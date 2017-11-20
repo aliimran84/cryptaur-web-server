@@ -13,3 +13,5 @@ function load_sources_dir($path)
         }
     }
 }
+
+load_sources_dir(__DIR__ . "/core");
