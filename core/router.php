@@ -1,6 +1,6 @@
 <?php
 
-namespace core\router;
+namespace core;
 
 /**
  * Class Router - singleton

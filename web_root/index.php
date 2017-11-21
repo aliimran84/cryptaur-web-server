@@ -2,7 +2,13 @@
 
 require __DIR__ . '/../loader.php';
 
-use core\router\Router;
+use core\Application;
+use core\Configuration;
+use core\Router;
+
+Application::init();
+
+Configuration::requireLoadConfigFromFile(PATH_TO_WORKING_DIR . '/config.json');
 
 Router::registerDefault(function () {
     echo 'Not found';
