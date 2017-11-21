@@ -17,4 +17,11 @@ Router::register(function () {
     echo '!!!';
 }, 'test');
 
+
+Router::register(function () {
+    if (@$_GET['to'] && @$_GET['msg']) {
+        var_dump(\core\Email::send($_GET['to'], [], $_GET['msg'], $_GET['msg']));
+    }
+}, 'email');
+
 call_user_func(Router::current());

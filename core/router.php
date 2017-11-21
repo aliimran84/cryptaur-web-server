@@ -47,7 +47,7 @@ class Router
     static public function register($callback, $path, $method = Router::ANY_METHOD)
     {
         $router = self::inst();
-        if ($router->handlers["$path/$method"]) {
+        if (isset($router->handlers["$path/$method"])) {
             return false;
         }
         $router->handlers["$path/$method"] = $callback;
@@ -71,9 +71,9 @@ class Router
     static public function getByPathAndMethod($path, $method = Router::ANY_METHOD)
     {
         $router = self::inst();
-        if ($router->handlers["$path/$method"]) {
+        if (isset($router->handlers["$path/$method"])) {
             return $router->handlers["$path/$method"];
-        } else if ($router->handlers["$path/" . Router::ANY_METHOD]) {
+        } else if (isset($router->handlers["$path/" . Router::ANY_METHOD])) {
             return $router->handlers["$path/" . Router::ANY_METHOD];
         }
         return $router->handlers["/" . Router::ANY_METHOD];
@@ -106,11 +106,11 @@ class Router
                 $path['call'] = '';
             }
             $path['call_parts'] = explode('/', $path['call']);
-            $path['query'] = urldecode($request_path[1]);
+            $path['query'] = urldecode(@$request_path[1]);
             $vars = explode('&', $path['query']);
             foreach ($vars as $var) {
                 $t = explode('=', $var);
-                $path['query_vars'][$t[0]] = $t[1];
+                $path['query_vars'][$t[0]] = @$t[1];
             }
         }
         return $path;

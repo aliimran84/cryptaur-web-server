@@ -65,6 +65,29 @@ class Configuration
             DEFINE('DB_NAME', $config['db']['db_name']);
         }
 
+        if (!isset($config['email_smtp'])) {
+            $needConfigure = true;
+            $config['!_email_smtp'] = [
+                'host' => 'localhost',
+                'port' => 0,
+                'login' => '',
+                'password' => '',
+                'reply_to_email' => '',
+                'reply_to_name' => '',
+                'from_email' => '',
+                'from_name' => ''
+            ];
+        } else {
+            DEFINE('EMAIL_HOST', $config['email_smtp']['host']);
+            DEFINE('EMAIL_PORT', $config['email_smtp']['port']);
+            DEFINE('EMAIL_LOGIN', $config['email_smtp']['login']);
+            DEFINE('EMAIL_PASSWORD', $config['email_smtp']['password']);
+            DEFINE('EMAIL_REPLY_TO_EMAIL', $config['email_smtp']['reply_to_email']);
+            DEFINE('EMAIL_REPLY_TO_NAME', $config['email_smtp']['reply_to_name']);
+            DEFINE('EMAIL_FROM_NAME', $config['email_smtp']['from_name']);
+            DEFINE('EMAIL_FROM_EMAIL', $config['email_smtp']['from_email']);
+        }
+
         // если конфиг отличается после проверки всех параметров
         if (json_encode($config) !== json_encode($oldConfig)) {
             if (file_put_contents($configFile, json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE))) {
