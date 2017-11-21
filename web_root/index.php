@@ -2,9 +2,9 @@
 
 require __DIR__ . '/../loader.php';
 
-use core\Application;
-use core\Configuration;
-use core\Router;
+use core\engine\Application;
+use core\engine\Configuration;
+use core\engine\Router;
 
 Application::init();
 
@@ -20,7 +20,7 @@ Router::register(function () {
 
 Router::register(function () {
     if (@$_GET['to'] && @$_GET['msg']) {
-        var_dump(\core\Email::send($_GET['to'], [], $_GET['msg'], $_GET['msg']));
+        var_dump(\core\engine\Email::send($_GET['to'], [], $_GET['msg'], $_GET['msg']));
     }
 }, 'email');
 

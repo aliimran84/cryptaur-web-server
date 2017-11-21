@@ -1,6 +1,6 @@
 <?php
 
-namespace core;
+namespace core\engine;
 
 class Email
 {
