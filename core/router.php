@@ -60,7 +60,7 @@ class Router
      */
     static public function registerDefault($callback)
     {
-        return Router::register($callback, '');
+        return self::register($callback, '');
     }
 
     /**
@@ -110,7 +110,7 @@ class Router
             $vars = explode('&', $path['query']);
             foreach ($vars as $var) {
                 $t = explode('=', $var);
-                $path['query_vars'][$t[0]] = @$t[1];
+                $path['query_vars'][@$t[0]] = @$t[1];
             }
         }
         return $path;
