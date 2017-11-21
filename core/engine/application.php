@@ -6,9 +6,9 @@ class Application
 {
     static public function init()
     {
-        define('PATH_TO_WORKING_DIR', __DIR__ . '/../working_dir');
-        define('PATH_TO_TMP_DIR', __DIR__ . '/../working_dir/tmp');
-        define('PATH_TO_THIRD_PARTY_DIR', __DIR__ . '/../third_party');
+        define('PATH_TO_WORKING_DIR', __DIR__ . '/../../working_dir');
+        define('PATH_TO_TMP_DIR', __DIR__ . '/../../working_dir/tmp');
+        define('PATH_TO_THIRD_PARTY_DIR', __DIR__ . '/../../third_party');
 
         mb_internal_encoding('UTF-8');
         date_default_timezone_set('Etc/GMT0');
