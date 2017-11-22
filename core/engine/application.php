@@ -24,14 +24,20 @@ class Application
         self::initTmpDir();
         self::initErrorHandling();
 
-        if (@Application::getValue('version') !== self::VERSION) {
+        if (!@Application::getValue('version')) {
             self::db_initializing();
             Investor::db_initializing();
         }
+
+        Investor::module_initializing();
     }
 
     static private function initTmpDir()
     {
+        if (!is_dir(PATH_TO_WORKING_DIR)) {
+            mkdir(PATH_TO_WORKING_DIR, 0777, true);
+            chmod(PATH_TO_WORKING_DIR, 0777);
+        }
         if (!is_dir(PATH_TO_TMP_DIR)) {
             mkdir(PATH_TO_TMP_DIR, 0777, true);
             chmod(PATH_TO_TMP_DIR, 0777);
