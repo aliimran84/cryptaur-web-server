@@ -56,11 +56,12 @@ class DB
         $this->query("SET SESSION group_concat_max_len = 1000000;");
     }
 
-    private function query($query)
+    static public function query($query)
     {
-        $result = $this->_connection->real_query($query);
+        $db = self::inst();
+        $result = $db->_connection->real_query($query);
         if (!$result) {
-            $this->error($query . PHP_EOL . $this->_connection->error);
+            $db->error($query . PHP_EOL . $db->_connection->error);
             return NULL;
         }
         return $result;
@@ -91,7 +92,7 @@ class DB
      * @param array $values array of values
      * @return array
      */
-    static public function get($query, $values = [])
+    static private function prepareStatementExecute($query, $values = [])
     {
         $db = self::inst();
         $stmt = $db->_connection->prepare($query);
@@ -119,6 +120,26 @@ class DB
         return $result;
     }
 
+    /**
+     * @param string $query query for prepare statement with ? instead of values
+     * @param array $values array of values
+     * @return array
+     */
+    static public function get($query, $values = [])
+    {
+        return self::prepareStatementExecute($query, $values);
+    }
+
+
+    /**
+     * @param string $query query for prepare statement with ? instead of values
+     * @param array $values array of values
+     * @return array
+     */
+    static public function set($query, $values = [])
+    {
+        return self::prepareStatementExecute($query, $values);
+    }
 
     static private function initializeErrorFile()
     {

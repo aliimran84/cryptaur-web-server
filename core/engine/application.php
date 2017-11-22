@@ -2,13 +2,19 @@
 
 namespace core\engine;
 
+use core\models\Investor;
+
 class Application
 {
+    const VERSION = 1;
+
     static public function init()
     {
         define('PATH_TO_WORKING_DIR', __DIR__ . '/../../working_dir');
         define('PATH_TO_TMP_DIR', __DIR__ . '/../../working_dir/tmp');
         define('PATH_TO_THIRD_PARTY_DIR', __DIR__ . '/../../third_party');
+
+        Configuration::requireLoadConfigFromFile(PATH_TO_WORKING_DIR . '/config.json');
 
         define('PATH_TO_PHPERRORS', PATH_TO_TMP_DIR . '/php-errors.log');
 
@@ -17,6 +23,11 @@ class Application
 
         self::initTmpDir();
         self::initErrorHandling();
+
+        if (@Application::getValue('version') !== self::VERSION) {
+            self::db_initializing();
+            Investor::db_initializing();
+        }
     }
 
     static private function initTmpDir()
@@ -44,5 +55,42 @@ class Application
                 die($error);
             }
         });
+    }
+
+    /**
+     * @param string $key
+     * @return mixed
+     */
+    static public function getValue($key)
+    {
+        $value = @DB::get("SELECT `value` FROM `key_value_storage` WHERE `key`=? LIMIT 1;", [$key])[0]['value'];
+        if ($value) {
+            return @json_decode($value, true);
+        }
+        return null;
+    }
+
+    /**
+     * @param string $key
+     * @param mixed $value
+     */
+    static public function setValue($key, $value)
+    {
+        DB::set("
+            REPLACE `key_value_storage` SET `key`=?, `value`=?",
+            [$key, $value]
+        );
+    }
+
+    static private function db_initializing()
+    {
+        DB::query("
+            CREATE TABLE IF NOT EXISTS `key_value_storage`  (
+                `key` varchar(256) NOT NULL,
+                `value` varchar(4096) NOT NULL,
+                PRIMARY KEY (`key`)
+            );
+        ");
+        self::setValue('version', self::VERSION);
     }
 }
