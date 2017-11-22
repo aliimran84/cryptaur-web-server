@@ -31,7 +31,7 @@ class Investor
                 echo 'Perhaps the link is outdated';
                 return;
             }
-            $investorId = self::registerUser($data['email'], $data['eth_address'], $data['referrer_id']);
+            $investorId = self::registerUser($data['email'], $data['eth_address'], $data['referrer_id'], $data['password_hash']);
             if (!$investorId) {
                 echo 'Sorry, something went wrong with investor registration';
                 return;
@@ -49,6 +49,7 @@ class Investor
                 `refferer_code` varchar(32) NOT NULL,
                 `joined_datetime` datetime(0) NOT NULL,
                 `email` varchar(254) NOT NULL,
+                `password_hash` varchar(254) NOT NULL,
                 `eth_address` varchar(50) NOT NULL,
                 `eth_withdrawn` bigint(20) NOT NULL,
                 `tokens_count` bigint(20) UNSIGNED NOT NULL,
@@ -57,13 +58,26 @@ class Investor
         ");
     }
 
+    static public function checkEmailPassword($email, $password)
+    {
+        $investor = DB::get("
+            SELECT * FROM `investors`
+            WHERE
+                `email` = ? AND
+                `password_hash` = ?
+            LIMIT 1
+        ;", [$email, self::hashPassword($password)]);
+        return (bool)$investor;
+    }
+
     /**
      * @param string $email
      * @param string $eth_address
      * @param int $referrer_id
+     * @param string $password_hash
      * @return false|int
      */
-    static public function registerUser($email, $eth_address, $referrer_id)
+    static public function registerUser($email, $eth_address, $referrer_id, $password_hash)
     {
         if (!preg_match("/^0x[a-fA-F0-9]{40}$/", $eth_address)) {
             return false;
@@ -98,13 +112,14 @@ class Investor
             INSERT INTO `investors`
             SET
                 `referrer_id` = ?,
-                `refferer_code`=?,
-                `joined_datetime`=?,
-                `email`=?,
-                `eth_address`=?,
-                `eth_withdrawn`=?,
-                `tokens_count`=?
-            ", [$referrer_id, $referrer_code, DB::timetostr(time()), $email, $eth_address, 0, 0]
+                `refferer_code` = ?,
+                `joined_datetime` = ?,
+                `email` = ?,
+                `password_hash` = ?,
+                `eth_address` = ?,
+                `eth_withdrawn` = ?,
+                `tokens_count` = ?
+            ", [$referrer_id, $referrer_code, DB::timetostr(time()), $email, $password_hash, $eth_address, 0, 0]
         );
 
         return DB::lastInsertId();
@@ -119,12 +134,18 @@ class Investor
         return $referrerCode;
     }
 
-    static public function createUrlForRegistration($email, $eth_address, $referrer_id)
+    static public function hashPassword($password)
+    {
+        return hash('sha256', $password . APPLICATION_ID);
+    }
+
+    static public function urlForRegistration($email, $eth_address, $referrer_id, $password)
     {
         $data = [
             'email' => $email,
             'eth_address' => $eth_address,
-            'referrer_id' => $referrer_id
+            'referrer_id' => $referrer_id,
+            'password_hash' => Investor::hashPassword($password)
         ];
         return APPLICATION_URL . "/investor/register?d=" . Application::encodeData($data);
     }
