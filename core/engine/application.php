@@ -93,4 +93,46 @@ class Application
         ");
         self::setValue('version', self::VERSION);
     }
+
+    const ENCRYPTED_METHOD = 'AES-256-CBC';
+
+    /**
+     * @param mixed $data json-coverable data
+     * @return string|false
+     */
+    static public function encodeData($data)
+    {
+
+        $string = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        if (!$string) {
+            return false;
+        }
+        $iv = substr(hash('sha256', APPLICATION_ID), 0, 16);
+
+        $encryptedString = openssl_encrypt($string, self::ENCRYPTED_METHOD, APPLICATION_ID, 0, $iv);
+        if (!$encryptedString) {
+            return false;
+        }
+        $encryptedString = base64_encode($encryptedString);
+
+        return $encryptedString;
+    }
+
+    /**
+     * @param string $encryptedString
+     * @return mixed|false
+     */
+    static public function decodeData($encryptedString)
+    {
+        $iv = substr(hash('sha256', APPLICATION_ID), 0, 16);
+        $decryptedString = @openssl_decrypt(base64_decode($encryptedString), self::ENCRYPTED_METHOD, APPLICATION_ID, 0, $iv);
+        if (!$decryptedString) {
+            return false;
+        }
+        $data = json_decode($decryptedString, false);
+        if (!$data) {
+            return false;
+        }
+        return $data;
+    }
 }

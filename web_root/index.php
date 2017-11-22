@@ -12,6 +12,9 @@ Router::registerDefault(function () {
 });
 Router::register(function () {
     var_dump(@Application::getValue('version'));
+    $s = Application::encodeData([1, 2, 3]);
+    var_dump($s);
+    var_dump(Application::decodeData($s));
 }, 'test');
 
 
