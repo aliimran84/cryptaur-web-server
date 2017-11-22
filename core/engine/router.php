@@ -70,6 +70,7 @@ class Router
      */
     static public function getByPathAndMethod($path, $method = Router::ANY_METHOD)
     {
+        $path = trim($path, '/');
         $router = self::inst();
         if (isset($router->handlers["$path/$method"])) {
             return $router->handlers["$path/$method"];
