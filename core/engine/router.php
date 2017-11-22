@@ -12,12 +12,12 @@ class Router
      * singleton object
      * @var Router
      */
-    protected static $_instance;
+    static private $_instance;
 
     /**
      * @return Router
      */
-    private static function inst()
+    static private function inst()
     {
         if (is_null(self::$_instance)) {
             self::$_instance = new self();

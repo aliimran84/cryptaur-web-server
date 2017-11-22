@@ -14,7 +14,7 @@ Router::registerDefault(function () {
     echo 'Not found';
 });
 Router::register(function () {
-    echo '!!!';
+    var_dump(core\engine\DB::get("SELECT * FROM a WHERE a=?", [1]));
 }, 'test');
 
 
