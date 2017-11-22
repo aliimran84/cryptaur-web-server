@@ -50,6 +50,14 @@ class Configuration
         }
         DEFINE('APPLICATION_ID', $config['application_id']);
 
+        if (!isset($config['application_url'])) {
+            $needConfigure = true;
+            $config['!_application_url'] = '';
+        } else {
+            $config['application_url'] = trim($config['application_url'], '/');
+            DEFINE('APPLICATION_URL', $config['application_url']);
+        }
+
         if (!isset($config['db'])) {
             $needConfigure = true;
             $config['!_db'] = [

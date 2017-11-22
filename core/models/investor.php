@@ -126,6 +126,6 @@ class Investor
             'eth_address' => $eth_address,
             'referrer_id' => $referrer_id
         ];
-        return "investor/register?d=" . Application::encodeData($data);
+        return APPLICATION_URL . "/investor/register?d=" . Application::encodeData($data);
     }
 }
