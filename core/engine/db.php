@@ -97,7 +97,7 @@ class DB
         $db = self::inst();
         $stmt = $db->_connection->prepare($query);
         if (!$stmt) {
-            self::error("no stmt for query $query");
+            self::error("no stmt for query $query: {$db->_connection->error}");
             return [];
         }
 
@@ -141,6 +141,14 @@ class DB
         return self::prepareStatementExecute($query, $values);
     }
 
+    /**
+     * @return int
+     */
+    static public function lastInsertId()
+    {
+        return DB::inst()->_connection->insert_id;
+    }
+
     static private function initializeErrorFile()
     {
         if (!is_file(self::PATH_TO_MYSQLIERRORS)) {
@@ -156,8 +164,17 @@ class DB
      */
     static private function error($text)
     {
-        $datetime = date('Y-m-d H:i:s');
+        $datetime = self::timetostr(time());
         file_put_contents(self::PATH_TO_MYSQLIERRORS, "\r\n$datetime\r\n$text\r\n", FILE_APPEND);
         return $text;
+    }
+
+    /**
+     * @param int $timestamp time()
+     * @return string строка в формате для mysqli
+     */
+    static public function timetostr($timestamp)
+    {
+        return date('Y-m-d H:i:s', $timestamp);
     }
 }
