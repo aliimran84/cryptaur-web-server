@@ -129,7 +129,7 @@ class Application
         if (!$decryptedString) {
             return false;
         }
-        $data = json_decode($decryptedString, false);
+        $data = json_decode($decryptedString, true);
         if (!$data) {
             return false;
         }
