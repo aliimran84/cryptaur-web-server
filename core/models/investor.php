@@ -52,19 +52,9 @@ class Investor
                 `email` varchar(254) NOT NULL,
                 `password_hash` varchar(254) NOT NULL,
                 `eth_address` varchar(50) NOT NULL,
-                `eth_withdrawn` bigint(20) NOT NULL,
+                `eth_withdrawn` double(20, 8) NOT NULL,
                 `tokens_count` bigint(20) UNSIGNED NOT NULL,
                 `phone` varchar(254) NOT NULL,
-                PRIMARY KEY (`id`)
-            );
-        ");
-        DB::query("
-            CREATE TABLE IF NOT EXISTS `investors_coins` (
-                `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-                `coin` varchar(32) NOT NULL,
-                `eth_address` varchar(254) NOT NULL,
-                `balance` bigint(20) UNSIGNED NOT NULL,
-                `usd` bigint(20) UNSIGNED NOT NULL,
                 PRIMARY KEY (`id`)
             );
         ");

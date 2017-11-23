@@ -2,8 +2,10 @@
 
 namespace core\engine;
 
+use core\models\Deposit;
 use core\models\Investor;
 use core\models\Investor_controller;
+use core\models\Wallet;
 use core\views\Base_view;
 
 class Application
@@ -34,6 +36,8 @@ class Application
         if (!@Application::getValue('version')) {
             self::db_init();
             Investor::db_init();
+            Wallet::db_init();
+            Deposit::db_init();
         }
 
         Router::registerDefault(function () {
