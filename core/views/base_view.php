@@ -18,6 +18,7 @@ class Base_view
             <title>Cryptaur<?= $title ? " - $title" : '' ?></title>
             <base href="<?= APPLICATION_URL ?>/">
             <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
+            <link rel="shortcut icon" href="favicon.png" type="image/png">
             <link rel="stylesheet" href="styles/materialize.min.css">
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
             <link rel="stylesheet" href="styles/bundle.min.css?rev=6f325e308238c8ac4ee386583ae4b092">
