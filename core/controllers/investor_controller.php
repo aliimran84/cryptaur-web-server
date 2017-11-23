@@ -84,7 +84,7 @@ class Investor_controller
         session_start();
         unset($_SESSION['authorized_investor_id']);
         session_write_close();
-        Utility::location(self::BASE_URL);
+        Utility::location();
     }
 
     static public function handleRegistrationRequest()

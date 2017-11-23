@@ -19,7 +19,7 @@ class Investor_view
                         <input type="password" name="password" placeholder="PASSWORD">
                         <div class="row">
                             <input type="submit" class="waves-effect waves-light btn btn-login" value="LOGIN">
-                            <p>Forgot your account password? <a href="#">Recover</a></p>
+                            <!--<p>Forgot your account password? <a href="#">Recover</a></p>-->
                         </div>
                         <h5>Not a member yet?</h5>
                         <div class="row">
