@@ -33,7 +33,7 @@ class Application
 
         if (!@Application::getValue('version')) {
             self::db_init();
-            Investor_controller::db_init();
+            Investor::db_init();
         }
 
         Router::registerDefault(function () {

@@ -40,4 +40,75 @@ class Investor
 
         return $instance;
     }
+
+    static public function db_init()
+    {
+        DB::query("
+            CREATE TABLE IF NOT EXISTS `investors` (
+                `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `referrer_id` int(10) UNSIGNED NOT NULL,
+                `referrer_code` varchar(32) NOT NULL,
+                `joined_datetime` datetime(0) NOT NULL,
+                `email` varchar(254) NOT NULL,
+                `password_hash` varchar(254) NOT NULL,
+                `eth_address` varchar(50) NOT NULL,
+                `eth_withdrawn` bigint(20) NOT NULL,
+                `tokens_count` bigint(20) UNSIGNED NOT NULL,
+                `phone` varchar(254) NOT NULL,
+                PRIMARY KEY (`id`)
+            );
+            CREATE TABLE IF NOT EXISTS `investors_coins` (
+                `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `coin` varchar(32) NOT NULL,
+                `eth_address` varchar(254) NOT NULL,
+                `balance` bigint(20) UNSIGNED NOT NULL,
+                `usd` bigint(20) UNSIGNED NOT NULL,
+                PRIMARY KEY (`id`)
+            );
+        ");
+    }
+
+    static public function getInvestorIdByEmailPassword($email, $password)
+    {
+        $investor = DB::get("
+            SELECT `id` FROM `investors`
+            WHERE
+                `email` = ? AND
+                `password_hash` = ?
+            LIMIT 1
+        ;", [$email, Investor_controller::hashPassword($password)]);
+        if (!$investor) {
+            return false;
+        }
+        return $investor[0]['id'];
+    }
+
+    /**
+     * @param string $code
+     * @return false|number
+     */
+    static public function getReferrerIdByCode($code)
+    {
+        $investorId = @DB::get("
+            SELECT `id` FROM `investors`
+            WHERE
+                `referrer_code` = ?
+            LIMIT 1
+        ;", [$code])[0]['id'];
+        if (!$investorId) {
+            return false;
+        }
+        return (int)$investorId;
+    }
+
+    static public function isExistInvestorWithParams($email, $eth_address)
+    {
+        return !!@DB::get("
+            SELECT * FROM `investors`
+            WHERE
+                `email` = ? OR
+                `eth_address` = ?
+            LIMIT 1
+        ;", [$email, $eth_address])[0];
+    }
 }

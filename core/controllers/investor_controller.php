@@ -67,60 +67,9 @@ class Investor_controller
         }, self::REGISTER_CONFIRMATION_URL);
     }
 
-    static public function db_init()
-    {
-        DB::query("
-            CREATE TABLE IF NOT EXISTS `investors` (
-                `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-                `referrer_id` int(10) UNSIGNED NOT NULL,
-                `referrer_code` varchar(32) NOT NULL,
-                `joined_datetime` datetime(0) NOT NULL,
-                `email` varchar(254) NOT NULL,
-                `password_hash` varchar(254) NOT NULL,
-                `eth_address` varchar(50) NOT NULL,
-                `eth_withdrawn` bigint(20) NOT NULL,
-                `tokens_count` bigint(20) UNSIGNED NOT NULL,
-                PRIMARY KEY (`id`)
-            );
-        ");
-    }
-
-    static public function getInvestorIdByEmailPassword($email, $password)
-    {
-        $investor = DB::get("
-            SELECT `id` FROM `investors`
-            WHERE
-                `email` = ? AND
-                `password_hash` = ?
-            LIMIT 1
-        ;", [$email, self::hashPassword($password)]);
-        if (!$investor) {
-            return false;
-        }
-        return $investor[0]['id'];
-    }
-
-    /**
-     * @param string $code
-     * @return false|number
-     */
-    static public function getReferrerIdByCode($code)
-    {
-        $investorId = @DB::get("
-            SELECT `id` FROM `investors`
-            WHERE
-                `referrer_code` = ?
-            LIMIT 1
-        ;", [$code])[0]['id'];
-        if (!$investorId) {
-            return false;
-        }
-        return (int)$investorId;
-    }
-
     static public function handleLoginRequest()
     {
-        $investorId = @self::getInvestorIdByEmailPassword($_POST['email'], $_POST['password']);
+        $investorId = @Investor::getInvestorIdByEmailPassword($_POST['email'], $_POST['password']);
         if ($investorId) {
             session_start();
             $_SESSION['authorized_investor_id'] = $investorId;
@@ -146,12 +95,12 @@ class Investor_controller
         if (!Utility::validateEthAddress(@$_POST['eth_address'])) {
             Utility::location(self::REGISTER_URL . '?err=2');
         }
-        if (self::isExistInvestorWithParams($_POST['email'], $_POST['eth_address'])) {
+        if (Investor::isExistInvestorWithParams($_POST['email'], $_POST['eth_address'])) {
             Utility::location(self::REGISTER_URL . '?err=3');
         }
         $referrerId = 0;
         if (@$_POST['referrer_code']) {
-            $referrerId = self::getReferrerIdByCode(@$_POST['referrer_code']);
+            $referrerId = Investor::getReferrerIdByCode(@$_POST['referrer_code']);
             if (!$referrerId) {
                 Utility::location(self::REGISTER_URL . '?err=4');
             }
@@ -177,17 +126,6 @@ class Investor_controller
         echo "Registered $investorId!";
     }
 
-    static public function isExistInvestorWithParams($email, $eth_address)
-    {
-        return !!@DB::get("
-            SELECT * FROM `investors`
-            WHERE
-                `email` = ? OR
-                `eth_address` = ?
-            LIMIT 1
-        ;", [$email, $eth_address])[0];
-    }
-
     /**
      * @param string $email
      * @param string $eth_address
@@ -201,7 +139,7 @@ class Investor_controller
             return false;
         }
 
-        if (self::isExistInvestorWithParams($email, $eth_address)) {
+        if (Investor::isExistInvestorWithParams($email, $eth_address)) {
             return false;
         }
 
