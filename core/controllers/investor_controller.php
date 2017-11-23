@@ -55,7 +55,9 @@ class Investor_controller
         }, self::LOGOUT_URL);
 
         Router::register(function () {
+            echo Base_view::header('Login');
             echo Investor_view::registerForm();
+            echo Base_view::footer();
         }, self::REGISTER_URL, Router::GET_METHOD);
         Router::register(function () {
             self::handleRegistrationRequest();
