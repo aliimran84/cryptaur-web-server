@@ -1,0 +1,11 @@
+{
+  "name": "Cryptaur",
+  "version": "1.0",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat-css": "^2.3.0",
+    "gulp-minify-css": "^1.2.4",
+    "gulp-rename": "^1.2.2",
+    "gulp-rev-append": "^0.1.8"
+  }
+}

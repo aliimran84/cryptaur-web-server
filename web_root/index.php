@@ -13,6 +13,10 @@ Router::registerDefault(function () {
 Router::register(function () {
     echo 'test';
 }, 'test');
+Router::register(function () {
+    echo \core\views\Base_view::header();
+    echo \core\views\Base_view::footer();
+}, 'test/1');
 
 
 Router::register(function () {

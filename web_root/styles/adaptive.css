@@ -1,0 +1,21 @@
+@media screen and (max-width: 1501px){
+    nav .nav-wrapper #nav-mobile li a,
+    nav .nav-wrapper #nav-mobile li {
+        font-size: 1.2rem;
+        margin: 0;
+    }
+}
+@media screen and (max-width: 1201px){
+    nav .nav-wrapper #nav-mobile .login {
+        display: none;
+    }
+    nav .nav-wrapper #nav-mobile li a {
+        font-size: 1rem;
+    }
+}
+@media screen and (max-width: 992px){
+    nav .brand-logo {
+    margin-left: 0;
+}
+}
+
