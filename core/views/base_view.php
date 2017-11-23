@@ -73,6 +73,7 @@ class Base_view
         <? } else { ?>
             <li><a href="#">About</a></li>
             <li><a href="<?= Investor_controller::LOGIN_URL ?>">Login</a></li>
+            <li><a href="<?= Investor_controller::REGISTER_URL ?>">Register</a></li>
         <? }
         return ob_get_clean();
     }
