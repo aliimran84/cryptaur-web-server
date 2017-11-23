@@ -2,11 +2,13 @@
 
 namespace core\engine;
 
-use core\models\Investor;
+use core\models\Investor_controller;
 
 class Application
 {
     const VERSION = 1;
+
+    static public $authorizedInvestor = null;
 
     static public function init()
     {
@@ -26,10 +28,10 @@ class Application
 
         if (!@Application::getValue('version')) {
             self::db_initializing();
-            Investor::db_initializing();
+            Investor_controller::db_initializing();
         }
 
-        Investor::module_initializing();
+        Investor_controller::initializing();
     }
 
     static private function initTmpDir()
@@ -140,5 +142,10 @@ class Application
             return false;
         }
         return $data;
+    }
+
+    static public function validateEthAddress($eth_address)
+    {
+        return !!preg_match("/^0x[a-fA-F0-9]{40}$/", $eth_address);
     }
 }

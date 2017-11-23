@@ -2,151 +2,42 @@
 
 namespace core\models;
 
-use core\engine\Application;
 use core\engine\DB;
-use core\engine\Router;
 
 class Investor
 {
-    static public $module_initialized = false;
-
     public $id = 0;
     public $referrer_id = 0;
-    public $refferer_code = '';
+    public $referrer_code = '';
     public $joined_datetime = 0;
     public $email = '';
     public $tokens_count = 0;
     public $eth_address = '';
     public $eth_withdrawn = 0;
 
-    static public function module_initializing()
+    static public function getById($id)
     {
-        if (Investor::$module_initialized) {
-            return;
-        }
-        Investor::$module_initialized = true;
-        Router::register(function () {
-            $data = @Application::decodeData($_GET['d']);
-            if (!$data) {
-                echo 'Perhaps the link is outdated';
-                return;
-            }
-            $investorId = self::registerUser($data['email'], $data['eth_address'], $data['referrer_id'], $data['password_hash']);
-            if (!$investorId) {
-                echo 'Sorry, something went wrong with investor registration';
-                return;
-            }
-            echo "Registered $investorId!";
-        }, "investor/register");
-    }
-
-    static public function db_initializing()
-    {
-        DB::query("
-            CREATE TABLE IF NOT EXISTS `investors` (
-                `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-                `referrer_id` int(10) UNSIGNED NOT NULL,
-                `refferer_code` varchar(32) NOT NULL,
-                `joined_datetime` datetime(0) NOT NULL,
-                `email` varchar(254) NOT NULL,
-                `password_hash` varchar(254) NOT NULL,
-                `eth_address` varchar(50) NOT NULL,
-                `eth_withdrawn` bigint(20) NOT NULL,
-                `tokens_count` bigint(20) UNSIGNED NOT NULL,
-                PRIMARY KEY (`id`)
-            );
-        ");
-    }
-
-    static public function checkEmailPassword($email, $password)
-    {
-        $investor = DB::get("
+        $investor = @DB::get("
             SELECT * FROM `investors`
             WHERE
-                `email` = ? AND
-                `password_hash` = ?
+                `id` = ?
             LIMIT 1
-        ;", [$email, self::hashPassword($password)]);
-        return (bool)$investor;
-    }
+        ;", [$id])[0];
 
-    /**
-     * @param string $email
-     * @param string $eth_address
-     * @param int $referrer_id
-     * @param string $password_hash
-     * @return false|int
-     */
-    static public function registerUser($email, $eth_address, $referrer_id, $password_hash)
-    {
-        if (!preg_match("/^0x[a-fA-F0-9]{40}$/", $eth_address)) {
-            return false;
+        if (!$investor) {
+            return null;
         }
 
-        $existingParamsUser = @DB::get("
-            SELECT * FROM `investors`
-            WHERE
-                `email` = ? OR
-                `eth_address` = ?
-            LIMIT 1
-        ;", [$email, $eth_address])[0];
-        if ($existingParamsUser) {
-            return false;
-        }
+        $instance = new Investor();
+        $instance->id = $investor['id'];
+        $instance->referrer_id = $investor['referrer_id'];
+        $instance->referrer_code = $investor['referrer_code'];
+        $instance->joined_datetime = strtotime($investor['joined_datetime']);
+        $instance->email = $investor['email'];
+        $instance->tokens_count = $investor['tokens_count'];
+        $instance->eth_address = $investor['eth_address'];
+        $instance->eth_withdrawn = $investor['eth_withdrawn'];
 
-        if ($referrer_id) {
-            $existingReferrer = @DB::get("
-                SELECT * FROM `investors`
-                WHERE
-                    `referrer_id` = ?
-                LIMIT 1
-            ;", [$referrer_id])[0];
-            if (!$existingReferrer) {
-                return false;
-            }
-        }
-
-        $referrer_code = self::generateReferrerCode();
-
-        DB::set("
-            INSERT INTO `investors`
-            SET
-                `referrer_id` = ?,
-                `refferer_code` = ?,
-                `joined_datetime` = ?,
-                `email` = ?,
-                `password_hash` = ?,
-                `eth_address` = ?,
-                `eth_withdrawn` = ?,
-                `tokens_count` = ?
-            ", [$referrer_id, $referrer_code, DB::timetostr(time()), $email, $password_hash, $eth_address, 0, 0]
-        );
-
-        return DB::lastInsertId();
-    }
-
-    static private function generateReferrerCode()
-    {
-        $referrerCode = null;
-        do {
-            $referrerCode = substr(uniqid(), -9);
-        } while (DB::get("SELECT * FROM `investors` WHERE `refferer_code` = ? LIMIT 1;", [$referrerCode]));
-        return $referrerCode;
-    }
-
-    static public function hashPassword($password)
-    {
-        return hash('sha256', $password . APPLICATION_ID);
-    }
-
-    static public function urlForRegistration($email, $eth_address, $referrer_id, $password)
-    {
-        $data = [
-            'email' => $email,
-            'eth_address' => $eth_address,
-            'referrer_id' => $referrer_id,
-            'password_hash' => Investor::hashPassword($password)
-        ];
-        return APPLICATION_URL . "/investor/register?d=" . Application::encodeData($data);
+        return $instance;
     }
 }
