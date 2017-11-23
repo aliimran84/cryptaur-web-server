@@ -3,6 +3,7 @@
 namespace core\models;
 
 use core\engine\Application;
+use core\engine\Utility;
 use core\engine\DB;
 use core\engine\Router;
 use core\views\Investor_view;
@@ -39,9 +40,9 @@ class Investor_controller
 
         Router::register(function () {
             if (Application::$authorizedInvestor) {
-                Application::location();
+                Utility::location();
             } else {
-                Application::location(self::LOGIN_URL);
+                Utility::location(self::LOGIN_URL);
             }
         }, self::BASE_URL);
         Router::register(function () {
@@ -113,38 +114,38 @@ class Investor_controller
             session_start();
             $_SESSION['authorized_investor_id'] = $investorId;
             session_write_close();
-            Application::location('test');
+            Utility::location('test');
         }
-        Application::location(self::LOGIN_URL);
+        Utility::location(self::LOGIN_URL);
     }
 
     static public function handleRegistrationRequest()
     {
         if (!filter_var(@$_POST['email'], FILTER_VALIDATE_EMAIL)) {
-            Application::location(self::REGISTER_URL . '?err=1');
+            Utility::location(self::REGISTER_URL . '?err=1');
         }
-        if (!Application::validateEthAddress(@$_POST['eth_address'])) {
-            Application::location(self::REGISTER_URL . '?err=2');
+        if (!Utility::validateEthAddress(@$_POST['eth_address'])) {
+            Utility::location(self::REGISTER_URL . '?err=2');
         }
         if (self::isExistInvestorWithParams($_POST['email'], $_POST['eth_address'])) {
-            Application::location(self::REGISTER_URL . '?err=3');
+            Utility::location(self::REGISTER_URL . '?err=3');
         }
         $referrerId = 0;
         if (@$_POST['referrer_code']) {
             $referrerId = self::getReferrerIdByCode(@$_POST['referrer_code']);
             if (!$referrerId) {
-                Application::location(self::REGISTER_URL . '?err=4');
+                Utility::location(self::REGISTER_URL . '?err=4');
             }
         }
         if (!preg_match('/^[0-9A-Za-z?!@#$%\-\_\.,;:]{6,50}$/', @$_POST['password'])) {
-            Application::location(self::REGISTER_URL . '?err=5');
+            Utility::location(self::REGISTER_URL . '?err=5');
         }
         echo self::urlForRegistration($_POST['email'], $_POST['eth_address'], $referrerId, $_POST['password']);
     }
 
     static public function handleRegistrationConfirmationRequest()
     {
-        $data = @Application::decodeData($_GET['d']);
+        $data = @Utility::decodeData($_GET['d']);
         if (!$data) {
             echo 'Perhaps the link is outdated';
             return;
@@ -177,7 +178,7 @@ class Investor_controller
      */
     static public function registerUser($email, $eth_address, $referrer_id, $password_hash)
     {
-        if (!Application::validateEthAddress($eth_address)) {
+        if (!Utility::validateEthAddress($eth_address)) {
             return false;
         }
 
@@ -238,6 +239,6 @@ class Investor_controller
             'referrer_id' => $referrer_id,
             'password_hash' => self::hashPassword($password)
         ];
-        return APPLICATION_URL . '/' . self::REGISTER_CONFIRMATION_URL . '?d=' . Application::encodeData($data);
+        return APPLICATION_URL . '/' . self::REGISTER_CONFIRMATION_URL . '?d=' . Utility::encodeData($data);
     }
 }
