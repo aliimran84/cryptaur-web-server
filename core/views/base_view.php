@@ -29,7 +29,6 @@ class Base_view
         </nav>
         <div class="wrapper">
         <div class="content">
-        <div class="row">
 
         <?php
         return ob_get_clean();
@@ -83,7 +82,6 @@ class Base_view
         ob_start();
         ?>
 
-        </div>
         </div>
         <footer>
             <div class="container">

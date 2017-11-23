@@ -6,6 +6,7 @@ use core\models\Deposit;
 use core\models\Investor;
 use core\models\Investor_controller;
 use core\models\Wallet;
+use core\views\About_view;
 use core\views\Base_view;
 
 class Application
@@ -42,6 +43,7 @@ class Application
 
         Router::registerDefault(function () {
             echo Base_view::header();
+            echo About_view::stageOne();
             echo Base_view::footer();
         });
         Investor_controller::init();
