@@ -7,9 +7,6 @@ use core\engine\Router;
 
 Application::init();
 
-Router::registerDefault(function () {
-    echo 'Not found';
-});
 Router::register(function () {
     echo 'test';
 }, 'test');
@@ -17,7 +14,6 @@ Router::register(function () {
     echo \core\views\Base_view::header();
     echo \core\views\Base_view::footer();
 }, 'test/1');
-
 
 Router::register(function () {
     if (@$_GET['to'] && @$_GET['msg']) {

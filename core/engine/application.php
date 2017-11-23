@@ -27,11 +27,15 @@ class Application
         self::initErrorHandling();
 
         if (!@Application::getValue('version')) {
-            self::db_initializing();
-            Investor_controller::db_initializing();
+            self::db_init();
+            Investor_controller::db_init();
         }
 
-        Investor_controller::initializing();
+        Router::registerDefault(function () {
+            echo \core\views\Base_view::header();
+            echo \core\views\Base_view::footer();
+        });
+        Investor_controller::init();
     }
 
     static private function initTmpDir()
@@ -90,7 +94,7 @@ class Application
         );
     }
 
-    static private function db_initializing()
+    static private function db_init()
     {
         DB::query("
             CREATE TABLE IF NOT EXISTS `key_value_storage`  (
@@ -100,6 +104,16 @@ class Application
             );
         ");
         self::setValue('version', self::VERSION);
+    }
+
+    /**
+     * send header location
+     * @param $newRelativePath
+     */
+    static public function location($newRelativePath = '')
+    {
+        header('Location: /' . $newRelativePath);
+        exit;
     }
 
     const ENCRYPTED_METHOD = 'AES-256-CBC';

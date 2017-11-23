@@ -11,11 +11,12 @@ class Investor_controller
 {
     static public $initialized = false;
 
+    const BASE_URL = 'investor';
     const LOGIN_URL = 'investor/login';
     const REGISTER_URL = 'investor/register';
     const REGISTER_CONFIRMATION_URL = 'investor/register_confirm';
 
-    static public function initializing()
+    static public function init()
     {
         if (self::$initialized) {
             return;
@@ -37,6 +38,13 @@ class Investor_controller
         }, self::LOGIN_URL, Router::POST_METHOD);
 
         Router::register(function () {
+            if (Application::$authorizedInvestor) {
+                Application::location();
+            } else {
+                Application::location(self::LOGIN_URL);
+            }
+        }, self::BASE_URL);
+        Router::register(function () {
             echo Investor_view::registerForm();
         }, self::REGISTER_URL, Router::GET_METHOD);
         Router::register(function () {
@@ -47,7 +55,7 @@ class Investor_controller
         }, self::REGISTER_CONFIRMATION_URL);
     }
 
-    static public function db_initializing()
+    static public function db_init()
     {
         DB::query("
             CREATE TABLE IF NOT EXISTS `investors` (
@@ -105,38 +113,31 @@ class Investor_controller
             session_start();
             $_SESSION['authorized_investor_id'] = $investorId;
             session_write_close();
-            header('Location: /test');
-            exit();
+            Application::location('test');
         }
-        header('Location: /investor/login');
-        exit();
+        Application::location(self::LOGIN_URL);
     }
 
     static public function handleRegistrationRequest()
     {
         if (!filter_var(@$_POST['email'], FILTER_VALIDATE_EMAIL)) {
-            header('Location: /' . self::REGISTER_URL . '?err=1');
-            exit();
+            Application::location(self::REGISTER_URL . '?err=1');
         }
         if (!Application::validateEthAddress(@$_POST['eth_address'])) {
-            header('Location: /' . self::REGISTER_URL . '?err=2');
-            exit();
+            Application::location(self::REGISTER_URL . '?err=2');
         }
         if (self::isExistInvestorWithParams($_POST['email'], $_POST['eth_address'])) {
-            header('Location: /' . self::REGISTER_URL . '?err=3');
-            exit();
+            Application::location(self::REGISTER_URL . '?err=3');
         }
         $referrerId = 0;
         if (@$_POST['referrer_code']) {
             $referrerId = self::getReferrerIdByCode(@$_POST['referrer_code']);
             if (!$referrerId) {
-                header('Location: /' . self::REGISTER_URL . '?err=4');
-                exit();
+                Application::location(self::REGISTER_URL . '?err=4');
             }
         }
         if (!preg_match('/^[0-9A-Za-z?!@#$%\-\_\.,;:]{6,50}$/', @$_POST['password'])) {
-            header('Location: /' . self::REGISTER_URL . '?err=5');
-            exit();
+            Application::location(self::REGISTER_URL . '?err=5');
         }
         echo self::urlForRegistration($_POST['email'], $_POST['eth_address'], $referrerId, $_POST['password']);
     }
