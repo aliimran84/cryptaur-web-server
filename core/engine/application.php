@@ -2,6 +2,7 @@
 
 namespace core\engine;
 
+use core\models\Investor;
 use core\models\Investor_controller;
 use core\views\Base_view;
 
@@ -9,6 +10,9 @@ class Application
 {
     const VERSION = 1;
 
+    /**
+     * @var Investor|null
+     */
     static public $authorizedInvestor = null;
 
     static public function init()

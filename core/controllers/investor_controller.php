@@ -6,6 +6,7 @@ use core\engine\Application;
 use core\engine\Utility;
 use core\engine\DB;
 use core\engine\Router;
+use core\views\Base_view;
 use core\views\Investor_view;
 
 class Investor_controller
@@ -14,6 +15,7 @@ class Investor_controller
 
     const BASE_URL = 'investor';
     const LOGIN_URL = 'investor/login';
+    const LOGOUT_URL = 'investor/logout';
     const REGISTER_URL = 'investor/register';
     const REGISTER_CONFIRMATION_URL = 'investor/register_confirm';
 
@@ -32,19 +34,26 @@ class Investor_controller
         session_abort();
 
         Router::register(function () {
-            echo Investor_view::loginForm();
-        }, self::LOGIN_URL, Router::GET_METHOD);
-        Router::register(function () {
-            self::handleLoginRequest();
-        }, self::LOGIN_URL, Router::POST_METHOD);
-
-        Router::register(function () {
             if (Application::$authorizedInvestor) {
                 Utility::location();
             } else {
                 Utility::location(self::LOGIN_URL);
             }
         }, self::BASE_URL);
+
+        Router::register(function () {
+            echo Base_view::header('Login');
+            echo Investor_view::loginForm();
+            echo Base_view::footer();
+        }, self::LOGIN_URL, Router::GET_METHOD);
+        Router::register(function () {
+            self::handleLoginRequest();
+        }, self::LOGIN_URL, Router::POST_METHOD);
+
+        Router::register(function () {
+            self::handleLogoutRequest();
+        }, self::LOGOUT_URL);
+
         Router::register(function () {
             echo Investor_view::registerForm();
         }, self::REGISTER_URL, Router::GET_METHOD);
@@ -114,9 +123,17 @@ class Investor_controller
             session_start();
             $_SESSION['authorized_investor_id'] = $investorId;
             session_write_close();
-            Utility::location('test');
+            Utility::location(self::BASE_URL);
         }
         Utility::location(self::LOGIN_URL);
+    }
+
+    static public function handleLogoutRequest()
+    {
+        session_start();
+        unset($_SESSION['authorized_investor_id']);
+        session_write_close();
+        Utility::location(self::BASE_URL);
     }
 
     static public function handleRegistrationRequest()

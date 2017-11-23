@@ -2,6 +2,9 @@
 
 namespace core\views;
 
+use core\engine\Application;
+use core\models\Investor_controller;
+
 class Base_view
 {
     static public function header($title = '')
@@ -32,7 +35,7 @@ class Base_view
         return ob_get_clean();
     }
 
-    static public function nav()
+    static private function nav()
     {
         ob_start();
         ?>
@@ -40,21 +43,12 @@ class Base_view
             <a href="#" class="brand-logo">crypt<span>aur</span></a>
             <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
-                <li><a href="#">About</a></li>
-                <li><a href="#">Dashboard</a></li>
-                <li><a class="active" href="#">Transactions history</a></li>
-                <li><a href="#">Settings</a></li>
-                <li class="login">name@mail.com</li>
-                <li><a href="#">Logout</a></li>
+                <?= self::menuList() ?>
                 <li><a class="dropdown-button" href="#!" data-activates="dropdown_flag"><img src="images/flag_usa.png"/><i class="material-icons right">keyboard_arrow_down</i></a>
                 </li>
             </ul>
             <ul class="side-nav" id="mobile-demo">
-                <li><a href="#">About</a></li>
-                <li><a href="#">Dashboard</a></li>
-                <li><a href="#">Transactions history</a></li>
-                <li><a href="#">Settings</a></li>
-                <li><a href="#">Logout</a></li>
+                <?= self::menuList() ?>
             </ul>
         </div>
         <ul id="dropdown_flag" class="dropdown-content">
@@ -62,6 +56,24 @@ class Base_view
             <li><a href="#!"><img src="images/flag_rus.png"/></a></li>
         </ul>
         <?php
+        return ob_get_clean();
+    }
+
+    static private function menuList()
+    {
+        // todo: what li is actice?
+        ob_start();
+        if (Application::$authorizedInvestor) { ?>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Transactions history</a></li>
+            <li><a href="#">Settings</a></li>
+            <li class="login"><?= Application::$authorizedInvestor->email ?></li>
+            <li><a href="<?= Investor_controller::LOGOUT_URL ?>">Logout</a></li>
+        <? } else { ?>
+            <li><a href="#">About</a></li>
+            <li><a href="<?= Investor_controller::LOGIN_URL ?>">Login</a></li>
+        <? }
         return ob_get_clean();
     }
 
