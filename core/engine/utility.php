@@ -2,7 +2,7 @@
 
 namespace core\engine;
 
-use core\models\Investor_controller;
+use core\controllers\Investor_controller;
 use core\views\Base_view;
 
 class Utility

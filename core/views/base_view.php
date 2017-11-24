@@ -2,8 +2,9 @@
 
 namespace core\views;
 
+use core\controllers\Administrator_controller;
 use core\engine\Application;
-use core\models\Investor_controller;
+use core\controllers\Investor_controller;
 
 class Base_view
 {
@@ -63,7 +64,11 @@ class Base_view
     {
         // todo: what li is actice?
         ob_start();
-        if (Application::$authorizedInvestor) { ?>
+        if (Application::$authorizedAdministrator) { ?>
+            <li><a href="<?= Administrator_controller::ADMINISTRATORS_LIST ?>">Administrators</a></li>
+            <li class="login">Admin: <?= Application::$authorizedAdministrator->email ?></li>
+            <li><a href="<?= Administrator_controller::LOGOUT_URL ?>">Logout</a></li>
+        <? } elseif (Application::$authorizedInvestor) { ?>
             <li><a href="#">About</a></li>
             <li><a href="#">Dashboard</a></li>
             <li><a href="#">Transactions history</a></li>

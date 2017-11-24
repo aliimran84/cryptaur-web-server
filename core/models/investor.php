@@ -2,6 +2,7 @@
 
 namespace core\models;
 
+use core\controllers\Investor_controller;
 use core\engine\DB;
 
 class Investor

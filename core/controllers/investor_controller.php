@@ -1,11 +1,12 @@
 <?php
 
-namespace core\models;
+namespace core\controllers;
 
 use core\engine\Application;
 use core\engine\Utility;
 use core\engine\DB;
 use core\engine\Router;
+use core\models\Investor;
 use core\views\Base_view;
 use core\views\Investor_view;
 
