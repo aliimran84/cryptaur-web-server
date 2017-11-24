@@ -51,8 +51,8 @@ class About_view
                         <p class="header">From Level 2: 3%</p>
                         <p class="header">From Level 3: 3%</p>
                         <p class="header">From Level 4: 3%</p>
-                        <p class="header">From Level 5: 3%</p>
-                        <p class="header">From Level 6: 3%</p>
+                        <p class="header">From Level 5: 4%</p>
+                        <p class="header">From Level 6: 4%</p>
                     </div>
                     <div class="row">
                         <p>
