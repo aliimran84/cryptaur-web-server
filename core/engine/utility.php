@@ -122,9 +122,10 @@ class Utility
 
     /**
      * @param string $file relative path
+     * @param mixed $additionalData
      * @return bool
      */
-    static public function logOriginalRequest($file)
+    static public function logOriginalRequest($file, $additionalData = null)
     {
         $logsDir = PATH_TO_TMP_DIR . '/logs';
         if (!is_dir($logsDir)) {
@@ -134,7 +135,10 @@ class Utility
 
         ob_start();
         var_dump(self::getRequestDataArr());
+        var_dump($additionalData);
         $output = ob_get_clean();
+
+        $output = date('Y-m-d H:i:s') . "\n$output\n";
 
         self::mkdir_0777(dirname("$logsDir/$file"));
         return !!file_put_contents("$logsDir/$file", $output);
