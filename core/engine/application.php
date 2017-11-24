@@ -3,6 +3,7 @@
 namespace core\engine;
 
 use core\controllers\Dashboard_controller;
+use core\controllers\Transactions_controller;
 use core\models\Administrator;
 use core\models\Deposit;
 use core\models\Investor;
@@ -64,6 +65,7 @@ class Application
         Administrator_controller::init();
         PaymentServer_controller::init();
         Dashboard_controller::init();
+        Transactions_controller::init();
     }
 
     static private function initTmpDir()
