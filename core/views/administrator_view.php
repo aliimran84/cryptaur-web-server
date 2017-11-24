@@ -18,8 +18,8 @@ class Administrator_view
                     <form class="login col s12" action="<?= Administrator_controller::LOGIN_URL ?>" method="post">
                         <input type="text" name="email" placeholder="E-MAIL">
                         <input type="password" name="password" placeholder="PASSWORD">
-                        <div class="row">
-                            <input type="submit" class="waves-effect waves-light btn btn-login" value="LOGIN">
+                        <div class="row center">
+                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">LOGIN</button>
                             <!--<p>Forgot your account password? <a href="#">Recover</a></p>-->
                         </div>
                     </form>
@@ -48,7 +48,7 @@ class Administrator_view
                             <?= $email ? 'readonly' : '' ?> value="<?= $email ?>">
                         <input type="password" name="password" placeholder="PASSWORD">
                         <div class="row center">
-                            <input type="submit" class="waves-effect waves-light btn btn-send" value="Register">
+                            <button type="submit" class="waves-effect waves-light btn btn-send" style="width: 100%">Set</button>
                         </div>
                     </form>
                 </div>

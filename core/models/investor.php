@@ -4,6 +4,7 @@ namespace core\models;
 
 use core\controllers\Investor_controller;
 use core\engine\DB;
+use core\engine\Utility;
 
 class Investor
 {
@@ -103,5 +104,53 @@ class Investor
                 `eth_address` = ?
             LIMIT 1
         ;", [$email, $eth_address])[0];
+    }
+
+    /**
+     * @param string $email
+     * @param string $eth_address
+     * @param int $referrer_id
+     * @param string $password_hash
+     * @return false|int
+     */
+    static public function registerUser($email, $eth_address, $referrer_id, $password_hash)
+    {
+        if (!Utility::validateEthAddress($eth_address)) {
+            return false;
+        }
+
+        if (Investor::isExistWithParams($email, $eth_address)) {
+            return false;
+        }
+
+        if ($referrer_id) {
+            $existingReferrer = @DB::get("
+                SELECT * FROM `investors`
+                WHERE
+                    `id` = ?
+                LIMIT 1
+            ;", [$referrer_id])[0];
+            if (!$existingReferrer) {
+                return false;
+            }
+        }
+
+        $referrer_code = Investor_controller::generateReferrerCode();
+
+        DB::set("
+            INSERT INTO `investors`
+            SET
+                `referrer_id` = ?,
+                `referrer_code` = ?,
+                `joined_datetime` = ?,
+                `email` = ?,
+                `password_hash` = ?,
+                `eth_address` = ?,
+                `eth_withdrawn` = ?,
+                `tokens_count` = ?
+            ", [$referrer_id, $referrer_code, DB::timetostr(time()), $email, $password_hash, $eth_address, 0, 0]
+        );
+
+        return DB::lastInsertId();
     }
 }

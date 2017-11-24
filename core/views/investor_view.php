@@ -17,12 +17,12 @@ class Investor_view
                     <form class="login col s12" action="<?= Investor_controller::LOGIN_URL ?>" method="post">
                         <input type="text" name="email" placeholder="E-MAIL">
                         <input type="password" name="password" placeholder="PASSWORD">
-                        <div class="row">
-                            <input type="submit" class="waves-effect waves-light btn btn-login" value="LOGIN">
+                        <div class="row center">
+                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">LOGIN</button>
                             <!--<p>Forgot your account password? <a href="#">Recover</a></p>-->
                         </div>
                         <h5>Not a member yet?</h5>
-                        <div class="row">
+                        <div class="row center">
                             <a href="<?= Investor_controller::REGISTER_URL ?>" class="waves-effect waves-light btn btn-login">Register</a>
                         </div>
                     </form>
@@ -52,7 +52,7 @@ class Investor_view
                         <input type="text" name="eth_address" placeholder="ETH-ADDRESS">
                         <input type="text" name="referrer_code" placeholder="REFERRER CODE">
                         <div class="row center">
-                            <input type="submit" class="waves-effect waves-light btn btn-send" value="Register">
+                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">Register</button>
                         </div>
                     </form>
                 </div>

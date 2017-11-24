@@ -3,6 +3,7 @@
 namespace core\controllers;
 
 use core\engine\Application;
+use core\engine\Email;
 use core\engine\Utility;
 use core\engine\DB;
 use core\engine\Router;
@@ -29,12 +30,7 @@ class Investor_controller
         }
         self::$initialized = true;
 
-        session_start();
-        $authorizedInvestor = Investor::getById(@$_SESSION[self::SESSION_KEY]);
-        if ($authorizedInvestor) {
-            Application::$authorizedInvestor = $authorizedInvestor;
-        }
-        session_abort();
+        self::detectLoggedInInvestor();
 
         Router::register(function () {
             if (Application::$authorizedInvestor) {
@@ -82,19 +78,34 @@ class Investor_controller
         }, self::REGISTER_CONFIRMATION_URL);
     }
 
-    static public function handleLoginRequest()
+    static private function detectLoggedInInvestor()
+    {
+        session_start();
+        $authorizedInvestor = Investor::getById(@$_SESSION[self::SESSION_KEY]);
+        if ($authorizedInvestor) {
+            Application::$authorizedInvestor = $authorizedInvestor;
+        }
+        session_abort();
+    }
+
+    static private function loginWithId($investorId)
+    {
+        session_start();
+        $_SESSION[self::SESSION_KEY] = $investorId;
+        session_write_close();
+    }
+
+    static private function handleLoginRequest()
     {
         $investorId = @Investor::getInvestorIdByEmailPassword($_POST['email'], $_POST['password']);
         if ($investorId) {
-            session_start();
-            $_SESSION[self::SESSION_KEY] = $investorId;
-            session_write_close();
+            self::loginWithId($investorId);
             Utility::location(self::BASE_URL);
         }
         Utility::location(self::LOGIN_URL);
     }
 
-    static public function handleLogoutRequest()
+    static private function handleLogoutRequest()
     {
         session_start();
         if (isset($_SESSION[self::SESSION_KEY])) {
@@ -104,7 +115,7 @@ class Investor_controller
         Utility::location();
     }
 
-    static public function handleRegistrationRequest()
+    static private function handleRegistrationRequest()
     {
         if (!filter_var(@$_POST['email'], FILTER_VALIDATE_EMAIL)) {
             Utility::location(self::REGISTER_URL . '?err=1');
@@ -125,73 +136,40 @@ class Investor_controller
         if (!preg_match('/^[0-9A-Za-z?!@#$%\-\_\.,;:]{6,50}$/', @$_POST['password'])) {
             Utility::location(self::REGISTER_URL . '?err=5');
         }
-        echo self::urlForRegistration($_POST['email'], $_POST['eth_address'], $referrerId, $_POST['password']);
+        $confirmationUrl = self::urlForRegistration($_POST['email'], $_POST['eth_address'], $referrerId, $_POST['password']);
+        Email::send($_POST['email'], [], 'Cryptaur: email confirmation', "<a href=\"$confirmationUrl\">Confirm email to finish registration</a>");
+
+        echo Base_view::header('Email confirmation info');
+        echo Base_view::text("Please check your email and follow the sent link");
+        echo Base_view::footer();
     }
 
-    static public function handleRegistrationConfirmationRequest()
+    static private function handleRegistrationConfirmationRequest()
     {
         $data = @Utility::decodeData($_GET['d']);
         if (!$data) {
-            echo 'Perhaps the link is outdated';
+            echo Base_view::header('Email confirmation problem');
+            echo Base_view::text('Perhaps the link is outdated');
+            echo Base_view::footer();
             return;
         }
-        $investorId = self::registerUser($data['email'], $data['eth_address'], $data['referrer_id'], $data['password_hash']);
+        $investorId = Investor::registerUser($data['email'], $data['eth_address'], $data['referrer_id'], $data['password_hash']);
         if (!$investorId) {
-            echo 'Sorry, something went wrong with investor registration';
+            echo Base_view::header('Email confirmation problem');
+            echo Base_view::text('Something went wrong with investor registration');
+            echo Base_view::footer();
             return;
         }
-        echo "Registered $investorId!";
+
+        self::loginWithId($investorId);
+        self::detectLoggedInInvestor();
+
+        echo Base_view::header('Email confirmed successfully');
+        echo Base_view::text("Email confirmed successfully");
+        echo Base_view::footer();
     }
 
-    /**
-     * @param string $email
-     * @param string $eth_address
-     * @param int $referrer_id
-     * @param string $password_hash
-     * @return false|int
-     */
-    static public function registerUser($email, $eth_address, $referrer_id, $password_hash)
-    {
-        if (!Utility::validateEthAddress($eth_address)) {
-            return false;
-        }
-
-        if (Investor::isExistWithParams($email, $eth_address)) {
-            return false;
-        }
-
-        if ($referrer_id) {
-            $existingReferrer = @DB::get("
-                SELECT * FROM `investors`
-                WHERE
-                    `id` = ?
-                LIMIT 1
-            ;", [$referrer_id])[0];
-            if (!$existingReferrer) {
-                return false;
-            }
-        }
-
-        $referrer_code = self::generateReferrerCode();
-
-        DB::set("
-            INSERT INTO `investors`
-            SET
-                `referrer_id` = ?,
-                `referrer_code` = ?,
-                `joined_datetime` = ?,
-                `email` = ?,
-                `password_hash` = ?,
-                `eth_address` = ?,
-                `eth_withdrawn` = ?,
-                `tokens_count` = ?
-            ", [$referrer_id, $referrer_code, DB::timetostr(time()), $email, $password_hash, $eth_address, 0, 0]
-        );
-
-        return DB::lastInsertId();
-    }
-
-    static private function generateReferrerCode()
+    static public function generateReferrerCode()
     {
         $referrerCode = null;
         do {

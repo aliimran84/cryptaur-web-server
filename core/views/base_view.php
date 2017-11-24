@@ -83,6 +83,11 @@ class Base_view
         return ob_get_clean();
     }
 
+    static public function text($text)
+    {
+        return "<h3>$text</h3>";
+    }
+
     static public function footer()
     {
         ob_start();
