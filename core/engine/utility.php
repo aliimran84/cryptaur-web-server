@@ -80,4 +80,43 @@ class Utility
         curl_close($curl);
         return $response;
     }
+
+    /**
+     * @param string $file relative path
+     * @return bool
+     */
+    static public function logOriginalRequest($file)
+    {
+        $logsDir = PATH_TO_TMP_DIR . '/logs';
+        if (!is_dir($logsDir)) {
+            mkdir($logsDir, 0777, true);
+            chmod($logsDir, 0777);
+        }
+
+        ob_start();
+        var_dump(self::getRequestDataArr());
+        $output = ob_get_clean();
+
+        return !!file_put_contents("$logsDir/$file", $output);
+    }
+
+    /**
+     * @return array
+     */
+    static public function getRequestDataArr()
+    {
+        $array = [];
+
+        if (function_exists('getallheaders')) {
+            $array['headers'] = getallheaders();
+        } else {
+            $array['headers'] = "getallheaders() not exist";
+        }
+        $array['get'] = $_GET;
+        $array['post'] = $_POST;
+        $array['phpinput'] = @file_get_contents('php://input');
+        $array['files'] = $_FILES;
+
+        return $array;
+    }
 }
