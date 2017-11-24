@@ -19,4 +19,13 @@ class Coin
         self::BCC_COIN,
         self::DOGE_COIN
     ];
+
+    const MIN_CONF = [
+        self::ETH_COIN => 12,
+        self::ETC_COIN => 10,
+        self::BTC_COIN => 3,
+        self::BTG_COIN => 10,
+        self::BCC_COIN => 10,
+        self::DOGE_COIN => 6
+    ];
 }

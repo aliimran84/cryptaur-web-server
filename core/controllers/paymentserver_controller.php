@@ -88,8 +88,7 @@ class PaymentServer_controller
             return true;
         } else if ($message['reason'] === self::NOTIFY_REASON_DEPOSIT) {
             //"{"amount": "2.0", "coin": "DOGE", "conf": 1, "keyid": "22c336448554e86b", "nonce": 1511352641577, "reason": "deposit", "txid": "cf3344b4fd3d7cf08fbd3fc19a751a0cf7ec1d776e65bcf3c573bac5c6484f5d", "userid": 666, "vout": 0}"
-            Deposit::receiveDeposit($message['amount'], $message['coin'], $message['conf'], $message['txid'], $message['vout'], $message['userid']);
-            return true;
+            return Deposit::receiveDeposit($message['amount'], $message['coin'], $message['conf'], $message['txid'], $message['vout'], $message['userid']);
         }
 
         return false;

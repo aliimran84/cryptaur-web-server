@@ -37,8 +37,22 @@ class Deposit
         ");
     }
 
+    /**
+     * @param double $amount
+     * @param string $coin
+     * @param int $conf
+     * @param string $txid
+     * @param int $vout
+     * @param int $investorId
+     * @return bool
+     */
     static public function receiveDeposit($amount, $coin, $conf, $txid, $vout, $investorId)
     {
         Utility::logOriginalRequest('paymentServerDeposit/' . time());
+        $upperCoin = strtoupper($coin);
+        if ($conf < Coin::MIN_CONF[$upperCoin]) {
+            return false;
+        }
+        return true;
     }
 }
