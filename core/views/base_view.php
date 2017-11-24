@@ -69,18 +69,18 @@ class Base_view
             <li><a href="<?= Administrator_controller::ADMINISTRATORS_LIST ?>">Administrators</a></li>
             <li class="login">Admin: <?= Application::$authorizedAdministrator->email ?></li>
             <li><a href="<?= Administrator_controller::LOGOUT_URL ?>">Logout</a></li>
-        <? } elseif (Application::$authorizedInvestor) { ?>
+        <?php } elseif (Application::$authorizedInvestor) { ?>
             <li><a href="#">About</a></li>
             <li><a href="#">Dashboard</a></li>
             <li><a href="#">Transactions history</a></li>
             <li><a href="#">Settings</a></li>
             <li class="login"><?= Application::$authorizedInvestor->email ?></li>
             <li><a href="<?= Investor_controller::LOGOUT_URL ?>">Logout</a></li>
-        <? } else { ?>
+        <?php } else { ?>
             <li><a href="#">About</a></li>
             <li><a href="<?= Investor_controller::LOGIN_URL ?>">Login</a></li>
             <li><a href="<?= Investor_controller::REGISTER_URL ?>">Register</a></li>
-        <? }
+        <?php }
         return ob_get_clean();
     }
 
