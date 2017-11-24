@@ -9,6 +9,7 @@ use core\models\PaymentServer;
 use core\models\Wallet;
 use core\controllers\Administrator_controller;
 use core\controllers\Investor_controller;
+use core\controllers\PaymentServer_controller;
 use core\views\About_view;
 use core\views\Base_view;
 use core\views\Wallet_view;
@@ -58,6 +59,7 @@ class Application
         });
         Investor_controller::init();
         Administrator_controller::init();
+        PaymentServer_controller::init();
     }
 
     static private function initTmpDir()

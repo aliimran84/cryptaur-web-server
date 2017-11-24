@@ -65,6 +65,7 @@ class Base_view
         // todo: what li is actice?
         ob_start();
         if (Application::$authorizedAdministrator) { ?>
+            <li><a href="<?= Administrator_controller::COINS_SETTINGS ?>">Coins settings</a></li>
             <li><a href="<?= Administrator_controller::ADMINISTRATORS_LIST ?>">Administrators</a></li>
             <li class="login">Admin: <?= Application::$authorizedAdministrator->email ?></li>
             <li><a href="<?= Administrator_controller::LOGOUT_URL ?>">Logout</a></li>

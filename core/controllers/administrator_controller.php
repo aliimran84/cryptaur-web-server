@@ -17,6 +17,7 @@ class Administrator_controller
     const LOGIN_URL = 'administrator/login';
     const LOGOUT_URL = 'administrator/logout';
     const SET_URL = 'administrator/set';
+    const COINS_SETTINGS = 'administrator/coins_settings';
     const ADMINISTRATORS_LIST = 'administrator/list';
 
     const SESSION_KEY = 'authorized_administrator_id';
@@ -94,6 +95,16 @@ class Administrator_controller
             echo Administrator_view::administratorsList();
             echo Base_view::footer();
         }, self::ADMINISTRATORS_LIST);
+
+        Router::register(function () {
+            // administrators can setup only administrator
+            if (!Application::$authorizedAdministrator) {
+                Utility::location(self::BASE_URL);
+            }
+            echo Base_view::header('Administrator set');
+            echo Administrator_view::coinsSettings();
+            echo Base_view::footer();
+        }, self::COINS_SETTINGS, Router::GET_METHOD);
     }
 
     static public function handleLoginRequest()

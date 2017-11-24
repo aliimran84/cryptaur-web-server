@@ -4,6 +4,7 @@ namespace core\views;
 
 use core\controllers\Administrator_controller;
 use core\models\Administrator;
+use core\models\PaymentServer;
 
 class Administrator_view
 {
@@ -73,6 +74,14 @@ class Administrator_view
             </div>
         </div>
         <?php
+        return ob_get_clean();
+    }
+
+    static public function coinsSettings()
+    {
+        $paymentServer = PaymentServer::getFirst();
+        ob_start();
+        echo PaymentServer_view::setForm($paymentServer);
         return ob_get_clean();
     }
 }
