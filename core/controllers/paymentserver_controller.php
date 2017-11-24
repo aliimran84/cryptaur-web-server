@@ -37,7 +37,9 @@ class PaymentServer_controller
 
 
         Router::register(function () {
-            $accept = self::handleNotify();
+            $result = self::handleNotify();
+            Utility::logOriginalRequest('paymentServerNotify/' . time(), $result);
+            $accept = $result > 0;
             echo json_encode(['accept' => $accept], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         }, self::NOTIFY_URL);
     }
@@ -62,36 +64,40 @@ class PaymentServer_controller
         return hash_hmac('sha256', $message, pack("H*", $pServer->secretkey));
     }
 
+    /**
+     * @return int < 0 - error; > 0 success
+     */
     static public function handleNotify()
     {
-        Utility::logOriginalRequest('paymentServerNotify/' . time());
-
         $headers = getallheaders();
         $receivedHmacHash = @$headers[self::HMAC_HEADER];
         $rawMessage = @file_get_contents('php://input');
         $message = @json_decode($rawMessage, true);
         if (!$message) {
-            return false;
+            return -1;
         }
         $calculatedHmac = self::messageHmacHash($message['keyid'], $rawMessage);
         if ($receivedHmacHash !== $calculatedHmac) {
-            return false;
+            return -2;
         }
 
         if (!PaymentServer::checkUpdateNonce($message['keyid'], $message['nonce'])) {
-            return false;
+            return -3;
         }
 
         if ($message['reason'] === self::NOTIFY_REASON_ADDRESS) {
             //"{"address": "0xf410e1a3b6a42511d2113911111181116511711d", "coin": "eth", "keyid": "22c336448554e86b", "nonce": 1511527643485, "reason": "address", "userid": 1}"
             Wallet::registerWallet($message['userid'], $message['coin'], $message['address']);
-            return true;
+            return 1;
         } else if ($message['reason'] === self::NOTIFY_REASON_DEPOSIT) {
             //"{"amount": "2.0", "coin": "DOGE", "conf": 1, "keyid": "22c336448554e86b", "nonce": 1511352641577, "reason": "deposit", "txid": "cf3344b4fd3d7cf08fbd3fc19a751a0cf7ec1d776e65bcf3c573bac5c6484f5d", "userid": 666, "vout": 0}"
-            return Deposit::receiveDeposit($message['amount'], $message['coin'], $message['conf'], $message['txid'], $message['vout'], $message['userid']);
+            if (!Deposit::receiveDeposit((double)$message['amount'], $message['coin'], $message['conf'], $message['txid'], $message['vout'], $message['userid'])) {
+                return -4;
+            }
+            return 2;
         }
 
-        return false;
+        return -5;
     }
 
     /**
