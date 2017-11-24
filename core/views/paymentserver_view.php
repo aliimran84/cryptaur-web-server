@@ -17,7 +17,7 @@ class PaymentServer_view
         ?>
         <div class="row card">
             <form class="registration col s12" action="<?= PaymentServer_controller::SET_URL ?>" method="post">
-                <h3>Payment server</h3>
+                <h5 class="center">Payment server</h5>
                 <?php if (isset($_GET['err'])) {
                     // todo: decode error
                     ?>

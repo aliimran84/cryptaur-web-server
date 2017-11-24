@@ -8,12 +8,18 @@ use core\models\Wallet;
 
 class Wallet_view
 {
+    static private $already_myContribution = false;
+
     static public function myContribution()
     {
+        if (self::$already_myContribution) {
+            return '<a href="#my-contribution-section">My Contribution</a>';
+        }
+        self::$already_myContribution = true;
         ob_start();
         ?>
 
-        <section class="my-contribution">
+        <section id="my-contribution-section" class="my-contribution">
             <div class="row">
                 <h3>My contribution</h3>
             </div>
@@ -69,6 +75,41 @@ class Wallet_view
                             //</div>
                             ?>
                         </form>
+                        <script>
+                            $(document).ready(function () {
+                                <?php
+                                $coinsRates = [];
+                                foreach (array_merge(Coin::COINS, [Coin::TOKEN]) as $coin) {
+                                    $coinsRates[$coin] = Coin::getRate($coin);
+                                }
+                                ?>
+                                window.coinsRate = <?= json_encode($coinsRates, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
+                                window.currentCoin = '';
+                                window.onAmountChange = function (input) {
+                                    var val = parseFloat($(input).val());
+                                    if (!val) {
+                                        val = 0;
+                                    }
+                                    $('#selected_amount').text(val);
+                                    var usd = window.coinsRate[window.currentCoin] * val
+                                    var tokens = usd / window.coinsRate['<?= Coin::TOKEN ?>'];
+                                    $('#calculated_selected_to_cpt').text(tokens);
+                                };
+                                $('#select-coins').on('change', function () {
+                                    var coin = $(this).val();
+                                    window.currentCoin = coin;
+                                    $('.div-amount-coins').hide();
+                                    $('#div-amount-' + coin).show();
+                                    $('#selected_currency').text(coin);
+                                    window.onAmountChange($('#input-amount-' + coin)[0]);
+                                    var walletAddrText = 'Wallet registration in progress';
+                                    if (window.investorWallets[coin]) {
+                                        walletAddrText = window.investorWallets[coin];
+                                    }
+                                    $('#selected_wallet_addr').html(walletAddrText);
+                                }).change();
+                            });
+                        </script>
                     </div>
                 </div>
             </div>

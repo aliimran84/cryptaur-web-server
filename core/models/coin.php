@@ -31,6 +31,8 @@ class Coin
         self::DOGE_COIN => 6
     ];
 
+    const TOKEN = 'CPT';
+
     const RATE_KEY_PREFIX = 'rate_count_of_usd_in_';
 
     /**

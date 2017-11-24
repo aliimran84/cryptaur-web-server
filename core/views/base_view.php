@@ -25,6 +25,7 @@ class Base_view
             <link rel="stylesheet" href="styles/materialize.min.css">
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
             <link rel="stylesheet" href="styles/bundle.min.css?rev=6f325e308238c8ac4ee386583ae4b092">
+            <script type="text/javascript" src="scripts/jquery-3.2.1.min.js"></script>
         </head>
         <body class="<?= $bodyClass ?>">
 
@@ -111,7 +112,6 @@ class Base_view
         </footer>
         </div>
 
-        <script type="text/javascript" src="scripts/jquery-3.2.1.min.js"></script>
         <script type="text/javascript" src="scripts/materialize.min.js"></script>
         <script type="text/javascript" src="scripts/script.js"></script>
 
