@@ -67,9 +67,9 @@ class PaymentServer_controller
         Utility::logOriginalRequest('paymentServerNotify/' . time());
 
         $headers = getallheaders();
-        $receivedHmacHash = $headers[self::HMAC_HEADER];
+        $receivedHmacHash = @$headers[self::HMAC_HEADER];
         $rawMessage = @file_get_contents('php://input');
-        $message = json_decode($rawMessage, true);
+        $message = @json_decode($rawMessage, true);
         if (!$message) {
             return false;
         }

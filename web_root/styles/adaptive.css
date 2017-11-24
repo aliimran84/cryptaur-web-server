@@ -4,6 +4,11 @@
         font-size: 1.2rem;
         margin: 0;
     }
+    .dashboard .main-panel .main-panel-block h3,
+    .content section.my-contribution .btn-send,
+    .content section.my-contribution .btn-contribute {
+        font-size: 1.2rem;
+    }
 }
 @media screen and (max-width: 1201px){
     nav .nav-wrapper #nav-mobile .login {
@@ -12,10 +17,32 @@
     nav .nav-wrapper #nav-mobile li a {
         font-size: 1rem;
     }
+    .content section.my-contribution .btn-send,
+    .content section.my-contribution .btn-contribute,
+    .dashboard .main-panel .main-panel-block h3 {
+        font-size: 1rem;
+    }
 }
 @media screen and (max-width: 992px){
     nav .brand-logo {
-    margin-left: 0;
+        margin-left: 0;
+    }
 }
+@media screen and (max-width: 600px){
+    .dashboard .content .main-panel .my-contribution h5 {
+        font-size: .9rem;
+        font-weight: 700;
+    }
+    .dashboard .content .left-panel {
+        display: none;
+    }
+    .wrapper footer .copyright,
+    .wrapper footer .terms-and-conditions {
+        text-align: center;
+        padding: 10px 0;
+    }
+    .wrapper footer {
+        padding: 45px 0;
+    }
 }
 

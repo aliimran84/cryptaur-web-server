@@ -8,7 +8,7 @@ use core\controllers\Investor_controller;
 
 class Base_view
 {
-    static public function header($title = '')
+    static public function header($title = '', $bodyClass = '')
     {
         ob_start();
         ?>
@@ -24,7 +24,7 @@ class Base_view
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
             <link rel="stylesheet" href="styles/bundle.min.css?rev=6f325e308238c8ac4ee386583ae4b092">
         </head>
-        <body>
+        <body class="<?= $bodyClass ?>">
 
         <nav>
             <?= self::nav() ?>
@@ -71,7 +71,7 @@ class Base_view
             <li><a href="<?= Administrator_controller::LOGOUT_URL ?>">Logout</a></li>
         <?php } elseif (Application::$authorizedInvestor) { ?>
             <li><a href="#">About</a></li>
-            <li><a href="#">Dashboard</a></li>
+            <li><a href="/dashboard">Dashboard</a></li>
             <li><a href="#">Transactions history</a></li>
             <li><a href="#">Settings</a></li>
             <li class="login"><?= Application::$authorizedInvestor->email ?></li>
