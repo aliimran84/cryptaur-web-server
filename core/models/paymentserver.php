@@ -38,12 +38,41 @@ class PaymentServer
      */
     static public function set($url, $keyId, $secretKey)
     {
-        DB::set("
-            REPLACE `payment_servers` SET
-            `url` = ?,
-            `keyid` = ?,
-            `secretkey` = ?
-        ;", [$url, $keyId, $secretKey]);
+        if (self::getFirst()) {
+            DB::set("
+                UPDATE `payment_servers` SET
+                    `url` = ?,
+                    `secretkey` = ?,
+                    `keyid` = ?
+            ;", [$url, $secretKey, $keyId]);
+        } else {
+            DB::set("
+                INSERT INTO `payment_servers` SET
+                    `url` = ?,
+                    `secretkey` = ?,
+                    `keyid` = ?
+            ;", [$url, $secretKey, $keyId]);
+        }
+
+        return;
+        // когда серверов станет больше
+
+        if (self::getByKeyId($keyId)) {
+            DB::set("
+                UPDATE `payment_servers` SET
+                    `url` = ?,
+                    `secretkey` = ?
+                WHERE
+                    `keyid` = ?
+            ;", [$url, $secretKey, $keyId]);
+        } else {
+            DB::set("
+                INSERT INTO `payment_servers` SET
+                    `url` = ?,
+                    `secretkey` = ?,
+                    `keyid` = ?
+            ;", [$url, $secretKey, $keyId]);
+        }
     }
 
     static private function createWithDataFromDB($data)
