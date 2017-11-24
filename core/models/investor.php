@@ -22,15 +22,15 @@ class Investor
         DB::query("
             CREATE TABLE IF NOT EXISTS `investors` (
                 `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-                `referrer_id` int(10) UNSIGNED NOT NULL,
-                `referrer_code` varchar(32) NOT NULL,
+                `referrer_id` int(10) UNSIGNED DEFAULT '0',
+                `referrer_code` varchar(32) DEFAULT '',
                 `joined_datetime` datetime(0) NOT NULL,
                 `email` varchar(254) NOT NULL,
                 `password_hash` varchar(254) NOT NULL,
                 `eth_address` varchar(50) NOT NULL,
-                `eth_withdrawn` double(20, 8) NOT NULL,
-                `tokens_count` bigint(20) UNSIGNED NOT NULL,
-                `phone` varchar(254) NOT NULL,
+                `eth_withdrawn` double(20, 8) DEFAULT '0',
+                `tokens_count` bigint(20) UNSIGNED DEFAULT '0',
+                `phone` varchar(254) DEFAULT '',
                 PRIMARY KEY (`id`)
             );
         ");

@@ -23,8 +23,8 @@ class Wallet
                 `investor_id` int(10) UNSIGNED NOT NULL,
                 `coin` varchar(32) NOT NULL,
                 `address` varchar(254) NOT NULL,
-                `balance` double(20, 8) UNSIGNED NOT NULL,
-                `usdUsed` double(20, 8) UNSIGNED NOT NULL,
+                `balance` double(20, 8) UNSIGNED DEFAULT '0',
+                `usdUsed` double(20, 8) UNSIGNED DEFAULT '0',
                 PRIMARY KEY (`id`)
             );
         ");

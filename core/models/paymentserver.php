@@ -21,10 +21,10 @@ class PaymentServer
         DB::query("
             CREATE TABLE IF NOT EXISTS `payment_servers` (
                 `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-                `url` varchar(254) NOT NULL,
-                `nonce` int(10) UNSIGNED NOT NULL,
-                `keyid` varchar(254) NOT NULL,
-                `secretkey` varchar(254) NOT NULL,
+                `url` varchar(254) DEFAULT '',
+                `nonce` int(10) UNSIGNED DEFAULT '0',
+                `keyid` varchar(254) DEFAULT '',
+                `secretkey` varchar(254) DEFAULT '',
                 PRIMARY KEY (`id`),
                 UNIQUE KEY `keyid` (`keyid`)
             );

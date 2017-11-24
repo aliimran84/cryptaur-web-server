@@ -27,11 +27,11 @@ class Deposit
                 `txid` varchar(254) NOT NULL,
                 `vout` int(10) NOT NULL,
                 `amount` double(20, 8) NOT NULL,
-                `usd` double(20, 8) NOT NULL,
-                `rate` double(20, 8) NOT NULL,
+                `usd` double(20, 8) DEFAULT '-1',
+                `rate` double(20, 8) DEFAULT '-1',
                 `datetime` datetime(0) NOT NULL,
-                `used_in_minting` tinyint(1) UNSIGNED NOT NULL,
-                `used_in_bounty` tinyint(1) UNSIGNED NOT NULL,
+                `used_in_minting` tinyint(1) UNSIGNED DEFAULT '0',
+                `used_in_bounty` tinyint(1) UNSIGNED DEFAULT '0',
                 PRIMARY KEY (`id`)
             );
         ");
