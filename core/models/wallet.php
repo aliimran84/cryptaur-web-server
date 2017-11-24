@@ -29,19 +29,27 @@ class Wallet
         ");
     }
 
-    static public function getByInvestoridCoin($investorId, $coin)
+    /**
+     * @param int $investorId
+     * @param string $coin
+     * @param bool $withoutRegistration
+     * @return Wallet|null
+     */
+    static public function getByInvestoridCoin($investorId, $coin, $withoutRegistration = false)
     {
         $wallet = @DB::get("
             SELECT * FROM `wallets`
             WHERE
-                `investor_id` = ?,
+                `investor_id` = ? AND
                 `coin` = ?
             LIMIT 1
         ;", [$investorId, $coin])[0];
 
-        if (!$wallet) {
-            self::requestWalletRegistration($investorId, $coin);
-            return null;
+        if (!$wallet && !$withoutRegistration) {
+            $regResult = self::requestWalletRegistration($investorId, $coin);
+            if (is_bool($regResult)) {
+                return null;
+            }
         }
 
         $instance = new Wallet();
@@ -51,19 +59,22 @@ class Wallet
         $instance->address = $wallet['address'];
         $instance->balance = $wallet['balance'];
         $instance->usdUsed = $wallet['usdUsed'];
+
+        return $instance;
     }
 
     /**
      * @param int $investorId
      * @param string $coin
      * @param string $address
+     * @return Wallet
      */
     static public function registerWallet($investorId, $coin, $address)
     {
         $existing = @DB::get("
             SELECT * FROM `wallets`
             WHERE
-                `investor_id` = ?,
+                `investor_id` = ? AND
                 `coin` = ?
             LIMIT 1
         ;", [$investorId, $coin])[0];
@@ -73,7 +84,7 @@ class Wallet
                 SET
                     `address`= ? 
                 WHERE
-                    `investor_id` = ?,
+                    `investor_id` = ? AND
                     `coin` = ?
             LIMIT 1;", [$address, $investorId, $coin]);
         } else {
@@ -83,15 +94,17 @@ class Wallet
                     `investor_id` = ?,
                     `coin` = ?,
                     `address`= ?
-            ;", [$address, $investorId, $coin]);
+            ;", [$investorId, $coin, $address]);
         }
+
+        return self::getByInvestoridCoin($investorId, $coin, true);
     }
 
     /**
      * send request. It can answer with address now or later
      * @param int $investorId
      * @param string $coin
-     * @return bool
+     * @return bool|Wallet
      */
     static public function requestWalletRegistration($investorId, $coin)
     {
@@ -99,17 +112,19 @@ class Wallet
         if (!$pServer) {
             return false;
         }
+
+        $lowerCoin = strtolower($coin);
+        $httpPostResult = Utility::httpPost("{$pServer->url}/$lowerCoin/getaddress", ['user' => $investorId]);
         $response = @json_decode(
-            Utility::httpPost("$pServer/$coin/getaddress", ['user' => $investorId]),
+            $httpPostResult,
             true
-        );
+        )['result'];
         if (!isset($response['pending']) || !isset($response['address'])) {
             return false;
         }
         if ($response['pending'] || !$response['address']) {
             return true;
         }
-        self::registerWallet($investorId, $coin, $response['address']);
-        return true;
+        return self::registerWallet($investorId, $coin, $response['address']);
     }
 }

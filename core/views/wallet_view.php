@@ -2,6 +2,10 @@
 
 namespace core\views;
 
+use core\engine\Application;
+use core\models\Coin;
+use core\models\Wallet;
+
 class Wallet_view
 {
     static public function myContribution()
@@ -30,16 +34,35 @@ class Wallet_view
                     <div class="row">
                         <form>
                             <div class="input-field col s6 m6">
-                                <select>
-                                    <option value="ETH" selected>ETH</option>
-                                    <option value="BTC">BTC</option>
+                                <select id="select-coins">
+                                    <?php foreach (Coin::COINS as $coin) { ?>
+                                        <option value="<?= $coin ?>"><?= $coin ?></option>
+                                    <?php } ?>
                                 </select>
-                                <label>select currency</label>
+                                <label for="select-coins">select currency</label>
                             </div>
-                            <div class="input-field col s6 m6">
-                                <input type="number" name="amount" value="10" min="10" max="40" step="1">
-                                <label>select amount</label>
-                            </div>
+                            <script>
+                                <?php
+                                $wallets = [];
+                                foreach (Coin::COINS as $coin) {
+                                    $wallet = Wallet::getByInvestoridCoin(Application::$authorizedInvestor->id, $coin);
+                                    $address = null;
+                                    if ($wallet) {
+                                        $address = @$wallet->address;
+                                    }
+                                    $wallets[$coin] = $address;
+                                }
+                                ?>
+                                window.investorWallets = <?= json_encode($wallets, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
+                            </script>
+                            <?php foreach (Coin::COINS as $coin) { ?>
+                                <div style="display: none;" id="div-amount-<?= $coin ?>" class="div-amount-coins input-field col s6 m6">
+                                    <input id="input-amount-<?= $coin ?>" type="number"
+                                           onchange="window.onAmountChange(this)" onkeyup="window.onAmountChange(this)"
+                                           value="1" min="0" max="9999999" step="0.000000001">
+                                    <label for="input-amount-<?= $coin ?>">select amount</label>
+                                </div>
+                            <?php } ?>
                             <?php
                             //<div class="input-field col s12 m4">
                             //<button class="waves-effect waves-light btn btn-contribute">Contribute</button>
@@ -50,9 +73,13 @@ class Wallet_view
                 </div>
             </div>
             <div class="row">
-                <p>Copy address below to send 10 ETH</p>
-                <h5>0x2b2732Efb676f4660d31F8c7D7e418D4345B17C3</h5>
-                <p>You will get: 320,307.345 CPT</p>
+                <p>
+                    Copy address below to send
+                    <span id="selected_amount"></span>
+                    <span id="selected_currency"></span>
+                </p>
+                <h5 id="selected_wallet_addr"></h5>
+                <p>You will get: <span id="calculated_selected_to_cpt"></span> CPT</p>
                 <?php
                 //<p>Time left: 23 min</p>
                 ?>
