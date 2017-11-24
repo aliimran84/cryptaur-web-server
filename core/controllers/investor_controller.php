@@ -19,6 +19,8 @@ class Investor_controller
     const REGISTER_URL = 'investor/register';
     const REGISTER_CONFIRMATION_URL = 'investor/register_confirm';
 
+    const SESSION_KEY = 'authorized_investor_id';
+
     static public function init()
     {
         if (self::$initialized) {
@@ -27,7 +29,7 @@ class Investor_controller
         self::$initialized = true;
 
         session_start();
-        $authorizedInvestor = Investor::getById($_SESSION['authorized_investor_id']);
+        $authorizedInvestor = Investor::getById(@$_SESSION[self::SESSION_KEY]);
         if ($authorizedInvestor) {
             Application::$authorizedInvestor = $authorizedInvestor;
         }
@@ -42,6 +44,9 @@ class Investor_controller
         }, self::BASE_URL);
 
         Router::register(function () {
+            if (Application::$authorizedInvestor) {
+                Utility::location(self::BASE_URL);
+            }
             echo Base_view::header('Login');
             echo Investor_view::loginForm();
             echo Base_view::footer();
@@ -51,15 +56,24 @@ class Investor_controller
         }, self::LOGIN_URL, Router::POST_METHOD);
 
         Router::register(function () {
+            if (!Application::$authorizedInvestor) {
+                Utility::location(self::BASE_URL);
+            }
             self::handleLogoutRequest();
         }, self::LOGOUT_URL);
 
         Router::register(function () {
+            if (Application::$authorizedInvestor) {
+                Utility::location(self::BASE_URL);
+            }
             echo Base_view::header('Login');
             echo Investor_view::registerForm();
             echo Base_view::footer();
         }, self::REGISTER_URL, Router::GET_METHOD);
         Router::register(function () {
+            if (Application::$authorizedInvestor) {
+                Utility::location(self::BASE_URL);
+            }
             self::handleRegistrationRequest();
         }, self::REGISTER_URL, Router::POST_METHOD);
         Router::register(function () {
@@ -72,7 +86,7 @@ class Investor_controller
         $investorId = @Investor::getInvestorIdByEmailPassword($_POST['email'], $_POST['password']);
         if ($investorId) {
             session_start();
-            $_SESSION['authorized_investor_id'] = $investorId;
+            $_SESSION[self::SESSION_KEY] = $investorId;
             session_write_close();
             Utility::location(self::BASE_URL);
         }
@@ -82,7 +96,9 @@ class Investor_controller
     static public function handleLogoutRequest()
     {
         session_start();
-        unset($_SESSION['authorized_investor_id']);
+        if (isset($_SESSION[self::SESSION_KEY])) {
+            unset($_SESSION[self::SESSION_KEY]);
+        }
         session_write_close();
         Utility::location();
     }
@@ -95,7 +111,7 @@ class Investor_controller
         if (!Utility::validateEthAddress(@$_POST['eth_address'])) {
             Utility::location(self::REGISTER_URL . '?err=2');
         }
-        if (Investor::isExistInvestorWithParams($_POST['email'], $_POST['eth_address'])) {
+        if (Investor::isExistWithParams($_POST['email'], $_POST['eth_address'])) {
             Utility::location(self::REGISTER_URL . '?err=3');
         }
         $referrerId = 0;
@@ -139,7 +155,7 @@ class Investor_controller
             return false;
         }
 
-        if (Investor::isExistInvestorWithParams($email, $eth_address)) {
+        if (Investor::isExistWithParams($email, $eth_address)) {
             return false;
         }
 
@@ -185,7 +201,7 @@ class Investor_controller
 
     static public function hashPassword($password)
     {
-        return hash('sha256', $password . APPLICATION_ID);
+        return hash('sha256', $password . APPLICATION_ID . 'investor');
     }
 
     static public function urlForRegistration($email, $eth_address, $referrer_id, $password)

@@ -25,32 +25,15 @@ class Deposit
                 `investor_id` int(10) UNSIGNED NOT NULL,
                 `coin` varchar(32) NOT NULL,
                 `txid` varchar(254) NOT NULL,
+                `vout` int(10) NOT NULL,
                 `amount` double(20, 8) NOT NULL,
                 `usd` double(20, 8) NOT NULL,
+                `rate` double(20, 8) NOT NULL,
                 `datetime` datetime(0) NOT NULL,
                 `used_in_minting` tinyint(1) UNSIGNED NOT NULL,
                 `used_in_bounty` tinyint(1) UNSIGNED NOT NULL,
                 PRIMARY KEY (`id`)
             );
         ");
-    }
-
-    /**
-     * check that new nonce bigger than old and update to new
-     * @param string $serverKey
-     * @param int $newNonce
-     * @return bool
-     */
-    static public function checkUpdateNonce($serverKey, $newNonce)
-    {
-        $storageKey = "payment_server_nonce_$serverKey";
-        $nonce = Application::getValue($storageKey);
-        if ($nonce) {
-            if ($nonce >= $newNonce) {
-                return false;
-            }
-        }
-        Application::setValue($storageKey, $newNonce);
-        return true;
     }
 }

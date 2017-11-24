@@ -5,6 +5,7 @@ namespace core\engine;
 use core\models\Deposit;
 use core\models\Investor;
 use core\models\Investor_controller;
+use core\models\PaymentServer;
 use core\models\Wallet;
 use core\views\About_view;
 use core\views\Base_view;
@@ -18,6 +19,7 @@ class Application
      * @var Investor|null
      */
     static public $authorizedInvestor = null;
+    // static public $authorizedAdministrator = null;
 
     static public function init()
     {
@@ -40,6 +42,8 @@ class Application
             Investor::db_init();
             Wallet::db_init();
             Deposit::db_init();
+            // Administrator::db_init();
+            PaymentServer::db_init();
         }
 
         Router::registerDefault(function () {

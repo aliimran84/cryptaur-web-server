@@ -15,6 +15,25 @@ class Investor
     public $eth_address = '';
     public $eth_withdrawn = 0;
 
+    static public function db_init()
+    {
+        DB::query("
+            CREATE TABLE IF NOT EXISTS `investors` (
+                `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `referrer_id` int(10) UNSIGNED NOT NULL,
+                `referrer_code` varchar(32) NOT NULL,
+                `joined_datetime` datetime(0) NOT NULL,
+                `email` varchar(254) NOT NULL,
+                `password_hash` varchar(254) NOT NULL,
+                `eth_address` varchar(50) NOT NULL,
+                `eth_withdrawn` double(20, 8) NOT NULL,
+                `tokens_count` bigint(20) UNSIGNED NOT NULL,
+                `phone` varchar(254) NOT NULL,
+                PRIMARY KEY (`id`)
+            );
+        ");
+    }
+
     static public function getById($id)
     {
         $investor = @DB::get("
@@ -39,25 +58,6 @@ class Investor
         $instance->eth_withdrawn = $investor['eth_withdrawn'];
 
         return $instance;
-    }
-
-    static public function db_init()
-    {
-        DB::query("
-            CREATE TABLE IF NOT EXISTS `investors` (
-                `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-                `referrer_id` int(10) UNSIGNED NOT NULL,
-                `referrer_code` varchar(32) NOT NULL,
-                `joined_datetime` datetime(0) NOT NULL,
-                `email` varchar(254) NOT NULL,
-                `password_hash` varchar(254) NOT NULL,
-                `eth_address` varchar(50) NOT NULL,
-                `eth_withdrawn` double(20, 8) NOT NULL,
-                `tokens_count` bigint(20) UNSIGNED NOT NULL,
-                `phone` varchar(254) NOT NULL,
-                PRIMARY KEY (`id`)
-            );
-        ");
     }
 
     static public function getInvestorIdByEmailPassword($email, $password)
@@ -93,7 +93,7 @@ class Investor
         return (int)$investorId;
     }
 
-    static public function isExistInvestorWithParams($email, $eth_address)
+    static public function isExistWithParams($email, $eth_address)
     {
         return !!@DB::get("
             SELECT * FROM `investors`
