@@ -82,6 +82,45 @@ class Utility
     }
 
     /**
+     * Создает всю структуру папок с правами 0777
+     * Нужна, т.к. mkdir(, 0777) отрезает текущую umask и получается 0755
+     * http://stackoverflow.com/questions/3997641/why-cant-php-create-a-directory-with-777-permissions
+     * @param string $path
+     * @return bool
+     */
+    static public function mkdir_0777($path)
+    {
+        if (is_dir($path)) {
+            return true;
+        }
+        if (is_file($path)) {
+            return false;
+        }
+
+        $pathArr = explode("/", $path);
+
+        if (count($pathArr) == 0)
+            return false;
+
+        if ($pathArr[0] == "")
+            unset($pathArr[0]);
+
+        $currDir = "";
+
+        foreach ($pathArr AS $dir) {
+            $currDir .= "/" . $dir;
+            if (!is_dir($currDir)) {
+                if (!mkdir($currDir, 0777, true))
+                    return false;
+                if (!chmod($currDir, 0777))
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * @param string $file relative path
      * @return bool
      */
@@ -97,6 +136,7 @@ class Utility
         var_dump(self::getRequestDataArr());
         $output = ob_get_clean();
 
+        self::mkdir_0777(dirname("$logsDir/$file"));
         return !!file_put_contents("$logsDir/$file", $output);
     }
 
