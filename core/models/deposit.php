@@ -2,8 +2,8 @@
 
 namespace core\models;
 
-use core\engine\Application;
 use core\engine\DB;
+use core\engine\Utility;
 
 class Deposit
 {
@@ -35,5 +35,10 @@ class Deposit
                 PRIMARY KEY (`id`)
             );
         ");
+    }
+
+    static public function receiveDeposit($amount, $coin, $conf, $txid, $vout, $investorId)
+    {
+        Utility::logOriginalRequest('paymentServerDeposit/' . time());
     }
 }

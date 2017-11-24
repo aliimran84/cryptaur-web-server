@@ -2,6 +2,7 @@
 
 namespace core\models;
 
+use core\controllers\PaymentServer_controller;
 use core\engine\DB;
 use core\engine\Utility;
 
@@ -71,6 +72,7 @@ class Wallet
      */
     static public function registerWallet($investorId, $coin, $address)
     {
+        $coin = strtoupper($coin);
         $existing = @DB::get("
             SELECT * FROM `wallets`
             WHERE
@@ -113,15 +115,11 @@ class Wallet
             return false;
         }
 
-        $lowerCoin = strtolower($coin);
-        $httpPostResult = Utility::httpPost("{$pServer->url}/$lowerCoin/getaddress", ['user' => $investorId]);
-        $response = @json_decode(
-            $httpPostResult,
-            true
-        )['result'];
-        if (!isset($response['pending']) || !isset($response['address'])) {
+        $response = PaymentServer_controller::requestWalletRegistration($pServer, $coin, $investorId);
+        if (!$response) {
             return false;
         }
+
         if ($response['pending'] || !$response['address']) {
             return true;
         }
