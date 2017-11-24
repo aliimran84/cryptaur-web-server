@@ -28,7 +28,6 @@ class PaymentServer_controller
         self::$initialized = true;
 
         Router::register(function () {
-            // administrators can setup only administrator
             if (!Application::$authorizedAdministrator) {
                 Utility::location();
             }

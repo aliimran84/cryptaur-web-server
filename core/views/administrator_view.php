@@ -4,6 +4,7 @@ namespace core\views;
 
 use core\controllers\Administrator_controller;
 use core\models\Administrator;
+use core\models\Coin;
 use core\models\PaymentServer;
 
 class Administrator_view
@@ -20,7 +21,9 @@ class Administrator_view
                         <input type="text" name="email" placeholder="E-MAIL">
                         <input type="password" name="password" placeholder="PASSWORD">
                         <div class="row center">
-                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">LOGIN</button>
+                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                LOGIN
+                            </button>
                             <!--<p>Forgot your account password? <a href="#">Recover</a></p>-->
                         </div>
                     </form>
@@ -49,7 +52,9 @@ class Administrator_view
                             <?= $email ? 'readonly' : '' ?> value="<?= $email ?>">
                         <input type="password" name="password" placeholder="PASSWORD">
                         <div class="row center">
-                            <button type="submit" class="waves-effect waves-light btn btn-send" style="width: 100%">Set</button>
+                            <button type="submit" class="waves-effect waves-light btn btn-send" style="width: 100%">
+                                Set
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -81,7 +86,16 @@ class Administrator_view
     {
         $paymentServer = PaymentServer::getFirst();
         ob_start();
-        echo PaymentServer_view::setForm($paymentServer);
+        ?>
+        <div class="row">
+            <div class="col s12 m6 xl4">
+                <?= PaymentServer_view::setForm($paymentServer) ?>
+            </div>
+            <div class="col s12 m6 xl4">
+                <?= Coin_view::setRatesForm() ?>
+            </div>
+        </div>
+        <?php
         return ob_get_clean();
     }
 }

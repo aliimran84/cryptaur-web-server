@@ -2,6 +2,7 @@
 
 namespace core\engine;
 
+use core\controllers\Coin_controller;
 use core\controllers\Dashboard_controller;
 use core\controllers\Transactions_controller;
 use core\models\Administrator;
@@ -66,6 +67,7 @@ class Application
         PaymentServer_controller::init();
         Dashboard_controller::init();
         Transactions_controller::init();
+        Coin_controller::init();
     }
 
     static private function initTmpDir()

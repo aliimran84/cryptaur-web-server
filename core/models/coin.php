@@ -2,6 +2,8 @@
 
 namespace core\models;
 
+use core\engine\Application;
+
 class Coin
 {
     const ETH_COIN = 'ETH';
@@ -28,4 +30,26 @@ class Coin
         self::BCC_COIN => 10,
         self::DOGE_COIN => 6
     ];
+
+    const RATE_KEY_PREFIX = 'rate_count_of_usd_in_';
+
+    /**
+     * @param string $coin
+     * @param double $rate count of usd in one coin
+     */
+    static public function setRate($coin, $rate)
+    {
+        $coin = strtoupper($coin);
+        Application::setValue(self::RATE_KEY_PREFIX . $coin, $rate);
+    }
+
+    /**
+     * @param string $coin
+     * @return double count of usd in one coin
+     */
+    static public function getRate($coin)
+    {
+        $coin = strtoupper($coin);
+        return Application::getValue(self::RATE_KEY_PREFIX . $coin);
+    }
 }
