@@ -53,6 +53,33 @@ class Deposit
         if ($conf < Coin::MIN_CONF[$upperCoin]) {
             return false;
         }
+
+        $investor = Investor::getById($investorId);
+        if (!$investor) {
+            return true;
+        }
+
+        $rate = Coin::getRate($coin);
+        $usd = $rate * $amount;
+        DB::set("
+        INSERT INTO `deposits`
+        SET
+            `investor_id` = ?,
+            `coin` = ?,
+            `txid` = ?,
+            `vout` = ?,
+            `amount` = ?,
+            `usd` = ?,
+            `rate` = ?,
+            `datetime` = ?
+        ;", [$investorId, $coin, $txid, $vout, $amount, $usd, $rate, DB::timetostr(time())]);
+
+        $wallet = Wallet::getByInvestoridCoin($investorId, $coin);
+        if (!$wallet) {
+            return true;
+        }
+        $wallet->addToWallet($amount, $usd);
+
         return true;
     }
 }

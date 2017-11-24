@@ -31,6 +31,25 @@ class Wallet
     }
 
     /**
+     * @param double $amount
+     * @param double $usdUsed
+     */
+    public function addToWallet($amount, $usdUsed)
+    {
+        $this->balance += $amount;
+        $this->usdUsed += $usdUsed;
+        DB::set("
+            UPDATE `wallets`
+            SET
+                `balance` = ?,
+                `usdUsed` = ?
+            WHERE
+                `id` = ?
+            LIMIT 1
+        ;", [$this->balance, $this->usdUsed, $this->id]);
+    }
+
+    /**
      * @param int $investorId
      * @param string $coin
      * @param bool $withoutRegistration
