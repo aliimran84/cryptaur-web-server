@@ -108,18 +108,4 @@ class PaymentServer
         DB::set("UPDATE `payment_servers` SET `nonce`=? WHERE `keyid`=? LIMIT 1;", [$newNonce, $keyId]);
         return true;
     }
-
-    /**
-     * @param string $keyId
-     * @param string $message full php-in
-     * @return bool|string
-     */
-    static public function messageHmacHash($keyId, $message)
-    {
-        $pServer = self::getByKeyId($keyId);
-        if (!$pServer) {
-            return false;
-        }
-        return hash_hmac('sha256', $message, pack("H*", $pServer->secretkey));
-    }
 }

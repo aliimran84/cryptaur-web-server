@@ -34,4 +34,18 @@ class PaymentServer_controller
         PaymentServer::set(trim($_POST['url'], '/'), $_POST['keyid'], $_POST['secretkey']);
         Utility::location(Administrator_controller::COINS_SETTINGS);
     }
+
+    /**
+     * @param string $keyId
+     * @param string $message full php-in
+     * @return bool|string
+     */
+    static public function messageHmacHash($keyId, $message)
+    {
+        $pServer = PaymentServer::getByKeyId($keyId);
+        if (!$pServer) {
+            return false;
+        }
+        return hash_hmac('sha256', $message, pack("H*", $pServer->secretkey));
+    }
 }
