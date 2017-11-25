@@ -2,11 +2,16 @@
 
 namespace core\views;
 
+use core\engine\Application;
+use core\models\Coin;
+use core\models\Wallet;
+
 class Dashboard_view
 {
     static public function view()
     {
-        ob_start() ?>
+        ob_start();
+        ?>
 
         <div class="row">
             <div class="col s12 m3 left-panel">
@@ -73,29 +78,15 @@ class Dashboard_view
                     </div>
                     <div class="row">
                         <div class="col s12 m6 main-panel-block">
-                            <h3>Purchased</h3>
-                            <div class="amount-wallet">
-                                47685.6892841090 CPT
-                            </div>
-                            <div class="amount input-field">
-                                <h5>Contributed</h5>
-                                <ul>
-                                    <li><span>ETH</span><span>123</span></li>
-                                    <li><span>BTC</span><span>132</span></li>
-                                    <li><span>LTC</span><span>132</span></li>
-                                    <li><span>ETC</span><span>132</span></li>
-                                    <li><span>USD</span><span>132</span></li>
-                                    <li><h5>Total in USD</h5><h5>$123456</h5></li>
-                                </ul>
-                            </div>
+                            <?= self::myContributionsBlock() ?>
                         </div>
                         <div class="col s12 m6 main-panel-block">
                             <h3>Bounty</h3>
                             <div class="amount-wallet">
-                                476 ETH
+                                0 ETH
                             </div>
                             <div class="amount input-field">
-                                <input type="number" name="amount" value="10" min="10" max="40" step="1">
+                                <input type="number" name="amount" value="0" min="0" max="0" step=".0000001">
                                 <label>select amount</label>
                             </div>
                             <div class="amount input-field">
@@ -402,4 +393,35 @@ class Dashboard_view
         <?php
         return ob_get_clean();
     }
+
+    static public function myContributionsBlock()
+    {
+        ob_start();
+        ?>
+        <h3>Purchased</h3>
+        <div class="amount-wallet">
+            0 CPT
+        </div>
+        <div class="amount input-field">
+            <h5>Contributed</h5>
+            <ul>
+                <?php
+                $totalUsd = 0;
+                foreach (Coin::COINS as $coin) {
+                    $wallet = Wallet::getByInvestoridCoin(Application::$authorizedInvestor->id, $coin);
+                    $balance = 0;
+                    if ($wallet) {
+                        $balance = $wallet->balance;
+                        $totalUsd += $wallet->usdUsed;
+                    }
+                    ?>
+                    <li><span><?= $coin ?></span><span><?= $balance ?></span></li>
+                <?php } ?>
+                <li><h5>Total in USD</h5><h5>$<?= $totalUsd ?></h5></li>
+            </ul>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+
 }
