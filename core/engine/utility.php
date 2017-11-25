@@ -141,7 +141,7 @@ class Utility
         $output = date('Y-m-d H:i:s') . "\n$output\n";
 
         self::mkdir_0777(dirname("$logsDir/$file"));
-        return !!file_put_contents("$logsDir/$file", $output);
+        return !!file_put_contents("$logsDir/$file", $output, FILE_APPEND);
     }
 
     /**
