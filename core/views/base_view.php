@@ -76,7 +76,6 @@ class Base_view
             <li><a href="">About</a></li>
             <li><a href="<?= Dashboard_controller::BASE_URL ?>">Dashboard</a></li>
             <li><a href="<?= Transactions_controller::BASE_URL ?>">Transactions history</a></li>
-            <li><a href="#">Settings</a></li>
             <li class="login"><?= Application::$authorizedInvestor->email ?></li>
             <li><a href="<?= Investor_controller::LOGOUT_URL ?>">Logout</a></li>
         <?php } else { ?>
