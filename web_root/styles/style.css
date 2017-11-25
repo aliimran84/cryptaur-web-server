@@ -571,7 +571,7 @@ footer .row {
 }
 .dashboard .content .left-panel .current-stage .shares {
     margin-top: 20px;
-    padding: 0 60px;
+    padding: 0 5%;
 }
 .dashboard .content .left-panel .stage .btn-learn-more {
     padding: 0;
