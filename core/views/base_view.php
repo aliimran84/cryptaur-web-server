@@ -22,9 +22,9 @@ class Base_view
             <base href="<?= APPLICATION_URL ?>/">
             <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
             <link rel="shortcut icon" href="favicon.png" type="image/png">
-            <link rel="stylesheet" href="styles/materialize.min.css">
+            <link rel="stylesheet" href="styles/materialize.min.css?<?= md5_file(PATH_TO_WEB_ROOT_DIR . '/styles/materialize.min.css') ?>">
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-            <link rel="stylesheet" href="styles/bundle.min.css?rev=6f325e308238c8ac4ee386583ae4b092">
+            <link rel="stylesheet" href="styles/bundle.min.css?<?= md5_file(PATH_TO_WEB_ROOT_DIR . '/styles/bundle.min.css') ?>">
             <script type="text/javascript" src="scripts/jquery-3.2.1.min.js"></script>
         </head>
         <body>
@@ -111,8 +111,8 @@ class Base_view
         </footer>
         </div>
 
-        <script type="text/javascript" src="scripts/materialize.min.js"></script>
-        <script type="text/javascript" src="scripts/script.js"></script>
+        <script type="text/javascript" src="scripts/materialize.min.js?<?= md5_file(PATH_TO_WEB_ROOT_DIR . '/scripts/materialize.min.js') ?>"></script>
+        <script type="text/javascript" src="scripts/script.js?<?= md5_file(PATH_TO_WEB_ROOT_DIR . '/scripts/script.js') ?>"></script>
 
         </body>
         </html>

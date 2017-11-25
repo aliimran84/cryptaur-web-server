@@ -33,6 +33,7 @@ class Application
         define('PATH_TO_WORKING_DIR', __DIR__ . '/../../working_dir');
         define('PATH_TO_TMP_DIR', __DIR__ . '/../../working_dir/tmp');
         define('PATH_TO_THIRD_PARTY_DIR', __DIR__ . '/../../third_party');
+        define('PATH_TO_WEB_ROOT_DIR', __DIR__ . '/../../web_root');
 
         Configuration::requireLoadConfigFromFile(PATH_TO_WORKING_DIR . '/config.json');
 
