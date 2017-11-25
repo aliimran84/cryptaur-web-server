@@ -46,16 +46,20 @@ class Transactions_view
                                     </div>
                                     <div class="col s4 collapsible-col">
                                         <?php
-                                        if ($deposit->used_in_bounty) {
-                                            echo 'Used in bounty';
+                                        if ($deposit->is_donation) {
+                                            echo 'Transferred as donation';
                                         } else {
-                                            echo 'Not used in bounty';
-                                        }
-                                        echo '<br>';
-                                        if ($deposit->used_in_minting) {
-                                            echo 'Used in minting';
-                                        } else {
-                                            echo 'Not used in minting';
+                                            if ($deposit->used_in_bounty) {
+                                                echo 'Used in bounty';
+                                            } else {
+                                                echo 'Not used in bounty';
+                                            }
+                                            echo '<br>';
+                                            if ($deposit->used_in_minting) {
+                                                echo 'Used in minting';
+                                            } else {
+                                                echo 'Not used in minting';
+                                            }
                                         }
                                         ?>
                                     </div>

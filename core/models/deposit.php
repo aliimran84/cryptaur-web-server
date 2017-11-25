@@ -2,6 +2,7 @@
 
 namespace core\models;
 
+use core\engine\Application;
 use core\engine\DB;
 use core\engine\Utility;
 
@@ -16,8 +17,9 @@ class Deposit
     public $rate = 0;
     public $datetime = 0;
     public $investor_id = 0;
-    public $used_in_minting = 0;
-    public $used_in_bounty = 0;
+    public $is_donation = false;
+    public $used_in_minting = false;
+    public $used_in_bounty = false;
 
     const MINIMAL_TOKENS_FOR_MINTING_KEY = 'minimal_tokens_for_minting';
     const MINIMAL_TOKENS_FOR_BOUNTY_KEY = 'minimal_tokens_for_bounty';
@@ -35,6 +37,7 @@ class Deposit
                 `usd` double(20, 8) DEFAULT '-1',
                 `rate` double(20, 8) DEFAULT '-1',
                 `datetime` datetime(0) NOT NULL,
+                `is_donation` tinyint(1) UNSIGNED DEFAULT '0',
                 `used_in_minting` tinyint(1) UNSIGNED DEFAULT '0',
                 `used_in_bounty` tinyint(1) UNSIGNED DEFAULT '0',
                 PRIMARY KEY (`id`)
@@ -58,6 +61,7 @@ class Deposit
         $instance->usd = $data['usd'];
         $instance->rate = $data['rate'];
         $instance->datetime = strtotime($data['datetime']);
+        $instance->is_donation = (bool)$data['is_donation'];
         $instance->used_in_minting = (bool)$data['used_in_minting'];
         $instance->used_in_bounty = (bool)$data['used_in_bounty'];
         return $instance;
@@ -87,18 +91,31 @@ class Deposit
 
         $rate = Coin::getRate($coin);
         $usd = $rate * $amount;
+
+        $tokenRate = Coin::getRate(Coin::TOKEN);
+        $minimalTokensForMinting = Application::getValue(self::MINIMAL_TOKENS_FOR_MINTING_KEY);
+
+        $depositTokens = $usd / $tokenRate;
+
+        $isDonation = $depositTokens < ($minimalTokensForMinting / 10);
+
         DB::set("
-        INSERT INTO `deposits`
-        SET
-            `investor_id` = ?,
-            `coin` = ?,
-            `txid` = ?,
-            `vout` = ?,
-            `amount` = ?,
-            `usd` = ?,
-            `rate` = ?,
-            `datetime` = ?
-        ;", [$investorId, $coin, $txid, $vout, $amount, $usd, $rate, DB::timetostr(time())]);
+            INSERT INTO `deposits`
+            SET
+                `investor_id` = ?,
+                `coin` = ?,
+                `txid` = ?,
+                `vout` = ?,
+                `amount` = ?,
+                `usd` = ?,
+                `rate` = ?,
+                `datetime` = ?,
+                `is_donation` = ?
+        ;", [$investorId, $coin, $txid, $vout, $amount, $usd, $rate, DB::timetostr(time()), $isDonation]);
+
+        if ($isDonation) {
+            return true;
+        }
 
         $wallet = Wallet::getByInvestoridCoin($investorId, $coin);
         if (!$wallet) {
