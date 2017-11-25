@@ -25,6 +25,8 @@ class PaymentServer
                 `nonce` int(10) UNSIGNED DEFAULT '0',
                 `keyid` varchar(254) DEFAULT '',
                 `secretkey` varchar(254) DEFAULT '',
+                `backend_eth_address` varchar(254) DEFAULT '',
+                `backend_eth_password` varchar(254) DEFAULT '',
                 PRIMARY KEY (`id`),
                 UNIQUE KEY `keyid` (`keyid`)
             );
