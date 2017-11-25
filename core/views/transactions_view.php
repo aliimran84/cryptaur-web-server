@@ -20,7 +20,7 @@ class Transactions_view
                 <h3>There is no transaction yet</h3>
                 <?= Wallet_view::myContribution() ?>
                 <?php
-            } else foreach ($deposits as $deposit) {
+            } else {
                 ?>
                 <div class="head-collapsible">
                     <div class="row">
@@ -32,51 +32,55 @@ class Transactions_view
                     </div>
                 </div>
                 <ul class="collapsible" data-collapsible="accordion">
-                    <li>
-                        <div class="collapsible-header">
-                            <div class="row">
-                                <div class="col s1 collapsible-col center">
-                                    Send
-                                </div>
-                                <div class="col s4 collapsible-col">
-                                    <?= DB::timetostr($deposit->datetime) ?>
-                                </div>
-                                <div class="col s4 collapsible-col">
-                                    <?php
-                                    if ($deposit->used_in_bounty) {
-                                        echo 'Used in bounty';
-                                    } else {
-                                        echo 'Not used in bounty';
-                                    }
-                                    echo '<br>';
-                                    if ($deposit->used_in_minting) {
-                                        echo 'Used in minting';
-                                    } else {
-                                        echo 'Not used in minting';
-                                    }
-                                    ?>
-                                </div>
-                                <div class="col s2 collapsible-col">
-                                    <?= $deposit->amount ?> <?= $deposit->coin ?>
-                                </div>
-                                <div class="col s1 collapsible-col">
-                                    <i class="material-icons">keyboard_arrow_right</i>
+                    <?php
+                    foreach ($deposits as $deposit) {
+                        ?>
+                        <li>
+                            <div class="collapsible-header">
+                                <div class="row">
+                                    <div class="col s1 collapsible-col center">
+                                        Send
+                                    </div>
+                                    <div class="col s4 collapsible-col">
+                                        <?= DB::timetostr($deposit->datetime) ?>
+                                    </div>
+                                    <div class="col s4 collapsible-col">
+                                        <?php
+                                        if ($deposit->used_in_bounty) {
+                                            echo 'Used in bounty';
+                                        } else {
+                                            echo 'Not used in bounty';
+                                        }
+                                        echo '<br>';
+                                        if ($deposit->used_in_minting) {
+                                            echo 'Used in minting';
+                                        } else {
+                                            echo 'Not used in minting';
+                                        }
+                                        ?>
+                                    </div>
+                                    <div class="col s2 collapsible-col">
+                                        <?= $deposit->amount ?> <?= $deposit->coin ?>
+                                    </div>
+                                    <div class="col s1 collapsible-col">
+                                        <i class="material-icons">keyboard_arrow_right</i>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="collapsible-body">
-                            <div class="row">
-                                <div class="col s1"></div>
-                                <div class="col s10">
-                                    <p>Converted to <?= $deposit->usd ?> USD</p>
-                                    <p>Order Id:#<?= $deposit->id ?></p>
-                                    <p>txid: <?= $deposit->txid ?></p>
-                                    <p>vout: <?= $deposit->vout ?></p>
+                            <div class="collapsible-body">
+                                <div class="row">
+                                    <div class="col s1"></div>
+                                    <div class="col s10">
+                                        <p>Converted to <?= $deposit->usd ?> USD</p>
+                                        <p>Order Id:#<?= $deposit->id ?></p>
+                                        <p>txid: <?= $deposit->txid ?></p>
+                                        <p>vout: <?= $deposit->vout ?></p>
+                                    </div>
+                                    <div class="col s1"></div>
                                 </div>
-                                <div class="col s1"></div>
                             </div>
-                        </div>
-                    </li>
+                        </li>
+                    <?php } ?>
                 </ul>
             <?php } ?>
         </div>
