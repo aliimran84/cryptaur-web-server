@@ -145,206 +145,7 @@ class Dashboard_view
                     </ul>
                 </div>
             </div>
-            <div class="col s12 m9 main-panel">
-                <section class="my-group">
-                    <div class="row">
-                        <h3>My group</h3>
-                    </div>
-                    <div class="row">
-                        <div class="col s12 m4 main-panel-block">
-                            <h3>Raised by group: US$ 123,567.89</h3>
-                        </div>
-                        <div class="col s12 m4 main-panel-block">
-                            <h3>Group participants: 247</h3>
-                        </div>
-                        <div class="col s12 m4 main-panel-block">
-                            <div class="input-field">
-                                <button class="waves-effect waves-light btn ">Invite friends</button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="main-panel-block tree">
-                            <ul class="first-level">
-                                <li class="first-level">
-                                    <div class="tree-block">
-                                        <h2>Sponsor name</h2>
-                                        <p>Contributed</p>
-                                        <h3>US$ 12399.546</h3>
-                                    </div>
-                                    <div class="line-bottom"></div>
-                                </li>
-                                <li>
-                                    <ul class="second-level">
-                                        <li class="second-level">
-                                            <div class="tree-block">
-                                                <h2>My name</h2>
-                                                <p>Contributed</p>
-                                                <h3>US$ 12399.546</h3>
-                                            </div>
-                                            <div class="line-left"></div>
-                                            <div class="line-bottom"></div>
-                                        </li>
-                                        <li>
-                                            <ul class="third-level">
-                                                <li class="third-level">
-                                                    <div class="tree-block">
-                                                        <h2>My name</h2>
-                                                        <p>Contributed</p>
-                                                        <h3>US$ 12399.546</h3>
-                                                    </div>
-                                                    <div class="line-right"></div>
-                                                    <div class="participants">
-                                                        <h2>15 participants in level<i class="material-icons">expand_more</i>
-                                                        </h2>
-                                                    </div>
-                                                    <div class="line-left"></div>
-                                                </li>
-                                                <li class="third-level">
-                                                    <div class="tree-block">
-                                                        <h2>My name</h2>
-                                                        <p>Contributed</p>
-                                                        <h3>US$ 12399.546</h3>
-                                                    </div>
-                                                    <div class="line-right"></div>
-                                                    <div class="participants">
-                                                        <h2>46 participants in level<i class="material-icons">expand_more</i>
-                                                        </h2>
-                                                    </div>
-                                                    <div class="line-left"></div>
-                                                </li>
-                                                <li class="third-level">
-                                                    <div class="tree-block">
-                                                        <h2>My name</h2>
-                                                        <p>Contributed</p>
-                                                        <h3>US$ 12399.546</h3>
-                                                    </div>
-                                                    <div class="line-right"></div>
-                                                    <div class="participants">
-                                                        <h2>8 participants in
-                                                            level<i class="material-icons">expand_more</i></h2>
-                                                    </div>
-                                                    <div class="line-left"></div>
-                                                </li>
-                                                <li class="third-level">
-                                                    <div class="tree-block">
-                                                        <h2>My name</h2>
-                                                        <p>Contributed</p>
-                                                        <h3>US$ 12399.546</h3>
-                                                    </div>
-                                                    <div class="line-right"></div>
-                                                    <div class="participants">
-                                                        <h2>17 participants in level<i class="material-icons">expand_more</i>
-                                                        </h2>
-                                                    </div>
-                                                    <div class="line-left"></div>
-                                                </li>
-                                                <li class="third-level">
-                                                    <div class="tree-block">
-                                                        <h2>My name</h2>
-                                                        <p>Contributed</p>
-                                                        <h3>US$ 12399.546</h3>
-                                                    </div>
-                                                    <div class="line-right"></div>
-                                                    <div class="participants">
-                                                        <h2>150 participants in level<i class="material-icons">expand_more</i>
-                                                        </h2>
-                                                    </div>
-                                                    <div class="line-left"></div>
-                                                </li>
-                                                <li class="third-level">
-                                                    <div class="tree-block">
-                                                        <h2>My name</h2>
-                                                        <p>Contributed</p>
-                                                        <h3>US$ 12399.546</h3>
-                                                    </div>
-                                                    <div class="line-right"></div>
-                                                    <div class="participants">
-                                                        <h2>79 participants in level<i class="material-icons">expand_more</i>
-                                                        </h2>
-                                                    </div>
-                                                    <div class="line-left"></div>
-                                                    <div class="line-bottom"></div>
-                                                </li>
-                                                <li>
-                                                    <ul class="fourth-level">
-                                                        <li class="fourth-level">
-                                                            <div class="tree-block">
-                                                                <h2>My name</h2>
-                                                                <p>Contributed</p>
-                                                                <h3>US$ 12399.546</h3>
-                                                            </div>
-                                                            <div class="line-right"></div>
-                                                            <div class="participants">
-                                                                <h2>10 participants in level<i class="material-icons">expand_more</i>
-                                                                </h2>
-                                                            </div>
-                                                            <div class="line-left"></div>
-                                                        </li>
-                                                        <li class="fourth-level">
-                                                            <div class="tree-block">
-                                                                <h2>My name</h2>
-                                                                <p>Contributed</p>
-                                                                <h3>US$ 12399.546</h3>
-                                                            </div>
-                                                            <div class="line-right"></div>
-                                                            <div class="participants">
-                                                                <h2>17 participants in level<i class="material-icons">expand_more</i>
-                                                                </h2>
-                                                            </div>
-                                                            <div class="line-left"></div>
-                                                        </li>
-                                                        <li class="fourth-level">
-                                                            <div class="tree-block">
-                                                                <h2>My name</h2>
-                                                                <p>Contributed</p>
-                                                                <h3>US$ 12399.546</h3>
-                                                            </div>
-                                                            <div class="line-right"></div>
-                                                            <div class="participants">
-                                                                <h2>30 participants in level<i class="material-icons">expand_more</i>
-                                                                </h2>
-                                                            </div>
-                                                            <div class="line-left"></div>
-                                                        </li>
-                                                        <li class="fourth-level">
-                                                            <div class="tree-block">
-                                                                <h2>My name</h2>
-                                                                <p>Contributed</p>
-                                                                <h3>US$ 12399.546</h3>
-                                                            </div>
-                                                            <div class="line-right"></div>
-                                                            <div class="participants">
-                                                                <h2>7 participants in level<i class="material-icons">expand_more</i>
-                                                                </h2>
-                                                            </div>
-                                                            <div class="line-left"></div>
-                                                        </li>
-                                                        <li class="fourth-level">
-                                                            <div class="tree-block">
-                                                                <h2>My name</h2>
-                                                                <p>Contributed</p>
-                                                                <h3>US$ 12399.546</h3>
-                                                            </div>
-                                                            <div class="line-right"></div>
-                                                            <div class="participants">
-                                                                <h2>10 participants in level<i class="material-icons">expand_more</i>
-                                                                </h2>
-                                                            </div>
-                                                            <div class="line-left"></div>
-                                                        </li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-
-                    </div>
-                </section>
-            </div>
+            <?= self::myGroup() ?>
         </div>
 
         <?php
@@ -377,6 +178,170 @@ class Dashboard_view
                 <li><h5>Total in USD</h5><h5>$<?= $totalUsd ?></h5></li>
             </ul>
         </div>
+        <?php
+        return ob_get_clean();
+    }
+
+    static public function myGroup()
+    {
+        ob_start();
+        ?>
+
+        <div class="col s12 m9 main-panel">
+            <section class="my-group">
+                <div class="row">
+                    <h3>My group</h3>
+                </div>
+                <div class="row">
+                    <div class="col s12 m4 main-panel-block">
+                        <h3>Raised by group: US$ 123,567.89</h3>
+                    </div>
+                    <div class="col s12 m4 main-panel-block">
+                        <h3>Group participants: 247</h3>
+                    </div>
+                    <div class="col s12 m4 main-panel-block">
+                        <div class="input-field">
+                            <button class="waves-effect waves-light btn ">Invite friends</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="main-panel-block tree">
+                        <ul class="first-level">
+                            <li class="first-level">
+                                <div class="tree-block">
+                                    <h2>Sponsor name</h2>
+                                    <p>Contributed</p>
+                                    <h3>US$ 12399.546</h3>
+                                </div>
+                                <div class="line-bottom"></div>
+                            </li>
+                            <li>
+                                <ul class="second-level">
+                                    <li class="second-level participants">
+                                        <div class="tree-block">
+                                            <h2>My name</h2>
+                                            <p>Contributed</p>
+                                            <h3>US$ 12399.546</h3>
+                                        </div>
+                                        <div class="line-right"></div>
+                                        <div class="participants-block">
+                                            <h2>6 participants in level<i class="material-icons">expand_more</i></h2>
+                                        </div>
+                                        <div class="line-left"></div>
+                                        <div class="line-bottom"></div>
+                                    </li>
+                                    <li>
+                                        <ul class="third-level participants">
+                                            <li class="third-level">
+                                                <div class="tree-block">
+                                                    <h2>My name</h2>
+                                                    <p>Contributed</p>
+                                                    <h3>US$ 12399.546</h3>
+                                                </div>
+                                                <div class="line-left"></div>
+                                            </li>
+                                            <li class="third-level">
+                                                <div class="tree-block">
+                                                    <h2>My name</h2>
+                                                    <p>Contributed</p>
+                                                    <h3>US$ 12399.546</h3>
+                                                </div>
+                                                <div class="line-left"></div>
+                                            </li>
+                                            <li class="third-level">
+                                                <div class="tree-block">
+                                                    <h2>My name</h2>
+                                                    <p>Contributed</p>
+                                                    <h3>US$ 12399.546</h3>
+                                                </div>
+                                                <div class="line-left"></div>
+                                            </li>
+                                            <li class="third-level">
+                                                <div class="tree-block">
+                                                    <h2>My name</h2>
+                                                    <p>Contributed</p>
+                                                    <h3>US$ 12399.546</h3>
+                                                </div>
+                                                <div class="line-left"></div>
+                                            </li>
+                                            <li class="third-level">
+                                                <div class="tree-block">
+                                                    <h2>My name</h2>
+                                                    <p>Contributed</p>
+                                                    <h3>US$ 12399.546</h3>
+                                                </div>
+                                                <div class="line-left"></div>
+                                            </li>
+                                            <li class="third-level participants">
+                                                <div class="tree-block">
+                                                    <h2>My name</h2>
+                                                    <p>Contributed</p>
+                                                    <h3>US$ 12399.546</h3>
+                                                </div>
+                                                <div class="line-right"></div>
+                                                <div class="participants-block">
+                                                    <h2>5 participants in level<i class="material-icons">expand_more</i>
+                                                    </h2>
+                                                </div>
+                                                <div class="line-left"></div>
+                                                <div class="line-bottom"></div>
+                                            </li>
+                                            <li>
+                                                <ul class="fourth-level participants">
+                                                    <li class="fourth-level">
+                                                        <div class="tree-block">
+                                                            <h2>My name</h2>
+                                                            <p>Contributed</p>
+                                                            <h3>US$ 12399.546</h3>
+                                                        </div>
+                                                        <div class="line-left"></div>
+                                                    </li>
+                                                    <li class="fourth-level">
+                                                        <div class="tree-block">
+                                                            <h2>My name</h2>
+                                                            <p>Contributed</p>
+                                                            <h3>US$ 12399.546</h3>
+                                                        </div>
+                                                        <div class="line-left"></div>
+                                                    </li>
+                                                    <li class="fourth-level">
+                                                        <div class="tree-block">
+                                                            <h2>My name</h2>
+                                                            <p>Contributed</p>
+                                                            <h3>US$ 12399.546</h3>
+                                                        </div>
+                                                        <div class="line-left"></div>
+                                                    </li>
+                                                    <li class="fourth-level">
+                                                        <div class="tree-block">
+                                                            <h2>My name</h2>
+                                                            <p>Contributed</p>
+                                                            <h3>US$ 12399.546</h3>
+                                                        </div>
+                                                        <div class="line-left"></div>
+                                                    </li>
+                                                    <li class="fourth-level">
+                                                        <div class="tree-block">
+                                                            <h2>My name</h2>
+                                                            <p>Contributed</p>
+                                                            <h3>US$ 12399.546</h3>
+                                                        </div>
+                                                        <div class="line-left"></div>
+                                                    </li>
+                                                </ul>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </section>
+        </div>
+
         <?php
         return ob_get_clean();
     }

@@ -10,7 +10,7 @@ use core\controllers\Investor_controller;
 
 class Base_view
 {
-    static public function header($title = '', $bodyClass = '')
+    static public function header($title = '', $contentClass = '')
     {
         ob_start();
         ?>
@@ -27,13 +27,13 @@ class Base_view
             <link rel="stylesheet" href="styles/bundle.min.css?rev=6f325e308238c8ac4ee386583ae4b092">
             <script type="text/javascript" src="scripts/jquery-3.2.1.min.js"></script>
         </head>
-        <body class="<?= $bodyClass ?>">
+        <body>
 
         <nav>
             <?= self::nav() ?>
         </nav>
         <div class="wrapper">
-        <div class="content">
+        <div class="content <?= $contentClass ?>">
 
         <?php
         return ob_get_clean();

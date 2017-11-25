@@ -44,4 +44,15 @@ $(document).ready(function(){
         heightLineBottom += sixthLevel[i].clientHeight + marginTop;
     }
     $('li.fifth-level>.line-bottom').css('height',heightLineBottom);
+
+    $('.dashboard .participants-block i').click(function () {
+        var element = $(this).closest('.participants').parent().find('ul.participants')[0];
+        if ($(element).hasClass('close')) {
+            $($(this).closest('.participants').find('.line-bottom')[0]).css('display','block');
+            $(element).removeClass('close');
+        } else {
+            $($(this).closest('.participants').find('.line-bottom')[0]).css('display','none');
+            $(element).addClass('close');
+        }
+    });
 });
