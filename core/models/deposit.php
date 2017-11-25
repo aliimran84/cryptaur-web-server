@@ -19,6 +19,9 @@ class Deposit
     public $used_in_minting = 0;
     public $used_in_bounty = 0;
 
+    const MINIMAL_TOKENS_FOR_MINTING_KEY = 'minimal_tokens_for_minting';
+    const MINIMAL_TOKENS_FOR_BOUNTY_KEY = 'minimal_tokens_for_bounty';
+
     static public function db_init()
     {
         DB::query("

@@ -4,18 +4,18 @@ namespace core\engine;
 
 use core\controllers\Coin_controller;
 use core\controllers\Dashboard_controller;
+use core\controllers\Deposit_controller;
 use core\controllers\Transactions_controller;
+use core\controllers\Administrator_controller;
+use core\controllers\Investor_controller;
+use core\controllers\PaymentServer_controller;
 use core\models\Administrator;
 use core\models\Deposit;
 use core\models\Investor;
 use core\models\PaymentServer;
 use core\models\Wallet;
-use core\controllers\Administrator_controller;
-use core\controllers\Investor_controller;
-use core\controllers\PaymentServer_controller;
 use core\views\About_view;
 use core\views\Base_view;
-use core\views\Dashboard_view;
 use core\views\Wallet_view;
 
 class Application
@@ -68,6 +68,7 @@ class Application
         Dashboard_controller::init();
         Transactions_controller::init();
         Coin_controller::init();
+        Deposit_controller::init();
     }
 
     static private function initTmpDir()

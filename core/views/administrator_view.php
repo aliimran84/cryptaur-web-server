@@ -94,6 +94,9 @@ class Administrator_view
             <div class="col s12 m6 xl4">
                 <?= Coin_view::setRatesForm() ?>
             </div>
+            <div class="col s12 m6 xl4">
+                <?= Deposit_view::setMinimalsForm() ?>
+            </div>
         </div>
         <?php
         return ob_get_clean();
