@@ -25,9 +25,8 @@ class Transactions_view
                 <div class="head-collapsible">
                     <div class="row">
                         <div class="col s1 collapsible-col center">Type</div>
-                        <div class="col s2 collapsible-col">Date</div>
+                        <div class="col s4 collapsible-col">Date</div>
                         <div class="col s4 collapsible-col">Description</div>
-                        <div class="col s2 collapsible-col center">Status</div>
                         <div class="col s2 collapsible-col">Amount</div>
                         <div class="col s1 collapsible-col"></div>
                     </div>
@@ -39,14 +38,10 @@ class Transactions_view
                                 <div class="col s1 collapsible-col center">
                                     Send
                                 </div>
-                                <div class="col s2 collapsible-col">
+                                <div class="col s4 collapsible-col">
                                     <?= DB::timetostr($deposit->datetime) ?>
                                 </div>
                                 <div class="col s4 collapsible-col">
-
-
-                                </div>
-                                <div class="col s2 collapsible-col center">
                                     <?php
                                     if ($deposit->used_in_bounty) {
                                         echo 'Used in bounty';
