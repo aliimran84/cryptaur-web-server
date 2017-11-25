@@ -10,8 +10,10 @@ class Deposit
     public $id = 0;
     public $coin = '';
     public $txid = '';
+    public $vout = 0;
     public $amount = 0;
     public $usd = 0;
+    public $rate = 0;
     public $datetime = 0;
     public $investor_id = 0;
     public $used_in_minting = 0;
@@ -35,6 +37,27 @@ class Deposit
                 PRIMARY KEY (`id`)
             );
         ");
+    }
+
+    /**
+     * @param array $data
+     * @return Deposit
+     */
+    static public function constructFromDbData($data)
+    {
+        $instance = new Deposit();
+        $instance->id = $data['id'];
+        $instance->investor_id = $data['investor_id'];
+        $instance->coin = $data['coin'];
+        $instance->txid = $data['txid'];
+        $instance->vout = $data['vout'];
+        $instance->amount = $data['amount'];
+        $instance->usd = $data['usd'];
+        $instance->rate = $data['rate'];
+        $instance->datetime = strtotime($data['datetime']);
+        $instance->used_in_minting = (bool)$data['used_in_minting'];
+        $instance->used_in_bounty = (bool)$data['used_in_bounty'];
+        return $instance;
     }
 
     /**
@@ -81,5 +104,21 @@ class Deposit
         $wallet->addToWallet($amount, $usd);
 
         return true;
+    }
+
+    /**
+     * @param int $investorId
+     * @return Deposit[]
+     */
+    static public function investorDeposits($investorId)
+    {
+        $deposits = [];
+        $db_deposits = DB::get("SELECT * FROM `deposits` WHERE `investor_id` = ?", [$investorId]);
+        foreach ($db_deposits as $db_deposit) {
+            $deposit = self::constructFromDbData($db_deposit);
+            $deposits[$deposit->id] = $deposit;
+        }
+
+        return $deposits;
     }
 }
