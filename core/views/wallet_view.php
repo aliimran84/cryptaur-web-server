@@ -86,9 +86,17 @@ class Wallet_view
                                 window.coinsRate = <?= json_encode($coinsRates, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
                                 window.currentCoin = '';
                                 window.onAmountChange = function (input) {
-                                    var val = parseFloat($(input).val());
-                                    if (!val) {
-                                        val = 0;
+                                    var text = $(input).val();
+                                    if (text.length === 0) {
+                                        return false;
+                                    }
+                                    var val = parseFloat(text);
+                                    if ('' + val !== text) {
+                                        $(input).val(val);
+                                        return;
+                                    } else if (val < 0) {
+                                        $(input).val(-val);
+                                        return;
                                     }
                                     $('#selected_amount').text(val);
                                     var usd = window.coinsRate[window.currentCoin] * val
