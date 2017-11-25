@@ -103,7 +103,9 @@ class DB
 
         $types = '';
         foreach ($values as $value) {
-            if (is_int($value)) {
+            if (is_bool($value)) {
+                $types .= 'i';
+            } elseif (is_int($value)) {
                 $types .= 'i';
             } elseif (is_double($value)) {
                 $types .= 'd';
