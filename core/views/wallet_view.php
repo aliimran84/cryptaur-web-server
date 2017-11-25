@@ -10,7 +10,7 @@ class Wallet_view
 {
     static private $already_myContribution = false;
 
-    static public function myContribution()
+    static public function newContribution()
     {
         if (self::$already_myContribution) {
             return '<a href="#my-contribution-section">My Contribution</a>';

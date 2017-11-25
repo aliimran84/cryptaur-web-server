@@ -57,7 +57,7 @@ class Application
             echo Base_view::header();
             echo About_view::stageOne();
             if (Application::$authorizedInvestor) {
-                echo Wallet_view::myContribution();
+                echo Wallet_view::newContribution();
             }
             echo Base_view::footer();
         });

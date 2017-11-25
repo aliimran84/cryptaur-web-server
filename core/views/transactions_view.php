@@ -18,7 +18,7 @@ class Transactions_view
             if (!$deposits) {
                 ?>
                 <h3>There is no transaction yet</h3>
-                <?= Wallet_view::myContribution() ?>
+                <?= Wallet_view::newContribution() ?>
                 <?php
             } else {
                 ?>
