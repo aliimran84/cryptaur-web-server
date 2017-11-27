@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cryptaur Wallet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="styles/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="styles/bundle.min.css?rev=0fa91078782ecc16ee30fcbab5cfa34b">
+</head>
+<body>
+
+<nav>
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo">crypt<span>aur</span></a>
+        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Dashboard</a></li>
+            <li><a class="active" href="#">Transactions history</a></li>
+            <li><a href="#">Settings</a></li>
+            <li class="login">name@mail.com</li>
+            <li><a href="#">Logout</a></li>
+            <li><a class="dropdown-button" href="#!" data-activates="dropdown_flag"><img src="images/flag_usa.png" /><i class="material-icons right">keyboard_arrow_down</i></a></li>
+        </ul>
+        <ul class="side-nav" id="mobile-demo">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Transactions history</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Logout</a></li>
+        </ul>
+    </div>
+    <ul id="dropdown_flag" class="dropdown-content">
+        <li><a href="#!"><img src="images/flag_usa.png" /></a></li>
+        <li><a href="#!"><img src="images/flag_rus.png" /></a></li>
+    </ul>
+</nav>
+<div class="wrapper">
+    <div class="content">
+        <section class="stage-one">
+            <div class="row">
+                <h3>Stage one</h3>
+            </div>
+            <div class="row">
+                <div class="col s12 m2">
+                    <p class="date">Start date:&nbsp;November 27, 2017</p>
+                    <p class="date">End date:&nbsp;&nbsp;&nbsp;December 07, 2017</p>
+                </div>
+                <div class="col s12 m10">
+                    <div class="row">
+                        <p class="header">Discount:</p>
+                        <p>The discount is offered throughout the 1st stage (November 27 through December 7) and will be 40% for the first day and 20% thereafter.</p>
+                    </div>
+                    <div class="row">
+                        <p class="header">Purchase limits:</p>
+                        <p>
+                            The minimum contribution limit remains the same as during presale - 50 USD (in CPT equivalent).<br>
+                            Both existing participants who ...
+                        </p>
+                    </div>
+                    <div class="row">
+                        <p class="header">Referral Program:</p>
+                        <p>Text text text text</p>
+                    </div>
+                    <div class="row">
+                        <p>Text text text text</p>
+                    </div>
+                    <div class="row">
+                        <p class="header">From Level 1: 3%</p>
+                        <p class="header">From Level 2: 3%</p>
+                        <p class="header">From Level 3: 3%</p>
+                        <p class="header">From Level 4: 3%</p>
+                        <p class="header">From Level 5: 3%</p>
+                        <p class="header">From Level 6: 3%</p>
+                    </div>
+                    <div class="row">
+                        <p>Text text text text</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="my-contribution">
+            <div class="row">
+                <h3>My contribution</h3>
+            </div>
+            <div class="row">
+                <p>
+                    <input type="checkbox" id="debit-card" checked="checked" />
+                    <label for="debit-card">I prefer perchase CPT tokens using my credit or debit card</label>
+                    <img src="images/visa.png">
+                </p>
+            </div>
+            <div class="row">
+                <p>To learn about the minimum contribution limits <a href="#">click here</a></p>
+            </div>
+            <div class="row">
+                <div class="col s12 offset-m3 m6">
+                    <div class="row">
+                        <div class="input-field col s12 m4">
+                            <select>
+                                <option value="ETH" selected>ETH</option>
+                                <option value="BTC">BTC</option>
+                            </select>
+                            <label>select currency</label>
+                        </div>
+                        <div class="input-field col s12 m4">
+                            <input type="number" name="amount" value="10" min="10" max="40" step="1">
+                            <label>select amount</label>
+                        </div>
+                        <div class="input-field col s12 m4">
+                            <button class="waves-effect waves-light btn btn-contribute">Contribute</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <p>Copy address below to send 10 ETH</p>
+                <h5>0x2b2732Efb676f4660d31F8c7D7e418D4345B17C3</h5>
+                <p>You will get: 320,307.345 CPT</p>
+                <p>Time left: 23 min</p>
+                <div class="input-field col s12 offset-m5 m2 center">
+                    <button class="waves-effect waves-light btn btn-send">Send</button>
+                </div>
+            </div>
+        </section>
+    </div>
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m6 copyright">
+                    <p>Copyright &copy; 2017. All right reserved.</p>
+                </div>
+                <div class="col s12 m6 terms-and-conditions">
+                    <p>Terms and Conditions</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<script type="text/javascript" src="scripts/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="scripts/materialize.min.js"></script>
+<script type="text/javascript" src="scripts/script.js"></script>
+
+</body>
+</html>

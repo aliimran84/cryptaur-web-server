@@ -1,0 +1,71 @@
+@media screen and (max-width: 1501px){
+    nav .nav-wrapper #nav-mobile li a,
+    nav .nav-wrapper #nav-mobile li {
+        font-size: 1.2rem;
+        margin: 0;
+    }
+    .dashboard .main-panel .main-panel-block h3,
+    .content section.my-contribution .btn-send,
+    .content section.my-contribution .btn-contribute {
+        font-size: 1.2rem;
+    }
+}
+@media screen and (max-width: 1201px){
+    nav .nav-wrapper #nav-mobile .login {
+        display: none;
+    }
+    nav .nav-wrapper #nav-mobile li a {
+        font-size: 1rem;
+    }
+    .content section.my-contribution .btn-send,
+    .content section.my-contribution .btn-contribute,
+    .dashboard .main-panel .main-panel-block h3 {
+        font-size: 1rem;
+    }
+    .dashboard .indicators h4 {
+        font-size: 1.5rem;
+    }
+    .dashboard .indicators h3 {
+        font-size: 1.8rem;
+    }
+}
+@media screen and (max-width: 992px){
+    nav .brand-logo {
+        margin-left: 0;
+    }
+    .dashboard.content .left-panel .current-stage .shares {
+        padding: 0 7.5px;
+    }
+    .content section.my-contribution h3,
+    .content section.my-group h3,
+    .content section.my-tokens h3,
+    .content section.stage-one h3,
+    .dashboard .indicators h4,
+    .dashboard .indicators h3 {
+        font-size: 1.3rem;
+    }
+    .dashboard.content .left-panel h3 {
+        font-size: 1.2rem;
+    }
+    .dashboard .my-group .main-panel-block.tree .tree-block h2 {
+        font-size: 1rem;
+    }
+}
+@media screen and (max-width: 600px){
+    .dashboard.content .main-panel .my-contribution h5 {
+        font-size: .9rem;
+        font-weight: 700;
+    }
+    .dashboard.content .left-panel {
+        display: none;
+    }
+    .wrapper footer .copyright,
+    .wrapper footer .terms-and-conditions {
+        text-align: center;
+        padding: 10px 0;
+    }
+    .wrapper footer {
+        padding: 45px 0;
+    }
+}
+
