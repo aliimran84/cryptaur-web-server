@@ -1,15 +1,3 @@
-var mainPanel = $('.main-panel');
-function resizeMainPanel() {
-    mainPanel.each(function (index,element) {
-        $(element).css('height',$(element).parent().height());
-    });
-}
-// if (window.outerWidth > 600) {
-//     resizeMainPanel();
-//     $(window).resize(function(){
-//         resizeMainPanel();
-//     });
-// }
 function conversionHeightLineBottom() {
     var ul = $('ul.second-level');
     var li = ul.children('li.'+ul.attr('class'));

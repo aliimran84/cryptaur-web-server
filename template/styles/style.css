@@ -552,7 +552,7 @@ footer .row {
     margin: 0;
 }
 .dashboard.content .left-panel .current-stage {
-    margin-bottom: 40px;
+    margin-bottom: 10px;
 }
 .dashboard.content .left-panel .stage h2,
 .dashboard.content .left-panel .current-stage .shares h2,
@@ -581,17 +581,13 @@ footer .row {
 .dashboard.content .left-panel .current-stage .shares h2,
 .dashboard.content .left-panel .current-stage .shares p {
     color: #404040;
-    text-align: left;
 }
 .dashboard.content .left-panel .current-stage .shares > p:first-child {
     font-weight: 700;
 }
-.dashboard.content .left-panel .current-stage .shares > p:last-child {
-    padding-right: 40%;
-}
 .dashboard.content .left-panel .current-stage .shares {
     margin-top: 20px;
-    padding: 0 12%;
+    padding: 0 10%;
 }
 .dashboard.content .left-panel .stage .btn-learn-more {
     padding: 0;
