@@ -4,6 +4,7 @@ namespace core\views;
 
 use core\engine\Application;
 use core\models\Coin;
+use core\models\Deposit;
 use core\models\Wallet;
 
 class Wallet_view
@@ -84,6 +85,7 @@ class Wallet_view
                                 }
                                 ?>
                                 window.coinsRate = <?= json_encode($coinsRates, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
+                                window.minimalTokensForNotToBeDonation = <?= json_encode(Deposit::minimalTokensForNotToBeDonation()) ?>;
                                 window.currentCoin = '';
                                 window.onAmountChange = function (input) {
                                     var text = $(input).val();
@@ -102,6 +104,7 @@ class Wallet_view
                                     var usd = window.coinsRate[window.currentCoin] * val
                                     var tokens = usd / window.coinsRate['<?= Coin::TOKEN ?>'];
                                     $('#calculated_selected_to_cpt').text(tokens);
+                                    $('#calculated_cpt_as_donation').toggle(tokens < window.minimalTokensForNotToBeDonation);
                                 };
                                 $('#select-coins').on('change', function () {
                                     var coin = $(this).val();
@@ -128,7 +131,12 @@ class Wallet_view
                     <span id="selected_currency"></span>
                 </p>
                 <h5 id="selected_wallet_addr"></h5>
-                <p>You will get: <span id="calculated_selected_to_cpt"></span> CPT</p>
+                <p>
+                    You will get:
+                    <span id="calculated_selected_to_cpt"></span>
+                    CPT
+                    <span id="calculated_cpt_as_donation" style="display: none;">(will be received as donation)</span>
+                </p>
                 <?php
                 //<p>Time left: 23 min</p>
                 ?>

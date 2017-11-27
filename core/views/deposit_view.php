@@ -21,13 +21,13 @@ class Deposit_view
                 Minimal tokens for minting:
                 <input type="number"
                        name="<?= Deposit::MINIMAL_TOKENS_FOR_MINTING_KEY ?>" placeholder="1"
-                       value="<?= Application::getValue(Deposit::MINIMAL_TOKENS_FOR_MINTING_KEY) ?>"
+                       value="<?= Deposit::minimalTokensForMinting() ?>"
                        min="0" max="9999999" step="0.000000001">
                 <br>
                 Minimal tokens for bounty:
                 <input type="number"
                        name="<?= Deposit::MINIMAL_TOKENS_FOR_BOUNTY_KEY ?>" placeholder="1"
-                       value="<?= Application::getValue(Deposit::MINIMAL_TOKENS_FOR_BOUNTY_KEY) ?>"
+                       value="<?= Deposit::minimalTokensForBounty() ?>"
                        min="0" max="9999999" step="0.000000001">
                 <br>
                 <div class="row center">

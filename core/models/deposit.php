@@ -93,11 +93,10 @@ class Deposit
         $usd = $rate * $amount;
 
         $tokenRate = Coin::getRate(Coin::TOKEN);
-        $minimalTokensForMinting = Application::getValue(self::MINIMAL_TOKENS_FOR_MINTING_KEY);
 
         $depositTokens = $usd / $tokenRate;
 
-        $isDonation = $depositTokens < ($minimalTokensForMinting / 10);
+        $isDonation = $depositTokens < self::minimalTokensForNotToBeDonation();
 
         DB::set("
             INSERT INTO `deposits`
@@ -140,5 +139,29 @@ class Deposit
         }
 
         return $deposits;
+    }
+
+    /**
+     * @return int
+     */
+    static public function minimalTokensForMinting()
+    {
+        return Application::getValue(self::MINIMAL_TOKENS_FOR_MINTING_KEY);
+    }
+
+    /**
+     * @return int
+     */
+    static public function minimalTokensForNotToBeDonation()
+    {
+        return Application::getValue(self::MINIMAL_TOKENS_FOR_MINTING_KEY) / 10;
+    }
+
+    /**
+     * @return int
+     */
+    static public function minimalTokensForBounty()
+    {
+        return Application::getValue(self::MINIMAL_TOKENS_FOR_BOUNTY_KEY);
     }
 }
