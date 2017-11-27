@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
     <link rel="stylesheet" href="styles/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="styles/bundle.min.css?rev=0fa91078782ecc16ee30fcbab5cfa34b">
+    <link rel="stylesheet" href="styles/bundle.min.css?rev=8e17df662beb7fbdca92ffc1c2bc8688">
 </head>
 <body>
 
@@ -43,11 +43,11 @@
                 <h3>Stage one</h3>
             </div>
             <div class="row">
-                <div class="col s12 m2">
+                <div class="col s12 m12 l2">
                     <p class="date">Start date:&nbsp;November 27, 2017</p>
                     <p class="date">End date:&nbsp;&nbsp;&nbsp;December 07, 2017</p>
                 </div>
-                <div class="col s12 m10">
+                <div class="col s12 offset-m1 m10 l10">
                     <div class="row">
                         <p class="header">Discount:</p>
                         <p>The discount is offered throughout the 1st stage (November 27 through December 7) and will be 40% for the first day and 20% thereafter.</p>
@@ -84,43 +84,46 @@
             <div class="row">
                 <h3>My contribution</h3>
             </div>
-            <div class="row">
-                <p>
-                    <input type="checkbox" id="debit-card" checked="checked" />
-                    <label for="debit-card">I prefer perchase CPT tokens using my credit or debit card</label>
-                    <img src="images/visa.png">
-                </p>
-            </div>
-            <div class="row">
-                <p>To learn about the minimum contribution limits <a href="#">click here</a></p>
-            </div>
-            <div class="row">
-                <div class="col s12 offset-m3 m6">
-                    <div class="row">
-                        <div class="input-field col s12 m4">
-                            <select>
-                                <option value="ETH" selected>ETH</option>
-                                <option value="BTC">BTC</option>
-                            </select>
-                            <label>select currency</label>
-                        </div>
-                        <div class="input-field col s12 m4">
-                            <input type="number" name="amount" value="10" min="10" max="40" step="1">
-                            <label>select amount</label>
-                        </div>
-                        <div class="input-field col s12 m4">
-                            <button class="waves-effect waves-light btn btn-contribute">Contribute</button>
+            <div class="my-contribution-block">
+                <div class="row">
+                    <div class="debit-card">
+                        <p>
+                            <input type="checkbox" id="debit-card" checked="checked" />
+                            <label for="debit-card">I prefer perchase CPT tokens using my credit or debit card</label>
+                        </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <p>To learn about the minimum contribution limits <a href="#">click here</a></p>
+                </div>
+                <div class="row">
+                    <div class="col s12 offset-m3 m6">
+                        <div class="row">
+                            <div class="input-field col s12 l4">
+                                <select>
+                                    <option value="ETH" selected>ETH</option>
+                                    <option value="BTC">BTC</option>
+                                </select>
+                                <label>select currency</label>
+                            </div>
+                            <div class="input-field col s12 l4">
+                                <input type="number" name="amount" value="10" min="10" max="40" step="1">
+                                <label>select amount</label>
+                            </div>
+                            <div class="input-field col s12 l4">
+                                <button class="waves-effect waves-light btn btn-contribute">Contribute</button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <p>Copy address below to send 10 ETH</p>
-                <h5>0x2b2732Efb676f4660d31F8c7D7e418D4345B17C3</h5>
-                <p>You will get: 320,307.345 CPT</p>
-                <p>Time left: 23 min</p>
-                <div class="input-field col s12 offset-m5 m2 center">
-                    <button class="waves-effect waves-light btn btn-send">Send</button>
+                <div class="row">
+                    <p>Copy address below to send 10 ETH</p>
+                    <h5>0x2b2732Efb676f4660d31F8c7D7e418D4345B17C3</h5>
+                    <p>You will get: 320,307.345 CPT</p>
+                    <p>Time left: 23 min</p>
+                    <div class="input-field col s12 offset-m3 m6 offset-l5 l2 center">
+                        <button class="waves-effect waves-light btn btn-send">Send</button>
+                    </div>
                 </div>
             </div>
         </section>

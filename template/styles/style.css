@@ -336,6 +336,21 @@ footer .row {
 .content section.my-contribution h5 {
     text-align: center;
 }
+.content section.my-contribution .debit-card {
+    background-image: url(../images/visa.png);
+    background-position: right;
+    background-repeat: no-repeat;
+    display: inline-block;
+    padding-right: 140px;
+    font-size: 1.5rem;
+    line-height: 32px;
+    margin: 10px 0;
+}
+.content section.my-contribution .my-contribution-block {
+    text-align: center;
+    padding: 0 10px;
+
+}
 .content .left-panel {
 
 }
