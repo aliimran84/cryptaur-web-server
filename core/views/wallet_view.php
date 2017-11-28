@@ -24,15 +24,6 @@ class Wallet_view
             <div class="row">
                 <h3>My contribution</h3>
             </div>
-            <?php
-            //<div class="row">
-            //<p>
-            //<input type="checkbox" id="debit-card" checked="checked"/>
-            //<label for="debit-card">I prefer to purchase CPT tokens using my credit or debit card</label>
-            //<img src="images/visa_mastercard.png">
-            //</p>
-            //</div>
-            ?>
             <div class="row">
                 <p>To learn about the minimum contribution limits <a href="./">click here</a></p>
             </div>
@@ -48,7 +39,16 @@ class Wallet_view
                                 </select>
                                 <label for="select-coins">select currency</label>
                             </div>
-                            <script>
+                            <?php foreach (Coin::COINS as $coin) { ?>
+                                <div style="display: none;" id="div-amount-<?= $coin ?>" class="div-amount-coins input-field col s6 m6">
+                                    <input class="input-amount" id="input-amount-<?= $coin ?>" type="number"
+                                           value="1" min="0" max="9999999" step="0.000000001">
+                                    <label for="input-amount-<?= $coin ?>">select amount</label>
+                                </div>
+                            <?php } ?>
+                        </form>
+                        <script>
+                            (function ($) {
                                 <?php
                                 $wallets = [];
                                 foreach (Coin::COINS as $coin) {
@@ -60,66 +60,56 @@ class Wallet_view
                                     $wallets[$coin] = $address;
                                 }
                                 ?>
-                                window.investorWallets = <?= json_encode($wallets, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
-                            </script>
-                            <?php foreach (Coin::COINS as $coin) { ?>
-                                <div style="display: none;" id="div-amount-<?= $coin ?>" class="div-amount-coins input-field col s6 m6">
-                                    <input id="input-amount-<?= $coin ?>" type="number"
-                                           onchange="window.onAmountChange(this)" onkeyup="window.onAmountChange(this)"
-                                           value="1" min="0" max="9999999" step="0.000000001">
-                                    <label for="input-amount-<?= $coin ?>">select amount</label>
-                                </div>
-                            <?php } ?>
-                            <?php
-                            //<div class="input-field col s12 m4">
-                            //<button class="waves-effect waves-light btn btn-contribute">Contribute</button>
-                            //</div>
-                            ?>
-                        </form>
-                        <script>
-                            $(document).ready(function () {
-                                <?php
-                                $coinsRates = [];
-                                foreach (array_merge(Coin::COINS, [Coin::TOKEN]) as $coin) {
-                                    $coinsRates[$coin] = Coin::getRate($coin);
-                                }
-                                ?>
-                                window.coinsRate = <?= json_encode($coinsRates, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
-                                window.minimalTokensForNotToBeDonation = <?= json_encode(Deposit::minimalTokensForNotToBeDonation()) ?>;
-                                window.currentCoin = '';
-                                window.onAmountChange = function (input) {
-                                    var text = $(input).val();
-                                    if (text.length === 0) {
-                                        return false;
+                                var investorWalletAddresses = <?= json_encode($wallets, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
+                                $(document).ready(function () {
+                                    <?php
+                                    $coinsRates = [];
+                                    foreach (array_merge(Coin::COINS, [Coin::TOKEN]) as $coin) {
+                                        $coinsRates[$coin] = Coin::getRate($coin);
                                     }
-                                    var val = parseFloat(text);
-                                    if ('' + val !== text) {
-                                        $(input).val(val);
-                                        return;
-                                    } else if (val < 0) {
-                                        $(input).val(-val);
-                                        return;
-                                    }
-                                    $('#selected_amount').text(val);
-                                    var usd = window.coinsRate[window.currentCoin] * val
-                                    var tokens = usd / window.coinsRate['<?= Coin::TOKEN ?>'];
-                                    $('#calculated_selected_to_cpt').text(tokens);
-                                    $('#calculated_cpt_as_donation').toggle(tokens < window.minimalTokensForNotToBeDonation);
-                                };
-                                $('#select-coins').on('change', function () {
-                                    var coin = $(this).val();
-                                    window.currentCoin = coin;
-                                    $('.div-amount-coins').hide();
-                                    $('#div-amount-' + coin).show();
-                                    $('#selected_currency').text(coin);
-                                    window.onAmountChange($('#input-amount-' + coin)[0]);
-                                    var walletAddrText = 'Wallet registration in progress';
-                                    if (window.investorWallets[coin]) {
-                                        walletAddrText = window.investorWallets[coin];
-                                    }
-                                    $('#selected_wallet_addr').html(walletAddrText);
-                                }).change();
-                            });
+                                    ?>
+                                    var coinsRate = <?= json_encode($coinsRates, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
+                                    var minimalTokensForNotToBeDonation = <?= json_encode(Deposit::minimalTokensForNotToBeDonation()) ?>;
+                                    var currentCoin = '';
+                                    var onAmountChange = function (input) {
+                                        var text = $(input).val();
+                                        if (text.length === 0) {
+                                            return false;
+                                        }
+                                        var val = parseFloat(text);
+                                        if ('' + val !== text) {
+                                            $(input).val(val);
+                                            return;
+                                        } else if (val < 0) {
+                                            $(input).val(-val);
+                                            return;
+                                        }
+                                        val = val.toFixed(8);
+                                        $('#selected_amount').text(val);
+                                        var usd = coinsRate[currentCoin] * val;
+                                        var tokens = usd / coinsRate['<?= Coin::TOKEN ?>'];
+                                        tokens = tokens.toFixed(8);
+                                        $('#calculated_selected_to_cpt').text(tokens);
+                                        $('#calculated_cpt_as_donation').toggle(tokens < minimalTokensForNotToBeDonation);
+                                    };
+                                    $('.input-amount').unbind('keyup change').bind('keyup change', function (e) {
+                                        onAmountChange(e.target);
+                                    });
+                                    $('#select-coins').on('change', function () {
+                                        var coin = $(this).val();
+                                        currentCoin = coin;
+                                        $('.div-amount-coins').hide();
+                                        $('#div-amount-' + coin).show();
+                                        $('#selected_currency').text(coin);
+                                        onAmountChange($('#input-amount-' + coin)[0]);
+                                        var walletAddrText = 'Wallet registration in progress';
+                                        if (investorWalletAddresses[coin]) {
+                                            walletAddrText = investorWalletAddresses[coin];
+                                        }
+                                        $('#selected_wallet_addr').html(walletAddrText);
+                                    }).change();
+                                });
+                            })(jQuery);
                         </script>
                     </div>
                 </div>
@@ -137,14 +127,6 @@ class Wallet_view
                     CPT
                     <span id="calculated_cpt_as_donation" style="display: none;">(will be received as donation)</span>
                 </p>
-                <?php
-                //<p>Time left: 23 min</p>
-                ?>
-                <?php
-                //<div class="input-field col s12 center">
-                //<button class="waves-effect waves-light btn btn-send">Send</button>
-                //</div>
-                ?>
             </div>
         </section>
 
