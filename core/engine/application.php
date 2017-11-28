@@ -5,7 +5,6 @@ namespace core\engine;
 use core\controllers\Coin_controller;
 use core\controllers\Dashboard_controller;
 use core\controllers\Deposit_controller;
-use core\controllers\Transactions_controller;
 use core\controllers\Administrator_controller;
 use core\controllers\Investor_controller;
 use core\controllers\PaymentServer_controller;
@@ -67,7 +66,6 @@ class Application
         Administrator_controller::init();
         PaymentServer_controller::init();
         Dashboard_controller::init();
-        Transactions_controller::init();
         Coin_controller::init();
         Deposit_controller::init();
     }

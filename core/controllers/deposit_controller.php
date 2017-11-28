@@ -6,12 +6,15 @@ use core\engine\Application;
 use core\engine\Utility;
 use core\engine\Router;
 use core\models\Deposit;
+use core\views\Base_view;
+use core\views\Deposit_view;
 
 class Deposit_controller
 {
     static public $initialized = false;
 
     const SET_URL = 'deposit/set';
+    const TRANSACTIONS_URL = 'transactions';
 
     static public function init()
     {
@@ -26,6 +29,15 @@ class Deposit_controller
             }
             self::handleSetRequest();
         }, self::SET_URL, Router::POST_METHOD);
+
+        Router::register(function () {
+            if (!Application::$authorizedInvestor) {
+                Utility::location();
+            }
+            echo Base_view::header('Transaction');
+            echo Deposit_view::transactions();
+            echo Base_view::footer();
+        }, self::TRANSACTIONS_URL);
     }
 
     static public function handleSetRequest()
