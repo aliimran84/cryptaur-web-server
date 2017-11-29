@@ -13,7 +13,6 @@ use core\models\Deposit;
 use core\models\Investor;
 use core\models\PaymentServer;
 use core\models\Wallet;
-use core\views\About_view;
 use core\views\Base_view;
 use core\views\Wallet_view;
 
@@ -55,7 +54,7 @@ class Application
 
         Router::registerDefault(function () {
             echo Base_view::header();
-            echo About_view::stageOne();
+            echo Base_view::about_stageOne();
             if (Application::$authorizedInvestor) {
                 echo Wallet_view::newContribution();
             }
