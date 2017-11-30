@@ -49,6 +49,16 @@ class PaymentServer_controller
         Utility::location(Administrator_controller::COINS_SETTINGS);
     }
 
+    static private function fromPaymentServerUserIdToInvestorId($userid)
+    {
+        return $userid - 1000;
+    }
+
+    static private function fromInvestorIdToPaymentServerUserId($investorid)
+    {
+        return $investorid + 1000;
+    }
+
     /**
      * @param string $keyId
      * @param string $message full php-in
@@ -86,11 +96,13 @@ class PaymentServer_controller
 
         if ($message['reason'] === self::NOTIFY_REASON_ADDRESS) {
             //"{"address": "0xf410e1a3b6a42511d2113911111181116511711d", "coin": "eth", "keyid": "22c336448554e86b", "nonce": 1511527643485, "reason": "address", "userid": 1}"
-            Wallet::registerWallet($message['userid'], $message['coin'], $message['address']);
+            $investorId = self::fromPaymentServerUserIdToInvestorId($message['userid']);
+            Wallet::registerWallet($investorId, $message['coin'], $message['address']);
             return 1;
         } else if ($message['reason'] === self::NOTIFY_REASON_DEPOSIT) {
             //"{"amount": "2.0", "coin": "DOGE", "conf": 1, "keyid": "22c336448554e86b", "nonce": 1511352641577, "reason": "deposit", "txid": "cf3344b4fd3d7cf08fbd3fc19a751a0cf7ec1d776e65bcf3c573bac5c6484f5d", "userid": 666, "vout": 0}"
-            if (!Deposit::receiveDeposit((double)$message['amount'], $message['coin'], $message['conf'], $message['txid'], $message['vout'], $message['userid'])) {
+            $investorId = self::fromPaymentServerUserIdToInvestorId($message['userid']);
+            if (!Deposit::receiveDeposit((double)$message['amount'], $message['coin'], $message['conf'], $message['txid'], $message['vout'], $investorId)) {
                 return -4;
             }
             return 2;
@@ -102,12 +114,13 @@ class PaymentServer_controller
     /**
      * @param PaymentServer $pServer
      * @param string $coin
-     * @param int $userId
+     * @param int $investorId
      * @return bool|array
      */
-    static public function requestWalletRegistration($pServer, $coin, $userId)
+    static public function requestWalletRegistration($pServer, $coin, $investorId)
     {
         $lowerCoin = strtolower($coin);
+        $userId = self::fromInvestorIdToPaymentServerUserId($investorId);
         $httpPostResult = Utility::httpPost("{$pServer->url}/$lowerCoin/getaddress", ['user' => $userId]);
         $response = @json_decode(
             $httpPostResult,
