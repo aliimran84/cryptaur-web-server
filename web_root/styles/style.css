@@ -336,6 +336,21 @@ footer .row {
 .content section.my-contribution h5 {
     text-align: center;
 }
+.content section.my-contribution .debit-card {
+    background-image: url(../images/visa.png);
+    background-position: right;
+    background-repeat: no-repeat;
+    display: inline-block;
+    padding-right: 140px;
+    font-size: 1.5rem;
+    line-height: 32px;
+    margin: 10px 0;
+}
+.content section.my-contribution .my-contribution-block {
+    text-align: center;
+    padding: 0 10px;
+
+}
 .content .left-panel {
 
 }
@@ -359,7 +374,7 @@ footer .row {
     margin-bottom: 10px;
 }
 .dashboard .indicators h3 {
-    font-size: 2.2rem;
+    font-size: 2rem;
     font-weight: 500;
 }
 .dashboard.content {
@@ -390,10 +405,13 @@ footer .row {
     padding-left: 50px;
     font-size: 1.5rem;
     line-height: 40px;
-    margin: 20px 40px;
+    margin: 30px 40px;
 }
 .dashboard .main-panel-block .amount {
     margin: 10px 40px;
+}
+.dashboard .my-contribution .my-contribution-block {
+    padding: 15px 0 0 0;
 }
 .dashboard .my-tokens .main-panel-block {
     padding-bottom: 30px;
@@ -501,7 +519,8 @@ footer .row {
 .dashboard .my-group .main-panel-block.tree li.participants .line-bottom {
     right: -45%;
     left: inherit;
-    top: 37px;
+    top: 0;
+    z-index: 1;
 }
 .dashboard .my-group .main-panel-block.tree .line-left,
 .dashboard .my-group .main-panel-block.tree .line-right {
@@ -521,6 +540,7 @@ footer .row {
     position: absolute;
     top: 0;
     right: -75%;
+    z-index: 10;
 }
 .dashboard .my-group .main-panel-block.tree .participants-block h2 {
     background: #0074ff;
@@ -547,7 +567,7 @@ footer .row {
     margin: 0;
 }
 .dashboard.content .left-panel .current-stage {
-    margin-bottom: 40px;
+    margin-bottom: 10px;
 }
 .dashboard.content .left-panel .stage h2,
 .dashboard.content .left-panel .current-stage .shares h2,
@@ -576,24 +596,20 @@ footer .row {
 .dashboard.content .left-panel .current-stage .shares h2,
 .dashboard.content .left-panel .current-stage .shares p {
     color: #404040;
-    text-align: left;
 }
 .dashboard.content .left-panel .current-stage .shares > p:first-child {
     font-weight: 700;
 }
-.dashboard.content .left-panel .current-stage .shares > p:last-child {
-    padding-right: 40%;
-}
 .dashboard.content .left-panel .current-stage .shares {
     margin-top: 20px;
-    padding: 0 5%;
+    padding: 0 10%;
 }
 .dashboard.content .left-panel .stage .btn-learn-more {
     padding: 0;
     width: 100%;
-    height: 45px;
-    font-size: 1rem;
-    line-height: 1rem;
+    height: 30px;
+    font-size: 0.8rem;
+    line-height: 0.8rem;
     background: #0074ff;
     border-radius: 10px;
     margin-top: 5px;

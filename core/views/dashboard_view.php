@@ -193,13 +193,13 @@ class Dashboard_view
                     <h3>My group</h3>
                 </div>
                 <div class="row">
-                    <div class="col s12 m4 main-panel-block">
+                    <div class="col s12 l4 main-panel-block">
                         <h3>Raised by group: US$ 123,567.89</h3>
                     </div>
-                    <div class="col s12 m4 main-panel-block">
+                    <div class="col s12 l4 main-panel-block">
                         <h3>Group participants: 247</h3>
                     </div>
-                    <div class="col s12 m4 main-panel-block">
+                    <div class="col s12 l4 main-panel-block">
                         <div class="input-field">
                             <button class="waves-effect waves-light btn ">Invite friends</button>
                         </div>
@@ -226,13 +226,13 @@ class Dashboard_view
                                         </div>
                                         <div class="line-right"></div>
                                         <div class="participants-block">
-                                            <h2>6 participants in level<i class="material-icons">expand_more</i></h2>
+                                            <h2>2 participants in level<i class="material-icons">expand_more</i></h2>
                                         </div>
                                         <div class="line-left"></div>
-                                        <div class="line-bottom"></div>
+                                        <div class="line-bottom" style="display:none;"></div>
                                     </li>
                                     <li>
-                                        <ul class="third-level participants">
+                                        <ul class="third-level participants close">
                                             <li class="third-level">
                                                 <div class="tree-block">
                                                     <h2>My name</h2>
@@ -248,88 +248,6 @@ class Dashboard_view
                                                     <h3>US$ 12399.546</h3>
                                                 </div>
                                                 <div class="line-left"></div>
-                                            </li>
-                                            <li class="third-level">
-                                                <div class="tree-block">
-                                                    <h2>My name</h2>
-                                                    <p>Contributed</p>
-                                                    <h3>US$ 12399.546</h3>
-                                                </div>
-                                                <div class="line-left"></div>
-                                            </li>
-                                            <li class="third-level">
-                                                <div class="tree-block">
-                                                    <h2>My name</h2>
-                                                    <p>Contributed</p>
-                                                    <h3>US$ 12399.546</h3>
-                                                </div>
-                                                <div class="line-left"></div>
-                                            </li>
-                                            <li class="third-level">
-                                                <div class="tree-block">
-                                                    <h2>My name</h2>
-                                                    <p>Contributed</p>
-                                                    <h3>US$ 12399.546</h3>
-                                                </div>
-                                                <div class="line-left"></div>
-                                            </li>
-                                            <li class="third-level participants">
-                                                <div class="tree-block">
-                                                    <h2>My name</h2>
-                                                    <p>Contributed</p>
-                                                    <h3>US$ 12399.546</h3>
-                                                </div>
-                                                <div class="line-right"></div>
-                                                <div class="participants-block">
-                                                    <h2>5 participants in level<i class="material-icons">expand_more</i>
-                                                    </h2>
-                                                </div>
-                                                <div class="line-left"></div>
-                                                <div class="line-bottom"></div>
-                                            </li>
-                                            <li>
-                                                <ul class="fourth-level participants">
-                                                    <li class="fourth-level">
-                                                        <div class="tree-block">
-                                                            <h2>My name</h2>
-                                                            <p>Contributed</p>
-                                                            <h3>US$ 12399.546</h3>
-                                                        </div>
-                                                        <div class="line-left"></div>
-                                                    </li>
-                                                    <li class="fourth-level">
-                                                        <div class="tree-block">
-                                                            <h2>My name</h2>
-                                                            <p>Contributed</p>
-                                                            <h3>US$ 12399.546</h3>
-                                                        </div>
-                                                        <div class="line-left"></div>
-                                                    </li>
-                                                    <li class="fourth-level">
-                                                        <div class="tree-block">
-                                                            <h2>My name</h2>
-                                                            <p>Contributed</p>
-                                                            <h3>US$ 12399.546</h3>
-                                                        </div>
-                                                        <div class="line-left"></div>
-                                                    </li>
-                                                    <li class="fourth-level">
-                                                        <div class="tree-block">
-                                                            <h2>My name</h2>
-                                                            <p>Contributed</p>
-                                                            <h3>US$ 12399.546</h3>
-                                                        </div>
-                                                        <div class="line-left"></div>
-                                                    </li>
-                                                    <li class="fourth-level">
-                                                        <div class="tree-block">
-                                                            <h2>My name</h2>
-                                                            <p>Contributed</p>
-                                                            <h3>US$ 12399.546</h3>
-                                                        </div>
-                                                        <div class="line-left"></div>
-                                                    </li>
-                                                </ul>
                                             </li>
                                         </ul>
                                     </li>

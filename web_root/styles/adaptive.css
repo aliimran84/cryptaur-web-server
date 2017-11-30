@@ -22,18 +22,52 @@
     .dashboard .main-panel .main-panel-block h3 {
         font-size: 1rem;
     }
+    .dashboard .indicators h4 {
+        font-size: 1.5rem;
+    }
+    .dashboard .indicators h3 {
+        font-size: 1.8rem;
+    }
 }
 @media screen and (max-width: 992px){
     nav .brand-logo {
         margin-left: 0;
     }
+    .dashboard.content .left-panel .current-stage .shares {
+        padding: 0 7.5px;
+    }
+    .content section.my-contribution h3,
+    .content section.my-group h3,
+    .content section.my-tokens h3,
+    .content section.stage-one h3,
+    .dashboard .indicators h4,
+    .dashboard .indicators h3 {
+        font-size: 1.3rem;
+    }
+    .dashboard.content .left-panel h3 {
+        font-size: 1.2rem;
+    }
+    .dashboard .my-group .main-panel-block.tree .tree-block h2 {
+        font-size: 1rem;
+    }
+    .content section.stage-one p.date {
+        text-align: center;
+        margin: 0 0 10px 0;
+    }
 }
 @media screen and (max-width: 600px){
-    .dashboard .content .main-panel .my-contribution h5 {
+    .dashboard .main-panel-block .amount-wallet {
+        font-size: 1.2rem;
+    }
+    .dashboard .my-contribution .my-contribution-block{
+        padding: 15px 10px 0;
+    }
+    .content section.my-contribution h5,
+    .dashboard.content .main-panel .my-contribution h5 {
         font-size: .9rem;
         font-weight: 700;
     }
-    .dashboard .content .left-panel {
+    .dashboard.content .left-panel {
         display: none;
     }
     .wrapper footer .copyright,
@@ -43,6 +77,10 @@
     }
     .wrapper footer {
         padding: 45px 0;
+    }
+    .content section.my-contribution .debit-card {
+        background: none;
+        padding-right: 0;
     }
 }
 
