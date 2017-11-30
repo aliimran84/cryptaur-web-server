@@ -7,6 +7,7 @@ use core\controllers\Dashboard_controller;
 use core\controllers\Deposit_controller;
 use core\engine\Application;
 use core\controllers\Investor_controller;
+use core\models\Investor;
 
 class Base_view
 {
@@ -76,6 +77,7 @@ class Base_view
             <li><a href="">About</a></li>
             <li><a href="<?= Dashboard_controller::BASE_URL ?>">Dashboard</a></li>
             <li><a href="<?= Deposit_controller::TRANSACTIONS_URL ?>">Transactions history</a></li>
+            <li><a href="<?= Investor_controller::SETTINGS_URL ?>">Settings</a></li>
             <li class="login"><?= Application::$authorizedInvestor->email ?></li>
             <li><a href="<?= Investor_controller::LOGOUT_URL ?>">Logout</a></li>
         <?php } else { ?>

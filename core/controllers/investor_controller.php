@@ -20,6 +20,7 @@ class Investor_controller
     const LOGOUT_URL = 'investor/logout';
     const REGISTER_URL = 'investor/register';
     const REGISTER_CONFIRMATION_URL = 'investor/register_confirm';
+    const SETTINGS_URL = 'investor/settings';
 
     const SESSION_KEY = 'authorized_investor_id';
 
@@ -76,6 +77,10 @@ class Investor_controller
         Router::register(function () {
             self::handleRegistrationConfirmationRequest();
         }, self::REGISTER_CONFIRMATION_URL);
+
+        Router::register(function () {
+            self::handleSettingsRequest();
+        }, self::SETTINGS_URL);
     }
 
     static private function detectLoggedInInvestor()
@@ -166,6 +171,17 @@ class Investor_controller
 
         echo Base_view::header('Email confirmed successfully');
         echo Base_view::text("Email confirmed successfully");
+        echo Base_view::footer();
+    }
+
+    static private function handleSettingsRequest()
+    {
+        if (!Application::$authorizedInvestor) {
+            Utility::location(self::BASE_URL);
+        }
+
+        echo Base_view::header('Settings');
+        echo Base_view::text('Settings come later');
         echo Base_view::footer();
     }
 
