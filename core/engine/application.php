@@ -107,7 +107,7 @@ class Application
     static public function getValue($key)
     {
         $value = @DB::get("SELECT `value` FROM `key_value_storage` WHERE `key`=? LIMIT 1;", [$key])[0]['value'];
-        if ($value) {
+        if (!is_null($value)) {
             return @json_decode($value, true);
         }
         return null;
