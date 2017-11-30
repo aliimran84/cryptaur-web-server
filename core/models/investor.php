@@ -153,4 +153,42 @@ class Investor
 
         return DB::lastInsertId();
     }
+
+    /**
+     * @param Investor $investor
+     * @return bool
+     */
+    static private function isInvestorCollapseInCompress($investor)
+    {
+        return (bool)($investor->tokens_count >= Deposit::minimalTokensForBounty());
+    }
+
+    /**
+     * @param Investor $investor
+     * @param bool $withCompressing
+     * @return Investor[]
+     */
+    static public function summonedBy($investor, $withCompressing = false)
+    {
+        $allInvestorsIdWithReffererId = @DB::get("
+            SELECT `id` FROM `investors`
+            WHERE
+                `referrer_id` = ?
+        ;", [$investor->id]);
+        $summonedInvestors = [];
+        foreach ($allInvestorsIdWithReffererId as $data) {
+            $summonedInvestor = Investor::getById($data['id']);
+            $compressingFunction = function ($summonedInvestor) {
+                return self::isInvestorCollapseInCompress($summonedInvestor);
+            };
+            if (!$withCompressing || $compressingFunction($summonedInvestor)) {
+                $summonedInvestors[$data['id']] = $summonedInvestor;
+            } else {
+                foreach (self::summonedBy($summonedInvestor, $compressingFunction) as $compressedInvestor) {
+                    $summonedInvestors[$compressedInvestor->id] = $compressedInvestor;
+                }
+            }
+        }
+        return $summonedInvestors;
+    }
 }
