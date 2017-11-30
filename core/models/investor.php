@@ -158,7 +158,7 @@ class Investor
      * @param Investor $investor
      * @return bool
      */
-    static private function isInvestorCollapseInCompress($investor)
+    static private function isInvestorCollapseInCompress(&$investor)
     {
         return (bool)($investor->tokens_count >= Deposit::minimalTokensForBounty());
     }
@@ -168,7 +168,7 @@ class Investor
      * @param bool $withCompressing
      * @return Investor[]
      */
-    static public function summonedBy($investor, $withCompressing = false)
+    static public function summonedBy(&$investor, $withCompressing = false)
     {
         $allInvestorsIdWithReffererId = @DB::get("
             SELECT `id` FROM `investors`
