@@ -54,4 +54,14 @@ class Coin
         $coin = strtoupper($coin);
         return Application::getValue(self::RATE_KEY_PREFIX . $coin);
     }
+
+    /*
+     * @param string $coin
+     * @param int $conf
+     * @return bool
+     */
+    static public function checkDepositConfirmation($coin, $conf)
+    {
+        return $conf >= Coin::MIN_CONF[$coin];
+    }
 }
