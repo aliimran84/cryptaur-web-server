@@ -36,6 +36,8 @@ class Wallet
      */
     public function addToWallet($amount, $usdUsed)
     {
+        // todo: is it not a event time? must not to put into wallet!
+
         $this->balance += $amount;
         $this->usdUsed += $usdUsed;
         DB::set("

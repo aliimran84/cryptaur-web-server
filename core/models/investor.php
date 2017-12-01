@@ -14,6 +14,7 @@ class Investor
     public $joined_datetime = 0;
     public $email = '';
     public $tokens_count = 0;
+    public $tokens_not_used_in_bounty = 0;
     public $eth_address = '';
     public $eth_withdrawn = 0;
 
@@ -30,6 +31,7 @@ class Investor
                 `eth_address` varchar(50) NOT NULL,
                 `eth_withdrawn` double(20, 8) DEFAULT '0',
                 `tokens_count` bigint(20) UNSIGNED DEFAULT '0',
+                `tokens_not_used_in_bounty` bigint(20) UNSIGNED DEFAULT '0',
                 `phone` varchar(254) DEFAULT '',
                 PRIMARY KEY (`id`)
             );
@@ -56,6 +58,7 @@ class Investor
         $instance->joined_datetime = strtotime($investor['joined_datetime']);
         $instance->email = $investor['email'];
         $instance->tokens_count = $investor['tokens_count'];
+        $instance->tokens_not_used_in_bounty = $investor['tokens_not_used_in_bounty'];
         $instance->eth_address = $investor['eth_address'];
         $instance->eth_withdrawn = $investor['eth_withdrawn'];
 

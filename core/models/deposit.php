@@ -82,8 +82,9 @@ class Deposit
             return true;
         }
 
-        $rate = Coin::getRate($coin);
-        $usd = $rate * $amount;
+        // todo: is it not a event time? set USD = 0, RATE = 0 and must not to do minting and must not to put into wallet!
+        $coinRate = Coin::getRate($coin);
+        $usd = $coinRate * $amount;
 
         $tokenRate = Coin::getRate(Coin::TOKEN);
 
@@ -103,7 +104,7 @@ class Deposit
                 `rate` = ?,
                 `datetime` = ?,
                 `is_donation` = ?
-        ;", [$investorId, $coin, $txid, $vout, $amount, $usd, $rate, DB::timetostr(time()), $isDonation]);
+        ;", [$investorId, $coin, $txid, $vout, $amount, $usd, $coinRate, DB::timetostr(time()), $isDonation]);
 
         if ($isDonation) {
             return true;
@@ -115,7 +116,73 @@ class Deposit
         }
         $wallet->addToWallet($amount, $usd);
 
+        self::tryMintTokens($investorId);
+
         return true;
+    }
+
+    /**
+     * @param double $usd
+     * @param double $rate
+     */
+    private function setUsdAndRate($usd, $rate)
+    {
+        $this->usd = $usd;
+        $this->rate = $rate;
+        DB::set("
+            UPDATE `deposits`
+            SET
+                `usd` = ?,
+                `rate` = ?
+            WHERE
+                `id` = ?
+            LIMIT 1
+        ;", [$usd, $rate, $this->id]);
+    }
+
+    static private function tryMintTokens($investorId)
+    {
+        // todo: is it not a event time? not to do minting!
+
+        $db_deposits = DB::get("
+            SELECT *
+            FROM `deposits`
+            WHERE
+                `investor_id` = ? AND
+                `used_in_minting` = 0
+        ;", [$investorId]);
+
+        $tokenRate = Coin::getRate(Coin::TOKEN);
+        $tokensToMinting = 0;
+        $depositsForMintig = [];
+        foreach ($db_deposits as $db_deposit) {
+            $deposit = self::constructFromDbData($db_deposit);
+
+            // если депозит был принят не в эвент, то устанавливаем rate и usd только сейчас
+            if (!$deposit->rate && !$deposit->usd) {
+                $coinRate = Coin::getRate($deposit->coin);
+                $usd = $coinRate * $deposit->amount;
+                $deposit->setUsdAndRate($usd, $coinRate);
+            }
+
+            $depositsForMintig[] = $deposit;
+            $tokensToMinting += $deposit->usd / $tokenRate;
+        }
+
+        if ($tokensToMinting >= self::minimalTokensForMinting()) {
+            foreach ($depositsForMintig as $i => $deposit) {
+                // если процесс чеканке был инициирован не одним платежом, а несколькими, то выполняем реальную чеканку только одной операцией
+                $realTokensMinting = 0;
+                if ($i === count($depositsForMintig)) {
+                    $realTokensMinting = $tokensToMinting;
+                }
+//                todo: request real mint
+//                $deposit->investor_id;
+//                $deposit->coin;
+//                $deposit->txid;
+//                $realTokensMinting
+            }
+        }
     }
 
     /**

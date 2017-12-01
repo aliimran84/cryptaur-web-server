@@ -30,8 +30,7 @@ class Bounty
                 $investorOnLevels[$level] += Investor::summonedBy($investor, true);
             }
             foreach ($investorOnLevels[$level] as &$investor) {
-                // todo: REPLCAE $investor->tokens_count. Must calc only deposits that not used at bounty in the past
-                $reward += $investor->tokens_count * $percent / 100;
+                $reward += $investor->tokens_not_used_int_bounty * $percent / 100;
             }
         }
         return $reward;
