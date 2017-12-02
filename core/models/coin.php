@@ -61,7 +61,7 @@ class Coin
      */
     static public function issetCoin($coin)
     {
-        return isset(Coin::MIN_CONF[$coin]);
+        return !is_null(Coin::MIN_CONF[$coin]);
     }
 
     /*
