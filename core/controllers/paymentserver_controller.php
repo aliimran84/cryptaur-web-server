@@ -97,26 +97,30 @@ class PaymentServer_controller
 
         if ($message['reason'] === self::NOTIFY_REASON_ADDRESS) {
             //"{"address": "0xf410e1a3b6a42511d2113911111181116511711d", "coin": "eth", "keyid": "22c336448554e86b", "nonce": 1511527643485, "reason": "address", "userid": 1}"
+            $coin = strtoupper($message['coin']);
+            if (!Coin::issetCoin($coin)) {
+                return -4;
+            }
             $investorId = self::fromPaymentServerUserIdToInvestorId($message['userid']);
             Wallet::registerWallet($investorId, $message['coin'], $message['address']);
             return 1;
         } else if ($message['reason'] === self::NOTIFY_REASON_DEPOSIT) {
             //"{"amount": "2.0", "coin": "DOGE", "conf": 1, "keyid": "22c336448554e86b", "nonce": 1511352641577, "reason": "deposit", "txid": "cf3344b4fd3d7cf08fbd3fc19a751a0cf7ec1d776e65bcf3c573bac5c6484f5d", "userid": 666, "vout": 0}"
-            $investorId = self::fromPaymentServerUserIdToInvestorId($message['userid']);
             $coin = strtoupper($message['coin']);
-            if (!isset(Coin::COINS[$coin])) {
-                return -4;
-            }
-            if (!Coin::checkDepositConfirmation($coin, $message['conf'])) {
+            if (!Coin::issetCoin($coin)) {
                 return -5;
             }
-            if (!Deposit::receiveDeposit((double)$message['amount'], $coin, $message['txid'], $message['vout'], $investorId)) {
+            if (!Coin::checkDepositConfirmation($coin, $message['conf'])) {
                 return -6;
+            }
+            $investorId = self::fromPaymentServerUserIdToInvestorId($message['userid']);
+            if (!Deposit::receiveDeposit((double)$message['amount'], $coin, $message['txid'], $message['vout'], $investorId)) {
+                return -7;
             }
             return 2;
         }
 
-        return -7;
+        return -8;
     }
 
     /**

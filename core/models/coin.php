@@ -47,12 +47,21 @@ class Coin
 
     /**
      * @param string $coin
-     * @return double count of usd in one coin
+     * @return null|double count of usd in one coin
      */
     static public function getRate($coin)
     {
         $coin = strtoupper($coin);
         return Application::getValue(self::RATE_KEY_PREFIX . $coin);
+    }
+
+    /*
+     * @param string $coin
+     * @return bool
+     */
+    static public function issetCoin($coin)
+    {
+        return isset(Coin::MIN_CONF[$coin]);
     }
 
     /*

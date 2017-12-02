@@ -93,7 +93,6 @@ class Wallet
      */
     static public function registerWallet($investorId, $coin, $address)
     {
-        $coin = strtoupper($coin);
         $existing = @DB::get("
             SELECT * FROM `wallets`
             WHERE

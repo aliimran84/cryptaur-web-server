@@ -84,6 +84,9 @@ class Deposit
 
         // todo: is it not a event time? set USD = 0, RATE = 0 and must not to do minting and must not to put into wallet!
         $coinRate = Coin::getRate($coin);
+        if (is_null($coinRate)) {
+            return false;
+        }
         $usd = $coinRate * $amount;
 
         $tokenRate = Coin::getRate(Coin::TOKEN);
