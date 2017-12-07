@@ -18,7 +18,7 @@ class Coin_view
             <form class="registration col s12" action="<?= Coin_controller::SETRATES_URL ?>" method="post">
                 <h5 class="center">Coins rates (deposits)<br>count of usd in one coin</h5>
                 <?php foreach (array_merge(Coin::COINS, [Coin::TOKEN]) as $coin) { ?>
-                    <?= $coin ?>:
+                    <label><?= $coin ?>:</label>
                     <input type="number"
                            name="<?= Coin::RATE_KEY_PREFIX . $coin ?>" placeholder="1"
                            value="<?= Coin::getRate($coin) ?>"

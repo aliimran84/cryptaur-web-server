@@ -19,18 +19,16 @@ class Deposit_view
         <div class="row card administrator-settings-block">
             <form class="registration col s12" action="<?= Deposit_controller::SET_URL ?>" method="post">
                 <h5 class="center">Set minimal values</h5>
-                Minimal tokens for minting:
+                <label>Minimal tokens for minting:</label>
                 <input type="number"
                        name="<?= Deposit::MINIMAL_TOKENS_FOR_MINTING_KEY ?>" placeholder="1"
                        value="<?= Deposit::minimalTokensForMinting() ?>"
                        min="0" max="9999999" step="0.000000001">
-                <br>
-                Minimal tokens for bounty:
+                <label>Minimal tokens for bounty:</label>
                 <input type="number"
                        name="<?= Deposit::MINIMAL_TOKENS_FOR_BOUNTY_KEY ?>" placeholder="1"
                        value="<?= Deposit::minimalTokensForBounty() ?>"
                        min="0" max="9999999" step="0.000000001">
-                <br>
                 <div class="row center">
                     <button type="submit" class="waves-effect waves-light btn btn-send" style="width: 100%">
                         Set

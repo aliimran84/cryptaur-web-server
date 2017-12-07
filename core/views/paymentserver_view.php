@@ -23,8 +23,11 @@ class PaymentServer_view
                     ?>
                     <label>Error <?= $_GET['err'] ?></label>
                 <?php } ?>
+                <label>URL:</label>
                 <input type="text" name="url" placeholder="url" value="<?= @$paymentServer->url ?>">
+                <label>Key id:</label>
                 <input type="text" name="keyid" placeholder="keyid" value="<?= @$paymentServer->keyid ?>">
+                <label>Secret key:</label>
                 <input type="text" name="secretkey" placeholder="secretkey" value="<?= @$paymentServer->secretkey ?>">
                 <div class="row center">
                     <button type="submit" class="waves-effect waves-light btn btn-send" style="width: 100%">
