@@ -4,6 +4,7 @@ namespace core\engine;
 
 class Configuration
 {
+    static public $CONFIG = [];
 
     /**
      * @param string $configFile full path to config json file
@@ -96,6 +97,42 @@ class Configuration
             DEFINE('EMAIL_FROM_EMAIL', $config['email_smtp']['from_email']);
         }
 
+        if (!isset($config['coins'])) {
+            $coins = [
+                'ETH' => [
+                    'min_conirmation' => 12,
+                    'activate' => true
+                ],
+                'BTC' => [
+                    'min_conirmation' => 3,
+                    'activate' => true
+                ],
+                'DOGE' => [
+                    'min_conirmation' => 6,
+                    'activate' => true
+                ],
+                'ETC' => [
+                    'min_conirmation' => 10,
+                    'activate' => false
+                ],
+                'BTG' => [
+                    'min_conirmation' => 10,
+                    'activate' => false
+                ],
+                'BCC' => [
+                    'min_conirmation' => 10,
+                    'activate' => false
+                ]
+            ];
+            $config['coins'] = $coins;
+        }
+
+        if (!isset($config['token'])) {
+            $config['token'] = [
+                'name' => 'CPT'
+            ];
+        }
+
         // если конфиг отличается после проверки всех параметров
         if (json_encode($config) !== json_encode($oldConfig)) {
             if (file_put_contents($configFile, json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE))) {
@@ -114,6 +151,8 @@ class Configuration
                 'error' => "NEED CONFIGURE: $configFile.\n<br>Change properties started with !_ and remove !_"
             ];
         }
+
+        Configuration::$CONFIG = $config;
 
         return ['success' => true];
     }

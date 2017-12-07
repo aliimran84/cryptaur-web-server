@@ -22,7 +22,7 @@ class Wallet_view
                 (function ($) {
                     <?php
                     $wallets = [];
-                    foreach (Coin::COINS as $coin) {
+                    foreach (Coin::coins() as $coin) {
                         $wallet = Wallet::getByInvestoridCoin(Application::$authorizedInvestor->id, $coin);
                         $address = null;
                         if ($wallet) {
@@ -35,7 +35,7 @@ class Wallet_view
                     $(document).ready(function () {
                         <?php
                         $coinsRates = [];
-                        foreach (array_merge(Coin::COINS, [Coin::TOKEN]) as $coin) {
+                        foreach (array_merge(Coin::coins(), [Coin::token()]) as $coin) {
                             $coinsRates[$coin] = Coin::getRate($coin);
                         }
                         ?>
@@ -60,7 +60,7 @@ class Wallet_view
                             section.find('.wallet_view-new_contribution-selected_amount').text(val);
 
                             var usd = coinsRate[coin] * val;
-                            var tokens = (usd / coinsRate['<?= Coin::TOKEN ?>']).toFixed(8);
+                            var tokens = (usd / coinsRate['<?= Coin::token() ?>']).toFixed(8);
 
                             section.find('.wallet_view-new_contribution-calculated_selected_to_tokens').text(tokens);
                             section.find('.wallet_view-new_contribution-calculated_as_donation').toggle(tokens < minimalTokensForNotToBeDonation);
@@ -102,17 +102,17 @@ class Wallet_view
                         <form>
                             <div class="input-field col s6 m6">
                                 <select class="wallet_view-new_contribution-select_coins">
-                                    <?php foreach (Coin::COINS as $coin) { ?>
+                                    <?php foreach (Coin::coins() as $coin) { ?>
                                         <option value="<?= $coin ?>"><?= $coin ?></option>
                                     <?php } ?>
                                 </select>
                                 <label>select currency</label>
                             </div>
-                            <?php foreach (Coin::COINS as $coin) { ?>
+                            <?php foreach (Coin::coins() as $coin) { ?>
                                 <div style="display: none;" data-coin="<?= $coin ?>" class="wallet_view-new_contribution-div_amount input-field col s6 m6">
                                     <input type="number"
                                            class="wallet_view-new_contribution-input_amount"
-                                           value="1" min="0" max="9999999" step="0.00000001">
+                                           value="1" min="0" max="9999999999" step="0.00000001">
                                     <label>select amount</label>
                                 </div>
                             <?php } ?>
@@ -130,7 +130,7 @@ class Wallet_view
                 <p>
                     You will get:
                     <span class="wallet_view-new_contribution-calculated_selected_to_tokens"></span>
-                    <?= Coin::TOKEN ?>
+                    <?= Coin::token() ?>
                     <span class="wallet_view-new_contribution-calculated_as_donation" style="display: none;">(will be received as donation)</span>
                 </p>
             </div>

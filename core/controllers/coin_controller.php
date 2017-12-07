@@ -30,9 +30,9 @@ class Coin_controller
 
     static public function handleSetRatesRequest()
     {
-        foreach (array_merge(Coin::COINS, [Coin::TOKEN]) as $coin) {
-            if (isset($_POST[Coin::RATE_KEY_PREFIX . $coin])) {
-                $rate = (double)$_POST[Coin::RATE_KEY_PREFIX . $coin];
+        foreach (array_merge(Coin::coins(), [Coin::token()]) as $coin) {
+            if (isset($_POST[$coin])) {
+                $rate = (double)$_POST[$coin];
                 Coin::setRate($coin, $rate);
             }
         }

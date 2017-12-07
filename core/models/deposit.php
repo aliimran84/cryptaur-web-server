@@ -89,7 +89,7 @@ class Deposit
         }
         $usd = $coinRate * $amount;
 
-        $tokenRate = Coin::getRate(Coin::TOKEN);
+        $tokenRate = Coin::getRate(Coin::token());
 
         $depositTokens = $usd / $tokenRate;
 
@@ -155,7 +155,7 @@ class Deposit
                 `used_in_minting` = 0
         ;", [$investorId]);
 
-        $tokenRate = Coin::getRate(Coin::TOKEN);
+        $tokenRate = Coin::getRate(Coin::token());
         $tokensToMinting = 0;
         $depositsForMintig = [];
         foreach ($db_deposits as $db_deposit) {

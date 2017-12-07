@@ -165,7 +165,7 @@ class Dashboard_view
             <ul>
                 <?php
                 $totalUsd = 0;
-                foreach (Coin::COINS as $coin) {
+                foreach (Coin::coins() as $coin) {
                     $wallet = Wallet::getByInvestoridCoin(Application::$authorizedInvestor->id, $coin);
                     $balance = 0;
                     if ($wallet) {
