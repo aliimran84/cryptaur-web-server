@@ -16,7 +16,7 @@ class Deposit_view
     {
         ob_start();
         ?>
-        <div class="row card">
+        <div class="row card administrator-settings-block">
             <form class="registration col s12" action="<?= Deposit_controller::SET_URL ?>" method="post">
                 <h5 class="center">Set minimal values</h5>
                 Minimal tokens for minting:

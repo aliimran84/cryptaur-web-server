@@ -14,7 +14,7 @@ class Coin_view
     {
         ob_start();
         ?>
-        <div class="row card">
+        <div class="row card administrator-settings-block">
             <form class="registration col s12" action="<?= Coin_controller::SETRATES_URL ?>" method="post">
                 <h5 class="center">Coins rates (deposits)<br>count of usd in one coin</h5>
                 <?php foreach (array_merge(Coin::COINS, [Coin::TOKEN]) as $coin) { ?>

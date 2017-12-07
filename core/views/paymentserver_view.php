@@ -15,7 +15,7 @@ class PaymentServer_view
     {
         ob_start();
         ?>
-        <div class="row card">
+        <div class="row card administrator-settings-block">
             <form class="registration col s12" action="<?= PaymentServer_controller::SET_URL ?>" method="post">
                 <h5 class="center">Payment server</h5>
                 <?php if (isset($_GET['err'])) {

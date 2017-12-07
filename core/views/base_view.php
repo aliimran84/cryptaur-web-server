@@ -26,6 +26,9 @@ class Base_view
             <link rel="stylesheet" href="styles/materialize.min.css?<?= md5_file(PATH_TO_WEB_ROOT_DIR . '/styles/materialize.min.css') ?>">
             <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
             <link rel="stylesheet" href="styles/bundle.min.css?<?= md5_file(PATH_TO_WEB_ROOT_DIR . '/styles/bundle.min.css') ?>">
+            <?php if (Application::$authorizedAdministrator) { ?>
+                <link rel="stylesheet" href="styles/administrator.css?<?= md5_file(PATH_TO_WEB_ROOT_DIR . '/styles/administrator.css') ?>">
+            <?php } ?>
             <script type="text/javascript" src="scripts/jquery-3.2.1.min.js"></script>
         </head>
         <body>
