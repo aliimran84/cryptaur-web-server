@@ -24,6 +24,9 @@ class Application
      * @var Investor|null
      */
     static public $authorizedInvestor = null;
+    /**
+     * @var Administrator|null
+     */
     static public $authorizedAdministrator = null;
 
     static public function init()
