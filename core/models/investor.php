@@ -224,4 +224,15 @@ class Investor
         }
         return $usdUsed;
     }
+
+    /**
+     * @return int
+     */
+    static public function totalTokens()
+    {
+        $tokens = (int)@DB::get("
+            SELECT SUM(`tokens_count`) as `total_tokens` FROM `investors`
+        ;")[0]['total_tokens'];
+        return $tokens;
+    }
 }

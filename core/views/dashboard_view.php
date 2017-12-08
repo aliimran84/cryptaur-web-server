@@ -63,7 +63,7 @@ class Dashboard_view
                 <div class="row indicators">
                     <div class="col s12 m4">
                         <h4>Total tokens issued</h4>
-                        <h3>CPT 3,532,715,580</h3>
+                        <h3><?= Coin::token() ?> <?= Investor::totalTokens() ?></h3>
                     </div>
                     <div class="col s12 m4">
                         <h4>Total funds raised</h4>
