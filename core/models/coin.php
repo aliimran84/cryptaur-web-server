@@ -7,6 +7,8 @@ use core\engine\Configuration;
 
 class Coin
 {
+    const COMMON_COIN = 'ETH';
+
     /**
      * @param bool $onlyActivate
      * @return string[]
