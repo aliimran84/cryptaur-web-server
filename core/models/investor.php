@@ -17,6 +17,10 @@ class Investor
     public $tokens_not_used_in_bounty = 0;
     public $eth_address = '';
     public $eth_withdrawn = 0;
+    /**
+     * @var null|Investor[]
+     */
+    public $referrals = null;
 
     static public function db_init()
     {
@@ -181,17 +185,43 @@ class Investor
         $summonedInvestors = [];
         foreach ($allInvestorsIdWithReffererId as $data) {
             $summonedInvestor = Investor::getById($data['id']);
-            $compressingFunction = function ($summonedInvestor) {
-                return self::isInvestorCollapseInCompress($summonedInvestor);
-            };
-            if (!$withCompressing || $compressingFunction($summonedInvestor)) {
+            if (!$withCompressing || self::isInvestorCollapseInCompress($summonedInvestor)) {
                 $summonedInvestors[$data['id']] = $summonedInvestor;
             } else {
-                foreach (self::summonedBy($summonedInvestor, $compressingFunction) as $compressedInvestor) {
+                foreach (self::summonedBy($summonedInvestor, true) as $compressedInvestor) {
                     $summonedInvestors[$compressedInvestor->id] = $compressedInvestor;
                 }
             }
         }
         return $summonedInvestors;
+    }
+
+    /**
+     * @param int $levels
+     */
+    public function initReferalls($levels)
+    {
+        if ($levels < 1) {
+            return;
+        }
+        if (is_null($this->referrals)) {
+            $this->referrals = self::summonedBy($this);
+        }
+        foreach ($this->referrals as $referral) {
+            $referral->initReferalls($levels - 1);
+        }
+    }
+
+    /**
+     * @return double
+     */
+    public function usdUsed()
+    {
+        $usdUsed = 0;
+        $wallets = Wallet::getByInvestorid($this->id);
+        foreach ($wallets as $wallet) {
+            $usdUsed += $wallet->usdUsed;
+        }
+        return $usdUsed;
     }
 }

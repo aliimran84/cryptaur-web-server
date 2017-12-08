@@ -51,6 +51,18 @@ class Wallet
         ;", [$this->balance, $this->usdUsed, $this->id]);
     }
 
+    static private function createWithDataFromDB($data)
+    {
+        $instance = new Wallet();
+        $instance->id = $data['id'];
+        $instance->investor_id = $data['investor_id'];
+        $instance->coin = $data['coin'];
+        $instance->address = $data['address'];
+        $instance->balance = $data['balance'];
+        $instance->usdUsed = $data['usdUsed'];
+        return $instance;
+    }
+
     /**
      * @param int $investorId
      * @param string $coin
@@ -74,15 +86,25 @@ class Wallet
             }
         }
 
-        $instance = new Wallet();
-        $instance->id = $wallet['id'];
-        $instance->investor_id = $wallet['investor_id'];
-        $instance->coin = $wallet['coin'];
-        $instance->address = $wallet['address'];
-        $instance->balance = $wallet['balance'];
-        $instance->usdUsed = $wallet['usdUsed'];
+        return self::createWithDataFromDB($wallet);
+    }
 
-        return $instance;
+    /**
+     * @param int $investorId
+     * @return Wallet[]
+     */
+    static public function getByInvestorid($investorId)
+    {
+        $walletsData = @DB::get("
+            SELECT * FROM `wallets`
+            WHERE
+                `investor_id` = ?
+        ;", [$investorId]);
+        $wallets = [];
+        foreach ($walletsData as $walletData) {
+            $wallets[] = self::createWithDataFromDB($walletData);
+        }
+        return $wallets;
     }
 
     /**

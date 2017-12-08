@@ -3,7 +3,9 @@
 namespace core\views;
 
 use core\engine\Application;
+use core\models\Bounty;
 use core\models\Coin;
+use core\models\Investor;
 use core\models\Wallet;
 
 class Dashboard_view
@@ -129,19 +131,13 @@ class Dashboard_view
                 <div class="referral-progam">
                     <div class="line-left"></div>
                     <div class="line-bottom"></div>
-                    <div class="circle"></div>
-                    <div class="circle"></div>
-                    <div class="circle"></div>
-                    <div class="circle"></div>
-                    <div class="circle"></div>
-                    <div class="circle"></div>
+                    <?php foreach (Bounty::CURRENT_BOUNTY_PROGRAM as $value) { ?>
+                        <div class="circle"></div>
+                    <?php } ?>
                     <ul>
-                        <li><h2>1st Level: 3%</h2></li>
-                        <li><h2>2st Level: 3%</h2></li>
-                        <li><h2>3st Level: 3%</h2></li>
-                        <li><h2>4st Level: 3%</h2></li>
-                        <li><h2>5st Level: 4%</h2></li>
-                        <li><h2>6st Level: 4%</h2></li>
+                        <?php foreach (Bounty::CURRENT_BOUNTY_PROGRAM as $i => $value) { ?>
+                            <li><h2><?= $i + 1 ?> Level: <?= $value ?>%</h2></li>
+                        <?php } ?>
                     </ul>
                 </div>
             </div>
@@ -182,8 +178,27 @@ class Dashboard_view
         return ob_get_clean();
     }
 
+    /**
+     * @param Investor $investor
+     * @return string
+     */
+    static private function investorCard(&$investor)
+    {
+        ob_start();
+        ?>
+        <div class="tree-block">
+            <h2><?= $investor->email ?></h2>
+            <p>Contributed</p>
+            <h3>US$ <?= $investor->usdUsed() ?></h3>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+
     static public function myGroup()
     {
+        $referrer = Investor::getById(Application::$authorizedInvestor->referrer_id);
+        Application::$authorizedInvestor->initReferalls(count(Bounty::program()));
         ob_start();
         ?>
 
@@ -209,47 +224,23 @@ class Dashboard_view
                     <div class="main-panel-block tree">
                         <ul class="first-level">
                             <li class="first-level">
-                                <div class="tree-block">
-                                    <h2>Sponsor name</h2>
-                                    <p>Contributed</p>
-                                    <h3>US$ 12399.546</h3>
-                                </div>
+                                <?= self::investorCard($referrer) ?>
                                 <div class="line-bottom"></div>
                             </li>
                             <li>
                                 <ul class="second-level">
                                     <li class="second-level participants">
-                                        <div class="tree-block">
-                                            <h2>My name</h2>
-                                            <p>Contributed</p>
-                                            <h3>US$ 12399.546</h3>
-                                        </div>
+                                        <?= self::investorCard(Application::$authorizedInvestor) ?>
                                         <div class="line-right"></div>
                                         <div class="participants-block">
-                                            <h2>2 participants in level<i class="material-icons">expand_more</i></h2>
+                                            <h2><?= count(Application::$authorizedInvestor->referrals) ?> participants
+                                                in level<i class="material-icons">expand_more</i></h2>
                                         </div>
                                         <div class="line-left"></div>
                                         <div class="line-bottom" style="display:none;"></div>
                                     </li>
                                     <li>
-                                        <ul class="third-level participants close">
-                                            <li class="third-level">
-                                                <div class="tree-block">
-                                                    <h2>My name</h2>
-                                                    <p>Contributed</p>
-                                                    <h3>US$ 12399.546</h3>
-                                                </div>
-                                                <div class="line-left"></div>
-                                            </li>
-                                            <li class="third-level">
-                                                <div class="tree-block">
-                                                    <h2>My name</h2>
-                                                    <p>Contributed</p>
-                                                    <h3>US$ 12399.546</h3>
-                                                </div>
-                                                <div class="line-left"></div>
-                                            </li>
-                                        </ul>
+                                        <?= self::groupSubTree(Application::$authorizedInvestor) ?>
                                     </li>
                                 </ul>
                             </li>
@@ -259,6 +250,43 @@ class Dashboard_view
                 </div>
             </section>
         </div>
+
+        <?php
+        return ob_get_clean();
+    }
+
+    /**
+     * @param Investor $investor
+     * @return string html
+     */
+    static private function groupSubTree(&$investor)
+    {
+        ob_start();
+        ?>
+
+        <ul class="third-level participants close">
+            <?php foreach ($investor->referrals as $referral) { ?>
+                <li class="third-level participants">
+                    <?= self::investorCard($referral) ?>
+                    <?php if ($referral->referrals) { ?>
+                        <div class="line-right"></div>
+                        <div class="participants-block">
+                            <h2><?= count($referral->referrals) ?> participants in
+                                level<i class="material-icons">expand_more</i></h2>
+                        </div>
+                    <?php } ?>
+                    <div class="line-left"></div>
+                    <?php if ($referral->referrals) { ?>
+                        <div class="line-bottom" style="display:none;"></div>
+                    <?php } ?>
+                </li>
+                <?php if ($referral->referrals) { ?>
+                    <li>
+                        <?= self::groupSubTree($referral) ?>
+                    </li>
+                <?php } ?>
+            <?php } ?>
+        </ul>
 
         <?php
         return ob_get_clean();
