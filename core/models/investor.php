@@ -42,33 +42,46 @@ class Investor
         ");
     }
 
+    static private function createWithDataFromDB($data)
+    {
+        $instance = new Investor();
+        $instance->id = $data['id'];
+        $instance->referrer_id = $data['referrer_id'];
+        $instance->referrer_code = $data['referrer_code'];
+        $instance->joined_datetime = strtotime($data['joined_datetime']);
+        $instance->email = $data['email'];
+        $instance->tokens_count = $data['tokens_count'];
+        $instance->tokens_not_used_in_bounty = $data['tokens_not_used_in_bounty'];
+        $instance->eth_address = $data['eth_address'];
+        $instance->eth_withdrawn = $data['eth_withdrawn'];
+        return $instance;
+    }
+
+    /**
+     * @param int $id
+     * @return Investor|null
+     */
     static public function getById($id)
     {
-        $investor = @DB::get("
+        $investorData = @DB::get("
             SELECT * FROM `investors`
             WHERE
                 `id` = ?
             LIMIT 1
         ;", [$id])[0];
 
-        if (!$investor) {
+        if (!$investorData) {
             return null;
         }
 
-        $instance = new Investor();
-        $instance->id = $investor['id'];
-        $instance->referrer_id = $investor['referrer_id'];
-        $instance->referrer_code = $investor['referrer_code'];
-        $instance->joined_datetime = strtotime($investor['joined_datetime']);
-        $instance->email = $investor['email'];
-        $instance->tokens_count = $investor['tokens_count'];
-        $instance->tokens_not_used_in_bounty = $investor['tokens_not_used_in_bounty'];
-        $instance->eth_address = $investor['eth_address'];
-        $instance->eth_withdrawn = $investor['eth_withdrawn'];
-
-        return $instance;
+        return self::createWithDataFromDB($investorData);
     }
 
+    /**
+     * @param string $email
+     * @param string $password
+     * @return bool
+     */
     static public function getInvestorIdByEmailPassword($email, $password)
     {
         $investor = DB::get("
@@ -102,6 +115,11 @@ class Investor
         return (int)$investorId;
     }
 
+    /**
+     * @param string $email
+     * @param string $eth_address
+     * @return bool
+     */
     static public function isExistWithParams($email, $eth_address)
     {
         return !!@DB::get("
@@ -159,6 +177,30 @@ class Investor
         );
 
         return DB::lastInsertId();
+    }
+
+    /**
+     * return array of investors from target investor to
+     * @param int $investor_id
+     * @return array
+     */
+    static public function referrersToRoot($investor_id)
+    {
+        $investorsData = @DB::get("
+            SELECT
+                id, email, referrer_id 
+            FROM
+                ( SELECT * FROM investors ORDER BY id DESC ) AS investors_sorted,
+                ( SELECT @temp_referrer_id := ? ) AS initialisation 
+            WHERE
+                id = @temp_referrer_id 
+                AND ( referrer_id = 0 OR @temp_referrer_id := referrer_id )
+        ;", [$investor_id]);
+        $investors = [];
+        foreach ($investorsData as $investorData) {
+            $investors[] = self::createWithDataFromDB($investorData);
+        }
+        return $investors;
     }
 
     /**
