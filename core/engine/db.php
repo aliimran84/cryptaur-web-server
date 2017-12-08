@@ -113,7 +113,9 @@ class DB
                 $types .= 's';
             }
         }
-        mysqli_stmt_bind_param($stmt, $types, ...$values);
+        if (count($values)) {
+            mysqli_stmt_bind_param($stmt, $types, ...$values);
+        }
         if (!$stmt->execute()) {
             self::error("cant execute query $query: {$stmt->error}.\n" .
                 json_encode($values, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
