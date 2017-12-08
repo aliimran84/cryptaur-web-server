@@ -22,7 +22,7 @@ class Coin_view
                     <input type="number"
                            name="<?= $coin ?>" placeholder="1"
                            value="<?= Coin::getRate($coin) ?>"
-                           min="0" max="9999999999" step="0.000000001">
+                           min="0" max="9999999999" step="0.00000001">
                     <br>
                 <?php } ?>
                 <div class="row center">

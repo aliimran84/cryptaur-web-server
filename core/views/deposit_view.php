@@ -23,12 +23,12 @@ class Deposit_view
                 <input type="number"
                        name="<?= Deposit::MINIMAL_TOKENS_FOR_MINTING_KEY ?>" placeholder="1"
                        value="<?= Deposit::minimalTokensForMinting() ?>"
-                       min="0" max="9999999999" step="0.000000001">
+                       min="0" max="9999999999" step="0.00000001">
                 <label>Minimal tokens for bounty:</label>
                 <input type="number"
                        name="<?= Deposit::MINIMAL_TOKENS_FOR_BOUNTY_KEY ?>" placeholder="1"
                        value="<?= Deposit::minimalTokensForBounty() ?>"
-                       min="0" max="9999999999" step="0.000000001">
+                       min="0" max="9999999999" step="0.00000001">
                 <div class="row center">
                     <button type="submit" class="waves-effect waves-light btn btn-send" style="width: 100%">
                         Set
