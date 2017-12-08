@@ -235,4 +235,15 @@ class Investor
         ;")[0]['total_tokens'];
         return $tokens;
     }
+
+    /**
+     * @return int
+     */
+    static public function totalInvestors()
+    {
+        $totalInvestors = (int)@DB::get("
+            SELECT COUNT(`id`) as `total_investors` FROM `investors`
+        ;")[0]['total_investors'];
+        return $totalInvestors;
+    }
 }

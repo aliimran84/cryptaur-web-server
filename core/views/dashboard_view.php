@@ -71,7 +71,7 @@ class Dashboard_view
                     </div>
                     <div class="col s12 m4">
                         <h4>Total participants</h4>
-                        <h3>45,836</h3>
+                        <h3><?= Investor::totalInvestors() ?></h3>
                     </div>
                 </div>
                 <section class="my-tokens">
