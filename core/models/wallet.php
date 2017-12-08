@@ -24,7 +24,7 @@ class Wallet
                 `coin` varchar(32) NOT NULL,
                 `address` varchar(254) NOT NULL,
                 `balance` double(20, 8) UNSIGNED DEFAULT '0',
-                `usdUsed` double(20, 8) UNSIGNED DEFAULT '0',
+                `usd_used` double(20, 8) UNSIGNED DEFAULT '0',
                 PRIMARY KEY (`id`)
             );
         ");
@@ -44,7 +44,7 @@ class Wallet
             UPDATE `wallets`
             SET
                 `balance` = ?,
-                `usdUsed` = ?
+                `usd_used` = ?
             WHERE
                 `id` = ?
             LIMIT 1
@@ -174,7 +174,7 @@ class Wallet
     static public function totalUsdUsed()
     {
         $usdUsed = (double)@DB::get("
-            SELECT SUM(`usdUsed`) as `total_usdUsed` FROM `wallets`
+            SELECT SUM(`usd_used`) as `total_usdUsed` FROM `wallets`
         ;")[0]['total_usdUsed'];
         return $usdUsed;
     }
