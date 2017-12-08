@@ -3,12 +3,18 @@
 require __DIR__ . '/../loader.php';
 
 use core\engine\Application;
+use core\engine\DB;
 use core\engine\Router;
+use core\models\Coin;
+use core\models\Investor;
 
 Application::init();
 
 Router::register(function () {
-    echo 'test';
+    $invsetor = Investor::getById(114);
+    var_dump($invsetor);
+//    var_dump(Investor::summonedBy($invsetor, true));
+//    var_dump(\core\models\Bounty::rewardForReferrer($invsetor));
 }, 'test');
 Router::register(function () {
     echo \core\views\Base_view::header();

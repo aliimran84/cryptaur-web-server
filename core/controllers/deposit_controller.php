@@ -8,6 +8,7 @@ use core\engine\Router;
 use core\models\Deposit;
 use core\views\Base_view;
 use core\views\Deposit_view;
+use core\views\Menu_point;
 
 class Deposit_controller
 {
@@ -34,7 +35,9 @@ class Deposit_controller
             if (!Application::$authorizedInvestor) {
                 Utility::location();
             }
-            echo Base_view::header('Transaction');
+            Base_view::$TITLE = 'Transaction';
+            Base_view::$MENU_POINT = Menu_point::Transactions;
+            echo Base_view::header();
             echo Deposit_view::transactions();
             echo Base_view::footer();
         }, self::TRANSACTIONS_URL);

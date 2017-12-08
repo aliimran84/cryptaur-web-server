@@ -10,6 +10,7 @@ use core\engine\Router;
 use core\models\Investor;
 use core\views\Base_view;
 use core\views\Investor_view;
+use core\views\Menu_point;
 
 class Investor_controller
 {
@@ -45,7 +46,9 @@ class Investor_controller
             if (Application::$authorizedInvestor) {
                 Utility::location(self::BASE_URL);
             }
-            echo Base_view::header('Login');
+            Base_view::$TITLE = 'Login';
+            Base_view::$MENU_POINT = Menu_point::Login;
+            echo Base_view::header();
             echo Investor_view::loginForm();
             echo Base_view::footer();
         }, self::LOGIN_URL, Router::GET_METHOD);
@@ -64,7 +67,9 @@ class Investor_controller
             if (Application::$authorizedInvestor) {
                 Utility::location(self::BASE_URL);
             }
-            echo Base_view::header('Login');
+            Base_view::$TITLE = 'Login';
+            Base_view::$MENU_POINT = Menu_point::Login;
+            echo Base_view::header();
             echo Investor_view::registerForm();
             echo Base_view::footer();
         }, self::REGISTER_URL, Router::GET_METHOD);
@@ -144,7 +149,9 @@ class Investor_controller
         $confirmationUrl = self::urlForRegistration($_POST['email'], $_POST['eth_address'], $referrerId, $_POST['password']);
         Email::send($_POST['email'], [], 'Cryptaur: email confirmation', "<a href=\"$confirmationUrl\">Confirm email to finish registration</a>");
 
-        echo Base_view::header('Email confirmation info');
+        Base_view::$TITLE = 'Email confirmation info';
+        Base_view::$MENU_POINT = Menu_point::Register;
+        echo Base_view::header();
         echo Base_view::text("Please check your email and follow the sent link");
         echo Base_view::footer();
     }
@@ -153,14 +160,18 @@ class Investor_controller
     {
         $data = @Utility::decodeData($_GET['d']);
         if (!$data) {
-            echo Base_view::header('Email confirmation problem');
+            Base_view::$TITLE = 'Email confirmation problem';
+            Base_view::$MENU_POINT = Menu_point::Register;
+            echo Base_view::header();
             echo Base_view::text('Perhaps the link is outdated');
             echo Base_view::footer();
             return;
         }
         $investorId = Investor::registerUser($data['email'], $data['eth_address'], $data['referrer_id'], $data['password_hash']);
         if (!$investorId) {
-            echo Base_view::header('Email confirmation problem');
+            Base_view::$TITLE = 'Email confirmation problem';
+            Base_view::$MENU_POINT = Menu_point::Register;
+            echo Base_view::header();
             echo Base_view::text('Something went wrong with investor registration');
             echo Base_view::footer();
             return;
@@ -169,7 +180,9 @@ class Investor_controller
         self::loginWithId($investorId);
         self::detectLoggedInInvestor();
 
-        echo Base_view::header('Email confirmed successfully');
+        Base_view::$TITLE = 'Email confirmed successfully';
+        Base_view::$MENU_POINT = Menu_point::Register;
+        echo Base_view::header();
         echo Base_view::text("Email confirmed successfully");
         echo Base_view::footer();
     }
@@ -180,7 +193,9 @@ class Investor_controller
             Utility::location(self::BASE_URL);
         }
 
-        echo Base_view::header('Settings');
+        Base_view::$TITLE = 'Settings';
+        Base_view::$MENU_POINT = Menu_point::Settings;
+        echo Base_view::header();
         echo Base_view::text('Settings come later');
         echo Base_view::footer();
     }

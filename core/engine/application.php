@@ -14,6 +14,7 @@ use core\models\Investor;
 use core\models\PaymentServer;
 use core\models\Wallet;
 use core\views\Base_view;
+use core\views\Menu_point;
 use core\views\Wallet_view;
 
 class Application
@@ -56,6 +57,7 @@ class Application
         }
 
         Router::registerDefault(function () {
+            Base_view::$MENU_POINT = Menu_point::About;
             echo Base_view::header();
             echo Base_view::about_stageOne();
             if (Application::$authorizedInvestor) {

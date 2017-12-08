@@ -8,6 +8,7 @@ use core\engine\Utility;
 use core\engine\Router;
 use core\views\Base_view;
 use core\views\Administrator_view;
+use core\views\Menu_point;
 
 class Administrator_controller
 {
@@ -48,7 +49,9 @@ class Administrator_controller
             if (Application::$authorizedAdministrator) {
                 Utility::location(self::BASE_URL);
             }
-            echo Base_view::header('Administrator login');
+            Base_view::$TITLE = 'Administrator login';
+            Base_view::$MENU_POINT = Menu_point::Admin_login;
+            echo Base_view::header();
             echo Administrator_view::loginForm();
             echo Base_view::footer();
         }, self::LOGIN_URL, Router::GET_METHOD);
@@ -71,7 +74,8 @@ class Administrator_controller
             if (!Application::$authorizedAdministrator) {
                 Utility::location(self::BASE_URL);
             }
-            echo Base_view::header('Administrator set');
+            Base_view::$TITLE = 'Administrator setup';
+            echo Base_view::header();
             $email = '';
             if (isset($_GET['id'])) {
                 $email = Administrator::getById($_GET['id'])->email;
@@ -91,7 +95,9 @@ class Administrator_controller
             if (!Application::$authorizedAdministrator) {
                 Utility::location(self::BASE_URL);
             }
-            echo Base_view::header('Administrators list');
+            Base_view::$TITLE = 'Administrators list';
+            Base_view::$MENU_POINT = Menu_point::Administrators_list;
+            echo Base_view::header();
             echo Administrator_view::administratorsList();
             echo Base_view::footer();
         }, self::ADMINISTRATORS_LIST);
@@ -101,7 +107,9 @@ class Administrator_controller
             if (!Application::$authorizedAdministrator) {
                 Utility::location(self::BASE_URL);
             }
-            echo Base_view::header('Administrator set');
+            Base_view::$TITLE = 'Coins settings';
+            Base_view::$MENU_POINT = Menu_point::Coins_settings;
+            echo Base_view::header();
             echo Administrator_view::coinsSettings();
             echo Base_view::footer();
         }, self::COINS_SETTINGS, Router::GET_METHOD);

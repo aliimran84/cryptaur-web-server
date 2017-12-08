@@ -7,11 +7,14 @@ use core\controllers\Dashboard_controller;
 use core\controllers\Deposit_controller;
 use core\engine\Application;
 use core\controllers\Investor_controller;
-use core\models\Investor;
 
 class Base_view
 {
-    static public function header($title = '', $contentClass = '')
+    static public $TITLE = '';
+    static public $CONTENT_BLOCK_CLASSES = [];
+    static public $MENU_POINT = 0;
+
+    static public function header()
     {
         ob_start();
         ?>
@@ -19,7 +22,7 @@ class Base_view
         <html lang="en">
         <head>
             <meta charset="UTF-8">
-            <title>Cryptaur<?= $title ? " - $title" : '' ?></title>
+            <title>Cryptaur<?= self::$TITLE ? ' - ' . self::$TITLE : '' ?></title>
             <base href="<?= APPLICATION_URL ?>/">
             <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
             <link rel="shortcut icon" href="favicon.png" type="image/png">
@@ -37,7 +40,7 @@ class Base_view
             <?= self::nav() ?>
         </nav>
         <div class="wrapper">
-        <div class="content <?= $contentClass ?>">
+        <div class="content <?= implode(' ', self::$CONTENT_BLOCK_CLASSES) ?>">
 
         <?php
         return ob_get_clean();
@@ -67,26 +70,48 @@ class Base_view
         return ob_get_clean();
     }
 
+    /**
+     * @param int $point
+     * @return string classname "active"
+     */
+    static private function activeMenuItem($point)
+    {
+        if (self::$MENU_POINT === $point) {
+            return 'active';
+        }
+        return '';
+    }
+
     static private function menuList()
     {
         // todo: what li is actice?
         ob_start();
         if (Application::$authorizedAdministrator) { ?>
-            <li><a href="<?= Administrator_controller::COINS_SETTINGS ?>">Coins settings</a></li>
-            <li><a href="<?= Administrator_controller::ADMINISTRATORS_LIST ?>">Administrators</a></li>
-            <li class="login">Admin: <?= Application::$authorizedAdministrator->email ?></li>
-            <li><a href="<?= Administrator_controller::LOGOUT_URL ?>">Logout</a></li>
+            <li class="<?= self::activeMenuItem(Menu_point::Coins_settings) ?>">
+                <a href="<?= Administrator_controller::COINS_SETTINGS ?>">Coins settings</a></li>
+            <li class="<?= self::activeMenuItem(Menu_point::Administrators_list) ?>">
+                <a href="<?= Administrator_controller::ADMINISTRATORS_LIST ?>">Administrators</a></li>
+            <li class="login <?= self::activeMenuItem(Menu_point::Admin_login) ?>">
+                Admin: <?= Application::$authorizedAdministrator->email ?></li>
+            <li class="<?= self::activeMenuItem(Menu_point::Admin_logout) ?>">
+                <a href="<?= Administrator_controller::LOGOUT_URL ?>">Logout</a></li>
         <?php } elseif (Application::$authorizedInvestor) { ?>
-            <li><a href="">About</a></li>
-            <li><a href="<?= Dashboard_controller::BASE_URL ?>">Dashboard</a></li>
-            <li><a href="<?= Deposit_controller::TRANSACTIONS_URL ?>">Transactions history</a></li>
-            <li><a href="<?= Investor_controller::SETTINGS_URL ?>">Settings</a></li>
-            <li class="login"><?= Application::$authorizedInvestor->email ?></li>
-            <li><a href="<?= Investor_controller::LOGOUT_URL ?>">Logout</a></li>
+            <li class="<?= self::activeMenuItem(Menu_point::About) ?>"><a href="">About</a></li>
+            <li class="<?= self::activeMenuItem(Menu_point::Dashboard) ?>">
+                <a href="<?= Dashboard_controller::BASE_URL ?>">Dashboard</a></li>
+            <li class="<?= self::activeMenuItem(Menu_point::Transactions) ?>">
+                <a href="<?= Deposit_controller::TRANSACTIONS_URL ?>">Transactions history</a></li>
+            <li class="<?= self::activeMenuItem(Menu_point::Settings) ?>">
+                <a href="<?= Investor_controller::SETTINGS_URL ?>">Settings</a></li>
+            <li class="login <?= self::activeMenuItem(Menu_point::Login) ?>"><?= Application::$authorizedInvestor->email ?></li>
+            <li class="<?= self::activeMenuItem(Menu_point::Logout) ?>">
+                <a href="<?= Investor_controller::LOGOUT_URL ?>">Logout</a></li>
         <?php } else { ?>
-            <li><a href="#">About</a></li>
-            <li><a href="<?= Investor_controller::LOGIN_URL ?>">Login</a></li>
-            <li><a href="<?= Investor_controller::REGISTER_URL ?>">Register</a></li>
+            <li class="<?= self::activeMenuItem(Menu_point::About) ?>"><a href="">About</a></li>
+            <li class="<?= self::activeMenuItem(Menu_point::Login) ?>"><a href="<?= Investor_controller::LOGIN_URL ?>">Login</a>
+            </li>
+            <li class="<?= self::activeMenuItem(Menu_point::Register) ?>">
+                <a href="<?= Investor_controller::REGISTER_URL ?>">Register</a></li>
         <?php }
         return ob_get_clean();
     }
