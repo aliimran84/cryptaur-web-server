@@ -67,7 +67,7 @@ class Dashboard_view
                     </div>
                     <div class="col s12 m4">
                         <h4>Total funds raised</h4>
-                        <h3>US$ 28,567,845</h3>
+                        <h3>US$ <?= (int)Wallet::totalUsdUsed() ?></h3>
                     </div>
                     <div class="col s12 m4">
                         <h4>Total participants</h4>

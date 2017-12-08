@@ -167,4 +167,15 @@ class Wallet
         }
         return self::registerWallet($investorId, $coin, $response['address']);
     }
+
+    /**
+     * @return double
+     */
+    static public function totalUsdUsed()
+    {
+        $usdUsed = (double)@DB::get("
+            SELECT SUM(`usdUsed`) as `total_usdUsed` FROM `wallets`
+        ;")[0]['total_usdUsed'];
+        return $usdUsed;
+    }
 }
