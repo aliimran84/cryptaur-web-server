@@ -182,7 +182,7 @@ class Investor
     /**
      * return array of investors from target investor to
      * @param int $investor_id
-     * @return array
+     * @return Investor[]
      */
     static public function referrersToRoot($investor_id)
     {
