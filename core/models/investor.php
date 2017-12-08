@@ -188,7 +188,7 @@ class Investor
     {
         $investorsData = @DB::get("
             SELECT
-                id, email, referrer_id 
+                * 
             FROM
                 ( SELECT * FROM investors ORDER BY id DESC ) AS investors_sorted,
                 ( SELECT @temp_referrer_id := ? ) AS initialisation 
