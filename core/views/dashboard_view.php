@@ -154,24 +154,22 @@ class Dashboard_view
         ?>
         <h3>Purchased</h3>
         <div class="amount-wallet">
-            0 CPT
+            <?= Application::$authorizedInvestor->tokens_count ?> <?= Coin::token() ?>
         </div>
         <div class="amount input-field">
             <h5>Contributed</h5>
             <ul>
                 <?php
-                $totalUsd = 0;
                 foreach (Coin::coins() as $coin) {
                     $wallet = Wallet::getByInvestoridCoin(Application::$authorizedInvestor->id, $coin);
                     $balance = 0;
                     if ($wallet) {
                         $balance = $wallet->balance;
-                        $totalUsd += $wallet->usdUsed;
                     }
                     ?>
                     <li><span><?= $coin ?></span><span><?= $balance ?></span></li>
                 <?php } ?>
-                <li><h5>Total in USD</h5><h5>$<?= $totalUsd ?></h5></li>
+                <li><h5>Total in USD</h5><h5>$<?= Application::$authorizedInvestor->usdUsed() ?></h5></li>
             </ul>
         </div>
         <?php
