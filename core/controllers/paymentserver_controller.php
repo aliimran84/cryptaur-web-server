@@ -39,7 +39,7 @@ class PaymentServer_controller
 
         Router::register(function () {
             $result = self::handleNotify();
-            Utility::logOriginalRequest('paymentServerNotify/' . time(), $result);
+            Utility::logOriginalRequest('paymentServerNotify/' . time() . "_$result", $result);
             $accept = $result > 0;
             echo json_encode(['accept' => $accept], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         }, self::NOTIFY_URL);
