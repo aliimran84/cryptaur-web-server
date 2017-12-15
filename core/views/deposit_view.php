@@ -55,6 +55,11 @@ class Deposit_view
                        name="<?= Deposit::RECEIVING_DEPOSITS_IS_ON ?>" placeholder="1"
                        value="<?= Deposit::receivingDepositsIsOn() ?>"
                        min="0" max="1" step="1">
+                <label>Minting is on:</label>
+                <input type="number"
+                       name="<?= Deposit::MINTING_IS_ON ?>" placeholder="1"
+                       value="<?= Deposit::mintingIsOn() ?>"
+                       min="0" max="1" step="1">
                 <div class="row center">
                     <button type="submit" class="waves-effect waves-light btn btn-send" style="width: 100%">
                         Set

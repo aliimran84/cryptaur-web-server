@@ -2,9 +2,9 @@
 
 namespace core\models;
 
+use core\controllers\Bounty_controller;
 use core\engine\Application;
 use core\engine\DB;
-use core\engine\Utility;
 
 class Deposit
 {
@@ -18,6 +18,7 @@ class Deposit
     public $datetime = 0;
     public $investor_id = 0;
     public $is_donation = false;
+    public $registered = false;
     public $used_in_minting = false;
     public $used_in_bounty = false;
 
@@ -25,6 +26,7 @@ class Deposit
     const MINIMAL_TOKENS_FOR_BOUNTY_KEY = 'minimal_tokens_for_bounty';
 
     const RECEIVING_DEPOSITS_IS_ON = 'receiving_deposits_is_on';
+    const MINTING_IS_ON = 'minting_is_on';
 
     static public function db_init()
     {
@@ -40,6 +42,7 @@ class Deposit
                 `rate` double(20, 8) DEFAULT '-1',
                 `datetime` datetime(0) NOT NULL,
                 `is_donation` tinyint(1) UNSIGNED DEFAULT '0',
+                `registered` tinyint(1) UNSIGNED DEFAULT '0',
                 `used_in_minting` tinyint(1) UNSIGNED DEFAULT '0',
                 `used_in_bounty` tinyint(1) UNSIGNED DEFAULT '0',
                 PRIMARY KEY (`id`)
@@ -64,6 +67,7 @@ class Deposit
         $instance->rate = $data['rate'];
         $instance->datetime = strtotime($data['datetime']);
         $instance->is_donation = (bool)$data['is_donation'];
+        $instance->registered = (bool)$data['registered'];
         $instance->used_in_minting = (bool)$data['used_in_minting'];
         $instance->used_in_bounty = (bool)$data['used_in_bounty'];
         return $instance;
@@ -84,7 +88,6 @@ class Deposit
             return true;
         }
 
-        // todo: is it not a event time? set USD = 0, RATE = 0 and must not to do minting and must not to put into wallet!
         $coinRate = Coin::getRate($coin);
         if (is_null($coinRate)) {
             return false;
@@ -97,6 +100,8 @@ class Deposit
 
         $isDonation = $depositTokens < self::minimalTokensForNotToBeDonation();
 
+        $receivingDepositsIsOn = self::receivingDepositsIsOn();
+
         DB::set("
             INSERT INTO `deposits`
             SET
@@ -108,10 +113,15 @@ class Deposit
                 `usd` = ?,
                 `rate` = ?,
                 `datetime` = ?,
-                `is_donation` = ?
-        ;", [$investorId, $coin, $txid, $vout, $amount, $usd, $coinRate, DB::timetostr(time()), $isDonation]);
+                `is_donation` = ?,
+                `registered` = ?
+        ;", [$investorId, $coin, $txid, $vout, $amount, $usd, $coinRate, DB::timetostr(time()), $isDonation, $receivingDepositsIsOn]);
 
         if ($isDonation) {
+            return true;
+        }
+
+        if ($receivingDepositsIsOn) {
             return true;
         }
 
@@ -145,47 +155,72 @@ class Deposit
         ;", [$usd, $rate, $this->id]);
     }
 
+    /**
+     * @param double $registered
+     */
+    private function setRegistered($registered)
+    {
+        $this->registered = $registered;
+        DB::set("
+            UPDATE `deposits`
+            SET
+                `registered` = ?
+            WHERE
+                `id` = ?
+            LIMIT 1
+        ;", [$registered, $this->id]);
+    }
+
+    /**
+     * @param int $investorId
+     */
     static private function tryMintTokens($investorId)
     {
-        // todo: is it not a event time? not to do minting!
+        if (!self::mintingIsOn()) {
+            return;
+        }
 
         $db_deposits = DB::get("
             SELECT *
             FROM `deposits`
             WHERE
                 `investor_id` = ? AND
-                `used_in_minting` = 0
+                `used_in_minting` = 0 AND
+                `is_donation` = 0
         ;", [$investorId]);
 
+        $receivingDepositsIsOn = self::receivingDepositsIsOn();
         $tokenRate = Coin::getRate(Coin::token());
         $tokensToMinting = 0;
         $depositsForMintig = [];
         foreach ($db_deposits as $db_deposit) {
             $deposit = self::constructFromDbData($db_deposit);
 
-            // если депозит был принят не в эвент, то устанавливаем rate и usd только сейчас
-            if (!$deposit->rate && !$deposit->usd) {
-                $coinRate = Coin::getRate($deposit->coin);
-                $usd = $coinRate * $deposit->amount;
-                $deposit->setUsdAndRate($usd, $coinRate);
+            // если депозит был принят, а сейчас может быть принят, то принимаем
+            if ($receivingDepositsIsOn && !$deposit->registered) {
+                $deposit->setRegistered(true);
+                $wallet = Wallet::getByInvestoridCoin($investorId, $deposit->coin);
+                if ($wallet) {
+                    $wallet->addToWallet($deposit->amount, $deposit->usd);
+                }
             }
 
-            $depositsForMintig[] = $deposit;
-            $tokensToMinting += $deposit->usd / $tokenRate;
+            if ($deposit->registered) {
+                $depositsForMintig[] = $deposit;
+                $tokensToMinting += $deposit->usd / $tokenRate;
+            }
         }
 
+        // если суммарно по депозитам инвестора превысили минимальный порог, то генерируем токены
         if ($tokensToMinting >= self::minimalTokensForMinting()) {
             foreach ($depositsForMintig as $i => $deposit) {
                 // если процесс чеканке был инициирован не одним платежом, а несколькими, то выполняем реальную чеканку только одной операцией
                 $realTokensMinting = 0;
-                if ($i === count($depositsForMintig)) {
+                if ($i === count($depositsForMintig) - 1) {
                     $realTokensMinting = $tokensToMinting;
                 }
-//                todo: request real mint
-//                $deposit->investor_id;
-//                $deposit->coin;
-//                $deposit->txid;
-//                $realTokensMinting
+                $investor = Investor::getById($investorId);
+                Bounty_controller::mintTokens($investor, $realTokensMinting, $deposit->coin, $deposit->txid);
             }
         }
     }
@@ -231,11 +266,18 @@ class Deposit
     }
 
     /**
-     * @return int
+     * @return bool
      */
     static public function receivingDepositsIsOn()
     {
         return Application::getValue(self::RECEIVING_DEPOSITS_IS_ON);
     }
 
+    /**
+     * @return bool
+     */
+    static public function mintingIsOn()
+    {
+        return Application::getValue(self::MINTING_IS_ON);
+    }
 }

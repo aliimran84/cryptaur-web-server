@@ -62,7 +62,7 @@ class Deposit_controller
 
     static public function handlePermissionsSetRequest()
     {
-        foreach ([Deposit::RECEIVING_DEPOSITS_IS_ON] as $key) {
+        foreach ([Deposit::RECEIVING_DEPOSITS_IS_ON, Deposit::MINTING_IS_ON] as $key) {
             $value = (bool)$_POST[$key];
             Application::setValue($key, $value);
         }
