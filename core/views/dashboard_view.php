@@ -197,6 +197,7 @@ class Dashboard_view
     {
         $referrer = Investor::getById(Application::$authorizedInvestor->referrer_id);
         Application::$authorizedInvestor->initReferalls(count(Bounty::program()));
+        Application::$authorizedInvestor->initCompressedReferalls(count(Bounty::program()));
         ob_start();
         ?>
 
@@ -219,7 +220,11 @@ class Dashboard_view
                     </div>
                 </div>
                 <div class="row">
-                    <div class="main-panel-block tree">
+                    <p class="after-compression">
+                        <input type="checkbox" id="after-compression"/>
+                        <label for="after-compression">After compression</label>
+                    </p>
+                    <div class="main-panel-block tree before-compression active">
                         <ul class="first-level">
                             <?php if ($referrer) { ?>
                                 <li class="first-level">
@@ -242,13 +247,42 @@ class Dashboard_view
                                         <div class="line-bottom" style="display:none;"></div>
                                     </li>
                                     <li>
-                                        <?= self::groupSubTree(Application::$authorizedInvestor) ?>
+                                        <?= self::groupSubTree_beforeCompress(Application::$authorizedInvestor) ?>
                                     </li>
                                 </ul>
                             </li>
                         </ul>
                     </div>
-
+                    <div class="main-panel-block tree after-compression">
+                        <ul class="first-level">
+                            <?php if ($referrer) { ?>
+                                <li class="first-level">
+                                    <?= self::investorCard($referrer) ?>
+                                    <div class="line-bottom"></div>
+                                </li>
+                            <?php } ?>
+                            <li>
+                                <ul class="second-level">
+                                    <li class="second-level participants">
+                                        <?= self::investorCard(Application::$authorizedInvestor) ?>
+                                        <div class="line-right"></div>
+                                        <div class="participants-block">
+                                            <h2><?= count(Application::$authorizedInvestor->compressed_referrals) ?>
+                                                participants
+                                                in level<i class="material-icons">expand_more</i></h2>
+                                        </div>
+                                        <?php if ($referrer) { ?>
+                                            <div class="line-left"></div>
+                                        <?php } ?>
+                                        <div class="line-bottom" style="display:none;"></div>
+                                    </li>
+                                    <li>
+                                        <?= self::groupSubTree_afterCompress(Application::$authorizedInvestor) ?>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </section>
         </div>
@@ -261,7 +295,7 @@ class Dashboard_view
      * @param Investor $investor
      * @return string html
      */
-    static private function groupSubTree(&$investor)
+    static private function groupSubTree_beforeCompress(&$investor)
     {
         ob_start();
         ?>
@@ -284,7 +318,7 @@ class Dashboard_view
                 </li>
                 <?php if ($referral->referrals) { ?>
                     <li>
-                        <?= self::groupSubTree($referral) ?>
+                        <?= self::groupSubTree_beforeCompress($referral) ?>
                     </li>
                 <?php } ?>
             <?php } ?>
@@ -294,4 +328,40 @@ class Dashboard_view
         return ob_get_clean();
     }
 
+    /**
+     * @param Investor $investor
+     * @return string html
+     */
+    static private function groupSubTree_afterCompress(&$investor)
+    {
+        ob_start();
+        ?>
+
+        <ul class="third-level participants close">
+            <?php foreach ($investor->compressed_referrals as $referral) { ?>
+                <li class="third-level participants">
+                    <?= self::investorCard($referral) ?>
+                    <?php if ($referral->compressed_referrals) { ?>
+                        <div class="line-right"></div>
+                        <div class="participants-block">
+                            <h2><?= count($referral->compressed_referrals) ?> participants in
+                                level<i class="material-icons">expand_more</i></h2>
+                        </div>
+                    <?php } ?>
+                    <div class="line-left"></div>
+                    <?php if ($referral->compressed_referrals) { ?>
+                        <div class="line-bottom" style="display:none;"></div>
+                    <?php } ?>
+                </li>
+                <?php if ($referral->compressed_referrals) { ?>
+                    <li>
+                        <?= self::groupSubTree_afterCompress($referral) ?>
+                    </li>
+                <?php } ?>
+            <?php } ?>
+        </ul>
+
+        <?php
+        return ob_get_clean();
+    }
 }
