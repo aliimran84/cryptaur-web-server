@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
     <link rel="stylesheet" href="styles/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" href="styles/bundle.min.css?rev=8e17df662beb7fbdca92ffc1c2bc8688">
+    <link rel="stylesheet" href="styles/bundle.min.css?rev=a095b9469b7e526f0c53c3f456919fd6">
 </head>
 <body>
 
@@ -248,7 +248,11 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="main-panel-block tree">
+                        <p class="after-compression">
+                            <input type="checkbox" id="after-compression" />
+                            <label for="after-compression">After compression</label>
+                        </p>
+                        <div class="main-panel-block tree before-compression active">
                             <ul class="first-level">
                                 <li class="first-level">
                                     <div class="tree-block">
@@ -368,7 +372,78 @@
                                 </li>
                             </ul>
                         </div>
+                        <div class="main-panel-block tree after-compression">
+                            <ul class="first-level">
+                                <li class="first-level">
+                                    <div class="tree-block">
+                                        <h2>6313dfd5@test.test</h2>
+                                        <p>Contributed</p>
+                                        <h3>US$ 0</h3>
+                                    </div>
+                                    <div class="line-bottom"></div>
+                                </li>
+                                <li>
+                                    <ul class="second-level">
+                                        <li class="second-level participants">
+                                            <div class="tree-block">
+                                                <h2>6f984859@test.test</h2>
+                                                <p>Contributed</p>
+                                                <h3>US$ 0</h3>
+                                            </div>
+                                            <div class="line-right"></div>
+                                            <div class="participants-block">
+                                                <h2>3 participants
+                                                    in level<i class="material-icons">expand_more</i></h2>
+                                            </div>
+                                            <div class="line-left"></div>
+                                            <div class="line-bottom" style="display:none;"></div>
+                                        </li>
+                                        <li>
 
+                                            <ul class="third-level participants close">
+                                                <li class="third-level participants">
+                                                    <div class="tree-block">
+                                                        <h2>35c2f24e@test.test</h2>
+                                                        <p>Contributed</p>
+                                                        <h3>US$ 0</h3>
+                                                    </div>
+                                                    <div class="line-right"></div>
+                                                    <div class="participants-block">
+                                                        <h2>1 participants in
+                                                            level<i class="material-icons">expand_more</i></h2>
+                                                    </div>
+                                                    <div class="line-left"></div>
+                                                    <div class="line-bottom" style="display:none;"></div>
+                                                </li>
+                                                <li>
+
+                                                    <ul class="third-level participants close">
+                                                        <li class="third-level participants">
+                                                            <div class="tree-block">
+                                                                <h2>2478753e@test.test</h2>
+                                                                <p>Contributed</p>
+                                                                <h3>US$ 0</h3>
+                                                            </div>
+                                                            <div class="line-left"></div>
+                                                        </li>
+                                                    </ul>
+
+                                                </li>
+                                                <li class="third-level participants">
+                                                    <div class="tree-block">
+                                                        <h2>489c181d@test.test</h2>
+                                                        <p>Contributed</p>
+                                                        <h3>US$ 0</h3>
+                                                    </div>
+                                                    <div class="line-left"></div>
+                                                </li>
+                                            </ul>
+
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </section>
             </div>
