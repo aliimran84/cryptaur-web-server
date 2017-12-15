@@ -320,6 +320,26 @@ class Investor
         }
     }
 
+    static public function fill_referalsCompressedTable_forAll($callback = null)
+    {
+        $minTokens = Deposit::minimalTokensForBounty();
+        $investors_data = @DB::get("
+            SELECT
+                `id` 
+            FROM
+                `investors`
+            WHERE
+                `tokens_count` >= ?
+        ;", [$minTokens]);
+        foreach ($investors_data as $i => $investor_data) {
+            $investor = self::getById($investor_data['id']);
+            self::fill_referalsCompressedTable_forInverstor($investor);
+            if (is_callable($callback)) {
+                call_user_func($callback, $i, count($investors_data));
+            }
+        }
+    }
+
     static public function fill_referalsCompressedTable_forInverstor(&$investor)
     {
         // это будет заполнятся только для тех, кто участвует в компрессии
