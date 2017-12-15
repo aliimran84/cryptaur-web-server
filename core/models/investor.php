@@ -21,6 +21,10 @@ class Investor
      * @var null|Investor[]
      */
     public $referrals = null;
+    /**
+     * @var null|Investor[]
+     */
+    public $compressed_referrals = null;
 
     static public function db_init()
     {
@@ -290,6 +294,29 @@ class Investor
         }
         foreach ($this->referrals as $referral) {
             $referral->initReferalls($levels - 1);
+        }
+    }
+
+    /**
+     * @param int $levels
+     */
+    public function initCompressedReferalls($levels)
+    {
+        if ($levels < 1) {
+            return;
+        }
+
+        $referralsIdByLevel = self::referrals_compressed($this->id, 1);
+        if (count($referralsIdByLevel) === 0) {
+            return;
+        }
+        $referralsId = $referralsIdByLevel[0];
+
+        $this->compressed_referrals = [];
+        foreach ($referralsId as $id) {
+            $investor = self::getById($id);
+            $investor->initCompressedReferalls($levels - 1);
+            $this->compressed_referrals[] = $investor;
         }
     }
 
