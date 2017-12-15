@@ -18,7 +18,7 @@ class Administrator_controller
     const LOGIN_URL = 'administrator/login';
     const LOGOUT_URL = 'administrator/logout';
     const SET_URL = 'administrator/set';
-    const COINS_SETTINGS = 'administrator/coins_settings';
+    const SETTINGS = 'administrator/settings';
     const ADMINISTRATORS_LIST = 'administrator/list';
 
     const SESSION_KEY = 'authorized_administrator_id';
@@ -107,12 +107,12 @@ class Administrator_controller
             if (!Application::$authorizedAdministrator) {
                 Utility::location(self::BASE_URL);
             }
-            Base_view::$TITLE = 'Coins settings';
-            Base_view::$MENU_POINT = Menu_point::Coins_settings;
+            Base_view::$TITLE = 'Settings';
+            Base_view::$MENU_POINT = Menu_point::Settings;
             echo Base_view::header();
             echo Administrator_view::coinsSettings();
             echo Base_view::footer();
-        }, self::COINS_SETTINGS, Router::GET_METHOD);
+        }, self::SETTINGS, Router::GET_METHOD);
     }
 
     static public function handleLoginRequest()

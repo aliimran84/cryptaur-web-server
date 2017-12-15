@@ -86,8 +86,8 @@ class Base_view
     {
         ob_start();
         if (Application::$authorizedAdministrator) { ?>
-            <li class="<?= self::activeMenuItem(Menu_point::Coins_settings) ?>">
-                <a href="<?= Administrator_controller::COINS_SETTINGS ?>">Coins settings</a></li>
+            <li class="<?= self::activeMenuItem(Menu_point::Administrator_settings) ?>">
+                <a href="<?= Administrator_controller::SETTINGS ?>">Settings</a></li>
             <li class="<?= self::activeMenuItem(Menu_point::Administrators_list) ?>">
                 <a href="<?= Administrator_controller::ADMINISTRATORS_LIST ?>">Administrators</a></li>
             <li class="login <?= self::activeMenuItem(Menu_point::Admin_login) ?>">

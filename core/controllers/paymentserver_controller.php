@@ -48,7 +48,7 @@ class PaymentServer_controller
     static public function handleSetRequest()
     {
         PaymentServer::set(trim($_POST['url'], '/'), $_POST['keyid'], $_POST['secretkey']);
-        Utility::location(Administrator_controller::COINS_SETTINGS);
+        Utility::location(Administrator_controller::SETTINGS);
     }
 
     static private function fromPaymentServerUserIdToInvestorId($userid)

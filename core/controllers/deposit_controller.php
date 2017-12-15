@@ -57,7 +57,7 @@ class Deposit_controller
             $value = (double)$_POST[$key];
             Application::setValue($key, $value);
         }
-        Utility::location(Administrator_controller::COINS_SETTINGS);
+        Utility::location(Administrator_controller::SETTINGS);
     }
 
     static public function handlePermissionsSetRequest()
@@ -66,6 +66,6 @@ class Deposit_controller
             $value = (bool)$_POST[$key];
             Application::setValue($key, $value);
         }
-        Utility::location(Administrator_controller::COINS_SETTINGS);
+        Utility::location(Administrator_controller::SETTINGS);
     }
 }

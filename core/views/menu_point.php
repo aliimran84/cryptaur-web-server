@@ -14,5 +14,5 @@ abstract class Menu_point
     const Login = 8;
     const Logout = 9;
     const Register = 10;
-    const Coins_settings = 11;
+    const Administrator_settings = 11;
 }

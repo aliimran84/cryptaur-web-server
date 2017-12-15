@@ -36,6 +36,6 @@ class Coin_controller
                 Coin::setRate($coin, $rate);
             }
         }
-        Utility::location(Administrator_controller::COINS_SETTINGS);
+        Utility::location(Administrator_controller::SETTINGS);
     }
 }
