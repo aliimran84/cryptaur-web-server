@@ -221,10 +221,12 @@ class Dashboard_view
                 <div class="row">
                     <div class="main-panel-block tree">
                         <ul class="first-level">
-                            <li class="first-level">
-                                <?= self::investorCard($referrer) ?>
-                                <div class="line-bottom"></div>
-                            </li>
+                            <?php if ($referrer) { ?>
+                                <li class="first-level">
+                                    <?= self::investorCard($referrer) ?>
+                                    <div class="line-bottom"></div>
+                                </li>
+                            <?php } ?>
                             <li>
                                 <ul class="second-level">
                                     <li class="second-level participants">
@@ -234,7 +236,9 @@ class Dashboard_view
                                             <h2><?= count(Application::$authorizedInvestor->referrals) ?> participants
                                                 in level<i class="material-icons">expand_more</i></h2>
                                         </div>
-                                        <div class="line-left"></div>
+                                        <?php if ($referrer) { ?>
+                                            <div class="line-left"></div>
+                                        <?php } ?>
                                         <div class="line-bottom" style="display:none;"></div>
                                     </li>
                                     <li>
