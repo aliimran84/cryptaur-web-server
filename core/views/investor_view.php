@@ -45,7 +45,7 @@ class Investor_view
                         <?php if (isset($_GET['err'])) {
                             // todo: decode error
                             ?>
-                            <label>Error <?= $_GET['err'] ?></label>
+                            <label class="red-text">Error <?= $_GET['err'] ?>: <?= $_GET['err_text'] ?></label>
                         <?php } ?>
                         <input type="text" name="email" placeholder="E-MAIL">
                         <input type="password" name="password" placeholder="PASSWORD">

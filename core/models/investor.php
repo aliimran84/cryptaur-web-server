@@ -129,18 +129,16 @@ class Investor
 
     /**
      * @param string $email
-     * @param string $eth_address
      * @return bool
      */
-    static public function isExistWithParams($email, $eth_address)
+    static public function isExistWithParams($email)
     {
         return !!@DB::get("
             SELECT * FROM `investors`
             WHERE
-                `email` = ? OR
-                `eth_address` = ?
+                `email` = ?
             LIMIT 1
-        ;", [$email, $eth_address])[0];
+        ;", [$email])[0];
     }
 
     /**
@@ -156,7 +154,7 @@ class Investor
             return false;
         }
 
-        if (Investor::isExistWithParams($email, $eth_address)) {
+        if (Investor::isExistWithParams($email)) {
             return false;
         }
 
