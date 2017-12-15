@@ -84,7 +84,6 @@ class Base_view
 
     static private function menuList()
     {
-        // todo: what li is actice?
         ob_start();
         if (Application::$authorizedAdministrator) { ?>
             <li class="<?= self::activeMenuItem(Menu_point::Coins_settings) ?>">

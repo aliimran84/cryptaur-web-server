@@ -128,23 +128,23 @@ class Investor_controller
     static private function handleRegistrationRequest()
     {
         if (!filter_var(@$_POST['email'], FILTER_VALIDATE_EMAIL)) {
-            Utility::location(self::REGISTER_URL . '?err=1');
+            Utility::location(self::REGISTER_URL . '?err=1&err_text=not a valid email');
         }
         if (!Utility::validateEthAddress(@$_POST['eth_address'])) {
-            Utility::location(self::REGISTER_URL . '?err=2');
+            Utility::location(self::REGISTER_URL . '?err=2&err_text=not a valid eth address');
         }
-        if (Investor::isExistWithParams($_POST['email'], $_POST['eth_address'])) {
-            Utility::location(self::REGISTER_URL . '?err=3');
+        if (Investor::isExistWithParams($_POST['email'])) {
+            Utility::location(self::REGISTER_URL . '?err=3&err_text=email already in use');
         }
         $referrerId = 0;
         if (@$_POST['referrer_code']) {
             $referrerId = Investor::getReferrerIdByCode(@$_POST['referrer_code']);
             if (!$referrerId) {
-                Utility::location(self::REGISTER_URL . '?err=4');
+                Utility::location(self::REGISTER_URL . '?err=4&err_text=not a valid referrer code');
             }
         }
         if (!preg_match('/^[0-9A-Za-z?!@#$%\-\_\.,;:]{6,50}$/', @$_POST['password'])) {
-            Utility::location(self::REGISTER_URL . '?err=5');
+            Utility::location(self::REGISTER_URL . '?err=5&err_text=not a valid password, use more than 6 characters');
         }
         $confirmationUrl = self::urlForRegistration($_POST['email'], $_POST['eth_address'], $referrerId, $_POST['password']);
         Email::send($_POST['email'], [], 'Cryptaur: email confirmation', "<a href=\"$confirmationUrl\">Confirm email to finish registration</a>");
