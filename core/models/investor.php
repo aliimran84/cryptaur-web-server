@@ -40,6 +40,14 @@ class Investor
                 PRIMARY KEY (`id`)
             );
         ");
+        DB::query("
+            CREATE TABLE IF NOT EXISTS `investors_referrals_compressed` (
+                `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `investor_id` int(10) UNSIGNED DEFAULT '0',
+                `referral_id` int(10) UNSIGNED DEFAULT '0',
+                PRIMARY KEY (`id`)
+            );
+        ");
     }
 
     static private function createWithDataFromDB($data)
@@ -209,33 +217,64 @@ class Investor
      */
     static private function isInvestorCollapseInCompress(&$investor)
     {
-        return (bool)($investor->tokens_count >= Deposit::minimalTokensForBounty());
+        return $investor->tokens_count < Deposit::minimalTokensForBounty();
     }
 
     /**
      * @param Investor $investor
-     * @param bool $withCompressing
      * @return Investor[]
      */
-    static public function summonedBy(&$investor, $withCompressing = false)
+    static public function referrals(&$investor)
     {
         $allInvestorsIdWithReffererId = @DB::get("
             SELECT `id` FROM `investors`
             WHERE
                 `referrer_id` = ?
         ;", [$investor->id]);
-        $summonedInvestors = [];
+        $referrals = [];
         foreach ($allInvestorsIdWithReffererId as $data) {
-            $summonedInvestor = Investor::getById($data['id']);
-            if (!$withCompressing || self::isInvestorCollapseInCompress($summonedInvestor)) {
-                $summonedInvestors[$data['id']] = $summonedInvestor;
-            } else {
-                foreach (self::summonedBy($summonedInvestor, true) as $compressedInvestor) {
-                    $summonedInvestors[$compressedInvestor->id] = $compressedInvestor;
-                }
+            $referrals[$data['id']] = Investor::getById($data['id']);
+        }
+        return $referrals;
+    }
+
+    /**
+     * @param int $investor_id
+     * @param int $levels
+     * @return array[] investors id by level
+     */
+    static public function referrals_compressed($investor_id, $levels)
+    {
+        if ($levels < 1) {
+            return [];
+        }
+        $referralsByLevel = [];
+        $compressedReferrals_data = @DB::get("
+            SELECT `referral_id` FROM `investors_referrals_compressed`
+            WHERE
+                `investor_id` = ?
+        ;", [$investor_id]);
+        $compressedReferrals = [];
+        foreach ($compressedReferrals_data as $compressedReferral_data) {
+            $compressedReferrals[] = $compressedReferral_data['referral_id'];
+        }
+        if (count($compressedReferrals) === 0) {
+            return [];
+        }
+        $referralsByLevel[] = $compressedReferrals;
+
+        $refReferrals = [];
+        foreach ($compressedReferrals as $referral_id) {
+            $oneRefReferralsByLevel = self::referrals_compressed($referral_id, $levels - 1);
+            foreach ($oneRefReferralsByLevel as $oneRefReferrals) {
+                $refReferrals[] = $oneRefReferrals;
             }
         }
-        return $summonedInvestors;
+        if (count($refReferrals) !== 0) {
+            $referralsByLevel[] = $refReferrals;
+        }
+
+        return $referralsByLevel;
     }
 
     /**
@@ -247,11 +286,91 @@ class Investor
             return;
         }
         if (is_null($this->referrals)) {
-            $this->referrals = self::summonedBy($this);
+            $this->referrals = self::referrals($this);
         }
         foreach ($this->referrals as $referral) {
             $referral->initReferalls($levels - 1);
         }
+    }
+
+    static public function fill_referalsCompressedTable_forInverstor(&$investor)
+    {
+        // это будет заполнятся только для тех, кто участвует в компрессии
+        if (self::isInvestorCollapseInCompress($investor)) {
+            return;
+        }
+
+        $minTokens = Deposit::minimalTokensForBounty();
+        // получаем массив реферреров для выбраного инвестора выше до следующего (вместе с собой),
+        // кто уже участвует в баунти или до самого верхнего родительского
+        $referrers_data = @DB::get("
+            SELECT
+                `id`,
+                @current_referrer_id := `referrer_id` AS `referrer_id`,
+                `tokens_count`,
+                @bounty_accepts := ( @bounty_accepts + CAST(`tokens_count` >= ? AS UNSIGNED INTEGER)) AS `bounty_accepts` 
+            FROM
+                `investors`
+                JOIN ( SELECT @current_referrer_id := ?, @bounty_accepts := 0 ) AS `tmp` 
+            WHERE
+                `id` = @current_referrer_id AND
+                @bounty_accepts < 2
+            ORDER BY
+                `id` DESC
+        ;", [$minTokens, $investor->id]);
+        unset($referrers_data[0]);
+
+        // получаем всех дочерних реферралов
+        $referrals_list_string = implode(',', array_merge([$investor->id], self::referrals_id_recursive($investor->id)));
+        foreach ($referrers_data as $referrer_data) {
+            // подчистим для всех полученных реферреров
+            // имеющиеся ссылки на compressed рефералов из наших дочерних реферралов
+            DB::set("
+                DELETE 
+                FROM
+                    `investors_referrals_compressed` 
+                WHERE
+                    `investor_id` = ? AND
+                    `referral_id` IN (
+                        ?
+                    )
+            ;", [$referrer_data['id'], $referrals_list_string]);
+
+            // устанавливаем ссылку теперь уже на себя
+            DB::set("
+                INSERT INTO `investors_referrals_compressed` 
+                SET `investor_id` = ?,
+                    `referral_id` = ?
+            ;", [$referrer_data['id'], $investor->id]);
+        }
+    }
+
+    /**
+     * @param int $investor_id
+     * @return int[] [1,2,4,5] without source investor
+     */
+    static public function referrals_id_recursive($investor_id)
+    {
+        $referrals_id_data = DB::get("
+            SELECT `id` FROM (
+                SELECT
+                    `id`,
+                    `referrer_id`,
+                    @ri := concat(@ri, ',', `id`) AS `referrers_list`
+                FROM
+                    `investors`
+                    JOIN ( SELECT @ri := ? ) `tmp `
+                WHERE
+                    find_in_set(`referrer_id`, @ri) > 0
+                ORDER BY
+                    `id` ASC
+                ) as `referrals`
+        ", [$investor_id]);
+        $referrals_id = [];
+        foreach ($referrals_id_data as $referral_id_data) {
+            $referrals_id[] = $referral_id_data['id'];
+        }
+        return $referrals_id;
     }
 
     /**

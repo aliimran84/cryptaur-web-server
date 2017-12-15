@@ -24,15 +24,16 @@ class Bounty
         $investorOnLevels = [
             -1 => [$referrer]
         ];
-        foreach (self::program() as $level => $percent) {
-            $investorOnLevels[$level] = [];
-            foreach ($investorOnLevels[$level - 1] as &$investor) {
-                $investorOnLevels[$level] += Investor::summonedBy($investor, true);
-            }
-            foreach ($investorOnLevels[$level] as &$investor) {
-                $reward += $investor->tokens_not_used_int_bounty * $percent / 100;
-            }
-        }
+        // use referrals_compressed
+//        foreach (self::program() as $level => $percent) {
+//            $investorOnLevels[$level] = [];
+//            foreach ($investorOnLevels[$level - 1] as &$investor) {
+//                $investorOnLevels[$level] += Investor::summonedBy($investor, true);
+//            }
+//            foreach ($investorOnLevels[$level] as &$investor) {
+//                $reward += $investor->tokens_not_used_int_bounty * $percent / 100;
+//            }
+//        }
         return $reward;
     }
 }
