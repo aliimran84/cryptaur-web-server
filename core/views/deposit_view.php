@@ -17,7 +17,7 @@ class Deposit_view
         ob_start();
         ?>
         <div class="row card administrator-settings-block">
-            <form class="registration col s12" action="<?= Deposit_controller::SET_URL ?>" method="post">
+            <form class="registration col s12" action="<?= Deposit_controller::TOKENS_SET_URL ?>" method="post">
                 <h5 class="center">Set minimal values</h5>
                 <label>Minimal tokens for minting:</label>
                 <input type="number"
@@ -29,6 +29,32 @@ class Deposit_view
                        name="<?= Deposit::MINIMAL_TOKENS_FOR_BOUNTY_KEY ?>" placeholder="1"
                        value="<?= Deposit::minimalTokensForBounty() ?>"
                        min="0" max="9999999999" step="0.00000001">
+                <div class="row center">
+                    <button type="submit" class="waves-effect waves-light btn btn-send" style="width: 100%">
+                        Set
+                    </button>
+                </div>
+            </form>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+
+    /**
+     * @return string
+     */
+    static public function setPersmissionsForm()
+    {
+        ob_start();
+        ?>
+        <div class="row card administrator-settings-block">
+            <form class="registration col s12" action="<?= Deposit_controller::PERMISSIONS_SET_URL ?>" method="post">
+                <h5 class="center">Set permissions values</h5>
+                <label>Receiving deposits is on:</label>
+                <input type="number"
+                       name="<?= Deposit::RECEIVING_DEPOSITS_IS_ON ?>" placeholder="1"
+                       value="<?= Deposit::receivingDepositsIsOn() ?>"
+                       min="0" max="1" step="1">
                 <div class="row center">
                     <button type="submit" class="waves-effect waves-light btn btn-send" style="width: 100%">
                         Set

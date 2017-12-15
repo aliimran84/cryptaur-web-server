@@ -24,6 +24,8 @@ class Deposit
     const MINIMAL_TOKENS_FOR_MINTING_KEY = 'minimal_tokens_for_minting';
     const MINIMAL_TOKENS_FOR_BOUNTY_KEY = 'minimal_tokens_for_bounty';
 
+    const RECEIVING_DEPOSITS_IS_ON = 'receiving_deposits_is_on';
+
     static public function db_init()
     {
         DB::query("
@@ -227,4 +229,13 @@ class Deposit
     {
         return Application::getValue(self::MINIMAL_TOKENS_FOR_BOUNTY_KEY);
     }
+
+    /**
+     * @return int
+     */
+    static public function receivingDepositsIsOn()
+    {
+        return Application::getValue(self::RECEIVING_DEPOSITS_IS_ON);
+    }
+
 }

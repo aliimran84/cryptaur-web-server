@@ -97,6 +97,9 @@ class Administrator_view
             <div class="col s12 m6 xl4">
                 <?= Deposit_view::setMinimalsForm() ?>
             </div>
+            <div class="col s12 m6 xl4">
+                <?= Deposit_view::setPersmissionsForm() ?>
+            </div>
         </div>
         <?php
         return ob_get_clean();

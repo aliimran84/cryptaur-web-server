@@ -14,7 +14,8 @@ class Deposit_controller
 {
     static public $initialized = false;
 
-    const SET_URL = 'deposit/set';
+    const TOKENS_SET_URL = 'deposit/tokens_set';
+    const PERMISSIONS_SET_URL = 'deposit/permissions_set';
     const TRANSACTIONS_URL = 'transactions';
 
     static public function init()
@@ -28,8 +29,15 @@ class Deposit_controller
             if (!Application::$authorizedAdministrator) {
                 Utility::location();
             }
-            self::handleSetRequest();
-        }, self::SET_URL, Router::POST_METHOD);
+            self::handleTokensSetRequest();
+        }, self::TOKENS_SET_URL, Router::POST_METHOD);
+
+        Router::register(function () {
+            if (!Application::$authorizedAdministrator) {
+                Utility::location();
+            }
+            self::handlePermissionsSetRequest();
+        }, self::PERMISSIONS_SET_URL, Router::POST_METHOD);
 
         Router::register(function () {
             if (!Application::$authorizedInvestor) {
@@ -43,10 +51,19 @@ class Deposit_controller
         }, self::TRANSACTIONS_URL);
     }
 
-    static public function handleSetRequest()
+    static public function handleTokensSetRequest()
     {
         foreach ([Deposit::MINIMAL_TOKENS_FOR_MINTING_KEY, Deposit::MINIMAL_TOKENS_FOR_BOUNTY_KEY] as $key) {
             $value = (double)$_POST[$key];
+            Application::setValue($key, $value);
+        }
+        Utility::location(Administrator_controller::COINS_SETTINGS);
+    }
+
+    static public function handlePermissionsSetRequest()
+    {
+        foreach ([Deposit::RECEIVING_DEPOSITS_IS_ON] as $key) {
+            $value = (bool)$_POST[$key];
             Application::setValue($key, $value);
         }
         Utility::location(Administrator_controller::COINS_SETTINGS);
