@@ -9,7 +9,7 @@ function conversionHeightLineBottom() {
         li = $(ul[i]).children('li.'+$(ul[i]).attr('class').split(' ')[0]);
         positionTopFirstLi = $(li[0]).offset().top;
         positionTopLastLi = $(li[li.length-1]).offset().top;
-        $(ul[i]).parent().prev().find('.line-bottom').css('height',positionTopLastLi - positionTopFirstLi + 208);
+        $(ul[i]).parent().prev().find('.line-bottom').css('height',positionTopLastLi - positionTopFirstLi + 211);
     }
 }
 $(document).ready(function(){
