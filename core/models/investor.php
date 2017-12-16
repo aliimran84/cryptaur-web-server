@@ -26,6 +26,8 @@ class Investor
      */
     public $compressed_referrals = null;
 
+    static private $storage = [];
+
     static public function db_init()
     {
         DB::query("
@@ -75,6 +77,9 @@ class Investor
      */
     static public function getById($id)
     {
+        if (isset(Investor::$storage[$id])) {
+            return Investor::$storage[$id];
+        }
         $investorData = @DB::get("
             SELECT * FROM `investors`
             WHERE
@@ -86,7 +91,9 @@ class Investor
             return null;
         }
 
-        return self::createWithDataFromDB($investorData);
+        $instance = self::createWithDataFromDB($investorData);
+        Investor::$storage[$id] = $instance;
+        return $instance;
     }
 
     /**
@@ -288,9 +295,10 @@ class Investor
             return;
         }
         if (is_null($this->referrals)) {
+            echo '*';
             $this->referrals = self::referrals($this);
         }
-        foreach ($this->referrals as $referral) {
+        foreach ($this->referrals as &$referral) {
             $referral->initReferalls($levels - 1);
         }
     }
@@ -304,18 +312,49 @@ class Investor
             return;
         }
 
-        $referralsIdByLevel = self::referrals_compressed($this->id, 1);
-        if (count($referralsIdByLevel) === 0) {
-            return;
-        }
-        $referralsId = $referralsIdByLevel[0];
+        if (is_null($this->compressed_referrals)) {
+            $this->compressed_referrals = [];
 
-        $this->compressed_referrals = [];
-        foreach ($referralsId as $id) {
-            $investor = self::getById($id);
-            $investor->initCompressedReferalls($levels - 1);
-            $this->compressed_referrals[] = $investor;
+            $referralsIdByLevel = self::referrals_compressed($this->id, 1);
+            if (count($referralsIdByLevel) === 0) {
+                return;
+            }
+
+            foreach ($referralsIdByLevel[0] as $id) {
+                $investor = self::getById($id);
+                $this->compressed_referrals[] = $investor;
+            }
         }
+
+        foreach ($this->compressed_referrals as &$investor) {
+            $investor->initCompressedReferalls($levels - 1);
+        }
+    }
+
+    public function referralsCount($isFirst = true)
+    {
+        $count = 0;
+        if ($isFirst) {
+            $this->initReferalls(count(Bounty::program()));
+        }
+        foreach ($this->referrals as &$referral) {
+            ++$count;
+            $count += $referral->referralsCount(false);
+        }
+        return $count;
+    }
+
+    public function compressedReferralsCount($isFirst = true)
+    {
+        $count = 0;
+        if ($isFirst) {
+            $this->initCompressedReferalls(count(Bounty::program()));
+        }
+        foreach ($this->compressed_referrals as &$referral) {
+            ++$count;
+            $count += $referral->compressedReferralsCount(false);
+        }
+        return $count;
     }
 
     static public function fill_referalsCompressedTable_forAll($callback = null)

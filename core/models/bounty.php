@@ -37,7 +37,7 @@ class Bounty
             return $reward;
         }
 
-        foreach ($investor->compressed_referrals as $referral) {
+        foreach ($investor->compressed_referrals as &$referral) {
             $reward += self::rewardForInvestor($referral, $level + 1);
         }
 

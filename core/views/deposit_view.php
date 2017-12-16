@@ -96,7 +96,7 @@ class Deposit_view
                 </div>
                 <ul class="collapsible" data-collapsible="accordion">
                     <?php
-                    foreach ($deposits as $deposit) {
+                    foreach ($deposits as &$deposit) {
                         ?>
                         <li>
                             <div class="collapsible-header">

@@ -338,7 +338,7 @@ class Dashboard_view
         ?>
 
         <ul class="third-level participants close">
-            <?php foreach ($investor->compressed_referrals as $referral) { ?>
+            <?php foreach ($investor->compressed_referrals as &$referral) { ?>
                 <li class="third-level participants">
                     <?= self::investorCard($referral) ?>
                     <?php if ($referral->compressed_referrals) { ?>
