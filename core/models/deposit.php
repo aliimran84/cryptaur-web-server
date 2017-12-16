@@ -140,7 +140,7 @@ class Deposit
      * @param double $usd
      * @param double $rate
      */
-    private function setUsdAndRate($usd, $rate)
+    public function setUsdAndRate($usd, $rate)
     {
         $this->usd = $usd;
         $this->rate = $rate;
@@ -158,7 +158,7 @@ class Deposit
     /**
      * @param bool $registered
      */
-    private function setRegistered($registered)
+    public function setRegistered($registered)
     {
         $this->registered = $registered;
         DB::set("
@@ -174,7 +174,7 @@ class Deposit
     /**
      * @param bool $usedInMinting
      */
-    private function setUsedInMinting($usedInMinting)
+    public function setUsedInMinting($usedInMinting)
     {
         $this->registered = $usedInMinting;
         DB::set("
@@ -255,7 +255,6 @@ class Deposit
             $deposit = self::constructFromDbData($db_deposit);
             $deposits[$deposit->id] = $deposit;
         }
-
         return $deposits;
     }
 
