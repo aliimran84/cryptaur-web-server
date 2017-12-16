@@ -15,25 +15,32 @@ class Bounty
     }
 
     /**
-     * @param Investor $referrer
+     * @param Investor $investor
+     * @param int $level
      * @return int
      */
-    static public function rewardForReferrer(&$referrer)
+    static public function rewardForInvestor(&$investor, $level = 0)
     {
         $reward = 0;
-        $investorOnLevels = [
-            -1 => [$referrer]
-        ];
-        // use referrals_compressed
-//        foreach (self::program() as $level => $percent) {
-//            $investorOnLevels[$level] = [];
-//            foreach ($investorOnLevels[$level - 1] as &$investor) {
-//                $investorOnLevels[$level] += Investor::summonedBy($investor, true);
-//            }
-//            foreach ($investorOnLevels[$level] as &$investor) {
-//                $reward += $investor->tokens_not_used_int_bounty * $percent / 100;
-//            }
-//        }
+        if ($level > count(self::program())) {
+            return $reward;
+        }
+
+        if ($level === 0) {
+            $investor->initCompressedReferalls(count(self::program()));
+        } else {
+            $tokenRate = Coin::getRate(Coin::token());
+            $reward += $tokenRate * $investor->tokens_not_used_in_bounty * Bounty::CURRENT_BOUNTY_PROGRAM[$level] / 100;
+        }
+
+        if (is_null($investor->compressed_referrals) || count($investor->compressed_referrals) === 0) {
+            return $reward;
+        }
+
+        foreach ($investor->compressed_referrals as $referral) {
+            $reward += self::rewardForInvestor($referral, $level + 1);
+        }
+
         return $reward;
     }
 }
