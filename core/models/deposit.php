@@ -156,7 +156,7 @@ class Deposit
     }
 
     /**
-     * @param double $registered
+     * @param bool $registered
      */
     private function setRegistered($registered)
     {
@@ -169,6 +169,22 @@ class Deposit
                 `id` = ?
             LIMIT 1
         ;", [$registered, $this->id]);
+    }
+
+    /**
+     * @param bool $usedInMinting
+     */
+    private function setUsedInMinting($usedInMinting)
+    {
+        $this->registered = $usedInMinting;
+        DB::set("
+            UPDATE `deposits`
+            SET
+                `used_in_minting` = ?
+            WHERE
+                `id` = ?
+            LIMIT 1
+        ;", [$usedInMinting, $this->id]);
     }
 
     /**
@@ -214,13 +230,15 @@ class Deposit
         // если суммарно по депозитам инвестора превысили минимальный порог, то генерируем токены
         if ($tokensToMinting >= self::minimalTokensForMinting()) {
             foreach ($depositsForMintig as $i => $deposit) {
-                // если процесс чеканке был инициирован не одним платежом, а несколькими, то выполняем реальную чеканку только одной операцией
                 $realTokensMinting = 0;
+                // если процесс чеканке был инициирован не одним платежом, а несколькими, то выполняем реальную чеканку только одной операцией
                 if ($i === count($depositsForMintig) - 1) {
                     $realTokensMinting = $tokensToMinting;
                 }
                 $investor = Investor::getById($investorId);
-                Bounty_controller::mintTokens($investor, $realTokensMinting, $deposit->coin, $deposit->txid);
+                if (Bounty_controller::mintTokens($investor, $realTokensMinting, $deposit->coin, $deposit->txid)) {
+                    $deposit->setUsedInMinting(true);
+                }
             }
         }
     }
