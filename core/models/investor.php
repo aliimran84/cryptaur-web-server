@@ -327,7 +327,6 @@ class Investor
             return;
         }
         if (is_null($this->referrals)) {
-            echo '*';
             $this->referrals = self::referrals($this);
         }
         foreach ($this->referrals as &$referral) {

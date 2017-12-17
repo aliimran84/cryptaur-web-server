@@ -45,6 +45,7 @@ class Coin
     }
 
     /**
+     * how much coins in 1 $
      * @param string $coin
      * @return null|double count of usd in one coin
      */

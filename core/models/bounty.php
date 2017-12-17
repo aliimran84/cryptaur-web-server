@@ -15,6 +15,7 @@ class Bounty
     }
 
     /**
+     * reward in $
      * @param Investor $investor
      * @param int $level
      * @return int

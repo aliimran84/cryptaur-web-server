@@ -85,7 +85,13 @@ class Dashboard_view
                         <div class="col s12 m6 main-panel-block">
                             <h3>Bounty</h3>
                             <div class="amount-wallet">
-                                <?= Application::$authorizedInvestor->eth_withdrawn ?> <?= Coin::COMMON_COIN ?>
+                                <?=
+                                number_format(
+                                    Bounty::rewardForInvestor(Application::$authorizedInvestor) /
+                                    Coin::getRate(Coin::COMMON_COIN),
+                                    4
+                                )
+                                ?> <?= Coin::COMMON_COIN ?>
                             </div>
                             <div class="amount input-field">
                                 <input type="number" name="amount" value="0" min="0" max="0" step="0.00000001">
