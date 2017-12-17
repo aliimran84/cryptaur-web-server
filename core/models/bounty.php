@@ -2,9 +2,14 @@
 
 namespace core\models;
 
+use core\engine\Application;
+
 class Bounty
 {
     const CURRENT_BOUNTY_PROGRAM = [3, 3, 3, 3, 4, 4];
+
+    const WITHDRAW_IS_ON = 'withdraw_is_on';
+    const REINVEST_IS_ON = 'reinvest_is_on';
 
     /**
      * @return int[]
@@ -49,5 +54,21 @@ class Bounty
         }
 
         return $reward;
+    }
+
+    /**
+     * @return bool
+     */
+    static public function withdrawIsOn()
+    {
+        return Application::getValue(self::WITHDRAW_IS_ON);
+    }
+
+    /**
+     * @return bool
+     */
+    static public function reinvestIsOn()
+    {
+        return Application::getValue(self::REINVEST_IS_ON);
     }
 }

@@ -5,6 +5,7 @@ namespace core\views;
 use core\controllers\Deposit_controller;
 use core\engine\Application;
 use core\engine\DB;
+use core\models\Bounty;
 use core\models\Deposit;
 
 class Deposit_view
@@ -59,6 +60,16 @@ class Deposit_view
                 <input type="number"
                        name="<?= Deposit::MINTING_IS_ON ?>" placeholder="1"
                        value="<?= Deposit::mintingIsOn() ?>"
+                       min="0" max="1" step="1">
+                <label>Withdraw is on:</label>
+                <input type="number"
+                       name="<?= Bounty::WITHDRAW_IS_ON ?>" placeholder="1"
+                       value="<?= Bounty::withdrawIsOn() ?>"
+                       min="0" max="1" step="1">
+                <label>Reinvest is on:</label>
+                <input type="number"
+                       name="<?= Bounty::REINVEST_IS_ON ?>" placeholder="1"
+                       value="<?= Bounty::reinvestIsOn() ?>"
                        min="0" max="1" step="1">
                 <div class="row center">
                     <button type="submit" class="waves-effect waves-light btn btn-send" style="width: 100%">

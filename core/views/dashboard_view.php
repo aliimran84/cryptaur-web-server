@@ -23,9 +23,9 @@ class Dashboard_view
                         <h2>Stage 1</h2>
                         <p>Nov 27, 2017</p>
                         <p>Dec 07, 2017</p>
-                        <div class="col s12 offset-m1 m10 offset-l2 l8 offset-xl3 xl6">
-                            <button class="waves-effect waves-light btn btn-learn-more">Learn more</button>
-                        </div>
+                        <!--                        <div class="col s12 offset-m1 m10 offset-l2 l8 offset-xl3 xl6">-->
+                        <!--                            <button class="waves-effect waves-light btn btn-learn-more">Learn more</button>-->
+                        <!--                        </div>-->
                     </div>
                 </div>
                 <div class="row">
@@ -33,9 +33,9 @@ class Dashboard_view
                         <h2>Stage 2</h2>
                         <p>Jan 22, 2018</p>
                         <p>Jan 31, 2018</p>
-                        <div class="col s12 offset-m1 m10 offset-l2 l8 offset-xl3 xl6">
-                            <button class="waves-effect waves-light btn btn-learn-more">Learn more</button>
-                        </div>
+                        <!--                        <div class="col s12 offset-m1 m10 offset-l2 l8 offset-xl3 xl6">-->
+                        <!--                            <button class="waves-effect waves-light btn btn-learn-more">Learn more</button>-->
+                        <!--                        </div>-->
                     </div>
                 </div>
                 <div class="row">
@@ -43,9 +43,9 @@ class Dashboard_view
                         <h2>Stage 3</h2>
                         <p>Feb 12, 2018</p>
                         <p>Feb 20, 2018</p>
-                        <div class="col s12 offset-m1 m10 offset-l2 l8 offset-xl3 xl6">
-                            <button class="waves-effect waves-light btn btn-learn-more">Learn more</button>
-                        </div>
+                        <!--                        <div class="col s12 offset-m1 m10 offset-l2 l8 offset-xl3 xl6">-->
+                        <!--                            <button class="waves-effect waves-light btn btn-learn-more">Learn more</button>-->
+                        <!--                        </div>-->
                     </div>
                 </div>
                 <div class="row">
@@ -53,9 +53,9 @@ class Dashboard_view
                         <h2>Stage 4</h2>
                         <p>Mar 05, 2018</p>
                         <p>Mar 12, 2018</p>
-                        <div class="col s12 offset-m1 m10 offset-l2 l8 offset-xl3 xl6">
-                            <button class="waves-effect waves-light btn btn-learn-more">Learn more</button>
-                        </div>
+                        <!--                        <div class="col s12 offset-m1 m10 offset-l2 l8 offset-xl3 xl6">-->
+                        <!--                            <button class="waves-effect waves-light btn btn-learn-more">Learn more</button>-->
+                        <!--                        </div>-->
                     </div>
                 </div>
             </div>
@@ -98,10 +98,16 @@ class Dashboard_view
                                 <label>select amount</label>
                             </div>
                             <div class="amount input-field">
-                                <button class="waves-effect waves-light btn ">Withdraw</button>
+                                <button class="waves-effect waves-light btn "
+                                    <?= (Bounty::withdrawIsOn() ? '' : 'disabled') ?>>
+                                    Withdraw
+                                </button>
                             </div>
                             <div class="amount input-field">
-                                <button class="waves-effect waves-light btn ">Reinvest</button>
+                                <button class="waves-effect waves-light btn "
+                                    <?= (Bounty::reinvestIsOn() ? '' : 'disabled') ?>>
+                                    Reinvest
+                                </button>
                             </div>
                         </div>
                     </div>
