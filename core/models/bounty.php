@@ -41,7 +41,7 @@ class Bounty
             $investor->initCompressedReferalls(count(self::program()));
         } else {
             $tokenRate = Coin::getRate(Coin::token());
-            $reward += $tokenRate * $investor->tokens_not_used_in_bounty * Bounty::CURRENT_BOUNTY_PROGRAM[$level] / 100;
+            $reward += $tokenRate * $investor->tokens_not_used_in_bounty * self::program()[$level - 1] / 100;
             $rewardPerLevel[$level] += $reward;
         }
 
