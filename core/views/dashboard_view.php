@@ -141,8 +141,17 @@ class Dashboard_view
                         <div class="circle"></div>
                     <?php } ?>
                     <ul>
+                        <?php
+                        $rewardByLevel = [];
+                        Bounty::rewardForInvestor(Application::$authorizedInvestor, $rewardByLevel);
+                        ?>
                         <?php foreach (Bounty::CURRENT_BOUNTY_PROGRAM as $i => $value) { ?>
-                            <li><h2><?= $i + 1 ?> Level: <?= $value ?>%</h2></li>
+                            <li>
+                                <h2>
+                                    <?= $i + 1 ?> Level: <?= $value ?>%,<br>
+                                    US$ <?= number_format($rewardByLevel[$i + 1], 2) ?>
+                                </h2>
+                            </li>
                         <?php } ?>
                     </ul>
                 </div>
@@ -214,10 +223,13 @@ class Dashboard_view
                 </div>
                 <div class="row">
                     <div class="col s12 l4 main-panel-block">
-                        <h3>Raised by group: US$ 123,567.89</h3>
+                        <h3>Raised by group: US$ <?= Bounty::rewardForInvestor(Application::$authorizedInvestor) ?></h3>
                     </div>
                     <div class="col s12 l4 main-panel-block">
-                        <h3>Group participants: 247</h3>
+                        <h3>
+                            Participants:
+                            <?= Application::$authorizedInvestor->referralsCount() ?>
+                        </h3>
                     </div>
                     <div class="col s12 l4 main-panel-block">
                         <div class="input-field">
