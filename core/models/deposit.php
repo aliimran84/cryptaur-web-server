@@ -20,7 +20,6 @@ class Deposit
     public $is_donation = false;
     public $registered = false;
     public $used_in_minting = false;
-    public $used_in_bounty = false;
 
     const MINIMAL_TOKENS_FOR_MINTING_KEY = 'minimal_tokens_for_minting';
     const MINIMAL_TOKENS_FOR_BOUNTY_KEY = 'minimal_tokens_for_bounty';
@@ -44,7 +43,6 @@ class Deposit
                 `is_donation` tinyint(1) UNSIGNED DEFAULT '0',
                 `registered` tinyint(1) UNSIGNED DEFAULT '0',
                 `used_in_minting` tinyint(1) UNSIGNED DEFAULT '0',
-                `used_in_bounty` tinyint(1) UNSIGNED DEFAULT '0',
                 PRIMARY KEY (`id`)
             );
         ");
@@ -69,7 +67,6 @@ class Deposit
         $instance->is_donation = (bool)$data['is_donation'];
         $instance->registered = (bool)$data['registered'];
         $instance->used_in_minting = (bool)$data['used_in_minting'];
-        $instance->used_in_bounty = (bool)$data['used_in_bounty'];
         return $instance;
     }
 

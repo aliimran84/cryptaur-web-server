@@ -123,12 +123,6 @@ class Deposit_view
                                         if ($deposit->is_donation) {
                                             echo 'Transferred as donation';
                                         } else {
-                                            if ($deposit->used_in_bounty) {
-                                                echo 'Used in bounty';
-                                            } else {
-                                                echo 'Not used in bounty';
-                                            }
-                                            echo '<br>';
                                             if ($deposit->used_in_minting) {
                                                 echo 'Used in minting';
                                             } else {

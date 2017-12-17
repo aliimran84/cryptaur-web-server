@@ -2,6 +2,7 @@
 
 namespace core\engine;
 
+use core\controllers\Bounty_controller;
 use core\controllers\Coin_controller;
 use core\controllers\Dashboard_controller;
 use core\controllers\Deposit_controller;
@@ -72,6 +73,7 @@ class Application
         Dashboard_controller::init();
         Coin_controller::init();
         Deposit_controller::init();
+        Bounty_controller::init();
     }
 
     static private function initTmpDir()

@@ -2,6 +2,7 @@
 
 namespace core\views;
 
+use core\controllers\Bounty_controller;
 use core\engine\Application;
 use core\models\Bounty;
 use core\models\Coin;
@@ -85,30 +86,26 @@ class Dashboard_view
                         <div class="col s12 m6 main-panel-block">
                             <h3>Bounty</h3>
                             <div class="amount-wallet">
-                                <?=
-                                number_format(
-                                    Bounty::rewardForInvestor(Application::$authorizedInvestor) /
-                                    Coin::getRate(Coin::COMMON_COIN),
-                                    4
-                                )
-                                ?> <?= Coin::COMMON_COIN ?>
+                                <?= Application::$authorizedInvestor->eth_bounty ?> <?= Coin::COMMON_COIN ?>
                             </div>
-                            <div class="amount input-field">
-                                <input type="number" name="amount" value="0" min="0" max="0" step="0.00000001">
-                                <label>select amount</label>
-                            </div>
-                            <div class="amount input-field">
-                                <button class="waves-effect waves-light btn "
-                                    <?= (Bounty::withdrawIsOn() ? '' : 'disabled') ?>>
-                                    Withdraw
-                                </button>
-                            </div>
-                            <div class="amount input-field">
-                                <button class="waves-effect waves-light btn "
-                                    <?= (Bounty::reinvestIsOn() ? '' : 'disabled') ?>>
-                                    Reinvest
-                                </button>
-                            </div>
+                            <form action="<?= Bounty_controller::INVESTOR_REALIZE_URL ?>" method="post">
+                                <div class="amount input-field">
+                                    <input type="number" name="amount" value="0" min="0" max="<?= Application::$authorizedInvestor->eth_bounty ?>" step="0.00000001">
+                                    <label>select amount</label>
+                                </div>
+                                <div class="amount input-field">
+                                    <button type="submit" name="action" value="withdraw" class="waves-effect waves-light btn "
+                                        <?= (Bounty::withdrawIsOn() ? '' : 'disabled') ?>>
+                                        Withdraw
+                                    </button>
+                                </div>
+                                <div class="amount input-field">
+                                    <button type="submit" name="action" value="reinvest" class="waves-effect waves-light btn "
+                                        <?= (Bounty::reinvestIsOn() ? '' : 'disabled') ?>>
+                                        Reinvest
+                                    </button>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </section>
@@ -191,6 +188,7 @@ class Dashboard_view
                     <li><span><?= $coin ?></span><span><?= $balance ?></span></li>
                 <?php } ?>
                 <li><h5>Total in USD</h5><h5>$<?= Application::$authorizedInvestor->usdUsed() ?></h5></li>
+                <li><h5>Withdrawn</h5><h5>$<?= Application::$authorizedInvestor->eth_withdrawn ?> ETH</h5></li>
             </ul>
         </div>
         <?php

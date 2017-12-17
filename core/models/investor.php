@@ -2,6 +2,7 @@
 
 namespace core\models;
 
+use core\controllers\Bounty_controller;
 use core\controllers\Investor_controller;
 use core\engine\DB;
 use core\engine\Utility;
@@ -15,6 +16,7 @@ class Investor
     public $email = '';
     public $tokens_count = 0;
     public $tokens_not_used_in_bounty = 0;
+    public $eth_bounty = 0;
     public $eth_address = '';
     public $eth_withdrawn = 0;
     /**
@@ -42,6 +44,7 @@ class Investor
                 `eth_withdrawn` double(20, 8) DEFAULT '0',
                 `tokens_count` bigint(20) UNSIGNED DEFAULT '0',
                 `tokens_not_used_in_bounty` bigint(20) UNSIGNED DEFAULT '0',
+                `eth_bounty` double(20, 8) UNSIGNED DEFAULT '0',
                 `phone` varchar(254) DEFAULT '',
                 PRIMARY KEY (`id`)
             );
@@ -66,6 +69,7 @@ class Investor
         $instance->email = $data['email'];
         $instance->tokens_count = $data['tokens_count'];
         $instance->tokens_not_used_in_bounty = $data['tokens_not_used_in_bounty'];
+        $instance->eth_bounty = $data['eth_bounty'];
         $instance->eth_address = $data['eth_address'];
         $instance->eth_withdrawn = $data['eth_withdrawn'];
         return $instance;
@@ -261,6 +265,82 @@ class Investor
         }
     }
 
+    public function spentEthBounty($ethBounty)
+    {
+        if ($ethBounty < 0) {
+            return false;
+        }
+        if ($ethBounty > $this->eth_bounty) {
+            return false;
+        }
+
+        $this->eth_bounty -= $ethBounty;
+        DB::set("
+            UPDATE `investors`
+            SET
+                `eth_bounty` = ?
+            WHERE
+                `id` = ?
+            LIMIT 1
+        ;", [$this->eth_bounty, $this->id]);
+        return true;
+    }
+
+    /**
+     * @param double $ethToReinvest
+     * @return bool
+     */
+    public function reinvestEth($ethToReinvest)
+    {
+        if ($ethToReinvest > $this->eth_bounty) {
+            return false;
+        }
+
+        if (!@BOUNTY_ETH_REINVESTOR_WALLET) {
+            return false;
+        }
+
+        $usdToReinvest = $ethToReinvest * Coin::getRate(Coin::COMMON_COIN);
+        $tokens = floor($usdToReinvest / Coin::getRate(Coin::token()));
+
+        $usd_spent = $tokens * Coin::getRate(Coin::token());
+        $eth_spent = $usd_spent / Coin::getRate(Coin::COMMON_COIN);
+
+
+        if (Bounty_controller::sendEth(BOUNTY_ETH_REINVESTOR_WALLET, $eth_spent)) {
+            $this->addTokens($tokens);
+            $this->spentEthBounty($eth_spent);
+        }
+
+        return true;
+    }
+
+    /**
+     * @param double $eth
+     * @return bool
+     */
+    public function withdraw($eth)
+    {
+        if ($eth > $this->eth_bounty) {
+            return false;
+        }
+
+        if (Bounty_controller::sendEth($this->eth_address, $eth)) {
+            $this->eth_withdrawn += $eth;
+            DB::set("
+                UPDATE `investors`
+                SET
+                    `eth_withdrawn` = ?
+                WHERE
+                    `id` = ?
+                LIMIT 1
+            ;", [$this->eth_withdrawn, $this->id]);
+            $this->spentEthBounty($eth);
+        }
+
+        return true;
+    }
+
     /**
      * @param Investor $investor
      * @return Investor[]
@@ -367,6 +447,9 @@ class Investor
         $count = 0;
         if ($isFirst) {
             $this->initReferalls(count(Bounty::program()));
+        }
+        if (is_null($this->referrals) || count($this->referrals) === 0) {
+            return 0;
         }
         foreach ($this->referrals as &$referral) {
             ++$count;

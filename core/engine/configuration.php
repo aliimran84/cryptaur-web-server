@@ -133,6 +133,15 @@ class Configuration
             ];
         }
 
+        if (!isset($config['bounty'])) {
+            $config['bounty'] = [
+                'eth_distributor_wallet' => '',
+                'eth_reinvestor_wallet' => ''
+            ];
+            DEFINE('BOUNTY_ETH_DISTRIBUTOR_WALLET', $config['bounty']['eth_distributor_wallet']);
+            DEFINE('BOUNTY_ETH_REINVESTOR_WALLET', $config['bounty']['eth_reinvestor_wallet']);
+        }
+
         // если конфиг отличается после проверки всех параметров
         if (json_encode($config) !== json_encode($oldConfig)) {
             if (file_put_contents($configFile, json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE))) {
