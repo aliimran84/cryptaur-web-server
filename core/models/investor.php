@@ -230,6 +230,38 @@ class Investor
     }
 
     /**
+     * @param int $addedTokensCount
+     */
+    public function addTokens($addedTokensCount)
+    {
+        if ($addedTokensCount <= 0) {
+            return;
+        }
+
+        $oldCollapseState = self::isInvestorCollapseInCompress($this);
+
+        $this->tokens_count += $addedTokensCount;
+        $this->tokens_not_used_in_bounty += $addedTokensCount;
+        DB::set("
+            UPDATE `investors`
+            SET
+                `tokens_count` = ?,
+                `tokens_not_used_in_bounty` = ?
+            WHERE
+                `id` = ?
+            LIMIT 1
+        ;", [$this->tokens_count, $this->tokens_not_used_in_bounty, $this->id]);
+
+        // если инвестор ранее не проходил по баунти-системе (компрессировался), а сейчас проходит,
+        // то следует выполнить заполнение таблицы
+        if (!$oldCollapseState) {
+            if (self::isInvestorCollapseInCompress($this)) {
+                $this->fill_referalsCompressedTable();
+            }
+        }
+    }
+
+    /**
      * @param Investor $investor
      * @return Investor[]
      */
@@ -359,7 +391,7 @@ class Investor
 
     static public function fill_referalsCompressedTable_forAll($callback = null)
     {
-        $minTokens = Deposit::minimalTokensForBounty();
+        DB::set("DELETE FROM `investors_referrals_compressed`;");
         $investors_data = @DB::get("
             SELECT
                 `id` 
@@ -367,20 +399,20 @@ class Investor
                 `investors`
             WHERE
                 `tokens_count` >= ?
-        ;", [$minTokens]);
+        ;", [Deposit::minimalTokensForBounty()]);
         foreach ($investors_data as $i => $investor_data) {
             $investor = self::getById($investor_data['id']);
-            self::fill_referalsCompressedTable_forInverstor($investor);
+            $investor->fill_referalsCompressedTable();
             if (is_callable($callback)) {
                 call_user_func($callback, $i, count($investors_data));
             }
         }
     }
 
-    static public function fill_referalsCompressedTable_forInverstor(&$investor)
+    public function fill_referalsCompressedTable()
     {
         // это будет заполнятся только для тех, кто участвует в компрессии
-        if (self::isInvestorCollapseInCompress($investor)) {
+        if (self::isInvestorCollapseInCompress($this)) {
             return;
         }
 
@@ -401,11 +433,11 @@ class Investor
                 @bounty_accepts < 2
             ORDER BY
                 `id` DESC
-        ;", [$minTokens, $investor->id]);
+        ;", [$minTokens, $this->id]);
         unset($referrers_data[0]);
 
         // получаем всех дочерних реферралов
-        $referrals_list_string = implode(',', array_merge([$investor->id], self::referrals_id_recursive($investor->id)));
+        $referrals_list_string = implode(',', array_merge([$this->id], self::referrals_id_recursive($this->id)));
         foreach ($referrers_data as $referrer_data) {
             // подчистим для всех полученных реферреров
             // имеющиеся ссылки на compressed рефералов из наших дочерних реферралов
@@ -425,7 +457,7 @@ class Investor
                 INSERT INTO `investors_referrals_compressed` 
                 SET `investor_id` = ?,
                     `referral_id` = ?
-            ;", [$referrer_data['id'], $investor->id]);
+            ;", [$referrer_data['id'], $this->id]);
         }
     }
 
