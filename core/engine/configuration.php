@@ -136,11 +136,19 @@ class Configuration
         if (!isset($config['bounty'])) {
             $config['bounty'] = [
                 'eth_distributor_wallet' => '',
-                'eth_reinvestor_wallet' => ''
+                'eth_reinvestor_wallet' => '',
+                'eth_cryptaur_contract' => '',
+                'eth_backend_wallet' => '',
+                'eth_backend_password' => '',
+                'eth_mint_node_url' => ''
             ];
-            DEFINE('BOUNTY_ETH_DISTRIBUTOR_WALLET', $config['bounty']['eth_distributor_wallet']);
-            DEFINE('BOUNTY_ETH_REINVESTOR_WALLET', $config['bounty']['eth_reinvestor_wallet']);
         }
+        DEFINE('BOUNTY_ETH_DISTRIBUTOR_WALLET', $config['bounty']['eth_distributor_wallet']);
+        DEFINE('BOUNTY_ETH_REINVESTOR_WALLET', $config['bounty']['eth_reinvestor_wallet']);
+        DEFINE('BOUNTY_ETH_CRYPTAUR_CONTRACT', $config['bounty']['eth_cryptaur_contract']);
+        DEFINE('BOUNTY_ETH_BACKEND_WALLET', $config['bounty']['eth_backend_wallet']);
+        DEFINE('BOUNTY_ETH_BACKEND_PASSWORD', $config['bounty']['eth_backend_password']);
+        DEFINE('BOUNTY_ETH_MINT_NODE_URL', $config['bounty']['eth_mint_node_url']);
 
         // если конфиг отличается после проверки всех параметров
         if (json_encode($config) !== json_encode($oldConfig)) {
