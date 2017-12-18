@@ -54,21 +54,21 @@ class Bounty_controller
      * @param Investor $investor
      * @param double $tokens
      * @param Deposit $deposit
-     * @return bool
+     * @return int if > 0 -> success
      */
-    static public function mintTokens($investor, $tokens, $deposit)
+    static public function mintTokens(&$investor, $tokens, &$deposit = null)
     {
-        $gethClient = new Client(BOUNTY_ETH_MINT_NODE_URL);
+        $gethClient = new Client(ETH_TOKENS_NODE_URL);
 
         if (!$gethClient->call('personal_unlockAccount', [
-            BOUNTY_ETH_BACKEND_WALLET,
-            BOUNTY_ETH_BACKEND_PASSWORD,
+            ETH_TOKENS_WALLET,
+            ETH_TOKENS_PASSWORD,
             5
         ])) {
-            return false;
+            return -1;
         }
         if (!$gethClient->result) {
-            return false;
+            return -2;
         }
 
         // https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI
@@ -78,37 +78,72 @@ class Bounty_controller
         $mintTokens_selector = '24b35ef2';
         $minter = $investor->eth_address;
         $tokensWithoutDecimals = floor($tokens * pow(10, 8));
+        $coin = '';
+        $txid = '';
+        if (!is_null($deposit)) {
+            $coin = $deposit->coin;
+            $txid = $deposit->txid;
+        }
 
         $minter_geth = str_pad(preg_replace('/^0x(.*)$/', '$1', $minter), 64, '0', STR_PAD_LEFT);
         $tokens_geth = str_pad(dechex($tokensWithoutDecimals), 64, '0', STR_PAD_LEFT);
-        $coin_geth = str_pad(bin2hex($deposit->coin), 64, '0', STR_PAD_LEFT);
-        $txid_geth = str_pad(preg_replace('/^0x(.*)$/', '$1', $deposit->txid), 64, '0', STR_PAD_LEFT);
+        $coin_geth = str_pad(bin2hex($coin), 64, '0', STR_PAD_LEFT);
+        $txid_geth = str_pad(preg_replace('/^0x(.*)$/', '$1', $txid), 64, '0', STR_PAD_LEFT);
 
         $mint_call = "0x$mintTokens_selector$minter_geth$tokens_geth$coin_geth$txid_geth";
 
         if (!$gethClient->call('eth_sendTransaction', [
             [
-                'from' => BOUNTY_ETH_BACKEND_WALLET,
-                'to' => BOUNTY_ETH_CRYPTAUR_CONTRACT,
+                'from' => ETH_TOKENS_WALLET,
+                'to' => ETH_TOKENS_CONTRACT,
                 'value' => '0x0',
                 'data' => $mint_call,
-                'gas' => "0x" . dechex(100000)
-            ],
+                'gas' => "0x" . dechex(500000)
+            ]
         ])) {
-            return false;
+            return -3;
         }
 
-        return $gethClient->result !== '0x';
+        if ($gethClient->result === '0x') {
+            return -4;
+        }
+        return 1;
     }
 
     /**
-     * @param string $ethAddress (use BOUNTY_ETH_REINVESTOR_WALLET or investor address)
-     * @param double $value
-     * @return bool
+     * @param string $ethAddress (use ETH_BOUNTY_COLD_WALLET or investor address)
+     * @param double $value in Eth
+     * @return int if > 0 -> success
      */
     static public function sendEth($ethAddress, $value)
     {
-        //todo: body
-        return true;
+        $gethClient = new Client(ETH_BOUNTY_NODE_URL);
+
+        if (!$gethClient->call('personal_unlockAccount', [
+            ETH_BOUNTY_DISPENSER,
+            ETH_BOUNTY_PASSWORD,
+            5
+        ])) {
+            return -1;
+        }
+        if (!$gethClient->result) {
+            return -2;
+        }
+
+        if (!$gethClient->call('eth_sendTransaction', [
+            [
+                'from' => ETH_BOUNTY_DISPENSER,
+                'to' => $ethAddress,
+                'value' => "0x" . Utility::bcdechex(\bcmul($value, '1000000000000000000')),
+                'gas' => "0x" . dechex(100000)
+            ]
+        ])) {
+            return -3;
+        }
+
+        if ($gethClient->result === '0x') {
+            return -4;
+        }
+        return 1;
     }
 }

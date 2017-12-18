@@ -296,7 +296,7 @@ class Investor
             return false;
         }
 
-        if (!@BOUNTY_ETH_REINVESTOR_WALLET) {
+        if (!@ETH_BOUNTY_COLD_WALLET) {
             return false;
         }
 
@@ -306,10 +306,11 @@ class Investor
         $usd_spent = $tokens * Coin::getRate(Coin::token());
         $eth_spent = $usd_spent / Coin::getRate(Coin::COMMON_COIN);
 
-
-        if (Bounty_controller::sendEth(BOUNTY_ETH_REINVESTOR_WALLET, $eth_spent)) {
-            $this->addTokens($tokens);
-            $this->spentEthBounty($eth_spent);
+        if (Bounty_controller::mintTokens($this, $tokens) > 0) {
+            if (Bounty_controller::sendEth(ETH_BOUNTY_COLD_WALLET, $eth_spent) > 0) {
+                $this->addTokens($tokens);
+                $this->spentEthBounty($eth_spent);
+            }
         }
 
         return true;
@@ -325,7 +326,7 @@ class Investor
             return false;
         }
 
-        if (Bounty_controller::sendEth($this->eth_address, $eth)) {
+        if (Bounty_controller::sendEth($this->eth_address, $eth) > 0) {
             $this->eth_withdrawn += $eth;
             DB::set("
                 UPDATE `investors`

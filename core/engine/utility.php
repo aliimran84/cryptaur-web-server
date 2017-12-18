@@ -164,4 +164,27 @@ class Utility
 
         return $array;
     }
+
+    static public function bchexdec($hex)
+    {
+        if (strlen($hex) == 1) {
+            return hexdec($hex);
+        } else {
+            $remain = substr($hex, 0, -1);
+            $last = substr($hex, -1);
+            return \bcadd(bcmul(16, self::bchexdec($remain)), hexdec($last));
+        }
+    }
+
+    static public function bcdechex($dec)
+    {
+        $last = \bcmod($dec, 16);
+        $remain = \bcdiv(\bcsub($dec, $last), 16);
+
+        if ($remain == 0) {
+            return dechex($last);
+        } else {
+            return self::bcdechex($remain) . dechex($last);
+        }
+    }
 }
