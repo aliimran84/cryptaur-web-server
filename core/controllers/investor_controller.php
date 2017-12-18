@@ -196,7 +196,7 @@ class Investor_controller
         Base_view::$TITLE = 'Settings';
         Base_view::$MENU_POINT = Menu_point::Settings;
         echo Base_view::header();
-        echo Base_view::text('Settings come later');
+        echo Investor_view::settings();
         echo Base_view::footer();
     }
 

@@ -3,6 +3,7 @@
 namespace core\views;
 
 use core\controllers\Investor_controller;
+use core\engine\Application;
 
 class Investor_view
 {
@@ -57,6 +58,22 @@ class Investor_view
                             </button>
                         </div>
                     </form>
+                </div>
+            </div>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+
+    static public function settings()
+    {
+        ob_start();
+        ?>
+        <div class="row">
+            <div class="col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
+                <h3>Investor settings</h3>
+                <div class="row">
+                    Referral code: <strong><?= Application::$authorizedInvestor->referrer_code ?></strong>
                 </div>
             </div>
         </div>
