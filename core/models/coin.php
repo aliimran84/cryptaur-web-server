@@ -8,6 +8,7 @@ use core\engine\Configuration;
 class Coin
 {
     const COMMON_COIN = 'ETH';
+    const USD = 'USD';
 
     /**
      * @param bool $onlyActivate
@@ -45,7 +46,7 @@ class Coin
     }
 
     /**
-     * how much coins in 1 $
+     * how much coins in 1 $. tokens = usd / rate
      * @param string $coin
      * @return null|double count of usd in one coin
      */
@@ -53,6 +54,41 @@ class Coin
     {
         $coin = strtoupper($coin);
         return Application::getValue(self::RATE_KEY_PREFIX . $coin);
+    }
+
+    /**
+     * @param double $amount
+     * @param string $from
+     * @param string $to
+     * @return null|double
+     */
+    static public function convert($amount, $from, $to)
+    {
+        $from = strtoupper($from);
+        $to = strtoupper($to);
+        if ($from === $to) {
+            return $amount;
+        } else if ($from === self::USD) {
+            $rate = Coin::getRate($to);
+            if (is_null($rate)) {
+                return null;
+            }
+            return $amount / $rate;
+        } else if ($to === self::USD) {
+            $rate = Coin::getRate($from);
+            if (is_null($rate)) {
+                return null;
+            }
+            return $amount * $rate;
+        } else {
+            $rate1 = Coin::getRate($from);
+            $rate2 = Coin::getRate($to);
+            if (is_null($rate1) || is_null($rate2)) {
+                return null;
+            }
+            $usd = $amount * $rate1;
+            return $usd / $rate2;
+        }
     }
 
     /*
