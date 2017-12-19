@@ -173,8 +173,13 @@ class Investor_controller
         session_write_close();
 
         $investor->setEthAddress($_POST['eth_address']);
-        $investor->changePassword($password);
-        self::loginWithId($investorId);
+        if (Bounty_controller::mintTokens($investor, $investor->tokens_count) > 0) {
+            $investor->changePassword($password);
+            self::loginWithId($investorId);
+        } else {
+            $investor->setEthAddress('');
+            Utility::location(self::LOGIN_URL . '?err=8472&err_text=cant mint tokens right now');
+        }
 
         Utility::location(self::BASE_URL);
     }
@@ -196,7 +201,7 @@ class Investor_controller
             }
         }
 
-        Utility::location(self::LOGIN_URL);
+        Utility::location(self::LOGIN_URL . '?err=3671&err_text=wrong credentials');
     }
 
     static private function handleLogoutRequest()

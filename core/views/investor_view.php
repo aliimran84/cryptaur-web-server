@@ -17,6 +17,9 @@ class Investor_view
                 <h3>Cryptaur login</h3>
                 <div class="row">
                     <form class="login col s12" action="<?= Investor_controller::LOGIN_URL ?>" method="post">
+                        <?php if (isset($_GET['err'])) { ?>
+                            <label class="red-text">Error <?= $_GET['err'] ?>: <?= $_GET['err_text'] ?></label>
+                        <?php } ?>
                         <input type="text" name="email" placeholder="E-MAIL">
                         <input type="password" name="password" placeholder="PASSWORD">
                         <div class="row center">
