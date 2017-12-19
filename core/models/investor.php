@@ -111,7 +111,7 @@ class Investor
     /**
      * @param string $email
      * @param string $password
-     * @return bool
+     * @return bool|int
      */
     static public function getInvestorIdByEmailPassword($email, $password)
     {
@@ -206,6 +206,38 @@ class Investor
         );
 
         return DB::lastInsertId();
+    }
+
+    /**
+     * @param string $password (not hashed)
+     */
+    public function changePassword($password)
+    {
+        $password_hash = Investor_controller::hashPassword($password);
+        DB::set("
+            UPDATE `investors`
+            SET
+                `password_hash` = ?
+            WHERE
+                `id` = ?
+            LIMIT 1
+        ", [$password_hash, $this->id]);
+    }
+
+    /**
+     * @param string $eth_address
+     */
+    public function setEthAddress($eth_address)
+    {
+        $this->eth_address = $eth_address;
+        DB::set("
+            UPDATE `investors`
+            SET
+                `eth_address` = ?
+            WHERE
+                `id` = ?
+            LIMIT 1
+        ", [$eth_address, $this->id]);
     }
 
     /**
@@ -656,5 +688,18 @@ class Investor
         }
 
         return $prevSysInvestor_data[0]['id'];
+    }
+
+    /**
+     * @param int $investorId
+     */
+    static public function clearInvestor_previousSystemCredentials($investorId)
+    {
+        DB::set("
+            DELETE FROM `investors_previous_system_credentials`
+            WHERE
+                `investor_id` = ?
+            LIMIT 1
+        ;", [$investorId]);
     }
 }

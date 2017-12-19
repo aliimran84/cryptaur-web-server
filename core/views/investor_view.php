@@ -4,6 +4,7 @@ namespace core\views;
 
 use core\controllers\Investor_controller;
 use core\engine\Application;
+use core\models\Coin;
 
 class Investor_view
 {
@@ -65,6 +66,29 @@ class Investor_view
         return ob_get_clean();
     }
 
+    static public function ethSetupForm()
+    {
+        ob_start();
+        ?>
+        <div class="row">
+            <div class="col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
+                <h3>Investor eth setup</h3>
+                <div class="row">
+                    <form class="registration col s12" action="<?= Investor_controller::SET_ETH_ADDRESS ?>" method="post">
+                        <input type="text" name="eth_address" placeholder="ETH-ADDRESS">
+                        <div class="row center">
+                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                Set
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+
     static public function settings()
     {
         ob_start();
@@ -73,7 +97,22 @@ class Investor_view
             <div class="col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
                 <h3>Investor settings</h3>
                 <div class="row">
-                    Referral code: <strong><?= Application::$authorizedInvestor->referrer_code ?></strong>
+                    Email: <strong><?= Application::$authorizedInvestor->email ?></strong>
+                </div>
+                <div class="row">
+                    Referrer code: <strong><?= Application::$authorizedInvestor->referrer_code ?></strong>
+                </div>
+                <div class="row">
+                    Eth address: <strong><?= Application::$authorizedInvestor->eth_address ?></strong>
+                </div>
+                <div class="row">
+                    Eth withdrawn: <strong><?= Application::$authorizedInvestor->eth_withdrawn ?></strong>
+                </div>
+                <div class="row">
+                    Eth bounty: <strong><?= Application::$authorizedInvestor->eth_bounty ?></strong>
+                </div>
+                <div class="row">
+                    <?= Coin::token() ?>: <strong><?= Application::$authorizedInvestor->tokens_count ?></strong>
                 </div>
             </div>
         </div>

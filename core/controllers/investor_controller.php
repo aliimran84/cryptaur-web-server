@@ -18,12 +18,15 @@ class Investor_controller
 
     const BASE_URL = 'investor';
     const LOGIN_URL = 'investor/login';
+    const SET_ETH_ADDRESS = 'investor/set_eth_address';
     const LOGOUT_URL = 'investor/logout';
     const REGISTER_URL = 'investor/register';
     const REGISTER_CONFIRMATION_URL = 'investor/register_confirm';
     const SETTINGS_URL = 'investor/settings';
 
     const SESSION_KEY = 'authorized_investor_id';
+    const PREVIOUS_SYSTEM_ID = 'previous_system_authorized_investor_id';
+    const PREVIOUS_SYSTEM_PASSWORD = 'previous_system_authorized_investor_password';
 
     static public function init()
     {
@@ -41,6 +44,13 @@ class Investor_controller
                 Utility::location(self::LOGIN_URL);
             }
         }, self::BASE_URL);
+
+        Router::register(function () {
+            self::handleEthSetForm();
+        }, self::SET_ETH_ADDRESS, Router::GET_METHOD);
+        Router::register(function () {
+            self::handleEthSetPost();
+        }, self::SET_ETH_ADDRESS, Router::POST_METHOD);
 
         Router::register(function () {
             if (Application::$authorizedInvestor) {
@@ -105,8 +115,70 @@ class Investor_controller
         session_write_close();
     }
 
+    static private function handleEthSetForm()
+    {
+        session_start();
+        $investorId = 0;
+        if (isset($_SESSION[self::PREVIOUS_SYSTEM_ID])) {
+            $investorId = $_SESSION[self::PREVIOUS_SYSTEM_ID];
+        }
+        session_abort();
+        if (!$investorId) {
+            Utility::location(self::LOGIN_URL);
+        }
+
+        $investor = Investor::getById($investorId);
+        if ($investor->eth_address) {
+            Utility::location(self::LOGIN_URL);
+        }
+
+        Base_view::$TITLE = 'Set eth address';
+        echo Base_view::header();
+        echo Investor_view::ethSetupForm();
+        echo Base_view::footer();
+    }
+
+    static private function handleEthSetPost()
+    {
+        session_start();
+        $investorId = 0;
+        if (isset($_SESSION[self::PREVIOUS_SYSTEM_ID])) {
+            $investorId = $_SESSION[self::PREVIOUS_SYSTEM_ID];
+        }
+        session_abort();
+
+        if (!$investorId) {
+            Utility::location(self::LOGIN_URL);
+        }
+
+        if (!Utility::validateEthAddress(@$_POST['eth_address'])) {
+            Utility::location(self::SET_ETH_ADDRESS . '?err=1&err_text=not a valid eth address');
+        }
+
+        session_start();
+        $password = $_SESSION[self::PREVIOUS_SYSTEM_PASSWORD];
+        if (isset($_SESSION[self::PREVIOUS_SYSTEM_ID])) {
+            unset($_SESSION[self::PREVIOUS_SYSTEM_ID]);
+            unset($_SESSION[self::PREVIOUS_SYSTEM_PASSWORD]);
+        }
+        session_write_close();
+
+        $investor = Investor::getById($investorId);
+        if ($investor->eth_address) {
+            Utility::location(self::LOGIN_URL);
+        }
+
+        $investor->setEthAddress($_POST['eth_address']);
+        $investor->changePassword($_POST['password']);
+        Investor::clearInvestor_previousSystemCredentials($investorId);
+        self::loginWithId($investorId);
+
+        Utility::location(self::BASE_URL);
+    }
+
     static private function handleLoginRequest()
     {
+        $loggedIn = false;
         $investorId = @Investor::getInvestorIdByEmailPassword($_POST['email'], $_POST['password']);
         if ($investorId) {
             self::loginWithId($investorId);
@@ -114,9 +186,14 @@ class Investor_controller
         } else {
             $investorId = Investor::investorId_previousSystemCredentials($_POST['email'], $_POST['password']);
             if ($investorId > 0) {
-                // todo: remember password to main table and remove investor from previous system table
+                session_start();
+                $_SESSION[self::PREVIOUS_SYSTEM_ID] = $investorId;
+                $_SESSION[self::PREVIOUS_SYSTEM_PASSWORD] = $_POST['password'];
+                session_write_close();
+                Utility::location(self::SET_ETH_ADDRESS);
             }
         }
+
         Utility::location(self::LOGIN_URL);
     }
 
