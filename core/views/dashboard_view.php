@@ -113,6 +113,7 @@ class Dashboard_view
         </div>
         <div class="row">
             <div class="col s12 m3 left-panel">
+                <?php /*
                 <h3>Current stage</h3>
                 <div class="current-stage">
                     <h2>Stage 1</h2>
@@ -129,6 +130,7 @@ class Dashboard_view
                         <p>Invite your friends and earn bounties during the Cryptaur token sale</p>
                     </div>
                 </div>
+                */ ?>
             </div>
             <div class="col s12 m9 main-panel">
                 <?= Wallet_view::newContribution() ?>
