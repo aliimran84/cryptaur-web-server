@@ -293,7 +293,7 @@ class Investor_controller
     {
         $referrerCode = null;
         do {
-            $referrerCode = substr(uniqid(), -9);
+            $referrerCode = substr(uniqid(), -8);
         } while (DB::get("SELECT * FROM `investors` WHERE `referrer_code` = ? LIMIT 1;", [$referrerCode]));
         return $referrerCode;
     }
