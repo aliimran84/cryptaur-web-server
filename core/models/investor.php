@@ -57,6 +57,14 @@ class Investor
                 PRIMARY KEY (`id`)
             );
         ");
+        DB::query("
+            CREATE TABLE IF NOT EXISTS `investors_previous_system_credentials` (
+                `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `investor_id` int(10) UNSIGNED DEFAULT '0',
+                `password_hash` varchar(254) NOT NULL,
+                PRIMARY KEY (`id`)
+            );
+        ");
     }
 
     static private function createWithDataFromDB($data)
@@ -605,5 +613,48 @@ class Investor
             SELECT COUNT(`id`) as `total_investors` FROM `investors`
         ;")[0]['total_investors'];
         return $totalInvestors;
+    }
+
+    /**
+     * @param string $email
+     * @param string $password
+     * @return int: < 0 - error; > 0 - investor id
+     */
+    static public function investorId_previousSystemCredentials($email, $password)
+    {
+        $prevSysInvestor_data = DB::get("
+            SELECT
+                `investors`.`id`,
+                `investors`.`email`,
+                `investors_previous_system_credentials`.`password_hash` 
+            FROM
+                `investors`
+                LEFT JOIN `investors_previous_system_credentials` ON `investors_previous_system_credentials`.`investor_id` = `investors`.`id` 
+            WHERE
+                `email` = ?
+                LIMIT 1
+        ;", [$email]);
+
+        if (count($prevSysInvestor_data) === 0) {
+            return -1;
+        }
+
+        $hash = $prevSysInvestor_data[0]['password_hash'];
+
+        $FIRST_HASH_ITER = 2000;
+        $firstHash = hash_pbkdf2('sha512', $password, sha1($password), $FIRST_HASH_ITER, 64);
+        $pieces = explode('$', $hash);
+        list($header, $iter, $salt, $hash) = $pieces;
+        if (!preg_match('#^pbkdf2_([a-z0-9A-Z]+)$#', $header, $m)) {
+            return -2;
+        }
+        $algo = $m[1];
+        $secondHash = base64_encode(hash_pbkdf2($algo, $firstHash, $salt, $iter, 32, true));
+
+        if (!hash_equals($secondHash, $hash)) {
+            return -3;
+        }
+
+        return $prevSysInvestor_data[0]['id'];
     }
 }

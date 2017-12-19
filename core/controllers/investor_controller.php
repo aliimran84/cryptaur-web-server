@@ -67,7 +67,7 @@ class Investor_controller
             if (Application::$authorizedInvestor) {
                 Utility::location(self::BASE_URL);
             }
-            Base_view::$TITLE = 'Login';
+            Base_view::$TITLE = 'Registration';
             Base_view::$MENU_POINT = Menu_point::Login;
             echo Base_view::header();
             echo Investor_view::registerForm();
@@ -111,6 +111,11 @@ class Investor_controller
         if ($investorId) {
             self::loginWithId($investorId);
             Utility::location(self::BASE_URL);
+        } else {
+            $investorId = Investor::investorId_previousSystemCredentials($_POST['email'], $_POST['password']);
+            if ($investorId > 0) {
+                // todo: remember password to main table and remove investor from previous system table
+            }
         }
         Utility::location(self::LOGIN_URL);
     }
