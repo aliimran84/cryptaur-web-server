@@ -40,7 +40,7 @@ class Investor
                 `joined_datetime` datetime(0) NOT NULL,
                 `email` varchar(254) NOT NULL,
                 `password_hash` varchar(254) NOT NULL,
-                `eth_address` varchar(50) NOT NULL,
+                `eth_address` varchar(50) DEFAULT '',
                 `eth_withdrawn` double(20, 8) DEFAULT '0',
                 `tokens_count` bigint(20) UNSIGNED DEFAULT '0',
                 `tokens_not_used_in_bounty` bigint(20) UNSIGNED DEFAULT '0',
@@ -54,14 +54,6 @@ class Investor
                 `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
                 `investor_id` int(10) UNSIGNED DEFAULT '0',
                 `referral_id` int(10) UNSIGNED DEFAULT '0',
-                PRIMARY KEY (`id`)
-            );
-        ");
-        DB::query("
-            CREATE TABLE IF NOT EXISTS `investors_previous_system_credentials` (
-                `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
-                `investor_id` int(10) UNSIGNED DEFAULT '0',
-                `password_hash` varchar(254) NOT NULL,
                 PRIMARY KEY (`id`)
             );
         ");
@@ -654,18 +646,7 @@ class Investor
      */
     static public function investorId_previousSystemCredentials($email, $password)
     {
-        $prevSysInvestor_data = DB::get("
-            SELECT
-                `investors`.`id`,
-                `investors`.`email`,
-                `investors_previous_system_credentials`.`password_hash` 
-            FROM
-                `investors`
-                LEFT JOIN `investors_previous_system_credentials` ON `investors_previous_system_credentials`.`investor_id` = `investors`.`id` 
-            WHERE
-                `email` = ?
-                LIMIT 1
-        ;", [$email]);
+        $prevSysInvestor_data = DB::get("SELECT * FROM `investors` WHERE `email` = ? LIMIT 1;", [$email]);
 
         if (count($prevSysInvestor_data) === 0) {
             return -1;
@@ -688,18 +669,5 @@ class Investor
         }
 
         return $prevSysInvestor_data[0]['id'];
-    }
-
-    /**
-     * @param int $investorId
-     */
-    static public function clearInvestor_previousSystemCredentials($investorId)
-    {
-        DB::set("
-            DELETE FROM `investors_previous_system_credentials`
-            WHERE
-                `investor_id` = ?
-            LIMIT 1
-        ;", [$investorId]);
     }
 }

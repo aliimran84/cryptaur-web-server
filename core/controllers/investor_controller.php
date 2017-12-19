@@ -142,7 +142,7 @@ class Investor_controller
     {
         session_start();
         $investorId = 0;
-        if (isset($_SESSION[self::PREVIOUS_SYSTEM_ID])) {
+        if (isset($_SESSION[self::PREVIOUS_SYSTEM_ID]) && isset($_SESSION[self::PREVIOUS_SYSTEM_PASSWORD])) {
             $investorId = $_SESSION[self::PREVIOUS_SYSTEM_ID];
         }
         session_abort();
@@ -151,8 +151,17 @@ class Investor_controller
             Utility::location(self::LOGIN_URL);
         }
 
+        $investor = Investor::getById($investorId);
+        if (is_null($investor)) {
+            Utility::location(self::LOGIN_URL);
+        }
+
         if (!Utility::validateEthAddress(@$_POST['eth_address'])) {
             Utility::location(self::SET_ETH_ADDRESS . '?err=1&err_text=not a valid eth address');
+        }
+
+        if ($investor->eth_address) {
+            Utility::location(self::LOGIN_URL);
         }
 
         session_start();
@@ -163,14 +172,8 @@ class Investor_controller
         }
         session_write_close();
 
-        $investor = Investor::getById($investorId);
-        if ($investor->eth_address) {
-            Utility::location(self::LOGIN_URL);
-        }
-
         $investor->setEthAddress($_POST['eth_address']);
-        $investor->changePassword($_POST['password']);
-        Investor::clearInvestor_previousSystemCredentials($investorId);
+        $investor->changePassword($password);
         self::loginWithId($investorId);
 
         Utility::location(self::BASE_URL);
@@ -178,7 +181,6 @@ class Investor_controller
 
     static private function handleLoginRequest()
     {
-        $loggedIn = false;
         $investorId = @Investor::getInvestorIdByEmailPassword($_POST['email'], $_POST['password']);
         if ($investorId) {
             self::loginWithId($investorId);
