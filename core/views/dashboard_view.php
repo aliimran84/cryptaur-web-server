@@ -190,7 +190,7 @@ class Dashboard_view
                     <li><span><?= $coin ?></span><span><?= $balance ?></span></li>
                 <?php } ?>
                 <li><h5>Total in USD</h5><h5>$<?= Application::$authorizedInvestor->usdUsed() ?></h5></li>
-                <li><h5>Withdrawn</h5><h5>$<?= Application::$authorizedInvestor->eth_withdrawn ?> ETH</h5></li>
+                <li><h5>Withdrawn</h5><h5><?= Application::$authorizedInvestor->eth_withdrawn ?> ETH</h5></li>
             </ul>
         </div>
         <?php
