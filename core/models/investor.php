@@ -612,7 +612,7 @@ class Investor
         $usdUsed = 0;
         $wallets = Wallet::getByInvestorid($this->id);
         foreach ($wallets as $wallet) {
-            $usdUsed += $wallet->usdUsed;
+            $usdUsed += $wallet->usd_used;
         }
         return $usdUsed;
     }

@@ -13,7 +13,7 @@ class Wallet
     public $coin = '';
     public $address = '';
     public $balance = 0;
-    public $usdUsed = 0;
+    public $usd_used = 0;
 
     static public function db_init()
     {
@@ -39,7 +39,7 @@ class Wallet
         // todo: is it not a event time? must not to put into wallet!
 
         $this->balance += $amount;
-        $this->usdUsed += $usdUsed;
+        $this->usd_used += $usdUsed;
         DB::set("
             UPDATE `wallets`
             SET
@@ -48,7 +48,7 @@ class Wallet
             WHERE
                 `id` = ?
             LIMIT 1
-        ;", [$this->balance, $this->usdUsed, $this->id]);
+        ;", [$this->balance, $this->usd_used, $this->id]);
     }
 
     static private function createWithDataFromDB($data)
@@ -59,7 +59,7 @@ class Wallet
         $instance->coin = $data['coin'];
         $instance->address = $data['address'];
         $instance->balance = $data['balance'];
-        $instance->usdUsed = $data['usdUsed'];
+        $instance->usd_used = $data['usd_used'];
         return $instance;
     }
 
