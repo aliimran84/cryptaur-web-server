@@ -16,7 +16,7 @@ class Coin_view
         ?>
         <div class="row card administrator-settings-block">
             <form class="registration col s12" action="<?= Coin_controller::SETRATES_URL ?>" method="post">
-                <h5 class="center">Coins rates (deposits)<br>count of usd in one coin</h5>
+                <h5 class="center"><?= Translate::td('Coins rates (deposits) count of usd in one coin') ?></h5>
                 <?php foreach (array_merge(Coin::coins(), [Coin::token()]) as $coin) { ?>
                     <label><?= $coin ?>:</label>
                     <input type="number"
@@ -27,7 +27,7 @@ class Coin_view
                 <?php } ?>
                 <div class="row center">
                     <button type="submit" class="waves-effect waves-light btn btn-send" style="width: 100%">
-                        Set
+                        <?= Translate::td('Set') ?>
                     </button>
                 </div>
             </form>

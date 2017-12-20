@@ -91,10 +91,10 @@ class Wallet_view
 
         <section class="my-contribution wallet_view-new_contribution-section">
             <div class="row">
-                <h3>My contribution</h3>
+                <h3><?= Translate::td('My contribution') ?></h3>
             </div>
             <div class="row">
-                <p>To learn about the minimum contribution limits <a href="./">click here</a></p>
+                <p><?= Translate::td('To learn about the minimum contribution limits') ?> <a href="./"><?= Translate::td('click here') ?></a></p>
             </div>
             <div class="row">
                 <div class="col s12 offset-m3 m6">
@@ -106,14 +106,14 @@ class Wallet_view
                                         <option value="<?= $coin ?>"><?= $coin ?></option>
                                     <?php } ?>
                                 </select>
-                                <label>select currency</label>
+                                <label><?= Translate::td('select currency') ?></label>
                             </div>
                             <?php foreach (Coin::coins() as $coin) { ?>
                                 <div style="display: none;" data-coin="<?= $coin ?>" class="wallet_view-new_contribution-div_amount input-field col s6 m6">
                                     <input type="number"
                                            class="wallet_view-new_contribution-input_amount"
                                            value="1" min="0" max="9999999999" step="0.00000001">
-                                    <label>select amount</label>
+                                    <label><?= Translate::td('select amount') ?></label>
                                 </div>
                             <?php } ?>
                         </form>
@@ -122,16 +122,16 @@ class Wallet_view
             </div>
             <div class="row">
                 <p>
-                    Copy address below to send
+                    <?= Translate::td('Copy address below to send') ?>
                     <span class="wallet_view-new_contribution-selected_amount"></span>
                     <span class="wallet_view-new_contribution-selected_currency"></span>
                 </p>
                 <h5 class="wallet_view-new_contribution-selected_wallet_addr"></h5>
                 <p>
-                    You will get:
+                    <?= Translate::td('You will get') ?>:
                     <span class="wallet_view-new_contribution-calculated_selected_to_tokens"></span>
                     <?= Coin::token() ?>
-                    <span class="wallet_view-new_contribution-calculated_as_donation" style="display: none;">(will be received as donation)</span>
+                    <span class="wallet_view-new_contribution-calculated_as_donation" style="display: none;">(<?= Translate::td('will be received as donation') ?>)</span>
                 </p>
             </div>
         </section>
