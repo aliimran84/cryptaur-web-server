@@ -144,6 +144,8 @@ class Investor_controller
         $investorId = 0;
         if (isset($_SESSION[self::PREVIOUS_SYSTEM_ID]) && isset($_SESSION[self::PREVIOUS_SYSTEM_PASSWORD])) {
             $investorId = $_SESSION[self::PREVIOUS_SYSTEM_ID];
+        } else {
+            Utility::location(self::LOGIN_URL);
         }
         session_abort();
 
@@ -164,21 +166,20 @@ class Investor_controller
             Utility::location(self::LOGIN_URL);
         }
 
-        session_start();
-        $password = $_SESSION[self::PREVIOUS_SYSTEM_PASSWORD];
-        if (isset($_SESSION[self::PREVIOUS_SYSTEM_ID])) {
-            unset($_SESSION[self::PREVIOUS_SYSTEM_ID]);
-            unset($_SESSION[self::PREVIOUS_SYSTEM_PASSWORD]);
-        }
-        session_write_close();
-
         $investor->setEthAddress($_POST['eth_address']);
         if (Bounty_controller::mintTokens($investor, $investor->tokens_count) > 0) {
+            session_start();
+            $password = $_SESSION[self::PREVIOUS_SYSTEM_PASSWORD];
+            if (isset($_SESSION[self::PREVIOUS_SYSTEM_ID])) {
+                unset($_SESSION[self::PREVIOUS_SYSTEM_ID]);
+                unset($_SESSION[self::PREVIOUS_SYSTEM_PASSWORD]);
+            }
+            session_write_close();
             $investor->changePassword($password);
             self::loginWithId($investorId);
         } else {
             $investor->setEthAddress('');
-            Utility::location(self::LOGIN_URL . '?err=8472&err_text=cant mint tokens right now');
+            Utility::location(self::SET_ETH_ADDRESS . '?err=8472&err_text=cant mint tokens right now');
         }
 
         Utility::location(self::BASE_URL);

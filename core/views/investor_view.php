@@ -19,7 +19,8 @@ class Investor_view
                 <div class="row">
                     <form class="login col s12" action="<?= Investor_controller::LOGIN_URL ?>" method="post">
                         <?php if (isset($_GET['err'])) { ?>
-                            <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>: <?= $_GET['err_text'] ?></label>
+                            <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
+                                : <?= $_GET['err_text'] ?></label>
                         <?php } ?>
                         <input type="text" name="email" placeholder="E-MAIL">
                         <input type="password" name="password" placeholder="<?= Translate::td('PASSWORD') ?>">
@@ -51,7 +52,8 @@ class Investor_view
                 <div class="row">
                     <form class="registration col s12" action="<?= Investor_controller::REGISTER_URL ?>" method="post">
                         <?php if (isset($_GET['err'])) { ?>
-                            <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>: <?= $_GET['err_text'] ?></label>
+                            <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
+                                : <?= $_GET['err_text'] ?></label>
                         <?php } ?>
                         <input type="text" name="email" placeholder="E-MAIL">
                         <input type="password" name="password" placeholder="<?= Translate::td('PASSWORD') ?>">
@@ -79,6 +81,10 @@ class Investor_view
                 <h3><?= Translate::td('Investor eth setup') ?></h3>
                 <div class="row">
                     <form class="registration col s12" action="<?= Investor_controller::SET_ETH_ADDRESS ?>" method="post">
+                        <?php if (isset($_GET['err'])) { ?>
+                            <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
+                                : <?= $_GET['err_text'] ?></label>
+                        <?php } ?>
                         <input type="text" name="eth_address" placeholder="<?= Translate::td('ETH-ADDRESS') ?>">
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
@@ -104,16 +110,20 @@ class Investor_view
                     <?= Translate::td('Email') ?>: <strong><?= Application::$authorizedInvestor->email ?></strong>
                 </div>
                 <div class="row">
-                    <?= Translate::td('Referrer code') ?>: <strong><?= Application::$authorizedInvestor->referrer_code ?></strong>
+                    <?= Translate::td('Referrer code') ?>:
+                    <strong><?= Application::$authorizedInvestor->referrer_code ?></strong>
                 </div>
                 <div class="row">
-                    <?= Translate::td('Eth address') ?>: <strong><?= Application::$authorizedInvestor->eth_address ?></strong>
+                    <?= Translate::td('Eth address') ?>:
+                    <strong><?= Application::$authorizedInvestor->eth_address ?></strong>
                 </div>
                 <div class="row">
-                    <?= Translate::td('Eth withdrawn') ?>: <strong><?= Application::$authorizedInvestor->eth_withdrawn ?></strong>
+                    <?= Translate::td('Eth withdrawn') ?>:
+                    <strong><?= Application::$authorizedInvestor->eth_withdrawn ?></strong>
                 </div>
                 <div class="row">
-                    <?= Translate::td('Eth bounty') ?>: <strong><?= Application::$authorizedInvestor->eth_bounty ?></strong>
+                    <?= Translate::td('Eth bounty') ?>:
+                    <strong><?= Application::$authorizedInvestor->eth_bounty ?></strong>
                 </div>
                 <div class="row">
                     <?= Coin::token() ?>: <strong><?= Application::$authorizedInvestor->tokens_count ?></strong>
