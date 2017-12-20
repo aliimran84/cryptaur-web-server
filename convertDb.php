@@ -9,6 +9,8 @@ use core\models\Wallet;
 
 Application::init();
 
+$startTime = time();
+
 DB::query("
             CREATE TABLE IF NOT EXISTS `temp_investors` (
                 `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -36,6 +38,7 @@ $users = DB::get("
         AND auth_user.is_staff = 0
         AND account_account.email_confirmed = 1
 ;");
+$usersCount = count($users);
 foreach ($users as $i => $user) {
     $tokens_data = DB::get("
         select sum(amount)/100000000 as tokens from transactions_history where account_id=? and type=0
@@ -60,7 +63,7 @@ foreach ($users as $i => $user) {
     ", [$user['id']])[0]['usd'];
 
     $refId = @(int)DB::get(
-        "SELECT previous_id FROM temp_investors WHERE investor_id=? LIMIT 1;",
+        "SELECT investor_id FROM temp_investors WHERE previous_id=? LIMIT 1;",
         [$user['invited_by_id']])[0]['previous_id'];
 
     DB::set("
@@ -89,8 +92,10 @@ foreach ($users as $i => $user) {
     $wallet = Wallet::registerWallet($id, 'usd', '');
     $wallet->addToWallet($usd, $usd);
 
-    $all = count($users);
-    echo "Fill for $i/$all\r\n";
+    $duration = time() - $startTime;
+    $speed = number_format($duration / $i, 5);
+    $remained = (int)($usersCount - $i) / $speed;
+    echo date('Y-m-d H:i:s') . ": fill for $i/$usersCount (duration: {$duration}s, speed: {$speed}u/s, remained: {$remained}s)\r\n";
 }
 
 DB::query("DROP TABLE IF EXISTS temp_investors;");
