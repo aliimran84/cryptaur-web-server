@@ -173,7 +173,7 @@ class Deposit
      */
     public function setUsedInMinting($usedInMinting)
     {
-        $this->registered = $usedInMinting;
+        $this->used_in_minting = $usedInMinting;
         DB::set("
             UPDATE `deposits`
             SET
