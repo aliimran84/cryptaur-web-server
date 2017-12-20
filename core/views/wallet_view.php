@@ -6,6 +6,7 @@ use core\engine\Application;
 use core\models\Coin;
 use core\models\Deposit;
 use core\models\Wallet;
+use core\translate\Translate;
 
 class Wallet_view
 {

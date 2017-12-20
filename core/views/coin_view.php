@@ -4,6 +4,7 @@ namespace core\views;
 
 use core\models\Coin;
 use core\controllers\Coin_controller;
+use core\translate\Translate;
 
 class Coin_view
 {

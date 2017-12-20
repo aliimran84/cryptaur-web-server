@@ -7,6 +7,7 @@ use core\engine\Application;
 use core\engine\DB;
 use core\models\Bounty;
 use core\models\Deposit;
+use core\translate\Translate;
 
 class Deposit_view
 {

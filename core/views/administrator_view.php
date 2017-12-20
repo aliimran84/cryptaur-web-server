@@ -6,6 +6,7 @@ use core\controllers\Administrator_controller;
 use core\models\Administrator;
 use core\models\Coin;
 use core\models\PaymentServer;
+use core\translate\Translate;
 
 class Administrator_view
 {

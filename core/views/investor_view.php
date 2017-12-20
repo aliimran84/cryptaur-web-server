@@ -5,6 +5,7 @@ namespace core\views;
 use core\controllers\Investor_controller;
 use core\engine\Application;
 use core\models\Coin;
+use core\translate\Translate;
 
 class Investor_view
 {

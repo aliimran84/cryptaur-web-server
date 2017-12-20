@@ -4,6 +4,7 @@ namespace core\views;
 
 use core\controllers\PaymentServer_controller;
 use core\models\PaymentServer;
+use core\translate\Translate;
 
 class PaymentServer_view
 {

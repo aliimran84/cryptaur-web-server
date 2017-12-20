@@ -8,6 +8,7 @@ use core\models\Bounty;
 use core\models\Coin;
 use core\models\Investor;
 use core\models\Wallet;
+use core\translate\Translate;
 
 class Dashboard_view
 {

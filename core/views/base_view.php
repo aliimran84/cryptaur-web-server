@@ -172,30 +172,18 @@ class Base_view
                 <div class="col s12 m10">
                     <div class="row">
                         <p class="header"><?= Translate::td('Discount') ?>:</p>
-                        <p><?= Translate::td('The discount is offered throughout the 1st stage (November 27 through December 7) and will be
-                            40% for the first day and 20% thereafter.') ?>.</p>
+                        <p><?= Translate::td('The discount is offered throughout the 1st stage (November 27 through December 7) and will be 40% for the first day and 20% thereafter.') ?>.</p>
                     </div>
                     <div class="row">
                         <p class="header"><?= Translate::td('Purchase limits') ?>:</p>
                         <p>
-                            <?= Translate::td('The minimum contribution limit remains the same as during presale – 50 USD (in CPT
-                            equivalent).
-                            Both existing participants who registered themselves during presale and new participants can
-                            take part in the token sale.') ?>
+                            <?= Translate::td('The minimum contribution limit remains the same as during presale – 50 USD (in CPT equivalent). Both existing participants who registered themselves during presale and new participants can take part in the token sale.') ?>
                         </p>
                     </div>
                     <div class="row">
                         <p class="header"><?= Translate::td('Referral Program') ?>:</p>
                         <p>
-                            <?= Translate::td('Anyone can get registered and participate in the token sale (see Terms and Conditions for
-                            legal restrictions). A new participant can get registered either directly at the web page of
-                            the project or using a group invite link from an existing participant. Newly registered
-                            participants can invite further potential participants by sending them their group invite
-                            links.
-                            The following reward system is applicable to all participants (newly registered or
-                            registered earlier) who have at least 10000 CPTs in their Cryptaur wallet (cumulatively from
-                            all the previous presale and sale stages) on the CPTs purchased during the token sale by
-                            those they invited') ?>:
+                            <?= Translate::td('Anyone can get registered and participate in the token sale (see Terms and Conditions for legal restrictions). A new participant can get registered either directly at the web page of the project or using a group invite link from an existing participant. Newly registered participants can invite further potential participants by sending them their group invite links. The following reward system is applicable to all participants (newly registered or registered earlier) who have at least 10000 CPTs in their Cryptaur wallet (cumulatively from all the previous presale and sale stages) on the CPTs purchased during the token sale by those they invited') ?>:
                         </p>
                     </div>
                     <div class="row">
@@ -208,12 +196,7 @@ class Base_view
                     </div>
                     <div class="row">
                         <p>
-                            <?= Translate::td('The bounty is awarded with the compression procedure applied to participants who have at
-                            least 10000 CPTs. Bounties for the purchases made during the 1st Stage will be calculated at
-                            the end of the 1st Stage with the compression procedure applied.
-                            The bounty received can be withdrawn to any Ether wallet address or re-invested into CPTs.
-                            In case of re-investment the discount will be 40% on the first day and 20% until January 22,
-                            including the period between Stage One and Stage Two of the token sale.') ?>
+                            <?= Translate::td('The bounty is awarded with the compression procedure applied to participants who have at least 10000 CPTs. Bounties for the purchases made during the 1st Stage will be calculated at the end of the 1st Stage with the compression procedure applied. The bounty received can be withdrawn to any Ether wallet address or re-invested into CPTs. In case of re-investment the discount will be 40% on the first day and 20% until January 22, including the period between Stage One and Stage Two of the token sale.') ?>
                         </p>
                     </div>
                 </div>
