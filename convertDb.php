@@ -93,7 +93,7 @@ foreach ($users as $i => $user) {
     $wallet->addToWallet($usd, $usd);
 
     $duration = time() - $startTime;
-    $speed = number_format($duration / $i, 5);
+    $speed = number_format($i / $duration, 5);
     $remained = (int)($usersCount - $i) / $speed;
     echo date('Y-m-d H:i:s') . ": fill for $i/$usersCount (duration: {$duration}s, speed: {$speed}u/s, remained: {$remained}s)\r\n";
 }
