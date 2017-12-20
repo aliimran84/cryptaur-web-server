@@ -42,8 +42,8 @@ class Investor
                 `password_hash` varchar(254) NOT NULL,
                 `eth_address` varchar(50) DEFAULT '',
                 `eth_withdrawn` double(20, 8) DEFAULT '0',
-                `tokens_count` bigint(20) UNSIGNED DEFAULT '0',
-                `tokens_not_used_in_bounty` bigint(20) UNSIGNED DEFAULT '0',
+                `tokens_count` double(20, 8) UNSIGNED DEFAULT '0',
+                `tokens_not_used_in_bounty` double(20, 8) UNSIGNED DEFAULT '0',
                 `eth_bounty` double(20, 8) UNSIGNED DEFAULT '0',
                 `phone` varchar(254) DEFAULT '',
                 PRIMARY KEY (`id`)
@@ -266,7 +266,7 @@ class Investor
     }
 
     /**
-     * @param int $addedTokensCount
+     * @param double $addedTokensCount
      */
     public function addTokens($addedTokensCount)
     {
@@ -333,7 +333,7 @@ class Investor
         }
 
         $usdToReinvest = $ethToReinvest * Coin::getRate(Coin::COMMON_COIN);
-        $tokens = floor($usdToReinvest / Coin::getRate(Coin::token()));
+        $tokens = (double)($usdToReinvest / Coin::getRate(Coin::token()));
 
         $usd_spent = $tokens * Coin::getRate(Coin::token());
         $eth_spent = $usd_spent / Coin::getRate(Coin::COMMON_COIN);

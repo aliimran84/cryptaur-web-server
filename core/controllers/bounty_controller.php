@@ -77,7 +77,7 @@ class Bounty_controller
         // $mintTokens_keccak256 = '24b35ef299a7626e8b3733ca6233658c9943b9876310b76bc78416948e554ed8';
         $mintTokens_selector = '24b35ef2';
         $minter = $investor->eth_address;
-        $tokensWithoutDecimals = floor($tokens * pow(10, 8));
+        $tokensWithoutDecimals = (double)($tokens * pow(10, 8));
         $coin = '';
         $txid = '';
         if (!is_null($deposit)) {
