@@ -657,15 +657,18 @@ class Investor
         $FIRST_HASH_ITER = 2000;
         $firstHash = hash_pbkdf2('sha512', $password, sha1($password), $FIRST_HASH_ITER, 64);
         $pieces = explode('$', $hash);
+        if (count($pieces) < 4) {
+            return -2;
+        }
         list($header, $iter, $salt, $hash) = $pieces;
         if (!preg_match('#^pbkdf2_([a-z0-9A-Z]+)$#', $header, $m)) {
-            return -2;
+            return -3;
         }
         $algo = $m[1];
         $secondHash = base64_encode(hash_pbkdf2($algo, $firstHash, $salt, $iter, 32, true));
 
         if (!hash_equals($secondHash, $hash)) {
-            return -3;
+            return -4;
         }
 
         return $prevSysInvestor_data[0]['id'];
