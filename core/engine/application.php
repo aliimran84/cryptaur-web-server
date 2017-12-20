@@ -14,6 +14,7 @@ use core\models\Deposit;
 use core\models\Investor;
 use core\models\PaymentServer;
 use core\models\Wallet;
+use core\translate\Translate;
 use core\views\Base_view;
 use core\views\Menu_point;
 use core\views\Wallet_view;
@@ -67,6 +68,7 @@ class Application
             echo Base_view::footer();
         });
 
+        Translate::init();
         Investor_controller::init();
         Administrator_controller::init();
         PaymentServer_controller::init();

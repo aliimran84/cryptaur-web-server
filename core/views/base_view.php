@@ -7,6 +7,7 @@ use core\controllers\Dashboard_controller;
 use core\controllers\Deposit_controller;
 use core\engine\Application;
 use core\controllers\Investor_controller;
+use core\translate\Translate;
 
 class Base_view
 {
@@ -55,7 +56,13 @@ class Base_view
             <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <?= self::menuList() ?>
-                <li><a class="dropdown-button" href="#!" data-activates="dropdown_flag"><img src="images/flag_usa.png"/><i class="material-icons right">keyboard_arrow_down</i></a>
+                <li><a class="dropdown-button" href="#!" data-activates="dropdown_flag"><img src="<?php
+                        if (Translate::defaultLang() === 'ru') {
+                            echo 'images/flag_rus.png';
+                        } else {
+                            echo 'images/flag_usa.png';
+                        }
+                        ?>"/><i class="material-icons right">keyboard_arrow_down</i></a>
                 </li>
             </ul>
             <ul class="side-nav" id="mobile-demo">
@@ -63,8 +70,8 @@ class Base_view
             </ul>
         </div>
         <ul id="dropdown_flag" class="dropdown-content">
-            <li><a href="#!"><img src="images/flag_usa.png"/></a></li>
-            <li><a href="#!"><img src="images/flag_rus.png"/></a></li>
+            <li><a href="<?= Translate::languageSwitchHref('en') ?>"><img src="images/flag_usa.png"/></a></li>
+            <li><a href="<?= Translate::languageSwitchHref('ru') ?>"><img src="images/flag_rus.png"/></a></li>
         </ul>
         <?php
         return ob_get_clean();
@@ -95,7 +102,7 @@ class Base_view
             <li class="<?= self::activeMenuItem(Menu_point::Admin_logout) ?>">
                 <a href="<?= Administrator_controller::LOGOUT_URL ?>">Logout</a></li>
         <?php } elseif (Application::$authorizedInvestor) { ?>
-            <li class="<?= self::activeMenuItem(Menu_point::About) ?>"><a href="">About</a></li>
+            <li class="<?= self::activeMenuItem(Menu_point::About) ?>"><a href=""><?= Translate::td('About') ?></a></li>
             <li class="<?= self::activeMenuItem(Menu_point::Dashboard) ?>">
                 <a href="<?= Dashboard_controller::BASE_URL ?>">Dashboard</a></li>
             <li class="<?= self::activeMenuItem(Menu_point::Transactions) ?>">
@@ -106,7 +113,7 @@ class Base_view
             <li class="<?= self::activeMenuItem(Menu_point::Logout) ?>">
                 <a href="<?= Investor_controller::LOGOUT_URL ?>">Logout</a></li>
         <?php } else { ?>
-            <li class="<?= self::activeMenuItem(Menu_point::About) ?>"><a href="">About</a></li>
+            <li class="<?= self::activeMenuItem(Menu_point::About) ?>"><a href=""><?= Translate::td('About') ?></a></li>
             <li class="<?= self::activeMenuItem(Menu_point::Login) ?>"><a href="<?= Investor_controller::LOGIN_URL ?>">Login</a>
             </li>
             <li class="<?= self::activeMenuItem(Menu_point::Register) ?>">
