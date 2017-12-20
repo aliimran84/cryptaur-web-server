@@ -25,7 +25,7 @@ class DB
     /**
      * @return DB
      */
-    private static function inst()
+    static private function inst()
     {
         if (is_null(self::$_instance)) {
             self::initializeErrorFile();
