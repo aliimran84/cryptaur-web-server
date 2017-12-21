@@ -105,10 +105,14 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
         $wallet = Wallet::registerWallet($id, 'usd', '');
         $wallet->addToWallet($usd, $usd);
 
-        $duration = time() - $startTime;
+        $duration = (time() - $startTime) + 1;
         $currentCount = $i + $offset;
         $speed = number_format($currentCount / $duration, 5);
-        $remained = (int)($usersCount - $currentCount) / $speed;
+        if ($speed === 0) {
+            $remained = 1;
+        } else {
+            $remained = (int)($usersCount - $currentCount) / $speed;
+        }
         echo date('Y-m-d H:i:s') . ": fill for $currentCount/$usersCount (userid: {$user['id']}, duration: {$duration}s, speed: {$speed}u/s, remained: {$remained}s)\r\n";
     }
 }
