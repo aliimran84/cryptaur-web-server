@@ -35,9 +35,11 @@ $users = DB::get("
         JOIN account_account ON account_account.id = auth_user.id
     WHERE
         auth_user.email NOT LIKE \"%+%\"
-        AND auth_user.is_staff = 0
         AND account_account.email_confirmed = 1
 ;");
+//        AND auth_user.is_staff = 0
+
+$previousIdToNew = [];
 $usersCount = count($users);
 foreach ($users as $i => $user) {
     $tokens_data = DB::get("
@@ -62,9 +64,7 @@ foreach ($users as $i => $user) {
             AND `status` = 4
     ", [$user['id']])[0]['usd'];
 
-    $refId = @(int)DB::get(
-        "SELECT investor_id FROM temp_investors WHERE previous_id=? LIMIT 1;",
-        [$user['invited_by_id']])[0]['previous_id'];
+    $refId = @(int)$previousIdToNew[$user['id']];
 
     DB::set("
         INSERT INTO `investors`
@@ -82,13 +82,7 @@ foreach ($users as $i => $user) {
     ", [$user['phone_number'], $refId, $user['referral_code'], $user['date_joined'], $user['email'], $user['password'], '', 0, $tokens, $bounty]
     );
     $id = DB::lastInsertId();
-    DB::set("
-        INSERT INTO `temp_investors`
-        SET
-            `investor_id` = ?,
-            `previous_id` = ?
-    ", [$id, $user['id']]);
-    $investor = Investor::getById($id);
+    $previousIdToNew[$user['id']] = $id;
     $wallet = Wallet::registerWallet($id, 'usd', '');
     $wallet->addToWallet($usd, $usd);
 
