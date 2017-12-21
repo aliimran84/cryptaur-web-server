@@ -23,6 +23,14 @@ $usersCount = DB::get("
         AND account_account.email_confirmed = 1
 ")[0]['count'];
 
+$lastCashbackedTs = DB::get("
+    select created_at from exchange_exchangeorder where id = (
+        select order_id from syndicates_syndicateexchangeorder where id = (
+           select order_id from syndicates_cashbackbonus where status = 3 order by id desc limit 1
+        )
+    )
+")[0]['created_at'];
+
 $previousIdToNew = [];
 
 $limitSize = 1000;
@@ -48,10 +56,14 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
 //        AND auth_user.is_staff = 0
 
     foreach ($users as $i => $user) {
-        $tokens_data = DB::get("
-            select sum(amount)/100000000 as tokens from transactions_history where account_id=? and type=0
-        ;", [$user['id']]);
-        $tokens = (double)@$tokens_data[0]['tokens'];
+        $tokens = (double)@DB::get("
+            select sum(amount)/100000000 as tokens from transactions_history where
+            account_id=? and type=0
+        ;", [$user['id']])[0]['tokens'];
+        $tokens_not_used_in_bounty = (double)@DB::get("
+            select sum(amount)/100000000 as tokens from transactions_history where
+            account_id=? and type=0 and `timestamp`>?
+        ;", [$user['id'], $lastCashbackedTs])[0]['tokens'];
         $b1 = (double)@DB::get("
             select sum(amount) as b1 from syndicates_cashbackbonus where recipient_id=? and status=3
         ", [$user['id']])[0]['b1'];
@@ -84,8 +96,9 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
                 `eth_address` = ?,
                 `eth_withdrawn` = ?,
                 `tokens_count` = ?,
+                `tokens_not_used_in_bounty` = ?,
                 `eth_bounty` = ?
-        ", [$user['phone_number'], $refId, $user['referral_code'], $user['date_joined'], $user['email'], $user['password'], '', 0, $tokens, $bounty]
+        ", [$user['phone_number'], $refId, $user['referral_code'], $user['date_joined'], $user['email'], $user['password'], '', 0, $tokens, $tokens_not_used_in_bounty, $bounty]
         );
         $id = DB::lastInsertId();
         $previousIdToNew[$user['id']] = $id;
