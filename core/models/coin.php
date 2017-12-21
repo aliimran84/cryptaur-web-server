@@ -10,6 +10,8 @@ class Coin
     const COMMON_COIN = 'ETH';
     const USD = 'USD';
 
+    static private $rateStorage = [];
+
     /**
      * @param bool $onlyActivate
      * @return string[]
@@ -42,6 +44,7 @@ class Coin
     static public function setRate($coin, $rate)
     {
         $coin = strtoupper($coin);
+        self::$rateStorage[$coin] = $rate;
         Application::setValue(self::RATE_KEY_PREFIX . $coin, $rate);
     }
 
@@ -53,7 +56,12 @@ class Coin
     static public function getRate($coin)
     {
         $coin = strtoupper($coin);
-        return Application::getValue(self::RATE_KEY_PREFIX . $coin);
+        if (isset(self::$rateStorage[$coin])) {
+            return self::$rateStorage[$coin];
+        }
+        $rate = Application::getValue(self::RATE_KEY_PREFIX . $coin);
+        self::$rateStorage[$coin] = $rate;
+        return $rate;
     }
 
     /**
