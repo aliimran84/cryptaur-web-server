@@ -38,7 +38,7 @@ class PaymentServer_controller
 
 
         Router::register(function () {
-            $result = self::handleNotify();
+            $result = self::handleNotify(@file_get_contents('php://input'));
             Utility::logOriginalRequest('paymentServerNotify/' . time() . "_$result", $result);
             $accept = $result > 0;
             echo json_encode(['accept' => $accept], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
@@ -76,13 +76,13 @@ class PaymentServer_controller
     }
 
     /**
+     * @param string $jsonMessage
      * @param bool $checkCredentials
      * @return int < 0 - error; > 0 success
      */
-    static public function handleNotify($checkCredentials = true)
+    static public function handleNotify($jsonMessage, $checkCredentials = true)
     {
-        $rawMessage = @file_get_contents('php://input');
-        $message = @json_decode($rawMessage, true);
+        $message = @json_decode($jsonMessage, true);
         if (!$message) {
             return -1;
         }
@@ -93,7 +93,7 @@ class PaymentServer_controller
         if ($checkCredentials) {
             $headers = getallheaders();
             $receivedHmacHash = @$headers[self::HMAC_HEADER];
-            $calculatedHmac = self::messageHmacHash(@$message['keyid'], $rawMessage);
+            $calculatedHmac = self::messageHmacHash(@$message['keyid'], $jsonMessage);
             if ($receivedHmacHash !== $calculatedHmac) {
                 return -3;
             }
