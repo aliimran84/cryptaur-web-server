@@ -76,9 +76,10 @@ class PaymentServer_controller
     }
 
     /**
+     * @param bool $checkCredentials
      * @return int < 0 - error; > 0 success
      */
-    static public function handleNotify()
+    static public function handleNotify($checkCredentials = true)
     {
         $rawMessage = @file_get_contents('php://input');
         $message = @json_decode($rawMessage, true);
@@ -88,15 +89,18 @@ class PaymentServer_controller
         if (!isset($message['keyid'])) {
             return -2;
         }
-        $headers = getallheaders();
-        $receivedHmacHash = @$headers[self::HMAC_HEADER];
-        $calculatedHmac = self::messageHmacHash(@$message['keyid'], $rawMessage);
-        if ($receivedHmacHash !== $calculatedHmac) {
-            return -3;
-        }
 
-        if (!PaymentServer::checkUpdateNonce($message['keyid'], $message['nonce'])) {
-            return -4;
+        if ($checkCredentials) {
+            $headers = getallheaders();
+            $receivedHmacHash = @$headers[self::HMAC_HEADER];
+            $calculatedHmac = self::messageHmacHash(@$message['keyid'], $rawMessage);
+            if ($receivedHmacHash !== $calculatedHmac) {
+                return -3;
+            }
+
+            if (!PaymentServer::checkUpdateNonce($message['keyid'], $message['nonce'])) {
+                return -4;
+            }
         }
 
         if ($message['reason'] === self::NOTIFY_REASON_ADDRESS) {
