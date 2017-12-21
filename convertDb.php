@@ -96,6 +96,6 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
         $currentCount = $i + $offset;
         $speed = number_format($currentCount / $duration, 5);
         $remained = (int)($usersCount - $currentCount) / $speed;
-        echo date('Y-m-d H:i:s') . ": fill for $currentCount/$usersCount (duration: {$duration}s, speed: {$speed}u/s, remained: {$remained}s)\r\n";
+        echo date('Y-m-d H:i:s') . ": fill for $currentCount/$usersCount (userid: {$user['id']}, duration: {$duration}s, speed: {$speed}u/s, remained: {$remained}s)\r\n";
     }
 }
