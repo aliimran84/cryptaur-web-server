@@ -339,8 +339,8 @@ class Investor
         $eth_spent = $usd_spent / Coin::getRate(Coin::COMMON_COIN);
 
         if (Bounty_controller::mintTokens($this, $tokens) > 0) {
+            $this->addTokens($tokens);
             if (Bounty_controller::sendEth(ETH_BOUNTY_COLD_WALLET, $eth_spent) > 0) {
-                $this->addTokens($tokens);
                 $this->spentEthBounty($eth_spent);
             }
         }
