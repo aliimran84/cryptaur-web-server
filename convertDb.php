@@ -93,8 +93,9 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
         $wallet->addToWallet($usd, $usd);
 
         $duration = time() - $startTime;
-        $speed = number_format($i / $duration, 5);
-        $remained = (int)($usersCount - $i) / $speed;
-        echo date('Y-m-d H:i:s') . ": fill for $i/$usersCount (duration: {$duration}s, speed: {$speed}u/s, remained: {$remained}s)\r\n";
+        $currentCount = $i + $offset;
+        $speed = number_format($currentCount / $duration, 5);
+        $remained = (int)($usersCount - $currentCount) / $speed;
+        echo date('Y-m-d H:i:s') . ": fill for $currentCount/$usersCount (duration: {$duration}s, speed: {$speed}u/s, remained: {$remained}s)\r\n";
     }
 }
