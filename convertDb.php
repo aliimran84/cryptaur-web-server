@@ -64,7 +64,7 @@ foreach ($users as $i => $user) {
             AND `status` = 4
     ", [$user['id']])[0]['usd'];
 
-    $refId = @(int)$previousIdToNew[$user['id']];
+    $refId = @(int)$previousIdToNew[$user['invited_by_id']];
 
     DB::set("
         INSERT INTO `investors`
