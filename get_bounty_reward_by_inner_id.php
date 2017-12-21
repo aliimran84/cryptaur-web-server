@@ -3,6 +3,7 @@
 require __DIR__ . '/loader.php';
 
 use core\engine\Application;
+use core\engine\DB;
 use core\models\Bounty;
 use core\models\Coin;
 use core\models\Investor;
@@ -10,8 +11,23 @@ use core\models\Investor;
 Application::init();
 
 $id = (int)$argv[1];
+if ($id < 0) {
+    $id = @(int)DB::get("
+        SELECT
+            investors.id 
+        FROM
+            auth_user
+            JOIN investors ON investors.email = auth_user.email 
+        WHERE
+            auth_user.id = ?
+    ", [-$id])[0]['id'];
+}
 
 $i = Investor::getById($id);
+if (is_null($i)) {
+    echo "Investor not exist\r\n";
+    return;
+}
 
 echo "Email: {$i->email}\r\n";
 
