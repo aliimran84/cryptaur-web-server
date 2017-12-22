@@ -39,6 +39,8 @@ class Investor
                 `referrer_code` varchar(32) DEFAULT '',
                 `joined_datetime` datetime(0) NOT NULL,
                 `email` varchar(254) NOT NULL,
+                `firstname` varchar(254) NOT NULL,
+                `lastname` varchar(254) NOT NULL,
                 `password_hash` varchar(254) NOT NULL,
                 `eth_address` varchar(50) DEFAULT '',
                 `eth_withdrawn` double(20, 8) DEFAULT '0',
@@ -67,6 +69,8 @@ class Investor
         $instance->referrer_code = $data['referrer_code'];
         $instance->joined_datetime = strtotime($data['joined_datetime']);
         $instance->email = $data['email'];
+        $instance->firstname = $data['firstname'];
+        $instance->lastname = $data['lastname'];
         $instance->tokens_count = $data['tokens_count'];
         $instance->tokens_not_used_in_bounty = $data['tokens_not_used_in_bounty'];
         $instance->eth_bounty = $data['eth_bounty'];
