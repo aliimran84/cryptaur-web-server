@@ -14,6 +14,8 @@ class Investor
     public $referrer_code = '';
     public $joined_datetime = 0;
     public $email = '';
+    public $firstname = '';
+    public $lastname = '';
     public $tokens_count = 0;
     public $tokens_not_used_in_bounty = 0;
     public $eth_bounty = 0;
