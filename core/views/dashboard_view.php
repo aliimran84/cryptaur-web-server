@@ -19,12 +19,12 @@ class Dashboard_view
 
         <div class="row">
             <div class="col s12 m3 left-panel">
-                <h3>Token sale</h3>
+                <h3><?= Translate::td('Token sale') ?></h3>
                 <div class="row">
                     <div class="stage active">
                         <h2><?= Translate::td('Stage') ?> 1</h2>
-                        <p>Nov 27, 2017</p>
-                        <p>Dec 07, 2017</p>
+                        <p><?= Translate::td('Nov') ?> 27, 2017</p>
+                        <p><?= Translate::td('Dec') ?> 07, 2017</p>
                         <!--                        <div class="col s12 offset-m1 m10 offset-l2 l8 offset-xl3 xl6">-->
                         <!--                            <button class="waves-effect waves-light btn btn-learn-more">Learn more</button>-->
                         <!--                        </div>-->
@@ -33,8 +33,8 @@ class Dashboard_view
                 <div class="row">
                     <div class="stage ">
                         <h2><?= Translate::td('Stage') ?> 2</h2>
-                        <p>Jan 22, 2018</p>
-                        <p>Jan 31, 2018</p>
+                        <p><?= Translate::td('Jan') ?> 22, 2018</p>
+                        <p><?= Translate::td('Jan') ?> 31, 2018</p>
                         <!--                        <div class="col s12 offset-m1 m10 offset-l2 l8 offset-xl3 xl6">-->
                         <!--                            <button class="waves-effect waves-light btn btn-learn-more">Learn more</button>-->
                         <!--                        </div>-->
@@ -43,8 +43,8 @@ class Dashboard_view
                 <div class="row">
                     <div class="stage ">
                         <h2><?= Translate::td('Stage') ?> 3</h2>
-                        <p>Feb 12, 2018</p>
-                        <p>Feb 20, 2018</p>
+                        <p><?= Translate::td('Feb') ?> 12, 2018</p>
+                        <p><?= Translate::td('Feb') ?> 20, 2018</p>
                         <!--                        <div class="col s12 offset-m1 m10 offset-l2 l8 offset-xl3 xl6">-->
                         <!--                            <button class="waves-effect waves-light btn btn-learn-more">Learn more</button>-->
                         <!--                        </div>-->
@@ -53,8 +53,8 @@ class Dashboard_view
                 <div class="row">
                     <div class="stage ">
                         <h2><?= Translate::td('Stage') ?> 4</h2>
-                        <p>Mar 05, 2018</p>
-                        <p>Mar 12, 2018</p>
+                        <p><?= Translate::td('Mar') ?> 05, 2018</p>
+                        <p><?= Translate::td('Mar') ?> 12, 2018</p>
                         <!--                        <div class="col s12 offset-m1 m10 offset-l2 l8 offset-xl3 xl6">-->
                         <!--                            <button class="waves-effect waves-light btn btn-learn-more">Learn more</button>-->
                         <!--                        </div>-->

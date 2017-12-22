@@ -1,4 +1,4 @@
-﻿About,Описание
+About,Описание
 Settings,Настройки
 Logout,Выйти
 Login,Войти
@@ -14,17 +14,17 @@ End date,Дата завершения
 Discount,Скидка
 The discount is offered throughout the 1st stage (November 27 through December 7) and will be 40% for the first day and 20% thereafter.,Скидка предоставляется на протяжении всего 1го этапа (27 ноября - 7 декабря) и составит 40 % в первый день и 20 % во все оставшиеся дни этого этапа.
 Purchase limits,Ограничения на покупки
-The minimum contribution limit remains the same as during presale – 50 USD (in CPT equivalent). Both existing participants who registered themselves during presale and new participants can take part in the token sale.,Минимальный взнос остается таким же, как и во время предпродажи - 50 USD (в эквиваленте CPT).<br> Участники, зарегистрировавшиеся во время предпродажи, а также новые участники могут принять участие в продаже токенов.
 Referral Program,Реферальная программа
-Anyone can get registered and participate in the token sale (see Terms and Conditions for legal restrictions). A new participant can get registered either directly at the web page of the project or using a group invite link from an existing participant. Newly registered participants can invite further potential participants by sending them their group invite links. The following reward system is applicable to all participants (newly registered or registered earlier) who have at least 10000 CPTs in their Cryptaur wallet (cumulatively from all the previous presale and sale stages) on the CPTs purchased during the token sale by those they invited,Любой может зарегистрироваться и участвовать в продаже токенов (см. Условия правовых ограничений). Новый участник может зарегистрироваться либо непосредственно на сайте проекта, либо с помощью приглашения группы от уже зарегистрированного участника, перейдя по ссылке. Новые зарегистрированные участники могут приглашать потенциальных участников, отправив им свои приглашения..<br> Данная система вознаграждения применима ко всем приглашенным участникам (только что зарегистрированным или зарегистрированным ранее), у которых в кошельке Cryptaur (по совокупности со всех предыдущих этапов продажи и предпродажи) есть по меньшей мере 10000 CPT, на CPT, приобретенных во время продажи токенов
+"The minimum contribution limit remains the same as during presale – 50 USD (in CPT equivalent). Both existing participants who registered themselves during presale and new participants can take part in the token sale.","Минимальный взнос остается таким же, как и во время предпродажи - 50 USD (в эквиваленте CPT).<br> Участники, зарегистрировавшиеся во время предпродажи, а также новые участники могут принять участие в продаже токенов."
+"Anyone can get registered and participate in the token sale (see Terms and Conditions for legal restrictions). A new participant can get registered either directly at the web page of the project or using a group invite link from an existing participant. Newly registered participants can invite further potential participants by sending them their group invite links. The following reward system is applicable to all participants (newly registered or registered earlier) who have at least 10000 CPTs in their Cryptaur wallet (cumulatively from all the previous presale and sale stages) on the CPTs purchased during the token sale by those they invited","Любой может зарегистрироваться и участвовать в продаже токенов (см. Условия правовых ограничений). Новый участник может зарегистрироваться либо непосредственно на сайте проекта, либо с помощью приглашения группы от уже зарегистрированного участника, перейдя по ссылке. Новые зарегистрированные участники могут приглашать потенциальных участников, отправив им свои приглашения..<br> Данная система вознаграждения применима ко всем приглашенным участникам (только что зарегистрированным или зарегистрированным ранее), у которых в кошельке Cryptaur (по совокупности со всех предыдущих этапов продажи и предпродажи) есть по меньшей мере 10000 CPT, на CPT, приобретенных во время продажи токенов"
 From Level,С уровня
-"The bounty is awarded with the compression procedure applied to participants who have at least 10000 CPTs. Bounties for the purchases made during the 1st Stage will be calculated at the end of the 1st Stage with the compression procedure applied. The bounty received can be withdrawn to any Ether wallet address or re-invested into CPTs. In case of re-investment the discount will be 40% on the first day and 20% until January 22, including the period between Stage One and Stage Two of the token sale.","Для получения баунти путем компрессии участник должен иметь на счету не менее 10000 CPT. Баунти за покупки, сделанные во время 1-го этапа, будут рассчитаны в конце 1-го этапа путем компрессии.<br> Полученную сумму можно снять на любой адрес кошелька Ether или повторно инвестировать в CPT. В случае реинвестирования скидка составит 40% в первый день и 20% до 22 января, включая период между первым  и вторым этапом продажи токенов »."
+"The bounty is awarded with the compression procedure applied to participants who have at least 10000 CPTs. Bounties for the purchases made during the 1st Stage will be calculated at the end of the 1st Stage with the compression procedure applied. The bounty received can be withdrawn to any Ether wallet address or re-invested into CPTs. In case of re-investment the discount will be 40% on the first day and 20% until January 22, including the period between Stage One and Stage Two of the token sale.","Для получения баунти путем компрессии участник должен иметь на счету не менее 10000 CPT. Баунти за покупки, сделанные во время 1-го этапа, будут рассчитаны в конце 1-го этапа путем компрессии.<br> Полученную сумму можно снять на любой адрес кошелька Ether или повторно инвестировать в CPT. В случае реинвестирования скидка составит 40% в первый день и 20% до 22 января, включая период между первым  и вторым этапом продажи токенов."
 My contribution,Мой взнос
 To learn about the minimum contribution limits,Чтобы узнать минимальные пределы взноса
 click here,кликните сюда
 select currency,выберите валюту
 select amount,выберите сумму
-Copy address below to send,Скопируйте адрес ниже, чтобы его отправить
+"Copy address below to send","Скопируйте адрес ниже, чтобы его отправить"
 You will get,Вы получите
 will be received as donation,будут получены в качестве пожертвования
 Payment server,Платежный сервер
@@ -88,3 +88,28 @@ Participants,Участники
 Invite friends,Пригласить друзей
 After compression,После компрессии
 participants in level,участники уровня
+January,Январь
+February,Февраль
+March,Март
+April,Апрель
+May,Май
+June,Июнь
+July,Июль
+August,Август
+September,Сентябрь
+October,Октябрь
+November,Ноябрь
+December,Декабрь
+Jan,Янв
+Feb,Фев
+Mar,Мар
+Apr,Апр
+May,Май
+Jun,Июн
+Jul,Июл
+Aug,Авг
+Sep,Сен
+Oct,Окт
+Nov,Ноя
+Dec,Дек
+Token sale,Продажа токенов
