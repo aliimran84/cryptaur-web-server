@@ -42,7 +42,7 @@ if (($handle = fopen($innerCsv, 'r')) !== FALSE) {
         $cpt = (double)$data[5];
         $cashback = (double)$data[6];
 
-        $id = @(int)DB::get("
+        $id_2 = @(int)DB::get("
             SELECT
                 investors.id 
             FROM
@@ -53,7 +53,7 @@ if (($handle = fopen($innerCsv, 'r')) !== FALSE) {
             LIMIT 1
         ;", [$id])[0]['id'];
 
-        $investor = Investor::getById($id);
+        $investor = Investor::getById($id_2);
         if (is_null($investor)) {
             continue;
         }
