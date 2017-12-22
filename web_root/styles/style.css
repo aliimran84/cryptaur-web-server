@@ -265,13 +265,16 @@ footer .row {
     top: -8px;
     height: 34px;
 }
-.content section.my-contribution [type="checkbox"]+label:before {
+.content section.my-contribution [type="checkbox"]+label:before,
+.content section.my-group [type="checkbox"]+label:before {
     border: 1px solid #5a5a5a;
 }
-.content section.my-contribution [type="checkbox"]+label {
+.content section.my-contribution [type="checkbox"]+label,
+.content section.my-group [type="checkbox"]+label {
     color: #404040;
 }
-.content section.my-contribution [type="checkbox"]:checked+label:before {
+.content section.my-contribution [type="checkbox"]:checked+label:before,
+.content section.my-group [type="checkbox"]:checked+label:before {
     border-right: 2px solid #0074ff;
     border-bottom: 2px solid #0074ff;
     border-top: 2px solid transparent;
@@ -425,7 +428,7 @@ footer .row {
     top: 55px;
 }
 .dashboard .main-panel-block .amount.input-field .btn {
-    width: 150px;
+    width: 50%;
     border: 1px solid #0074ff;
     background: transparent;
     color: #0074ff;
@@ -454,6 +457,10 @@ footer .row {
     background: #91aad1;
     line-height: 4.5rem;
     margin: 0;
+}
+.dashboard .my-group p.after-compression {
+    text-align: center;
+    margin: 10px 0;
 }
 .dashboard .my-group .main-panel-block.tree {
     overflow-x: auto;
@@ -558,6 +565,7 @@ footer .row {
     position: absolute;
     border-radius: 5px;
     right: 0;
+    top: 0;
     cursor: pointer;
 }
 .dashboard.content .left-panel h3 {
@@ -669,4 +677,11 @@ footer .row {
 }
 .dashboard.content .left-panel .referral-progam .circle:nth-child(6) {
     margin-top: 360px;
+}
+.dashboard .my-group .main-panel-block.tree.before-compression,
+.dashboard .my-group .main-panel-block.tree.after-compression {
+    display: none;
+}
+.dashboard .my-group .main-panel-block.tree.active {
+    display: block;
 }

@@ -139,7 +139,7 @@ class Dashboard_view
         </div>
         <div class="row">
             <div class="col s12 m3 left-panel">
-                <h3><?= Translate::td('Referral program') ?></h3>
+                <h3><?= Translate::td('Referral Program') ?></h3>
                 <div class="referral-progam">
                     <div class="line-left"></div>
                     <div class="line-bottom"></div>
