@@ -167,7 +167,7 @@ class Investor_controller
         }
 
         $investor->setEthAddress($_POST['eth_address']);
-        if (Bounty_controller::mintTokens($investor, $investor->tokens_count) > 0) {
+        if ($investor->tokens_count === 0 || Bounty_controller::mintTokens($investor, $investor->tokens_count) > 0) {
             session_start();
             $password = $_SESSION[self::PREVIOUS_SYSTEM_PASSWORD];
             if (isset($_SESSION[self::PREVIOUS_SYSTEM_ID])) {
