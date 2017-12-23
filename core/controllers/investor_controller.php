@@ -21,6 +21,7 @@ class Investor_controller
     const SET_ETH_ADDRESS = 'investor/set_eth_address';
     const LOGOUT_URL = 'investor/logout';
     const REGISTER_URL = 'investor/register';
+    const REGISTER_URL_PREVIOUS_SYSTEM = 'syndicates/join';
     const REGISTER_CONFIRMATION_URL = 'investor/register_confirm';
     const SETTINGS_URL = 'investor/settings';
 
@@ -83,6 +84,11 @@ class Investor_controller
             echo Investor_view::registerForm();
             echo Base_view::footer();
         }, self::REGISTER_URL, Router::GET_METHOD);
+
+        Router::register(function () {
+            Utility::location(self::REGISTER_URL . '?referrer_code=' . Router::$queryVar);
+        }, self::REGISTER_URL_PREVIOUS_SYSTEM, Router::ANY_METHOD);
+
         Router::register(function () {
             if (Application::$authorizedInvestor) {
                 Utility::location(self::BASE_URL);

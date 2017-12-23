@@ -44,6 +44,7 @@ class Investor_view
 
     static public function registerForm()
     {
+        $referrer_code = @$_GET['referrer_code'];
         ob_start();
         ?>
         <div class="row">
@@ -58,7 +59,7 @@ class Investor_view
                         <input type="text" name="email" placeholder="E-MAIL">
                         <input type="password" name="password" placeholder="<?= Translate::td('PASSWORD') ?>">
                         <input type="text" name="eth_address" placeholder="<?= Translate::td('ETH-ADDRESS') ?>">
-                        <input type="text" name="referrer_code" placeholder="<?= Translate::td('REFERRER CODE') ?>">
+                        <input type="text" name="referrer_code" value="<?= $referrer_code ?>" placeholder="<?= Translate::td('REFERRER CODE') ?>">
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Register') ?>
