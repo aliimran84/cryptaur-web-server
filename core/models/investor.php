@@ -171,16 +171,16 @@ class Investor
      * @param string $eth_address
      * @param int $referrer_id
      * @param string $password_hash
-     * @return false|int
+     * @return int if > 0 -> success, else error
      */
     static public function registerUser($email, $eth_address, $referrer_id, $password_hash)
     {
         if (!Utility::validateEthAddress($eth_address)) {
-            return false;
+            return -1;
         }
 
         if (Investor::isExistWithParams($email)) {
-            return false;
+            return -2;
         }
 
         if ($referrer_id) {
@@ -191,7 +191,7 @@ class Investor
                 LIMIT 1
             ;", [$referrer_id])[0];
             if (!$existingReferrer) {
-                return false;
+                return -3;
             }
         }
 

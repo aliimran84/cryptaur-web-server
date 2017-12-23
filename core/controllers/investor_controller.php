@@ -257,15 +257,16 @@ class Investor_controller
             echo Base_view::footer();
             return;
         }
-        $investorId = Investor::registerUser($data['email'], $data['eth_address'], $data['referrer_id'], $data['password_hash']);
-        if (!$investorId) {
+        $registerResult = Investor::registerUser($data['email'], $data['eth_address'], $data['referrer_id'], $data['password_hash']);
+        if ($registerResult < 0) {
             Base_view::$TITLE = 'Email confirmation problem';
             Base_view::$MENU_POINT = Menu_point::Register;
             echo Base_view::header();
-            echo Base_view::text('Something went wrong with investor registration');
+            echo Base_view::text("Something went wrong with investor registration ($registerResult)");
             echo Base_view::footer();
             return;
         }
+        $investorId = $registerResult;
 
         self::loginWithId($investorId);
         self::detectLoggedInInvestor();
