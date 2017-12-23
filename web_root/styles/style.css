@@ -37,9 +37,29 @@ nav .brand-logo span {
     font-weight: 400;
 }
 nav ul#nav-mobile li {
-    margin: 0 10px;
     font-size: 1.6rem;
+}
+nav .nav-wrapper #nav-mobile li a {
     padding: 0 1rem;
+}
+nav ul#nav-mobile li.login {
+    max-width: 250px;
+    padding: 0 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    position: relative;
+}
+nav ul#nav-mobile li.login:after {
+    content: '';
+    position: absolute;
+    right: 0; top: 0;
+    width: 1rem;
+    height: 100%;
+    background: -moz-linear-gradient(left, rgba(37,53,167, 0.2), #2535a7 100%);
+    background: -webkit-linear-gradient(left, rgba(37,53,167, 0.2), #2535a7 100%);
+    background: -o-linear-gradient(left, rgba(37,53,167, 0.2), #2535a7 100%);
+    background: -ms-linear-gradient(left, rgba(37,53,167, 0.2), #2535a7 100%);
+    background: linear-gradient(to right, rgba(37,53,167, 0.2), #2535a7 100%);
 }
 nav ul li a {
     padding: 0;
@@ -69,7 +89,7 @@ nav .dropdown-content li img {
     margin: 0 auto;
 }
 nav .dropdown-content li>a {
-    padding: 29px 16px;
+    padding: 29px 16px !important;
 }
 nav,
 nav .nav-wrapper i,
