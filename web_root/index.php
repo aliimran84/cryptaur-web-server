@@ -5,7 +5,7 @@ require __DIR__ . '/../loader.php';
 use core\engine\Application;
 use core\engine\DB;
 use core\engine\Router;
- use core\engine\Utility;
+use core\engine\Utility;
 use core\models\Coin;
 use core\models\Investor;
 
@@ -51,22 +51,12 @@ Router::register(function () {
 
 Router::register(function () {
     $time_start = microtime_float();
-
-    $invsetor = Investor::getById(144);
-    var_dump(Investor::summonedBy($invsetor, true));
-
+    $investor = Investor::getById(876);
+    $investor->initReferalls(1);
     var_dump(microtime_float() - $time_start);
-}, 'test21');
-
-Router::register(function () {
-    $time_start = microtime_float();
-
-    $investor = Investor::getById(9);
-//    $investor->initReferalls(1);
     $investor->initCompressedReferalls(6);
-    var_dump($investor);
-//    var_dump(@Investor::referrals_compressed(91, count(\core\models\Bounty::program()))[0]);
-
+    var_dump(microtime_float() - $time_start);
+    \core\models\Bounty::rewardForInvestor($investor);
     var_dump(microtime_float() - $time_start);
 }, 'test22');
 

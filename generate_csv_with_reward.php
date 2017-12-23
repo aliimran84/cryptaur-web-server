@@ -47,7 +47,7 @@ if (($handle = fopen($innerCsv, 'r')) !== FALSE) {
                 investors.id 
             FROM
                 auth_user
-                JOIN investors ON investors.email = auth_user.email 
+                JOIN investors ON investors.email = auth_user.email
             WHERE
                 auth_user.id = ?
             LIMIT 1
