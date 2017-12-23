@@ -8,6 +8,8 @@ namespace core\engine;
  */
 class Router
 {
+    static public $queryVar = '';
+
     /**
      * singleton object
      * @var Router
@@ -68,7 +70,7 @@ class Router
      * @param string $method
      * @return callable
      */
-    static public function getByPathAndMethod($path, $method = Router::ANY_METHOD)
+    static private function getByPathAndMethod($path, $method = Router::ANY_METHOD)
     {
         $path = trim($path, '/');
         $router = self::inst();
@@ -76,6 +78,14 @@ class Router
             return $router->handlers["$path/$method"];
         } else if (isset($router->handlers["$path/" . Router::ANY_METHOD])) {
             return $router->handlers["$path/" . Router::ANY_METHOD];
+        }
+        $isSub = preg_match_all('/(.*)\/(.*)$/', $path, $matches);
+        if ($isSub) {
+            $subPath = $matches[1][0];
+            self::$queryVar = $matches[2][0];
+            if ($path !== $subPath) {
+                return self::getByPathAndMethod($subPath, $method);
+            }
         }
         return $router->handlers["/" . Router::ANY_METHOD];
     }
@@ -89,14 +99,14 @@ class Router
         if ($_SERVER['REQUEST_METHOD'] === Router::POST_METHOD || $_SERVER['REQUEST_METHOD'] === Router::GET_METHOD) {
             $method = $_SERVER['REQUEST_METHOD'];
         }
-        $path = Router::parsePath()['call'];
-        return Router::getByPathAndMethod($path, $method);
+        $path = self::parsePath()['call'];
+        return self::getByPathAndMethod($path, $method);
     }
 
     /**
      * @return array
      */
-    static public function parsePath()
+    static private function parsePath()
     {
         $path = array();
         if (isset($_SERVER['REQUEST_URI'])) {
