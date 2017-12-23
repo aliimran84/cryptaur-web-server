@@ -428,7 +428,7 @@ footer .row {
     top: 55px;
 }
 .dashboard .main-panel-block .amount.input-field .btn {
-    width: 150px;
+    width: 50%;
     border: 1px solid #0074ff;
     background: transparent;
     color: #0074ff;

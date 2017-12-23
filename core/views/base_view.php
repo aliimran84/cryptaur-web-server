@@ -166,13 +166,13 @@ class Base_view
             </div>
             <div class="row">
                 <div class="col s12 m2">
-                    <p class="date"><?= Translate::td('Start date') ?>:<br>November 27, 2017</p>
-                    <p class="date"><?= Translate::td('End date') ?>:<br>December 07, 2017</p>
+                    <p class="date"><?= Translate::td('Start date') ?>:<br><?= Translate::td('November') ?> 27, 2017</p>
+                    <p class="date"><?= Translate::td('End date') ?>:<br><?= Translate::td('December') ?> 07, 2017</p>
                 </div>
                 <div class="col s12 m10">
                     <div class="row">
                         <p class="header"><?= Translate::td('Discount') ?>:</p>
-                        <p><?= Translate::td('The discount is offered throughout the 1st stage (November 27 through December 7) and will be 40% for the first day and 20% thereafter.') ?>.</p>
+                        <p><?= Translate::td('The discount is offered throughout the 1st stage (November 27 through December 7) and will be 40% for the first day and 20% thereafter.') ?></p>
                     </div>
                     <div class="row">
                         <p class="header"><?= Translate::td('Purchase limits') ?>:</p>
