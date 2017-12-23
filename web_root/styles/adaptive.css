@@ -1,4 +1,15 @@
-@media screen and (max-width: 1501px){
+@media screen and (max-width: 1670px){
+    nav .nav-wrapper #nav-mobile li a,
+    nav .nav-wrapper #nav-mobile li {
+        font-size: 1.4rem;
+    }
+    .dashboard .main-panel .main-panel-block h3,
+    .content section.my-contribution .btn-send,
+    .content section.my-contribution .btn-contribute {
+        font-size: 1.4rem;
+    }
+}
+@media screen and (max-width: 1570px){
     nav .nav-wrapper #nav-mobile li a,
     nav .nav-wrapper #nav-mobile li {
         font-size: 1.2rem;
@@ -9,13 +20,21 @@
     .content section.my-contribution .btn-contribute {
         font-size: 1.2rem;
     }
+    nav ul#nav-mobile li.login {
+        max-width: 220px;
+    }
 }
-@media screen and (max-width: 1201px){
+@media screen and (max-width: 1430px){
     nav .nav-wrapper #nav-mobile .login {
         display: none;
     }
+}
+@media screen and (max-width: 1201px){
     nav .nav-wrapper #nav-mobile li a {
         font-size: 1rem;
+    }
+    nav .brand-logo {
+        margin-left: 20px;
     }
     .content section.my-contribution .btn-send,
     .content section.my-contribution .btn-contribute,
@@ -27,6 +46,15 @@
     }
     .dashboard .indicators h3 {
         font-size: 1.8rem;
+    }
+    nav ul#nav-mobile li.login {
+        padding: 0 .8rem;
+    }
+    nav .nav-wrapper #nav-mobile li a {
+        padding: 0 .8rem;
+    }
+    nav ul#nav-mobile li.login:after {
+        width: .8rem;
     }
 }
 @media screen and (max-width: 992px){
