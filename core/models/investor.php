@@ -16,11 +16,14 @@ class Investor
     public $email = '';
     public $firstname = '';
     public $lastname = '';
-    public $tokens_count = 0;
-    public $tokens_not_used_in_bounty = 0;
-    public $eth_bounty = 0;
     public $eth_address = '';
     public $eth_withdrawn = 0;
+    public $tokens_count = 0;
+    public $tokens_not_used_in_bounty = 0;
+    public $eth_not_used_in_bounty = 0;
+    public $usd_not_used_in_bounty = 0;
+    public $eth_bounty = 0;
+    public $phone = '';
     /**
      * @var null|Investor[]
      */
@@ -48,6 +51,8 @@ class Investor
                 `eth_withdrawn` double(20, 8) DEFAULT '0',
                 `tokens_count` double(20, 8) UNSIGNED DEFAULT '0',
                 `tokens_not_used_in_bounty` double(20, 8) UNSIGNED DEFAULT '0',
+                `eth_not_used_in_bounty` double(20, 8) UNSIGNED DEFAULT '0',
+                `usd_not_used_in_bounty` double(20, 8) UNSIGNED DEFAULT '0',
                 `eth_bounty` double(20, 8) UNSIGNED DEFAULT '0',
                 `phone` varchar(254) DEFAULT '',
                 PRIMARY KEY (`id`)
@@ -73,11 +78,14 @@ class Investor
         $instance->email = $data['email'];
         $instance->firstname = $data['firstname'];
         $instance->lastname = $data['lastname'];
-        $instance->tokens_count = $data['tokens_count'];
-        $instance->tokens_not_used_in_bounty = $data['tokens_not_used_in_bounty'];
-        $instance->eth_bounty = $data['eth_bounty'];
         $instance->eth_address = $data['eth_address'];
         $instance->eth_withdrawn = $data['eth_withdrawn'];
+        $instance->tokens_count = $data['tokens_count'];
+        $instance->tokens_not_used_in_bounty = $data['tokens_not_used_in_bounty'];
+        $instance->eth_not_used_in_bounty = $data['eth_not_used_in_bounty'];
+        $instance->usd_not_used_in_bounty = $data['usd_not_used_in_bounty'];
+        $instance->eth_bounty = $data['eth_bounty'];
+        $instance->phone = $data['phone'];
         return $instance;
     }
 
