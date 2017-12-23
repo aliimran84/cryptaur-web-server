@@ -43,7 +43,7 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
             auth_user.email,
             auth_user.date_joined,
             account_account.phone_number,
-            account_account.referral_code
+            syndicates_syndicateaccount.referral
         FROM
             auth_user
             JOIN syndicates_syndicateaccount ON syndicates_syndicateaccount.account_id = auth_user.id
@@ -98,7 +98,7 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
                 `tokens_count` = ?,
                 `tokens_not_used_in_bounty` = ?,
                 `eth_bounty` = ?
-        ", [$user['phone_number'], $refId, $user['referral_code'], $user['date_joined'], $user['email'], $user['password'], '', 0, $tokens, $tokens_not_used_in_bounty, $bounty]
+        ", [$user['phone_number'], $refId, $user['referral'], $user['date_joined'], $user['email'], $user['password'], '', 0, $tokens, $tokens_not_used_in_bounty, $bounty]
         );
         $id = DB::lastInsertId();
         $previousIdToNew[$user['id']] = $id;
