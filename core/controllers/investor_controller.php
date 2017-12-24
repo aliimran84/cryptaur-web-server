@@ -8,6 +8,7 @@ use core\engine\Utility;
 use core\engine\DB;
 use core\engine\Router;
 use core\models\Investor;
+use core\translate\Translate;
 use core\views\Base_view;
 use core\views\Investor_view;
 use core\views\Menu_point;
@@ -21,9 +22,10 @@ class Investor_controller
     const SET_ETH_ADDRESS = 'investor/set_eth_address';
     const LOGOUT_URL = 'investor/logout';
     const REGISTER_URL = 'investor/register';
-    const REGISTER_URL_PREVIOUS_SYSTEM = 'syndicates/join';
+    const PREVIOUS_SYSTEM_REGISTER_URL = 'syndicates/join';
     const REGISTER_CONFIRMATION_URL = 'investor/register_confirm';
     const SETTINGS_URL = 'investor/settings';
+    const INVITE_FRIENDS_URL = 'investor/invite_friends';
 
     const SESSION_KEY = 'authorized_investor_id';
     const PREVIOUS_SYSTEM_ID = 'previous_system_authorized_investor_id';
@@ -87,7 +89,7 @@ class Investor_controller
 
         Router::register(function () {
             Utility::location(self::REGISTER_URL . '?referrer_code=' . Router::$queryVar);
-        }, self::REGISTER_URL_PREVIOUS_SYSTEM, Router::ANY_METHOD);
+        }, self::PREVIOUS_SYSTEM_REGISTER_URL, Router::ANY_METHOD);
 
         Router::register(function () {
             if (Application::$authorizedInvestor) {
@@ -102,6 +104,14 @@ class Investor_controller
         Router::register(function () {
             self::handleSettingsRequest();
         }, self::SETTINGS_URL);
+
+        Router::register(function () {
+            self::handleInviteFriendsForm();
+        }, self::INVITE_FRIENDS_URL, Router::GET_METHOD);
+
+        Router::register(function () {
+            self::handleInviteFriendsRequest();
+        }, self::INVITE_FRIENDS_URL, Router::POST_METHOD);
     }
 
     static private function detectLoggedInInvestor()
@@ -295,6 +305,43 @@ class Investor_controller
         echo Base_view::header();
         echo Investor_view::settings();
         echo Base_view::footer();
+    }
+
+    static public function handleInviteFriendsForm($message = '')
+    {
+        if (!Application::$authorizedInvestor) {
+            Utility::location(self::BASE_URL);
+        }
+
+        Base_view::$TITLE = 'Invite friends';
+        Base_view::$MENU_POINT = Menu_point::Dashboard;
+        echo Base_view::header();
+        echo Investor_view::invite_friends($message);
+        echo Base_view::footer();
+    }
+
+    static public function handleInviteFriendsRequest()
+    {
+        if (!Application::$authorizedInvestor) {
+            Utility::location(self::BASE_URL);
+        }
+        $email = @$_POST['email'];
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            Utility::location(self::INVITE_FRIENDS_URL . '?err=1&err_text=not a valid email');
+        }
+        $url = APPLICATION_URL . '/' . self::REGISTER_URL . '?referrer_code=' . Application::$authorizedInvestor->referrer_code;
+        $html = "
+            <h1>Invite</h1>
+            <p>
+                " . Application::$authorizedInvestor->email . " has invited you to join the group.<br>
+                Please follow the link to accept the invitation: <a href=\"$url\">$url</a>.
+            </p>
+        ";
+        if (Email::send($email, [], Translate::td('Invite friend'), $html)) {
+            self::handleInviteFriendsForm("$email successfully invited");
+        } else {
+            Utility::location(self::INVITE_FRIENDS_URL . '?err=2&err_text=can not send email with invite');
+        }
     }
 
     static public function generateReferrerCode()

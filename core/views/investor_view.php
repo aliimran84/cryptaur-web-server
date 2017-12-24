@@ -22,7 +22,7 @@ class Investor_view
                             <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
                                 : <?= $_GET['err_text'] ?></label>
                         <?php } ?>
-                        <input type="text" name="email" placeholder="E-MAIL">
+                        <input type="email" name="email" placeholder="E-MAIL">
                         <input type="password" name="password" placeholder="<?= Translate::td('PASSWORD') ?>">
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
@@ -56,7 +56,7 @@ class Investor_view
                             <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
                                 : <?= $_GET['err_text'] ?></label>
                         <?php } ?>
-                        <input type="text" name="email" placeholder="E-MAIL">
+                        <input type="email" name="email" placeholder="E-MAIL">
                         <input type="password" name="password" placeholder="<?= Translate::td('PASSWORD') ?>">
                         <input type="text" name="eth_address" placeholder="<?= Translate::td('ETH-ADDRESS') ?>">
                         <input type="text" name="referrer_code" value="<?= $referrer_code ?>" placeholder="<?= Translate::td('REFERRER CODE') ?>">
@@ -134,4 +134,35 @@ class Investor_view
         <?php
         return ob_get_clean();
     }
+
+    static public function invite_friends($message = '')
+    {
+        ob_start();
+        ?>
+        <div class="row">
+            <div class="col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
+                <h3><?= Translate::td('Invite friend') ?></h3>
+                <div class="row">
+                    <form class="login col s12" action="<?= Investor_controller::INVITE_FRIENDS_URL ?>" method="post">
+                        <?php if (isset($_GET['err'])) { ?>
+                            <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
+                                : <?= $_GET['err_text'] ?></label>
+                        <?php } ?>
+                        <?php if ($message) { ?>
+                            <label class="blue-text"><?= $message ?></label>
+                        <?php } ?>
+                        <input type="email" name="email" placeholder="friend email">
+                        <div class="row center">
+                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                <?= Translate::td('Send') ?>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+
 }
