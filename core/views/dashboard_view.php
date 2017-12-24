@@ -3,6 +3,7 @@
 namespace core\views;
 
 use core\controllers\Bounty_controller;
+use core\controllers\Investor_controller;
 use core\engine\Application;
 use core\models\Bounty;
 use core\models\Coin;
@@ -258,7 +259,7 @@ class Dashboard_view
                     </div>
                     <div class="col s12 l4 main-panel-block">
                         <div class="input-field">
-                            <button class="waves-effect waves-light btn "><?= Translate::td('Invite friends') ?></button>
+                            <a href="<?= Investor_controller::INVITE_FRIENDS_URL ?>" class="waves-effect waves-light btn"><?= Translate::td('Invite friends') ?></a>
                         </div>
                     </div>
                 </div>
