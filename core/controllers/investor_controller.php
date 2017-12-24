@@ -330,13 +330,7 @@ class Investor_controller
             Utility::location(self::INVITE_FRIENDS_URL . '?err=1&err_text=not a valid email');
         }
         $url = APPLICATION_URL . '/' . self::REGISTER_URL . '?referrer_code=' . Application::$authorizedInvestor->referrer_code;
-        $html = "
-            <h1>Invite</h1>
-            <p>
-                " . Application::$authorizedInvestor->email . " has invited you to join the group.<br>
-                Please follow the link to accept the invitation: <a href=\"$url\">$url</a>.
-            </p>
-        ";
+        $html = Email::templateEmail(Application::$authorizedInvestor->email, $url);
         if (Email::send($email, [], Translate::td('Invite friend'), $html)) {
             self::handleInviteFriendsForm("$email successfully invited");
         } else {

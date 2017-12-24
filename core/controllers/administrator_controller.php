@@ -21,7 +21,6 @@ class Administrator_controller
     const SETTINGS = 'administrator/settings';
     const ADMINISTRATORS_LIST = 'administrator/list';
     const LOGS = 'administrator/logs';
-    const EMAIL = 'administrator/email';
 
     const SESSION_KEY = 'authorized_administrator_id';
 
@@ -127,18 +126,6 @@ class Administrator_controller
             echo Administrator_view::logsList();
             echo Base_view::footer();
         }, self::LOGS, Router::GET_METHOD);
-
-        Router::register(function () {
-            // administrators can setup only administrator
-            if (!Application::$authorizedAdministrator) {
-                Utility::location(self::BASE_URL);
-            }
-            Base_view::$TITLE = 'Email';
-            Base_view::$MENU_POINT = Menu_point::Administrator_email;
-            echo Base_view::header();
-            echo Administrator_view::Email();
-            echo Base_view::footer();
-        }, self::EMAIL, Router::GET_METHOD);
     }
 
     static public function handleLoginRequest()
