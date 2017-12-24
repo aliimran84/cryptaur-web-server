@@ -130,8 +130,8 @@ class Wallet_view
                                                class="wallet_view-new_contribution-input_amount"
                                                value="1" min="0" max="9999999999" step="0.00000001">
                                         <label><?= Translate::td('select amount') ?></label>
-                                        <span class="btn-up"><i class="material-icons right">keyboard_arrow_up</i></span>
-                                        <span class="btn-down"><i class="material-icons right">keyboard_arrow_down</i></span>
+                                        <span class="btn-up"><i class="material-icons">keyboard_arrow_up</i></span>
+                                        <span class="btn-down"><i class="material-icons">keyboard_arrow_down</i></span>
                                     </div>
                                 <?php } ?>
                             </form>

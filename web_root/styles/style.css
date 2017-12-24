@@ -362,7 +362,7 @@ footer .row {
 .content section.my-contribution .wallet_view-new_contribution-div_amount .btn-down {
     position: absolute;
     right: 10%;
-    width: 12px;
+    width: 13px;
     height: 11px;
     border: 1px solid #95989a;
     cursor: pointer;
@@ -374,13 +374,13 @@ footer .row {
 .content section.my-contribution .wallet_view-new_contribution-div_amount .btn-up i,
 .content section.my-contribution .wallet_view-new_contribution-div_amount .btn-down i {
     font-size: .8rem;
-    width: 12px;
+    width: 11px;
     height: 11px;
     right: 0px;
     position: absolute;
 }
 .content section.my-contribution .wallet_view-new_contribution-div_amount .btn-up {
-    top: 11px;
+    top: 12px;
     border-radius: 10px 10px 0 0;
     border-top-style: solid;
     border-bottom-style: none;
@@ -388,7 +388,7 @@ footer .row {
     border-left-style: solid;
 }
 .content section.my-contribution .wallet_view-new_contribution-div_amount .btn-down {
-    bottom: 11px;
+    bottom: 12px;
     border-radius: 0 0 10px 10px;
     border-top-style: none;
     border-bottom-style: solid;
