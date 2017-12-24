@@ -110,5 +110,14 @@
         background: none;
         padding-right: 0;
     }
+    .dashboard .tokens-info h3 {
+        font-size: 1.2rem;
+    }
+    .dashboard .tokens-info h4 {
+        font-size: 1.1rem;
+    }
+    .dashboard .tokens-info h5 {
+        font-size: .9rem;
+    }
 }
 

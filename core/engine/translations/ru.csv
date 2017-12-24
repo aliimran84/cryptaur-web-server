@@ -113,3 +113,7 @@ Oct,Окт
 Nov,Ноя
 Dec,Дек
 Token sale,Продажа токенов
+"TO SEE YOUR TOKENS IN YOUR OWN WALLET ENTER THE FOLLOWING VALUES","ДЛЯ ТОГО, ЧТОБЫ УВИДЕТЬ ВАШИ ТОКЕНЫ В СВОЁМ КОШЕЛЬКЕ, ИСПОЛЬЗУЙТЕ СЛЕДУЮЩИЕ ЗНАЧЕНИЯ"
+Token Contract Address,Адрес смартконтракта
+Token Symbol,Название токена
+Decimal,Количество знаков
