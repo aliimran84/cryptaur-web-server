@@ -171,6 +171,7 @@ nav a.button-collapse i {
     display: block;
     text-decoration: none;
     margin-top: 0;
+    color: #ffffff;
 }
 footer {
     color: rgba(255,255,255,0.8);
@@ -330,9 +331,16 @@ footer .row {
 .content section.my-contribution input[type='number'] {
     box-sizing: inherit;
     -webkit-box-sizing: inherit;
+    -moz-appearance:textfield;
     padding: 0 15px;
-    border-radius: 12px;
-    border: 1px solid #9e9e9e;
+    margin: 0;
+}
+.content section.my-contribution input[type=number]::-webkit-inner-spin-button,
+.content section.my-contribution input[type=number]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0;
 }
 .content section.my-tokens input[type='number'] {
     margin: 0 0 20px 0;
@@ -345,6 +353,47 @@ footer .row {
 .content section.my-contribution .select-wrapper+label {
     top: 34px;
     height: auto;
+    font-size: .8rem;
+}
+.content section.my-contribution .wallet_view-new_contribution-div_amount {
+    position: relative;
+}
+.content section.my-contribution .wallet_view-new_contribution-div_amount .btn-up,
+.content section.my-contribution .wallet_view-new_contribution-div_amount .btn-down {
+    position: absolute;
+    right: 10%;
+    width: 12px;
+    height: 11px;
+    border: 1px solid #95989a;
+    cursor: pointer;
+}
+.content section.my-contribution .wallet_view-new_contribution-div_amount .btn-up:hover,
+.content section.my-contribution .wallet_view-new_contribution-div_amount .btn-down:hover {
+    background: #eaeaeb;
+}
+.content section.my-contribution .wallet_view-new_contribution-div_amount .btn-up i,
+.content section.my-contribution .wallet_view-new_contribution-div_amount .btn-down i {
+    font-size: .8rem;
+    width: 12px;
+    height: 11px;
+    right: 0px;
+    position: absolute;
+}
+.content section.my-contribution .wallet_view-new_contribution-div_amount .btn-up {
+    top: 11px;
+    border-radius: 10px 10px 0 0;
+    border-top-style: solid;
+    border-bottom-style: none;
+    border-right-style: solid;
+    border-left-style: solid;
+}
+.content section.my-contribution .wallet_view-new_contribution-div_amount .btn-down {
+    bottom: 11px;
+    border-radius: 0 0 10px 10px;
+    border-top-style: none;
+    border-bottom-style: solid;
+    border-right-style: solid;
+    border-left-style: solid;
 }
 .content section.my-contribution .btn-send,
 .content section.my-contribution .btn-contribute {

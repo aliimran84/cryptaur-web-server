@@ -69,6 +69,9 @@ class Wallet_view
                         $(document).on('keyup change', '.wallet_view-new_contribution-input_amount', function (event) {
                             onAmountChange(event.target);
                         });
+                        $(document).on('click', ['.wallet_view-new_contribution-div_amount .btn-up', '.wallet_view-new_contribution-div_amount .btn-down'], function (event) {
+                            onAmountChange($(event.target).closest('.wallet_view-new_contribution-div_amount').find('input')[0]);
+                        });
                         $(document).on('change', '.wallet_view-new_contribution-select_coins', function (event) {
                             var coin = $(event.target).val();
                             $('.wallet_view-new_contribution-div_amount').hide();
@@ -115,6 +118,8 @@ class Wallet_view
                                            class="wallet_view-new_contribution-input_amount"
                                            value="1" min="0" max="9999999999" step="0.00000001">
                                     <label><?= Translate::td('select amount') ?></label>
+                                    <span class="btn-up"><i class="material-icons right">keyboard_arrow_up</i></span>
+                                    <span class="btn-down"><i class="material-icons right">keyboard_arrow_down</i></span>
                                 </div>
                             <?php } ?>
                         </form>

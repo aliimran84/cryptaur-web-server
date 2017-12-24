@@ -58,3 +58,43 @@ $(document).ready(function(){
         });
     });
 });
+
+function catalogItemCounter(field){
+
+    var fieldCount = function(el) {
+        var min = el.attr('min') || false,
+            max = el.attr('max') || false,
+            step = Number(el.attr('step')) || 1,
+            btnUp = el.parent().find('span.btn-up'),
+            btnDown = el.parent().find('span.btn-down');
+
+        function init(el) {
+            if(!el.attr('disabled')){
+                btnDown.on('click', decrement);
+                btnUp.on('click', increment);
+            }
+
+            function decrement() {
+                var value = Number(el[0].value);
+                value = (value - step).toFixed(8);
+                if(!min || value >= min)
+                    el[0].value = value;
+            };
+
+            function increment() {
+                var value = Number(el[0].value);
+                value = (value + step).toFixed(8);
+                if(!max || value <= max)
+                    el[0].value = value;
+            };
+        }
+        el.each(function() {
+            init($(this));
+        });
+    };
+    $(field).each(function(){
+        fieldCount($(this));
+    });
+}
+
+catalogItemCounter('.wallet_view-new_contribution-input_amount');
