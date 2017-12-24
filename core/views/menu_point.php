@@ -16,4 +16,5 @@ abstract class Menu_point
     const Register = 10;
     const Administrator_settings = 11;
     const Administrator_logs = 12;
+    const Administrator_email = 13;
 }
