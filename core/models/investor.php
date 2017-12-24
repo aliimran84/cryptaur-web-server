@@ -66,6 +66,14 @@ class Investor
                 PRIMARY KEY (`id`)
             );
         ");
+        DB::query("
+            CREATE TABLE IF NOT EXISTS `investors_to_previous_system` (
+                `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `investor_id` int(10) UNSIGNED DEFAULT '0',
+                `previoussystem_id` int(10) UNSIGNED DEFAULT '0',
+                PRIMARY KEY (`id`)
+            );
+        ");
     }
 
     static private function createWithDataFromDB($data)
@@ -111,6 +119,31 @@ class Investor
 
         $instance = self::createWithDataFromDB($investorData);
         Investor::$storage[$id] = $instance;
+        return $instance;
+    }
+
+    /**
+     * @param string $email
+     * @return Investor|null
+     */
+    static public function getByEmail($email)
+    {
+        if (isset(Investor::$storage[$email])) {
+            return Investor::$storage[$email];
+        }
+        $investorData = @DB::get("
+            SELECT * FROM `investors`
+            WHERE
+                `email` = ?
+            LIMIT 1
+        ;", [$email])[0];
+
+        if (!$investorData) {
+            return null;
+        }
+
+        $instance = self::createWithDataFromDB($investorData);
+        Investor::$storage[$email] = $instance;
         return $instance;
     }
 

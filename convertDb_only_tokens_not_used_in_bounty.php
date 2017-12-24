@@ -9,6 +9,8 @@ Application::init();
 
 $startTime = time();
 
+$startOffset = (int)($argv[1] | 0);
+
 $usersCount = DB::get("
     SELECT
         count(auth_user.id) as count
@@ -16,7 +18,6 @@ $usersCount = DB::get("
         auth_user
         JOIN account_account ON account_account.id = auth_user.id
     WHERE
-        auth_user.email NOT LIKE '%+%'
         AND account_account.email_confirmed = 1
 ")[0]['count'];
 
@@ -29,7 +30,7 @@ $lastCashbackedTs = DB::get("
 ")[0]['created_at'];
 
 $limitSize = 1000;
-for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
+for ($offset = $startOffset; $offset < $usersCount; $offset += $limitSize) {
     $users = DB::get("
         SELECT
             auth_user.id,
@@ -38,31 +39,39 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
             auth_user
             JOIN account_account ON account_account.id = auth_user.id
         WHERE
-            auth_user.email NOT LIKE \"%+%\"
             AND account_account.email_confirmed = 1
         LIMIT $offset, $limitSize
     ;");
-//        AND auth_user.is_staff = 0
 
     foreach ($users as $i => $user) {
-        $tokens_not_used_in_bounty = (double)@DB::get("
-            select sum(amount)/100000000 as tokens from transactions_history where
-            account_id=? and type=0 and `timestamp`>?
-        ;", [$user['id'], $lastCashbackedTs])[0]['tokens'];
+        $btc = (double)@DB::get("
+            select sum(amount_to_exchange) as a from exchange_exchangeorder where
+            source_currency='btc' and account_id=? and status=4 and `created_at`>?
+        ;", [$user['id'], $lastCashbackedTs])[0]['a'];
+
+        $eth = (double)@DB::get("
+            select sum(amount_to_exchange) as a from exchange_exchangeorder where
+            source_currency='eth' and account_id=? and status=4 and `created_at`>?
+        ;", [$user['id'], $lastCashbackedTs])[0]['a'];
+
+        // btc -> eth = 40.9254 fix на указанный момент
+        $amount = $btc / 40.9254 + $eth;
 
         DB::get(
-            "UPDATE `investors` SET `tokens_not_used_in_bounty` = ? WHERE `email` = ? LIMIT 1;",
-            [$tokens_not_used_in_bounty, $user['email']]
+            "UPDATE `investors` SET `eth_not_used_in_bounty` = ? WHERE `email` = ? LIMIT 1;",
+            [$amount, $user['email']]
         );
 
-        $duration = (time() - $startTime) + 1;
-        $currentCount = $i + $offset;
-        $speed = number_format($currentCount / $duration, 5);
-        if ($speed === 0) {
-            $remained = 1;
-        } else {
-            $remained = (int)($usersCount - $currentCount) / $speed;
+        if ($i === 0) {
+            $duration = (time() - $startTime) + 1;
+            $currentCount = $i + $offset;
+            $speed = number_format($currentCount / $duration, 5);
+            if ($speed === 0) {
+                $remained = 1;
+            } else {
+                $remained = (int)($usersCount - $currentCount) / $speed;
+            }
+            echo date('Y-m-d H:i:s') . ": fill for $currentCount/$usersCount (userid: {$user['id']}, duration: {$duration}s, speed: {$speed}u/s, remained: {$remained}s)\r\n";
         }
-        echo date('Y-m-d H:i:s') . ": fill for $currentCount/$usersCount (userid: {$user['id']}, duration: {$duration}s, speed: {$speed}u/s, remained: {$remained}s)\r\n";
     }
 }
