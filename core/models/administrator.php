@@ -9,6 +9,9 @@ class Administrator
 {
     public $id = 0;
     public $email = '';
+    static private $PATH = '/var/www/cryptaur-web-server/working_dir/tmp/';
+    static private $LOG_PHP = 'php-errors.log';
+    static private $LOG_MYSQL = 'mysqli-errors.log';
 
     static public function db_init()
     {
@@ -104,5 +107,25 @@ class Administrator
             $all[] = self::getById($arrWithId['id']);
         }
         return $all;
+    }
+
+    /**
+     * @return dataPHP[]
+     */
+    static public function getLogsPHP()
+    {
+        $dataPHP = file_get_contents(self::$PATH . self::$LOG_PHP);
+        $dataPHP = explode("\n", $dataPHP);
+        return $dataPHP;
+    }
+
+    /**
+     * @return convertPHP[]
+     */
+    static public function getLogsMySQL()
+    {
+        $dataMySQL = file_get_contents(self::$PATH . self::$LOG_MYSQL);
+        $dataMySQL = explode("\n", $dataMySQL);
+        return $dataMySQL;
     }
 }

@@ -105,4 +105,34 @@ class Administrator_view
         <?php
         return ob_get_clean();
     }
+
+    static public function logsList()
+    {
+        ob_start();
+        $dataLogPHP = Administrator::getLogsPHP();
+        $dataLogMySQL = Administrator::getLogsMySQL();
+        ?>
+        <div class="row">
+            <ul class="tabs">
+                <li class="tab col s6"><a class="active" href="#logPHP">PHP</a></li>
+                <li class="tab col s6"><a href="#logMySQL">MySQL</a></li>
+            </ul>
+            <div id="logPHP" class="col s12">
+                <ul>
+                    <?php for ($i = count($dataLogPHP) - 1; $i >= 0; $i--) : ?>
+                        <li><?= $dataLogPHP[$i]; ?></li>
+                    <?php endfor; ?>
+                </ul>
+            </div>
+            <div id="logMySQL" class="col s12">
+                <ul>
+                    <?php for ($i = count($dataLogMySQL) - 3000 >= 0? count($dataLogMySQL) - 3000 : 0; $i < count($dataLogMySQL); $i++) : ?>
+                        <li><?= $dataLogMySQL[$i]; ?></li>
+                    <?php endfor; ?>
+                </ul>
+            </div>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
 }

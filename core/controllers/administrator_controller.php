@@ -20,6 +20,7 @@ class Administrator_controller
     const SET_URL = 'administrator/set';
     const SETTINGS = 'administrator/settings';
     const ADMINISTRATORS_LIST = 'administrator/list';
+    const LOGS = 'administrator/logs';
 
     const SESSION_KEY = 'authorized_administrator_id';
 
@@ -113,6 +114,18 @@ class Administrator_controller
             echo Administrator_view::coinsSettings();
             echo Base_view::footer();
         }, self::SETTINGS, Router::GET_METHOD);
+
+        Router::register(function () {
+            // administrators can setup only administrator
+            if (!Application::$authorizedAdministrator) {
+                Utility::location(self::BASE_URL);
+            }
+            Base_view::$TITLE = 'Logs';
+            Base_view::$MENU_POINT = Menu_point::Administrator_logs;
+            echo Base_view::header();
+            echo Administrator_view::logsList();
+            echo Base_view::footer();
+        }, self::LOGS, Router::GET_METHOD);
     }
 
     static public function handleLoginRequest()

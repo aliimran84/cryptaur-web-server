@@ -14,6 +14,8 @@ function conversionHeightLineBottom(tree) {
     }
 }
 $(document).ready(function(){
+    $('ul.tabs').tabs();
+
     $(".dropdown-button").dropdown();
     $('select').material_select();
     $('.collapsible').collapsible();

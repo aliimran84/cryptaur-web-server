@@ -426,6 +426,22 @@ footer .row {
 .content .left-panel {
 
 }
+.wrapper .content .tabs {
+    overflow-x: hidden;
+}
+.wrapper .content .tabs .tab a.active {
+    color: #2535a7;
+}
+.wrapper .content .tabs .tab a {
+    color: rgba(37, 53, 167, 0.7);
+}
+.wrapper .content .tabs .indicator {
+    background-color: #2535a7;
+}
+.wrapper .content #logPHP,
+.wrapper .content #logMySQL {
+    padding: 10px;
+}
 .dashboard .indicators {
     background: #001dff;
     margin: 0;

@@ -93,6 +93,8 @@ class Base_view
     {
         ob_start();
         if (Application::$authorizedAdministrator) { ?>
+            <li class="<?= self::activeMenuItem(Menu_point::Administrator_logs) ?>">
+                <a href="<?= Administrator_controller::LOGS ?>"><?= Translate::td('Logs') ?></a></li>
             <li class="<?= self::activeMenuItem(Menu_point::Administrator_settings) ?>">
                 <a href="<?= Administrator_controller::SETTINGS ?>"><?= Translate::td('Settings') ?></a></li>
             <li class="<?= self::activeMenuItem(Menu_point::Administrators_list) ?>">
