@@ -19,8 +19,8 @@ $usersCount = DB::get("
         JOIN syndicates_syndicateaccount ON syndicates_syndicateaccount.account_id = auth_user.id
         JOIN account_account ON account_account.id = auth_user.id
     WHERE
-        auth_user.email NOT LIKE '%+%'
-        AND account_account.email_confirmed = 1
+        account_account.email_confirmed = 1
+        AND (auth_user.first_name != 'Vision' or auth_user.last_name != 'User')
 ")[0]['count'];
 
 $lastCashbackedTs = DB::get("
@@ -49,8 +49,8 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
             JOIN syndicates_syndicateaccount ON syndicates_syndicateaccount.account_id = auth_user.id
             JOIN account_account ON account_account.id = auth_user.id
         WHERE
-            auth_user.email NOT LIKE \"%+%\"
-            AND account_account.email_confirmed = 1
+            account_account.email_confirmed = 1
+            AND (auth_user.first_name != 'Vision' or auth_user.last_name != 'User')
         LIMIT $offset, $limitSize
     ;");
 //        AND auth_user.is_staff = 0
@@ -84,6 +84,19 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
 
         $refId = @(int)$previousIdToNew[$user['invited_by_id']];
 
+        $btc = (double)@DB::get("
+            select sum(amount_to_exchange) as a from exchange_exchangeorder where
+            source_currency='btc' and account_id=? and status=4 and `created_at`>?
+        ;", [$user['id'], $lastCashbackedTs])[0]['a'];
+
+        $eth = (double)@DB::get("
+            select sum(amount_to_exchange) as a from exchange_exchangeorder where
+            source_currency='eth' and account_id=? and status=4 and `created_at`>?
+        ;", [$user['id'], $lastCashbackedTs])[0]['a'];
+
+        // btc -> eth = 40.9254 fix на указанный момент
+        $amountEth = $btc / 40.9254 + $eth;
+
         DB::set("
             INSERT INTO `investors`
             SET
@@ -97,10 +110,17 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
                 `eth_withdrawn` = ?,
                 `tokens_count` = ?,
                 `tokens_not_used_in_bounty` = ?,
+                `eth_not_used_in_bounty` = ?,
                 `eth_bounty` = ?
-        ", [$user['phone_number'], $refId, $user['referral'], $user['date_joined'], $user['email'], $user['password'], '', 0, $tokens, $tokens_not_used_in_bounty, $bounty]
+        ", [$user['phone_number'], $refId, $user['referral'], $user['date_joined'], $user['email'], $user['password'], '', 0, $tokens, $tokens_not_used_in_bounty, $amountEth, $bounty]
         );
         $id = DB::lastInsertId();
+        DB::set("
+            INSERT INTO investors_to_previous_system
+            SET
+                `investor_id` = ?,
+                `previoussystem_id` = ?
+        ", [$id, $user['id']]);
         $previousIdToNew[$user['id']] = $id;
         $wallet = Wallet::registerWallet($id, 'usd', '');
         $wallet->addToWallet($usd, $usd);
@@ -116,3 +136,14 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
         echo date('Y-m-d H:i:s') . ": fill for $currentCount/$usersCount (userid: {$user['id']}, duration: {$duration}s, speed: {$speed}u/s, remained: {$remained}s)\r\n";
     }
 }
+
+// для всех инвесторов, которым в старой системе выставлен родителем инвестор, добавленный позже делаем вот такой фокус
+DB::query("
+    UPDATE investors
+    JOIN investors_to_previous_system ON investors.id = investors_to_previous_system.investor_id
+    JOIN syndicates_syndicateaccount ON syndicates_syndicateaccount.account_id = investors_to_previous_system.previoussystem_id 
+    SET investors.referrer_id = ( SELECT investor_id FROM investors_to_previous_system WHERE previoussystem_id = syndicates_syndicateaccount.invited_by_id ) 
+    WHERE
+        investors.referrer_id = 0 
+        AND syndicates_syndicateaccount.invited_by_id > 0
+");

@@ -84,6 +84,7 @@ class DB
             call_user_func_array(array($statement, 'bind_result'), $PARAMS);
             $statement->fetch();
         }
+        $statement->close();
         return $result;
     }
 
