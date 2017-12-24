@@ -152,6 +152,10 @@ class Wallet
      */
     static public function requestWalletRegistration($investorId, $coin)
     {
+        if (!Deposit::receivingDepositsIsOn()) {
+            return false;
+        }
+
         $pServer = PaymentServer::getFirst();
         if (!$pServer) {
             return false;
