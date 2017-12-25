@@ -23,7 +23,7 @@ class Investor_view
                                 : <?= $_GET['err_text'] ?></label>
                         <?php } ?>
                         <input type="email" name="email" placeholder="E-MAIL">
-                        <input type="password" name="password" placeholder="<?= Translate::td('PASSWORD') ?>">
+                        <input type="password" name="password" placeholder="<?= Translate::td('Password') ?>">
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Login') ?>
@@ -63,7 +63,7 @@ class Investor_view
                         <input type="text" name="firstname" placeholder="<?= Translate::td('First name') ?>">
                         <input type="text" name="lastname" placeholder="<?= Translate::td('Last name') ?>">
                         <input type="email" name="email" placeholder="Email">
-                        <input type="password" name="password" placeholder="<?= Translate::td('PASSWORD') ?>">
+                        <input type="password" name="password" placeholder="<?= Translate::td('Password') ?>">
                         <input type="text" name="eth_address" placeholder="<?= Translate::td('ETH-ADDRESS') ?>">
                         <input type="text" name="referrer_code" value="<?= $referrer_code ?>" placeholder="<?= Translate::td('REFERRER CODE') ?>">
                         <div class="row center">
@@ -170,6 +170,10 @@ class Investor_view
                     <div class="row">
                         <?= Translate::td('Eth bounty') ?>:
                         <strong><?= Application::$authorizedInvestor->eth_bounty ?></strong>
+                    </div>
+                    <div class="row">
+                        <?= Translate::td('Password') ?> (<?= Translate::td('left it empty to not to change password') ?>):
+                        <input type="password" name="password" value="">
                     </div>
                     <div class="row">
                         <?= Coin::token() ?>: <strong><?= Application::$authorizedInvestor->tokens_count ?></strong>

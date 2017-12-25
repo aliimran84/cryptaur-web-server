@@ -39,12 +39,13 @@ Key id,Key id
 Secret key,Secret key
 Set,Set
 Cryptaur login,Cryptaur login
-PASSWORD,PASSWORD
+Password,Password
 Forgot your account login,Forgot your account login
 Recover,Recover
 Forgot password,Forgot password
 Password successfully chagned,Password successfully chagned
 If the user exists then he was sent a new password,If the user exists then he was sent a new password
+"left it empty to not to change password","left it empty to not to change password"
 Not a member yet,Not a member yet
 Cryptaur registration,Cryptaur registration
 REFERRER CODE,REFERRER CODE

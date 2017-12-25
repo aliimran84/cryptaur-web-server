@@ -250,6 +250,15 @@ class Investor_controller
         Utility::location();
     }
 
+    /**
+     * @param string $password
+     * @return bool
+     */
+    static private function verifyPassword($password)
+    {
+        return !!preg_match('/^[0-9A-Za-z?!@#$%\-\_\.,;:]{6,50}$/', $password);
+    }
+
     static private function handleRegistrationRequest()
     {
         if (!filter_var(@$_POST['email'], FILTER_VALIDATE_EMAIL)) {
@@ -268,7 +277,7 @@ class Investor_controller
                 Utility::location(self::REGISTER_URL . '?err=4&err_text=not a valid referrer code');
             }
         }
-        if (!preg_match('/^[0-9A-Za-z?!@#$%\-\_\.,;:]{6,50}$/', @$_POST['password'])) {
+        if (!self::verifyPassword(@$_POST['password'])) {
             Utility::location(self::REGISTER_URL . '?err=5&err_text=not a valid password, use more than 6 characters');
         }
         $confirmationUrl = self::urlForRegistration($_POST['email'], @$_POST['firstname'], @$_POST['lastname'], $_POST['eth_address'], $referrerId, $_POST['password']);
@@ -396,6 +405,9 @@ EOT;
             Utility::location(self::BASE_URL);
         }
         Application::$authorizedInvestor->setFirstnameLastName(@$_POST['firstname'], @$_POST['lastname']);
+        if (self::verifyPassword(@$_POST['password'])) {
+            Application::$authorizedInvestor->changePassword(@$_POST['password']);
+        }
         Utility::location(self::SETTINGS_URL);
     }
 

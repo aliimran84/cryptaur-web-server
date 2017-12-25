@@ -20,7 +20,7 @@ class Administrator_view
                 <div class="row">
                     <form class="login col s12" action="<?= Administrator_controller::LOGIN_URL ?>" method="post">
                         <input type="text" name="email" placeholder="E-MAIL">
-                        <input type="password" name="password" placeholder="<?= Translate::td('PASSWORD') ?>">
+                        <input type="password" name="password" placeholder="<?= Translate::td('Password') ?>">
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Login') ?>
@@ -51,7 +51,7 @@ class Administrator_view
                         <?php } ?>
                         <input type="text" name="email" placeholder="E-MAIL"
                             <?= $email ? 'readonly' : '' ?> value="<?= $email ?>">
-                        <input type="password" name="password" placeholder="<?= Translate::td('PASSWORD') ?>">
+                        <input type="password" name="password" placeholder="<?= Translate::td('Password') ?>">
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-send" style="width: 100%">
                                 <?= Translate::td('Set') ?>
