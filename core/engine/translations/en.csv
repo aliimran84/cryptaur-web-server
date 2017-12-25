@@ -5,6 +5,8 @@ Login,Login
 Register,Register
 First name,First name
 Last name,Last name
+"Please check your email and follow the sent link","Please check your email and follow the sent link"
+"Email confirmed successfully","Email confirmed successfully"
 Transactions history,Transactions history
 Dashboard,Dashboard
 Administrators,Administrators

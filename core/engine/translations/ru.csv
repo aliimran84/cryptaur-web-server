@@ -5,6 +5,8 @@ Login,Войти
 Register,Регистрация
 First name,Имя
 Last name,Фамилия
+"Please check your email and follow the sent link","Пожалуйста, проверьте свой почтовый ящик и перейдите по отправленной ссылке"
+"Email confirmed successfully","Email успешно подтвержден"
 Transactions history,История транизакций
 Dashboard,Панель управления
 Administrators,Администраторы

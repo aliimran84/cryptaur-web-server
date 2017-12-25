@@ -256,13 +256,13 @@ class Investor_controller
         if (!preg_match('/^[0-9A-Za-z?!@#$%\-\_\.,;:]{6,50}$/', @$_POST['password'])) {
             Utility::location(self::REGISTER_URL . '?err=5&err_text=not a valid password, use more than 6 characters');
         }
-        $confirmationUrl = self::urlForRegistration($_POST['email'], $_POST['eth_address'], $referrerId, $_POST['password']);
+        $confirmationUrl = self::urlForRegistration($_POST['email'], @$_POST['firstname'], @$_POST['lastname'], $_POST['eth_address'], $referrerId, $_POST['password']);
         Email::send($_POST['email'], [], 'Cryptaur: email confirmation', "<a href=\"$confirmationUrl\">Confirm email to finish registration</a>");
 
         Base_view::$TITLE = 'Email confirmation info';
         Base_view::$MENU_POINT = Menu_point::Register;
         echo Base_view::header();
-        echo Base_view::text("Please check your email and follow the sent link");
+        echo Base_view::text(Translate::td("Please check your email and follow the sent link"));
         echo Base_view::footer();
     }
 
@@ -277,7 +277,7 @@ class Investor_controller
             echo Base_view::footer();
             return;
         }
-        $registerResult = Investor::registerUser($data['email'], $data['eth_address'], $data['referrer_id'], $data['password_hash']);
+        $registerResult = Investor::registerUser($data['email'], $data['firstname'], $data['lastname'], $data['eth_address'], $data['referrer_id'], $data['password_hash']);
         if ($registerResult < 0) {
             Base_view::$TITLE = 'Email confirmation problem';
             Base_view::$MENU_POINT = Menu_point::Register;
@@ -291,10 +291,10 @@ class Investor_controller
         self::loginWithId($investorId);
         self::detectLoggedInInvestor();
 
-        Base_view::$TITLE = 'Email confirmed successfully';
+        Base_view::$TITLE = Translate::td('Email confirmed successfully');
         Base_view::$MENU_POINT = Menu_point::Register;
         echo Base_view::header();
-        echo Base_view::text("Email confirmed successfully");
+        echo Base_view::text(Translate::td('Email confirmed successfully'));
         echo Base_view::footer();
     }
 
@@ -373,10 +373,12 @@ EOT;
         return hash('sha256', $password . APPLICATION_ID . 'investor');
     }
 
-    static public function urlForRegistration($email, $eth_address, $referrer_id, $password)
+    static public function urlForRegistration($email, $firstname, $lastname, $eth_address, $referrer_id, $password)
     {
         $data = [
             'email' => $email,
+            'firstname' => $firstname,
+            'lastname' => $lastname,
             'eth_address' => $eth_address,
             'referrer_id' => $referrer_id,
             'password_hash' => self::hashPassword($password)

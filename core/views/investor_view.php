@@ -56,7 +56,9 @@ class Investor_view
                             <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
                                 : <?= $_GET['err_text'] ?></label>
                         <?php } ?>
-                        <input type="email" name="email" placeholder="E-MAIL">
+                        <input type="text" name="firstname" placeholder="<?= Translate::td('First name') ?>">
+                        <input type="text" name="lastname" placeholder="<?= Translate::td('Last name') ?>">
+                        <input type="email" name="email" placeholder="Email">
                         <input type="password" name="password" placeholder="<?= Translate::td('PASSWORD') ?>">
                         <input type="text" name="eth_address" placeholder="<?= Translate::td('ETH-ADDRESS') ?>">
                         <input type="text" name="referrer_code" value="<?= $referrer_code ?>" placeholder="<?= Translate::td('REFERRER CODE') ?>">

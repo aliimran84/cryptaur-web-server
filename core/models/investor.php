@@ -201,12 +201,14 @@ class Investor
 
     /**
      * @param string $email
+     * @param string $firstname
+     * @param string $lastname
      * @param string $eth_address
      * @param int $referrer_id
      * @param string $password_hash
      * @return int if > 0 -> success, else error
      */
-    static public function registerUser($email, $eth_address, $referrer_id, $password_hash)
+    static public function registerUser($email, $firstname, $lastname, $eth_address, $referrer_id, $password_hash)
     {
         if (!Utility::validateEthAddress($eth_address)) {
             return -1;
@@ -233,15 +235,18 @@ class Investor
         DB::set("
             INSERT INTO `investors`
             SET
-                `referrer_id` = ?,
-                `referrer_code` = ?,
+                `referrer_id` = ?, `referrer_code` = ?,
                 `joined_datetime` = ?,
-                `email` = ?,
-                `password_hash` = ?,
-                `eth_address` = ?,
-                `eth_withdrawn` = ?,
+                `email` = ?, `firstname` = ?, `lastname` = ?,
+                `password_hash` = ?, `eth_address` = ?, `eth_withdrawn` = ?,
                 `tokens_count` = ?
-            ", [$referrer_id, $referrer_code, DB::timetostr(time()), $email, $password_hash, $eth_address, 0, 0]
+            ", [
+                $referrer_id, $referrer_code,
+                DB::timetostr(time()),
+                $email, $firstname, $lastname,
+                $password_hash, $eth_address, 0,
+                0
+            ]
         );
 
         return DB::lastInsertId();
