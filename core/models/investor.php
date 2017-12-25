@@ -44,8 +44,8 @@ class Investor
                 `referrer_code` varchar(32) DEFAULT '',
                 `joined_datetime` datetime(0) NOT NULL,
                 `email` varchar(254) NOT NULL,
-                `firstname` varchar(254) NOT NULL,
-                `lastname` varchar(254) NOT NULL,
+                `firstname` varchar(254) DEFAULT '',
+                `lastname` varchar(254) DEFAULT '',
                 `password_hash` varchar(254) NOT NULL,
                 `eth_address` varchar(50) DEFAULT '',
                 `eth_withdrawn` double(20, 8) DEFAULT '0',
@@ -277,6 +277,25 @@ class Investor
                 `id` = ?
             LIMIT 1
         ", [$eth_address, $this->id]);
+    }
+
+    /**
+     * @param string $firstname
+     * @param string $lastname
+     */
+    public function setFirstnameLastName($firstname, $lastname)
+    {
+        $this->firstname = $firstname;
+        $this->lastname = $lastname;
+        DB::set("
+            UPDATE `investors`
+            SET
+                `firstname` = ?,
+                `lastname` = ?
+            WHERE
+                `id` = ?
+            LIMIT 1
+        ", [$firstname, $lastname, $this->id]);
     }
 
     /**

@@ -225,7 +225,7 @@ class Dashboard_view
         ob_start();
         ?>
         <div class="tree-block">
-            <h2><?= $investor->email ?></h2>
+            <h2><?= $investor->firstname ?> <?= $investor->lastname ?></h2>
             <p><?= Translate::td('Contributed') ?></p>
             <h3>US$ <?= $investor->usdUsed() ?></h3>
         </div>

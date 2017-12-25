@@ -102,8 +102,12 @@ class Investor_controller
         }, self::REGISTER_CONFIRMATION_URL);
 
         Router::register(function () {
+            self::handleSettingsForm();
+        }, self::SETTINGS_URL, Router::GET_METHOD);
+
+        Router::register(function () {
             self::handleSettingsRequest();
-        }, self::SETTINGS_URL);
+        }, self::SETTINGS_URL, Router::POST_METHOD);
 
         Router::register(function () {
             self::handleInviteFriendsForm();
@@ -294,7 +298,7 @@ class Investor_controller
         echo Base_view::footer();
     }
 
-    static private function handleSettingsRequest()
+    static private function handleSettingsForm()
     {
         if (!Application::$authorizedInvestor) {
             Utility::location(self::BASE_URL);
@@ -305,6 +309,15 @@ class Investor_controller
         echo Base_view::header();
         echo Investor_view::settings();
         echo Base_view::footer();
+    }
+
+    static private function handleSettingsRequest()
+    {
+        if (!Application::$authorizedInvestor) {
+            Utility::location(self::BASE_URL);
+        }
+        Application::$authorizedInvestor->setFirstnameLastName(@$_POST['firstname'], @$_POST['lastname']);
+        Utility::location(self::SETTINGS_URL);
     }
 
     static public function handleInviteFriendsForm($message = '')

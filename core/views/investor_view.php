@@ -106,29 +106,42 @@ class Investor_view
         ?>
         <div class="row">
             <div class="col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
-                <h3><?= Translate::td('Investor settings') ?></h3>
-                <div class="row">
-                    <?= Translate::td('Email') ?>: <strong><?= Application::$authorizedInvestor->email ?></strong>
-                </div>
-                <div class="row">
-                    <?= Translate::td('Referrer code') ?>:
-                    <strong><?= Application::$authorizedInvestor->referrer_code ?></strong>
-                </div>
-                <div class="row">
-                    <?= Translate::td('Eth address') ?>:
-                    <strong><?= Application::$authorizedInvestor->eth_address ?></strong>
-                </div>
-                <div class="row">
-                    <?= Translate::td('Eth withdrawn') ?>:
-                    <strong><?= Application::$authorizedInvestor->eth_withdrawn ?></strong>
-                </div>
-                <div class="row">
-                    <?= Translate::td('Eth bounty') ?>:
-                    <strong><?= Application::$authorizedInvestor->eth_bounty ?></strong>
-                </div>
-                <div class="row">
-                    <?= Coin::token() ?>: <strong><?= Application::$authorizedInvestor->tokens_count ?></strong>
-                </div>
+                <form action="<?= Investor_controller::SETTINGS_URL ?>" method="post">
+                    <h3><?= Translate::td('Investor settings') ?></h3>
+                    <div class="row">
+                        <?= Translate::td('Email') ?>: <strong><?= Application::$authorizedInvestor->email ?></strong>
+                    </div>
+                    <div class="row">
+                        <?= Translate::td('First name') ?>:
+                        <input type="text" name="firstname" placeholder="first name" value="<?= Application::$authorizedInvestor->firstname ?>">
+                    </div>
+                    <div class="row">
+                        <?= Translate::td('Last name') ?>:
+                        <input type="text" name="lastname" placeholder="last name" value="<?= Application::$authorizedInvestor->lastname ?>">
+                    </div>
+                    <div class="row">
+                        <?= Translate::td('Referrer code') ?>:
+                        <strong><?= Application::$authorizedInvestor->referrer_code ?></strong>
+                    </div>
+                    <div class="row">
+                        <?= Translate::td('Eth address') ?>:
+                        <strong><?= Application::$authorizedInvestor->eth_address ?></strong>
+                    </div>
+                    <div class="row">
+                        <?= Translate::td('Eth withdrawn') ?>:
+                        <strong><?= Application::$authorizedInvestor->eth_withdrawn ?></strong>
+                    </div>
+                    <div class="row">
+                        <?= Translate::td('Eth bounty') ?>:
+                        <strong><?= Application::$authorizedInvestor->eth_bounty ?></strong>
+                    </div>
+                    <div class="row">
+                        <?= Coin::token() ?>: <strong><?= Application::$authorizedInvestor->tokens_count ?></strong>
+                    </div>
+                    <button type="submit" class="waves-effect waves-light btn" style="width: 100%">
+                        <?= Translate::td('Set') ?>
+                    </button>
+                </form>
             </div>
         </div>
         <?php
