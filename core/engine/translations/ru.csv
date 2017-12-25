@@ -40,6 +40,11 @@ Secret key,Secret key
 Set,Задать
 Cryptaur login,Cryptaur авторизация
 PASSWORD,ПАРОЛЬ
+Forgot your account login,Забыли имя пользователя кабинета
+Recover,Восстановить
+Forgot password,Забыл пароль
+Password successfully chagned,Пароль успешно изменен
+If the user exists then he was sent a new password,Если пользователь существует то ему был отправлен новый пароль
 Not a member yet,Ещё не зарегистрированы
 Cryptaur registration,Cryptaur регистрация
 REFERRER CODE,РЕФЕРАЛЬНЫЙ КОД

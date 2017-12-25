@@ -21,6 +21,8 @@ class Investor_controller
     const LOGIN_URL = 'investor/login';
     const SET_ETH_ADDRESS = 'investor/set_eth_address';
     const LOGOUT_URL = 'investor/logout';
+    const RECOVER_URL = 'investor/recover';
+    const CHANGE_PASSWORD_URL = 'investor/changepassword';
     const REGISTER_URL = 'investor/register';
     const PREVIOUS_SYSTEM_REGISTER_URL = 'syndicates/join';
     const REGISTER_CONFIRMATION_URL = 'investor/register_confirm';
@@ -97,6 +99,19 @@ class Investor_controller
             }
             self::handleRegistrationRequest();
         }, self::REGISTER_URL, Router::POST_METHOD);
+
+        Router::register(function () {
+            self::handleRecoverForm();
+        }, self::RECOVER_URL, Router::GET_METHOD);
+
+        Router::register(function () {
+            self::handleRecoverRequest();
+        }, self::RECOVER_URL, Router::POST_METHOD);
+
+        Router::register(function () {
+            self::handleChangePassword();
+        }, self::CHANGE_PASSWORD_URL, Router::GET_METHOD);
+
         Router::register(function () {
             self::handleRegistrationConfirmationRequest();
         }, self::REGISTER_CONFIRMATION_URL);
@@ -264,6 +279,70 @@ class Investor_controller
         echo Base_view::header();
         echo Base_view::text(Translate::td("Please check your email and follow the sent link"));
         echo Base_view::footer();
+    }
+
+    static private function handleRecoverForm($message = '')
+    {
+        if (Application::$authorizedInvestor) {
+            Utility::location(self::BASE_URL);
+        }
+        Base_view::$TITLE = Translate::td('Recover');
+        Base_view::$MENU_POINT = Menu_point::Login;
+        echo Base_view::header();
+        echo Investor_view::recoverForm($message);
+        echo Base_view::footer();
+    }
+
+    static private function handleRecoverRequest()
+    {
+        if (Application::$authorizedInvestor) {
+            Utility::location(self::BASE_URL);
+        }
+        if (!filter_var(@$_POST['email'], FILTER_VALIDATE_EMAIL)) {
+            Utility::location(self::RECOVER_URL . '?err=1&err_text=not a valid email');
+        }
+        $investor = Investor::getByEmail(@$_POST['email']);
+        if ($investor) {
+            $password = substr(uniqid(), -6);
+            $data = [
+                'password' => $password,
+                'email' => $_POST['email'],
+                'time' => time()
+            ];
+            $url = APPLICATION_URL . '/' . self::CHANGE_PASSWORD_URL . '?d=' . Utility::encodeData($data);;
+            $html = <<<EOT
+<h3>Forgot password</h3>
+<p>Please follow the <a href="$url">link</a> to change password to <strong>$password</strong>:</p>
+<p><a href="$url">$url</a></p>
+<p>Link will be working for 48 hours.</p>
+EOT;
+            Email::send($investor->email, [], Translate::td('Forgot password'), $html, true);
+        }
+        self::handleRecoverForm(Translate::td('If the user exists then he was sent a new password'));
+    }
+
+    static private function handleChangePassword()
+    {
+        if (Application::$authorizedInvestor) {
+            Utility::location(self::BASE_URL);
+        }
+        $encodedData = @$_GET['d'];
+        if (!$encodedData) {
+            Utility::location(self::RECOVER_URL . '?err=1&err_text=something went wrong');
+        }
+        $data = Utility::decodeData($encodedData);
+        if (!$data) {
+            Utility::location(self::RECOVER_URL . '?err=2&err_text=something went wrong');
+        }
+        $investor = Investor::getByEmail(@$data['email']);
+        if (!$investor) {
+            Utility::location(self::RECOVER_URL . '?err=3&err_text=something went wrong');
+        }
+        if (time() - 48 * 60 * 60 > $data['time']) {
+            Utility::location(self::RECOVER_URL . '?err=4&err_text=link is outdated');
+        }
+        $investor->changePassword($data['password']);
+        self::handleRecoverForm(Translate::td('Password successfully chagned'));
     }
 
     static private function handleRegistrationConfirmationRequest()

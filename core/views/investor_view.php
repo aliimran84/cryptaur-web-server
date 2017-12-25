@@ -30,6 +30,10 @@ class Investor_view
                             </button>
                             <!--<p>Forgot your account password? <a href="#">Recover</a></p>-->
                         </div>
+                        <h5><?= Translate::td('Forgot your account login') ?>?</h5>
+                        <div class="row center">
+                            <a href="<?= Investor_controller::RECOVER_URL ?>" class="waves-effect waves-light btn btn-login"><?= Translate::td('Recover') ?></a>
+                        </div>
                         <h5><?= Translate::td('Not a member yet') ?>?</h5>
                         <div class="row center">
                             <a href="<?= Investor_controller::REGISTER_URL ?>" class="waves-effect waves-light btn btn-login"><?= Translate::td('Register') ?></a>
@@ -65,6 +69,36 @@ class Investor_view
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Register') ?>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+
+    static public function recoverForm($message = '')
+    {
+        ob_start();
+        ?>
+        <div class="row">
+            <div class="col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
+                <h3><?= Translate::td('Forgot password') ?></h3>
+                <div class="row">
+                    <form class="registration col s12" action="<?= Investor_controller::RECOVER_URL ?>" method="post">
+                        <?php if (isset($_GET['err'])) { ?>
+                            <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
+                                : <?= $_GET['err_text'] ?></label>
+                        <?php } ?>
+                        <?php if ($message) { ?>
+                            <label class="blue-text"><?= $message ?></label>
+                        <?php } ?>
+                        <input type="email" name="email" placeholder="Email">
+                        <div class="row center">
+                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                <?= Translate::td('Recover') ?>
                             </button>
                         </div>
                     </form>

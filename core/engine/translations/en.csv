@@ -40,6 +40,11 @@ Secret key,Secret key
 Set,Set
 Cryptaur login,Cryptaur login
 PASSWORD,PASSWORD
+Forgot your account login,Forgot your account login
+Recover,Recover
+Forgot password,Forgot password
+Password successfully chagned,Password successfully chagned
+If the user exists then he was sent a new password,If the user exists then he was sent a new password
 Not a member yet,Not a member yet
 Cryptaur registration,Cryptaur registration
 REFERRER CODE,REFERRER CODE
