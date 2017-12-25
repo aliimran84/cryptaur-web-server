@@ -9,7 +9,6 @@ class Administrator
 {
     public $id = 0;
     public $email = '';
-    static private $PATH = '/var/www/cryptaur-web-server/working_dir/tmp/';
     static private $LOG_PHP = 'php-errors.log';
     static private $LOG_MYSQL = 'mysqli-errors.log';
 
@@ -49,6 +48,36 @@ class Administrator
                 ", [$email, $password_hash]
             );
         }
+    }
+
+    static public function deleteAlarmMessage($id)
+    {
+        DB::query("
+            DELETE FROM `alarm_messages` 
+            WHERE `id` = ". $id ."
+        ");
+    }
+
+    static public function setAlarmMessage($message)
+    {
+        $alarm_messages = DB::set("
+            INSERT INTO `alarm_messages`
+            SET
+                `message` = ?
+            ", [$message]
+        );
+
+        return $alarm_messages;
+    }
+
+    static public function getAlarmMessage()
+    {
+        $alarm_messages = DB::get("
+            SELECT *
+            FROM `alarm_messages`
+        ");
+
+        return $alarm_messages;
     }
 
     static public function getById($id)
@@ -114,17 +143,17 @@ class Administrator
      */
     static public function getLogsPHP()
     {
-        $dataPHP = file_get_contents(self::$PATH . self::$LOG_PHP);
+        $dataPHP = file_get_contents(PATH_TO_TMP_DIR . '/' . self::$LOG_PHP);
         $dataPHP = explode("\n", $dataPHP);
         return $dataPHP;
     }
 
     /**
-     * @return convertPHP[]
+     * @return dataMySQL[]
      */
     static public function getLogsMySQL()
     {
-        $dataMySQL = file_get_contents(self::$PATH . self::$LOG_MYSQL);
+        $dataMySQL = file_get_contents(PATH_TO_TMP_DIR . '/' . self::$LOG_MYSQL);
         $dataMySQL = explode("\n", $dataMySQL);
         return $dataMySQL;
     }

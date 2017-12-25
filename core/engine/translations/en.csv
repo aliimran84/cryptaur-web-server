@@ -120,3 +120,5 @@ Token Contract Address,Token Contract Address
 Token Symbol,Token Symbol
 Decimal,Decimal
 Logs,Logs
+Alarm messages,Alarm messages
+Delete,Delete

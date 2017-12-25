@@ -123,6 +123,18 @@ nav a.button-collapse i {
     line-height: 3rem;
     background: #0074ff;
 }
+.content #alarmMessages .btn-send {
+    font-size: 1rem;
+    margin: 0;
+    line-height: 2rem;
+    height: auto;
+}
+.content #alarmMessages .message-id {
+    display: none;
+}
+.content #alarmMessages .col {
+    padding: 10px .75rem;
+}
 .content form input[type="text"],
 .content form input[type="email"],
 .content form input[type="number"],
@@ -445,7 +457,8 @@ footer .row {
     background-color: #2535a7;
 }
 .wrapper .content #logPHP,
-.wrapper .content #logMySQL {
+.wrapper .content #logMySQL,
+.wrapper .content #alarmMessages {
     padding: 10px;
 }
 .dashboard .indicators {

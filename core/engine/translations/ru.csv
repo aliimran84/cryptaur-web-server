@@ -120,3 +120,5 @@ Token Contract Address,Адрес смартконтракта
 Token Symbol,Название токена
 Decimal,Количество знаков
 Logs,Логи
+Alarm messages,Тревожные сообщения
+Delete,Удалить

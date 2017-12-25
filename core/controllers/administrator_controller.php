@@ -126,6 +126,13 @@ class Administrator_controller
             echo Administrator_view::logsList();
             echo Base_view::footer();
         }, self::LOGS, Router::GET_METHOD);
+        Router::register(function () {
+            // administrators can setup only administrator
+            if (!Application::$authorizedAdministrator) {
+                Utility::location(self::BASE_URL);
+            }
+            self::deleteAlarmMessage();
+        }, self::LOGS, Router::POST_METHOD);
     }
 
     static public function handleLoginRequest()
@@ -158,6 +165,12 @@ class Administrator_controller
         }
         Administrator::setAdministrator($_POST['email'], self::hashPassword($_POST['password']));
         Utility::location(self::ADMINISTRATORS_LIST);
+    }
+
+    static public function deleteAlarmMessage()
+    {
+        Administrator::deleteAlarmMessage($_POST['id']);
+        Utility::location(self::LOGS . '#alarmMessages');
     }
 
     static public function hashPassword($password)

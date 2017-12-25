@@ -8,6 +8,7 @@ use core\engine\Router;
 use core\models\Coin;
 use core\models\Deposit;
 use core\models\PaymentServer;
+use core\models\Administrator;
 use core\models\Wallet;
 
 class PaymentServer_controller
@@ -127,7 +128,14 @@ class PaymentServer_controller
             }
             return 2;
         } else if ($message['reason'] === self::NOTIFY_REASON_ALARM) {
-            //"{"data": {"address": "0xf59faa185482b63561858a24cb38b7b0367b103e", "coin": "ETH", "current-balance": 0.0, "minimum-balance": 0.5}, "keyid": "7551b0406fc7bfb2", "message": "Low deposit master account balance", "nonce": 1513260420631, "reason": "alarm"}"
+            $mess = "";
+            foreach ($message as $key=>$item) {
+                $mess .= $key;
+                $mess .= ": ";
+                $mess .= $item;
+                $mess .= "\n";
+            }
+            Administrator::setAlarmMessage($mess);
             return 3;
         }
 
