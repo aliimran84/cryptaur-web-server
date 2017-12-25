@@ -665,12 +665,12 @@ class Investor
                     @ri := concat(@ri, ',', `id`) AS `referrers_list`
                 FROM
                     `investors`
-                    JOIN ( SELECT @ri := ? ) `tmp `
+                    JOIN ( SELECT @ri := ? ) `tmp`
                 WHERE
                     find_in_set(`referrer_id`, @ri) > 0
                 ORDER BY
                     `id` ASC
-                ) as `referrals`
+            ) as `referrals`
         ", [$investor_id]);
         $referrals_id = [];
         foreach ($referrals_id_data as $referral_id_data) {

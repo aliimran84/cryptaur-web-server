@@ -172,7 +172,7 @@ class Investor_view
                         <strong><?= Application::$authorizedInvestor->eth_bounty ?></strong>
                     </div>
                     <div class="row">
-                        <?= Translate::td('Password') ?> (<?= Translate::td('left it empty to not to change password') ?>):
+                        <?= Translate::td('Password') ?> (<?= Translate::td('left it empty to not to change') ?>):
                         <input type="password" name="password" value="">
                     </div>
                     <div class="row">
