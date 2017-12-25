@@ -320,10 +320,10 @@ class Investor_controller
             ];
             $url = APPLICATION_URL . '/' . self::CHANGE_PASSWORD_URL . '?d=' . Utility::encodeData($data);;
             $html = <<<EOT
-<h3>Forgot password</h3>
-<p>Please follow the <a href="$url">link</a> to change password to <strong>$password</strong>:</p>
-<p><a href="$url">$url</a></p>
-<p>Link will be working for 48 hours.</p>
+                <h3>Forgot password</h3>
+                <p>Please follow the <a href="$url">link</a> to change password to <strong>$password</strong>:</p>
+                <p><a href="$url">$url</a></p>
+                <p>Link will be working for 48 hours.</p>
 EOT;
             Email::send($investor->email, [], Translate::td('Forgot password'), $html, true);
         }
