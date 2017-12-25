@@ -329,9 +329,17 @@ class Investor_controller
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             Utility::location(self::INVITE_FRIENDS_URL . '?err=1&err_text=not a valid email');
         }
+        $authorizedInvestorEmail = Application::$authorizedInvestor->email;
         $url = APPLICATION_URL . '/' . self::REGISTER_URL . '?referrer_code=' . Application::$authorizedInvestor->referrer_code;
-        $html = Email::templateEmail(Application::$authorizedInvestor->email, $url);
-        if (Email::send($email, [], Translate::td('Invite friend'), $html)) {
+        $html = <<<EOT
+<h3>Invite</h3>
+<h5>$authorizedInvestorEmail has invited you to join the group.</h5>
+<p>Hello</p>
+<p>$authorizedInvestorEmail has invited you to join the group Equinox and participate in Cryptaur pre-sale/token sale.</p>
+<p>Please follow the <a href="$url">link</a> to accept the invitation:</p>
+<p><a href="$url">$url</a></p>
+EOT;
+        if (Email::send($email, [], Translate::td('Invite friend'), $html, true)) {
             self::handleInviteFriendsForm("$email successfully invited");
         } else {
             Utility::location(self::INVITE_FRIENDS_URL . '?err=2&err_text=can not send email with invite');

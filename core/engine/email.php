@@ -31,10 +31,11 @@ class Email
      * @param array $copyTo
      * @param string $subject - тема письма
      * @param string $message - тело письма
+     * @param bool $withTemplate - обернуть ли письмо в шаблон
      * @param array $files
      * @return bool - true, если успешно отправлено
      */
-    static public function send($to, $copyTo, $subject, $message, $files = array())
+    static public function send($to, $copyTo, $subject, $message, $withTemplate = false, $files = array())
     {
         self::inst();
 
@@ -116,6 +117,9 @@ class Email
         //Read an HTML message body from an external file, convert referenced images to embedded,
         //convert HTML into a basic plain-text alternative body
         //$mail->msgHTML(file_get_contents('contents.html'), dirname(__FILE__));
+        if ($withTemplate) {
+            $message = self::wrapMessageInTemplate($message);
+        }
         $mail->msgHTML($message);
 
         //Replace the plain text body with one created manually
@@ -131,34 +135,31 @@ class Email
         return $mail->send();
     }
 
-    static public function templateEmail($authorizedInvestor, $url) {
-        $html = '
+    static private function wrapMessageInTemplate($message)
+    {
+        $domain = APPLICATION_URL;
+        $html = <<<EOT
             <div class="email">
                 <div class="logo-block">
-                    <a href="https://cryptaur.com" class="logo"><img src="images/CRYPTAUR_written.png" alt="cryptaur"></a>
+                    <a href="$domain" class="logo"><img src="$domain/images/CRYPTAUR_written.png" alt="cryptaur"></a>
                 </div>
                 <div class="menu">
                     <ul>
-                        <li><a href="https://cryptaur.com/home_ru">Home</a></li>
-                        <li><a href="https://cryptaur.com/home_ru#contacts">Contract</a></li>
+                        <li><a href="$domain/home_ru">Home</a></li>
+                        <li><a href="$domain/home_ru#contacts">Contract</a></li>
                     </ul>
                 </div>
                 <div class="message">
-                    <h3>Invite</h3>
-                    <h5>' . $authorizedInvestor . ' has invited you to join the group.</h5>
-                    <p>Hello</p>
-                    <p>' . $authorizedInvestor . ' has invited you to join the group Equinox and participate in Cryptaur pre-sale/token sale.</p>
-                    <p>Please follow the <a href="#">link</a> to accept the invitation: </p>
-                    <p><a href="' . $url .'">'. $url .'</a></p>
+                    $message
                 </div>
                 <div class="logo-block-footer">
-                    <a href="https://cryptaur.com" class="logo"><img src="images/CRYPTAUR_AVECTYPOCENTRE.png" alt="cryptaur"></a>
+                    <a href="$domain" class="logo"><img src="$domain/images/CRYPTAUR_AVECTYPOCENTRE.png" alt="cryptaur"></a>
                 </div>
                 <div class="footer">
-                    <p>If you would like to stop receiving invites from other people, follow the <a href="#">link</a></p>
+                    <p>If you would like to stop receiving invites from other people, follow the <a href="$domain">link</a></p>
                 </div>
             </div>
-        ';
+EOT;
         return $html;
     }
 }
