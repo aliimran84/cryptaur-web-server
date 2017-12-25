@@ -44,8 +44,8 @@ class Investor
                 `referrer_code` varchar(32) DEFAULT '',
                 `joined_datetime` datetime(0) NOT NULL,
                 `email` varchar(254) NOT NULL,
-                `firstname` varchar(254) NOT NULL,
-                `lastname` varchar(254) NOT NULL,
+                `firstname` varchar(254) DEFAULT '',
+                `lastname` varchar(254) DEFAULT '',
                 `password_hash` varchar(254) NOT NULL,
                 `eth_address` varchar(50) DEFAULT '',
                 `eth_withdrawn` double(20, 8) DEFAULT '0',
@@ -201,12 +201,14 @@ class Investor
 
     /**
      * @param string $email
+     * @param string $firstname
+     * @param string $lastname
      * @param string $eth_address
      * @param int $referrer_id
      * @param string $password_hash
      * @return int if > 0 -> success, else error
      */
-    static public function registerUser($email, $eth_address, $referrer_id, $password_hash)
+    static public function registerUser($email, $firstname, $lastname, $eth_address, $referrer_id, $password_hash)
     {
         if (!Utility::validateEthAddress($eth_address)) {
             return -1;
@@ -233,15 +235,18 @@ class Investor
         DB::set("
             INSERT INTO `investors`
             SET
-                `referrer_id` = ?,
-                `referrer_code` = ?,
+                `referrer_id` = ?, `referrer_code` = ?,
                 `joined_datetime` = ?,
-                `email` = ?,
-                `password_hash` = ?,
-                `eth_address` = ?,
-                `eth_withdrawn` = ?,
+                `email` = ?, `firstname` = ?, `lastname` = ?,
+                `password_hash` = ?, `eth_address` = ?, `eth_withdrawn` = ?,
                 `tokens_count` = ?
-            ", [$referrer_id, $referrer_code, DB::timetostr(time()), $email, $password_hash, $eth_address, 0, 0]
+            ", [
+                $referrer_id, $referrer_code,
+                DB::timetostr(time()),
+                $email, $firstname, $lastname,
+                $password_hash, $eth_address, 0,
+                0
+            ]
         );
 
         return DB::lastInsertId();
@@ -277,6 +282,25 @@ class Investor
                 `id` = ?
             LIMIT 1
         ", [$eth_address, $this->id]);
+    }
+
+    /**
+     * @param string $firstname
+     * @param string $lastname
+     */
+    public function setFirstnameLastName($firstname, $lastname)
+    {
+        $this->firstname = $firstname;
+        $this->lastname = $lastname;
+        DB::set("
+            UPDATE `investors`
+            SET
+                `firstname` = ?,
+                `lastname` = ?
+            WHERE
+                `id` = ?
+            LIMIT 1
+        ", [$firstname, $lastname, $this->id]);
     }
 
     /**

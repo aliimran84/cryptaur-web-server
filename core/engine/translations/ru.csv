@@ -3,6 +3,10 @@ Settings,Настройки
 Logout,Выйти
 Login,Войти
 Register,Регистрация
+First name,Имя
+Last name,Фамилия
+"Please check your email and follow the sent link","Пожалуйста, проверьте свой почтовый ящик и перейдите по отправленной ссылке"
+"Email confirmed successfully","Email успешно подтвержден"
 Transactions history,История транизакций
 Dashboard,Панель управления
 Administrators,Администраторы
@@ -35,7 +39,13 @@ Key id,Key id
 Secret key,Secret key
 Set,Задать
 Cryptaur login,Cryptaur авторизация
-PASSWORD,ПАРОЛЬ
+Password,Пароль
+Forgot your account login,Забыли имя пользователя кабинета
+Recover,Восстановить
+Forgot password,Забыл пароль
+Password successfully chagned,Пароль успешно изменен
+If the user exists then he was sent a new password,Если пользователь существует то ему был отправлен новый пароль
+"left it empty to not to change password","оставьте пустым, чтобы не менять пароль"
 Not a member yet,Ещё не зарегистрированы
 Cryptaur registration,Cryptaur регистрация
 REFERRER CODE,РЕФЕРАЛЬНЫЙ КОД

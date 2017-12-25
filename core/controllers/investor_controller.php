@@ -21,6 +21,8 @@ class Investor_controller
     const LOGIN_URL = 'investor/login';
     const SET_ETH_ADDRESS = 'investor/set_eth_address';
     const LOGOUT_URL = 'investor/logout';
+    const RECOVER_URL = 'investor/recover';
+    const CHANGE_PASSWORD_URL = 'investor/changepassword';
     const REGISTER_URL = 'investor/register';
     const PREVIOUS_SYSTEM_REGISTER_URL = 'syndicates/join';
     const REGISTER_CONFIRMATION_URL = 'investor/register_confirm';
@@ -97,13 +99,30 @@ class Investor_controller
             }
             self::handleRegistrationRequest();
         }, self::REGISTER_URL, Router::POST_METHOD);
+
+        Router::register(function () {
+            self::handleRecoverForm();
+        }, self::RECOVER_URL, Router::GET_METHOD);
+
+        Router::register(function () {
+            self::handleRecoverRequest();
+        }, self::RECOVER_URL, Router::POST_METHOD);
+
+        Router::register(function () {
+            self::handleChangePassword();
+        }, self::CHANGE_PASSWORD_URL, Router::GET_METHOD);
+
         Router::register(function () {
             self::handleRegistrationConfirmationRequest();
         }, self::REGISTER_CONFIRMATION_URL);
 
         Router::register(function () {
+            self::handleSettingsForm();
+        }, self::SETTINGS_URL, Router::GET_METHOD);
+
+        Router::register(function () {
             self::handleSettingsRequest();
-        }, self::SETTINGS_URL);
+        }, self::SETTINGS_URL, Router::POST_METHOD);
 
         Router::register(function () {
             self::handleInviteFriendsForm();
@@ -231,6 +250,15 @@ class Investor_controller
         Utility::location();
     }
 
+    /**
+     * @param string $password
+     * @return bool
+     */
+    static private function verifyPassword($password)
+    {
+        return !!preg_match('/^[0-9A-Za-z?!@#$%\-\_\.,;:]{6,50}$/', $password);
+    }
+
     static private function handleRegistrationRequest()
     {
         if (!filter_var(@$_POST['email'], FILTER_VALIDATE_EMAIL)) {
@@ -249,17 +277,81 @@ class Investor_controller
                 Utility::location(self::REGISTER_URL . '?err=4&err_text=not a valid referrer code');
             }
         }
-        if (!preg_match('/^[0-9A-Za-z?!@#$%\-\_\.,;:]{6,50}$/', @$_POST['password'])) {
+        if (!self::verifyPassword(@$_POST['password'])) {
             Utility::location(self::REGISTER_URL . '?err=5&err_text=not a valid password, use more than 6 characters');
         }
-        $confirmationUrl = self::urlForRegistration($_POST['email'], $_POST['eth_address'], $referrerId, $_POST['password']);
+        $confirmationUrl = self::urlForRegistration($_POST['email'], @$_POST['firstname'], @$_POST['lastname'], $_POST['eth_address'], $referrerId, $_POST['password']);
         Email::send($_POST['email'], [], 'Cryptaur: email confirmation', "<a href=\"$confirmationUrl\">Confirm email to finish registration</a>");
 
         Base_view::$TITLE = 'Email confirmation info';
         Base_view::$MENU_POINT = Menu_point::Register;
         echo Base_view::header();
-        echo Base_view::text("Please check your email and follow the sent link");
+        echo Base_view::text(Translate::td("Please check your email and follow the sent link"));
         echo Base_view::footer();
+    }
+
+    static private function handleRecoverForm($message = '')
+    {
+        if (Application::$authorizedInvestor) {
+            Utility::location(self::BASE_URL);
+        }
+        Base_view::$TITLE = Translate::td('Recover');
+        Base_view::$MENU_POINT = Menu_point::Login;
+        echo Base_view::header();
+        echo Investor_view::recoverForm($message);
+        echo Base_view::footer();
+    }
+
+    static private function handleRecoverRequest()
+    {
+        if (Application::$authorizedInvestor) {
+            Utility::location(self::BASE_URL);
+        }
+        if (!filter_var(@$_POST['email'], FILTER_VALIDATE_EMAIL)) {
+            Utility::location(self::RECOVER_URL . '?err=1&err_text=not a valid email');
+        }
+        $investor = Investor::getByEmail(@$_POST['email']);
+        if ($investor) {
+            $password = substr(uniqid(), -6);
+            $data = [
+                'password' => $password,
+                'email' => $_POST['email'],
+                'time' => time()
+            ];
+            $url = APPLICATION_URL . '/' . self::CHANGE_PASSWORD_URL . '?d=' . Utility::encodeData($data);;
+            $html = <<<EOT
+<h3>Forgot password</h3>
+<p>Please follow the <a href="$url">link</a> to change password to <strong>$password</strong>:</p>
+<p><a href="$url">$url</a></p>
+<p>Link will be working for 48 hours.</p>
+EOT;
+            Email::send($investor->email, [], Translate::td('Forgot password'), $html, true);
+        }
+        self::handleRecoverForm(Translate::td('If the user exists then he was sent a new password'));
+    }
+
+    static private function handleChangePassword()
+    {
+        if (Application::$authorizedInvestor) {
+            Utility::location(self::BASE_URL);
+        }
+        $encodedData = @$_GET['d'];
+        if (!$encodedData) {
+            Utility::location(self::RECOVER_URL . '?err=1&err_text=something went wrong');
+        }
+        $data = Utility::decodeData($encodedData);
+        if (!$data) {
+            Utility::location(self::RECOVER_URL . '?err=2&err_text=something went wrong');
+        }
+        $investor = Investor::getByEmail(@$data['email']);
+        if (!$investor) {
+            Utility::location(self::RECOVER_URL . '?err=3&err_text=something went wrong');
+        }
+        if (time() - 48 * 60 * 60 > $data['time']) {
+            Utility::location(self::RECOVER_URL . '?err=4&err_text=link is outdated');
+        }
+        $investor->changePassword($data['password']);
+        self::handleRecoverForm(Translate::td('Password successfully chagned'));
     }
 
     static private function handleRegistrationConfirmationRequest()
@@ -273,7 +365,7 @@ class Investor_controller
             echo Base_view::footer();
             return;
         }
-        $registerResult = Investor::registerUser($data['email'], $data['eth_address'], $data['referrer_id'], $data['password_hash']);
+        $registerResult = Investor::registerUser($data['email'], $data['firstname'], $data['lastname'], $data['eth_address'], $data['referrer_id'], $data['password_hash']);
         if ($registerResult < 0) {
             Base_view::$TITLE = 'Email confirmation problem';
             Base_view::$MENU_POINT = Menu_point::Register;
@@ -287,14 +379,14 @@ class Investor_controller
         self::loginWithId($investorId);
         self::detectLoggedInInvestor();
 
-        Base_view::$TITLE = 'Email confirmed successfully';
+        Base_view::$TITLE = Translate::td('Email confirmed successfully');
         Base_view::$MENU_POINT = Menu_point::Register;
         echo Base_view::header();
-        echo Base_view::text("Email confirmed successfully");
+        echo Base_view::text(Translate::td('Email confirmed successfully'));
         echo Base_view::footer();
     }
 
-    static private function handleSettingsRequest()
+    static private function handleSettingsForm()
     {
         if (!Application::$authorizedInvestor) {
             Utility::location(self::BASE_URL);
@@ -305,6 +397,18 @@ class Investor_controller
         echo Base_view::header();
         echo Investor_view::settings();
         echo Base_view::footer();
+    }
+
+    static private function handleSettingsRequest()
+    {
+        if (!Application::$authorizedInvestor) {
+            Utility::location(self::BASE_URL);
+        }
+        Application::$authorizedInvestor->setFirstnameLastName(@$_POST['firstname'], @$_POST['lastname']);
+        if (self::verifyPassword(@$_POST['password'])) {
+            Application::$authorizedInvestor->changePassword(@$_POST['password']);
+        }
+        Utility::location(self::SETTINGS_URL);
     }
 
     static public function handleInviteFriendsForm($message = '')
@@ -329,9 +433,17 @@ class Investor_controller
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             Utility::location(self::INVITE_FRIENDS_URL . '?err=1&err_text=not a valid email');
         }
+        $authorizedInvestorEmail = Application::$authorizedInvestor->email;
         $url = APPLICATION_URL . '/' . self::REGISTER_URL . '?referrer_code=' . Application::$authorizedInvestor->referrer_code;
-        $html = Email::templateEmail(Application::$authorizedInvestor->email, $url);
-        if (Email::send($email, [], Translate::td('Invite friend'), $html)) {
+        $html = <<<EOT
+<h3>Invite</h3>
+<h5>$authorizedInvestorEmail has invited you to join the group.</h5>
+<p>Hello</p>
+<p>$authorizedInvestorEmail has invited you to join the group Equinox and participate in Cryptaur pre-sale/token sale.</p>
+<p>Please follow the <a href="$url">link</a> to accept the invitation:</p>
+<p><a href="$url">$url</a></p>
+EOT;
+        if (Email::send($email, [], Translate::td('Invite friend'), $html, true)) {
             self::handleInviteFriendsForm("$email successfully invited");
         } else {
             Utility::location(self::INVITE_FRIENDS_URL . '?err=2&err_text=can not send email with invite');
@@ -352,10 +464,12 @@ class Investor_controller
         return hash('sha256', $password . APPLICATION_ID . 'investor');
     }
 
-    static public function urlForRegistration($email, $eth_address, $referrer_id, $password)
+    static public function urlForRegistration($email, $firstname, $lastname, $eth_address, $referrer_id, $password)
     {
         $data = [
             'email' => $email,
+            'firstname' => $firstname,
+            'lastname' => $lastname,
             'eth_address' => $eth_address,
             'referrer_id' => $referrer_id,
             'password_hash' => self::hashPassword($password)

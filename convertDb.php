@@ -41,6 +41,9 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
             syndicates_syndicateaccount.invited_by_id,
             auth_user.password,
             auth_user.email,
+            auth_user.first_name,
+            auth_user.last_name,
+            auth_user.email,
             auth_user.date_joined,
             account_account.phone_number,
             syndicates_syndicateaccount.referral
@@ -100,19 +103,22 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
         DB::set("
             INSERT INTO `investors`
             SET
-                `phone` = ?,
-                `referrer_id` = ?,
-                `referrer_code` = ?,
+                `phone` = ?, `referrer_id` = ?, `referrer_code` = ?,
                 `joined_datetime` = ?,
-                `email` = ?,
+                `email` = ?, `firstname` = ?, `lastname` = ?,
                 `password_hash` = ?,
-                `eth_address` = ?,
-                `eth_withdrawn` = ?,
-                `tokens_count` = ?,
-                `tokens_not_used_in_bounty` = ?,
-                `eth_not_used_in_bounty` = ?,
-                `eth_bounty` = ?
-        ", [$user['phone_number'], $refId, $user['referral'], $user['date_joined'], $user['email'], $user['password'], '', 0, $tokens, $tokens_not_used_in_bounty, $amountEth, $bounty]
+                `eth_address` = ?, `eth_withdrawn` = ?,
+                `tokens_count` = ?, `tokens_not_used_in_bounty` = ?,
+                `eth_not_used_in_bounty` = ?, `eth_bounty` = ?
+        ", [
+                $user['phone_number'], $refId, $user['referral'],
+                $user['date_joined'],
+                $user['email'], $user['first_name'], $user['last_name'],
+                $user['password'],
+                '', 0,
+                $tokens, $tokens_not_used_in_bounty,
+                $amountEth, $bounty
+            ]
         );
         $id = DB::lastInsertId();
         DB::set("
