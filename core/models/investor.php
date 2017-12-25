@@ -63,7 +63,9 @@ class Investor
                 `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
                 `investor_id` int(10) UNSIGNED DEFAULT '0',
                 `referral_id` int(10) UNSIGNED DEFAULT '0',
-                PRIMARY KEY (`id`)
+                PRIMARY KEY (`id`),
+                INDEX `investor_id_index`(`investor_id`) USING HASH,
+                INDEX `referral_id_index`(`referral_id`) USING HASH
             );
         ");
         DB::query("
@@ -71,7 +73,9 @@ class Investor
                 `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
                 `investor_id` int(10) UNSIGNED DEFAULT '0',
                 `previoussystem_id` int(10) UNSIGNED DEFAULT '0',
-                PRIMARY KEY (`id`)
+                PRIMARY KEY (`id`),
+                INDEX `investor_id_index`(`investor_id`) USING HASH,
+                INDEX `previoussystem_id_index`(`previoussystem_id`) USING HASH
             );
         ");
     }
