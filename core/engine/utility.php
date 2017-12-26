@@ -187,4 +187,10 @@ class Utility
             return self::bcdechex($remain) . dechex($last);
         }
     }
+
+    static public function microtime_float()
+    {
+        list($usec, $sec) = explode(" ", microtime());
+        return ((float)$usec + (float)$sec);
+    }
 }
