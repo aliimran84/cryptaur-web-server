@@ -23,7 +23,7 @@ class Wallet_view
             <h3><?= Translate::td('My contribution') ?></h3>
         </div>
         <div class="row">
-            <p><?= Translate::td('Contributions is not available between stages') ?></p>
+            <p><?= Translate::td('Contributions are not possible between stages') ?></p>
         </div>
 
         <?php
