@@ -32,8 +32,12 @@ class Application
      */
     static public $authorizedAdministrator = null;
 
+    static private $startTime = 0;
+
     static public function init()
     {
+        self::$startTime = microtime_float();
+
         define('PATH_TO_WORKING_DIR', __DIR__ . '/../../working_dir');
         define('PATH_TO_TMP_DIR', __DIR__ . '/../../working_dir/tmp');
         define('PATH_TO_THIRD_PARTY_DIR', __DIR__ . '/../../third_party');
@@ -107,6 +111,14 @@ class Application
                 die($error);
             }
         });
+    }
+
+    /**
+     * @return float
+     */
+    static public function executedTime()
+    {
+        return microtime_float() - self::$startTime;
     }
 
     /**
