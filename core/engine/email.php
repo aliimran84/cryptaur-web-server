@@ -139,113 +139,24 @@ class Email
     {
         $domain = APPLICATION_URL;
         $html = <<<EOT
-            <style>
-                .email {
-                    width: 595px;
-                    margin: 0 auto;
-                }
-                .email .logo-block,
-                .email .logo-block-footer {
-                    width: 100%;
-                    margin: 30px 0;
-                    text-align: center;
-                }
-                .email .logo-block .logo img {
-                    width: 250px;
-                }
-                .email .menu {
-                    width: 100%;
-                    height: 38px;
-                    background: rgba(33, 43, 90, 1);
-                }
-                .email .menu ul {
-                    margin: 0;
-                    padding: 0;
-                }
-                .email .menu ul li {
-                    float: left;
-                    list-style: none;
-                    width: 50%;
-                    padding: 8px 0;
-                    text-align: center;
-                    text-decoration: underline;
-                }
-                .email .menu ul li a {
-                    font-size: 12px;
-                    color: #ffffff;
-                    font-family: sans-serif;
-                    font-style: normal;
-                    font-weight: 400;
-                    text-transform: uppercase;
-                }
-                .email .message h3 {
-                    font-size: 32px;
-                    font-weight: 300;
-                    margin: 30px 0px;
-                    color: rgba(146, 146, 146, 1);
-                    line-height: 2.5em;
-                    font-family: sans-serif;
-                    font-style: normal;
-                    text-align: center;
-                    text-transform: none;
-                }
-                .email .message h5 {
-                    font-size: 16px;
-                    font-weight: 300;
-                    color: rgba(146, 146, 146, 1);
-                    font-family: sans-serif;
-                    font-style: normal;
-                    text-align: center;
-                }
-                .email .message {
-                    color: rgba(146, 146, 146, 1);
-                }
-                .email .message a {
-                    text-decoration: underline;
-                }
-                .email .message p {
-                    font-size: 14px;
-                    font-style: normal;
-                    font-weight: 400;
-                    line-height: 1.8;
-                    text-align: justify;
-                    padding: 10px 20px 0px;
-                }
-                .email .footer p {
-                    font-size: 14px;
-                    font-style: italic;
-                    font-weight: 400;
-                    line-height: 1.8;
-                    width: 50%;
-                    margin: 20px auto;
-                    text-align: center;
-                    color: rgba(146, 146, 146, 1);
-                }
-                .email .footer a {
-                    text-decoration: underline;
-                }
-                .email .logo-block-footer img {
-                    width: 95px;
-                }
-            </style>
-            <div class="email">
-                <div class="logo-block">
-                    <a href="$domain" class="logo"><img src="$domain/images/CRYPTAUR_written.png" alt="cryptaur"></a>
+            <div class="email" style="width: 595px;margin: 0 auto;">
+                <div class="logo-block" style="width: 100%;margin: 30px 0;text-align: center;">
+                    <a href="$domain" class="logo"><img style="width: 300px;" src="$domain/images/CRYPTAUR_written.png" alt="cryptaur"></a>
                 </div>
-                <div class="menu">
-                    <ul>
-                        <li><a href="$domain/home_ru">Home</a></li>
-                        <li><a href="$domain/home_ru#contacts">Contract</a></li>
+                <div class="menu" style="width: 100%;height: 38px;background: rgba(33, 43, 90, 1);">
+                    <ul style="margin: 0;padding: 0;">
+                        <li style="float: left;list-style:none;width:50%;height:38px;line-height:38px;margin:0;text-align: center;text-decoration: underline;"><a style="font-size: 12px;color: #ffffff;font-family: sans-serif;font-style: normal;font-weight: 400;text-transform: uppercase;" href="$domain/home_ru">Home</a></li>
+                        <li style="float: left;list-style:none;width:50%;height:38px;line-height:38px;margin:0;text-align: center;text-decoration: underline;"><a style="font-size: 12px;color: #ffffff;font-family: sans-serif;font-style: normal;font-weight: 400;text-transform: uppercase;" href="$domain/home_ru#contacts">Contract</a></li>
                     </ul>
                 </div>
-                <div class="message">
+                <div class="message" style="color: rgba(146, 146, 146, 1);">
                     $message
                 </div>
-                <div class="logo-block-footer">
-                    <a href="$domain" class="logo"><img src="$domain/images/CRYPTAUR_AVECTYPOCENTRE.png" alt="cryptaur"></a>
+                <div class="logo-block-footer" style="text-align:center;">
+                    <a href="$domain" style="margin:25px auto;display:inline-block;" class="logo"><img style="width: 95px;" src="$domain/images/CRYPTAUR_AVECTYPOCENTRE.png" alt="cryptaur"></a>
                 </div>
-                <div class="footer">
-                    <p>If you would like to stop receiving invites from other people, follow the <a href="$domain">link</a></p>
+                <div class="footer" style="width: 100%;margin: 0;text-align: center;">
+                    <p style="font-size: 14px;font-style: italic;font-weight: 400;line-height: 1.8;width: 50%;margin:0 auto;text-align: center;color: rgba(146, 146, 146, 1);">If you would like to stop receiving invites from other people, follow the <a style="text-decoration: underline;" href="$domain">link</a></p>
                 </div>
             </div>
 EOT;

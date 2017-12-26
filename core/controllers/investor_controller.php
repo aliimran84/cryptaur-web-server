@@ -320,10 +320,10 @@ class Investor_controller
             ];
             $url = APPLICATION_URL . '/' . self::CHANGE_PASSWORD_URL . '?d=' . Utility::encodeData($data);;
             $html = <<<EOT
-                <h3>Forgot password</h3>
-                <p>Please follow the <a href="$url">link</a> to change password to <strong>$password</strong>:</p>
-                <p><a href="$url">$url</a></p>
-                <p>Link will be working for 48 hours.</p>
+                <h3 style="font-size: 32px;font-weight: 300;margin: 30px 0px;color: rgba(146, 146, 146, 1);line-height: 2.5em;font-family: sans-serif;font-style: normal;text-align: center;text-transform: none;">Forgot password</h3>
+                <p style="font-size: 14px;font-style: normal;font-weight: 400;line-height: 1.8;margin: 0;text-align: justify;padding: 10px 20px 0px;">Please follow the <a href="$url">link</a> to change password to <strong>$password</strong>:</p>
+                <p style="font-size: 14px;font-style: normal;font-weight: 400;line-height: 1.8;margin: 0;text-align: justify;padding: 10px 20px 0px;"><a href="$url">$url</a></p>
+                <p style="font-size: 14px;font-style: normal;font-weight: 400;line-height: 1.8;margin: 0;text-align: justify;padding: 10px 20px 0px;">Link will be working for 48 hours.</p>
 EOT;
             Email::send($investor->email, [], Translate::td('Forgot password'), $html, true);
         }
@@ -436,12 +436,12 @@ EOT;
         $authorizedInvestorEmail = Application::$authorizedInvestor->email;
         $url = APPLICATION_URL . '/' . self::REGISTER_URL . '?referrer_code=' . Application::$authorizedInvestor->referrer_code;
         $html = <<<EOT
-<h3>Invite</h3>
-<h5>$authorizedInvestorEmail has invited you to join the group.</h5>
-<p>Hello</p>
-<p>$authorizedInvestorEmail has invited you to join the group Equinox and participate in Cryptaur pre-sale/token sale.</p>
-<p>Please follow the <a href="$url">link</a> to accept the invitation:</p>
-<p><a href="$url">$url</a></p>
+<h3 style="font-size: 32px;font-weight: 300;margin: 30px 0px;color: rgba(146, 146, 146, 1);line-height: 2.5em;font-family: sans-serif;font-style: normal;text-align: center;text-transform: none;">Invite</h3>
+<h5 style="font-size: 16px;font-weight: 300;color: rgba(146, 146, 146, 1);font-family: sans-serif;font-style: normal;text-align: center;">$authorizedInvestorEmail has invited you to join the group.</h5>
+<p style="font-size: 14px;font-style: normal;font-weight: 400;line-height: 1.8;margin: 0;text-align: justify;padding: 10px 20px 0px;">Hello</p>
+<p style="font-size: 14px;font-style: normal;font-weight: 400;line-height: 1.8;margin: 0;text-align: justify;padding: 10px 20px 0px;">$authorizedInvestorEmail has invited you to join the group Equinox and participate in Cryptaur pre-sale/token sale.</p>
+<p style="font-size: 14px;font-style: normal;font-weight: 400;line-height: 1.8;margin: 0;text-align: justify;padding: 10px 20px 0px;">Please follow the <a href="$url">link</a> to accept the invitation:</p>
+<p style="font-size: 14px;font-style: normal;font-weight: 400;line-height: 1.8;margin: 0;text-align: justify;padding: 10px 20px 0px;"><a href="$url">$url</a></p>
 EOT;
         if (Email::send($email, [], Translate::td('Invite friend'), $html, true)) {
             self::handleInviteFriendsForm("$email successfully invited");

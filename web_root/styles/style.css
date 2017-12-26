@@ -437,8 +437,11 @@ footer .row {
     padding: 0 10px;
 
 }
-.content .left-panel {
-
+.content form label.blue-text,
+.content form label.red-text {
+    display: block;
+    text-align: center;
+    margin-bottom: 5px;
 }
 .wrapper .content .tabs {
     overflow-x: hidden;
