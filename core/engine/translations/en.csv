@@ -65,7 +65,7 @@ Receiving deposits is on,Receiving deposits is on
 Minting is on,Minting is on
 Withdraw is on,Withdraw is on
 Reinvest is on,Reinvest is on
-There is no transaction yet,There is no transaction yet
+There are no transactions yet,There are no transactions yet
 Type,Type
 Date,Date
 Description,Description
@@ -133,3 +133,6 @@ Logs,Logs
 Alarm messages,Alarm messages
 Delete,Delete
 Friend email,Friend email
+wrong credentials,wrong credentials
+not a valid eth address,not a valid eth address
+not a valid email,not a valid email

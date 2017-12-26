@@ -7,7 +7,7 @@ First name,Имя
 Last name,Фамилия
 "Please check your email and follow the sent link","Пожалуйста, проверьте свой почтовый ящик и перейдите по отправленной ссылке"
 "Email confirmed successfully","Email успешно подтвержден"
-Transactions history,История транизакций
+Transactions history,История транзакций
 Dashboard,Панель управления
 Administrators,Администраторы
 All right reserved,Все права защищены
@@ -65,7 +65,7 @@ Receiving deposits is on,Получить депозит
 Minting is on,Чеканить
 Withdraw is on,Вывести
 Reinvest is on,Реинвестировать
-There is no transaction yet,Пока нет транзакций
+There are no transactions yet,Пока нет транзакций
 Type,Тип
 Date,Дата
 Description,Описание
@@ -133,3 +133,6 @@ Logs,Логи
 Alarm messages,Тревожные сообщения
 Delete,Удалить
 Friend email,Почта друга
+wrong credentials,неверные учетные данные
+not a valid eth address,недействительный eth адрес
+not a valid email,недействительная почта

@@ -84,6 +84,16 @@
     }
 }
 @media screen and (max-width: 600px){
+    .dashboard .indicators {
+        padding: 15px 0;
+    }
+    .content section.my-tokens input[type=number],
+    .dashboard .main-panel-block .amount.input-field .btn {
+        width: 100%;
+    }
+    .dashboard .indicators h3 {
+        margin-bottom: 20px;
+    }
     .dashboard .main-panel-block .amount-wallet {
         font-size: 1.2rem;
     }
