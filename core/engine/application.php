@@ -141,8 +141,10 @@ class Application
                 `key` varchar(256) NOT NULL,
                 `value` varchar(4096) NOT NULL,
                 PRIMARY KEY (`key`)
-            );
-        ");
+            )
+            DEFAULT CHARSET utf8
+            DEFAULT COLLATE utf8_general_ci
+        ;");
         self::setValue('version', self::VERSION);
     }
 }

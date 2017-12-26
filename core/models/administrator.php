@@ -20,8 +20,10 @@ class Administrator
                 `email` varchar(254) NOT NULL,
                 `password_hash` varchar(254) NOT NULL,
                 PRIMARY KEY (`id`)
-            );
-        ");
+            )
+            DEFAULT CHARSET utf8
+            DEFAULT COLLATE utf8_general_ci
+        ;");
     }
 
     /**

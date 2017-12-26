@@ -56,8 +56,10 @@ class Investor
                 `eth_bounty` double(20, 8) UNSIGNED DEFAULT '0',
                 `phone` varchar(254) DEFAULT '',
                 PRIMARY KEY (`id`)
-            );
-        ");
+            )
+            DEFAULT CHARSET utf8
+            DEFAULT COLLATE utf8_general_ci
+        ;");
         DB::query("
             CREATE TABLE IF NOT EXISTS `investors_referrals_compressed` (
                 `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -66,8 +68,10 @@ class Investor
                 PRIMARY KEY (`id`),
                 INDEX `investor_id_index`(`investor_id`) USING HASH,
                 INDEX `referral_id_index`(`referral_id`) USING HASH
-            );
-        ");
+            )
+            DEFAULT CHARSET utf8
+            DEFAULT COLLATE utf8_general_ci
+        ;");
         DB::query("
             CREATE TABLE IF NOT EXISTS `investors_to_previous_system` (
                 `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -76,8 +80,10 @@ class Investor
                 PRIMARY KEY (`id`),
                 INDEX `investor_id_index`(`investor_id`) USING HASH,
                 INDEX `previoussystem_id_index`(`previoussystem_id`) USING HASH
-            );
-        ");
+            )
+            DEFAULT CHARSET utf8
+            DEFAULT COLLATE utf8_general_ci
+        ;");
     }
 
     static private function createWithDataFromDB($data)

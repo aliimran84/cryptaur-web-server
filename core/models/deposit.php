@@ -44,8 +44,10 @@ class Deposit
                 `registered` tinyint(1) UNSIGNED DEFAULT '0',
                 `used_in_minting` tinyint(1) UNSIGNED DEFAULT '0',
                 PRIMARY KEY (`id`)
-            );
-        ");
+            )
+            DEFAULT CHARSET utf8
+            DEFAULT COLLATE utf8_general_ci
+        ;");
     }
 
     /**

@@ -29,8 +29,10 @@ class PaymentServer
                 `backend_eth_password` varchar(254) DEFAULT '',
                 PRIMARY KEY (`id`),
                 UNIQUE KEY `keyid` (`keyid`)
-            );
-        ");
+            )
+            DEFAULT CHARSET utf8
+            DEFAULT COLLATE utf8_general_ci
+        ;");
     }
 
     /**
