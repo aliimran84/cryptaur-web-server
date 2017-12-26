@@ -554,6 +554,15 @@ footer .row {
     background: transparent;
     color: #0074ff;
     box-shadow: none;
+    -webkit-transition: 0.5s;
+    -moz-transition: 0.5s;
+    -o-transition: 0.5s;
+    transition: 0.5s;
+}
+.dashboard .main-panel-block .amount.input-field .btn:hover {
+    background: #0074ff;
+    border: 1px solid #ffffff;
+    color: #ffffff;
 }
 .dashboard .main-panel-block .amount ul li {
     line-height: 30px;
@@ -572,6 +581,14 @@ footer .row {
     background: transparent;
     box-shadow: none;
     border: 1px solid;
+    -webkit-transition: 0.5s;
+    -moz-transition: 0.5s;
+    -o-transition: 0.5s;
+    transition: 0.5s;
+}
+.dashboard .my-group .main-panel-block .btn:hover {
+    background: #ffffff;
+    color: #91aad1;
 }
 .dashboard .my-group .main-panel-block .input-field {
     text-align: center;
