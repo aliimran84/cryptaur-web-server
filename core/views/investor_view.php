@@ -204,7 +204,7 @@ class Investor_view
                         <?php if ($message) { ?>
                             <label class="blue-text"><?= $message ?></label>
                         <?php } ?>
-                        <input type="email" name="email" placeholder="friend email">
+                        <input type="email" name="email" placeholder="<?= Translate::td('Friend email') ?>">
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Send') ?>

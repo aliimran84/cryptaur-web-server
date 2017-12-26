@@ -155,22 +155,10 @@ nav a.button-collapse i {
     box-shadow: none !important;
     border-bottom: 1px solid #95989a !important;
 }
-.content form input[type="text"]::-webkit-input-placeholder     {color:#404040;}
-.content form input[type="email"]::-webkit-input-placeholder     {color:#404040;}
-.content form input[type="number"]::-webkit-input-placeholder   {color:#404040;}
-.content form input[type="password"]::-webkit-input-placeholder   {color:#404040;}
-.content form input[type="text"]::-moz-placeholder              {color:#404040;}
-.content form input[type="email"]::-moz-placeholder              {color:#404040;}
-.content form input[type="number"]::-moz-placeholder            {color:#404040;}
-.content form input[type="password"]::-moz-placeholder            {color:#404040;}
-.content form input[type="text"]:-moz-placeholder               {color:#404040;}
-.content form input[type="email"]:-moz-placeholder               {color:#404040;}
-.content form input[type="number"]:-moz-placeholder             {color:#404040;}
-.content form input[type="password"]:-moz-placeholder             {color:#404040;}
-.content form input[type="text"]:-ms-input-placeholder          {color:#404040;}
-.content form input[type="email"]:-ms-input-placeholder          {color:#404040;}
-.content form input[type="number"]:-ms-input-placeholder        {color:#404040;}
-.content form input[type="password"]:-ms-input-placeholder        {color:#404040;}
+.content form input::-webkit-input-placeholder     {color:#909090;}
+.content form input::-moz-placeholder              {color:#909090;}
+.content form input:-moz-placeholder               {color:#909090;}
+.content form input:-ms-input-placeholder          {color:#909090;}
 .content form.login p,
 .content form.login h5 {
     color: #404040;
@@ -268,6 +256,9 @@ footer .row {
 }
 .content section.stage-one,
 .content section.my-contribution {
+}
+.content section.my-group {
+    min-height: 500px;
 }
 .content section.stage-one h3,
 .content section.my-contribution h3,
