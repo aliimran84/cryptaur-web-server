@@ -56,7 +56,7 @@ class Administrator
     {
         DB::query("
             DELETE FROM `alarm_messages` 
-            WHERE `id` = ". $id ."
+            WHERE `id` = " . $id . "
         ");
     }
 
