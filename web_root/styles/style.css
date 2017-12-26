@@ -355,14 +355,19 @@ footer .row {
     margin: 0 0 20px 0;
     width: 50%;
 }
-.content section.my-contribution input[type='number']+label {
+.content input+label {
     top: 60px;
-    height: auto;
+    font-size: 1rem;
 }
-.content section.my-contribution .select-wrapper+label {
+.content .select-wrapper+label {
     top: 34px;
-    height: auto;
     font-size: .8rem;
+}
+.content .after-compression input+label {
+    top: 0;
+}
+.content input:focus:not([readonly])+label {
+    color: #0074ff !important;
 }
 .content section.my-contribution .wallet_view-new_contribution-div_amount {
     position: relative;
@@ -544,9 +549,6 @@ footer .row {
     font-size: 1.2rem;
     font-weight: 500;
     text-transform: uppercase;
-}
-.dashboard .main-panel-block .amount.input-field label {
-    top: 55px;
 }
 .dashboard .main-panel-block .amount.input-field .btn {
     width: 50%;
