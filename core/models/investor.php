@@ -34,6 +34,7 @@ class Investor
     public $compressed_referrals = null;
 
     static private $storage = [];
+    static private $investors_referrals_compressed = [];
 
     static public function db_init()
     {
@@ -484,15 +485,19 @@ class Investor
             return [];
         }
         $referralsByLevel = [];
-        $compressedReferrals_data = @DB::get("
-            SELECT `referral_id` FROM `investors_referrals_compressed`
-            WHERE
-                `investor_id` = ?
-        ;", [$investor_id]);
-        $compressedReferrals = [];
-        foreach ($compressedReferrals_data as $compressedReferral_data) {
-            $compressedReferrals[] = $compressedReferral_data['referral_id'];
+        if (!isset(self::$investors_referrals_compressed[$investor_id])) {
+            $compressedReferrals_data = @DB::get("
+                SELECT `referral_id` FROM `investors_referrals_compressed`
+                WHERE
+                    `investor_id` = ?
+            ;", [$investor_id]);
+            self::$investors_referrals_compressed[$investor_id] = [];
+            foreach ($compressedReferrals_data as $compressedReferral_data) {
+                self::$investors_referrals_compressed[$investor_id][] = $compressedReferral_data['referral_id'];
+            }
         }
+
+        $compressedReferrals = self::$investors_referrals_compressed[$investor_id];
         if (count($compressedReferrals) === 0) {
             return [];
         }
@@ -539,6 +544,44 @@ class Investor
 
         if (is_null($this->compressed_referrals)) {
             $this->compressed_referrals = [];
+            if (!isset(self::$investors_referrals_compressed[$this->id])) {
+                $subquery = "
+                    SELECT
+                        `investor_id`, `referral_id`, '1' as `level`
+                    FROM
+                        `investors_referrals_compressed`
+                    WHERE
+                        `investor_id` in ({$this->id})
+                ";
+                $query = $subquery;
+                for ($i = 2; $i <= $levels; ++$i) {
+                    $subquery = "
+                        SELECT
+                            `investor_id`, `referral_id`, '$i' as `level`
+                        FROM
+                            `investors_referrals_compressed`
+                        WHERE
+                            `investor_id` in (" . preg_replace(
+                            "/`investor_id`, `referral_id`, '[0-9]+' as `level`/",
+                            '`referral_id`',
+                            $subquery
+                        ) . ")
+                    ";
+                    $query = "$query UNION $subquery";
+                }
+                $refsData = DB::get($query);
+                foreach ($refsData as $refData) {
+                    if (!isset(self::$investors_referrals_compressed[$refData['investor_id']])) {
+                        self::$investors_referrals_compressed[$refData['investor_id']] = [];
+                    }
+                    if ($refData['level'] !== $levels) {
+                        if (!isset(self::$investors_referrals_compressed[$refData['referral_id']])) {
+                            self::$investors_referrals_compressed[$refData['referral_id']] = [];
+                        }
+                    }
+                    self::$investors_referrals_compressed[$refData['investor_id']][] = $refData['referral_id'];
+                }
+            }
 
             $referralsIdByLevel = self::referrals_compressed($this->id, 1);
             if (count($referralsIdByLevel) === 0) {
