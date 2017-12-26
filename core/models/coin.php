@@ -35,6 +35,14 @@ class Coin
         return Configuration::$CONFIG['token']['name'];
     }
 
+    /**
+     * @return string
+     */
+    static public function reinvestToken()
+    {
+        return Configuration::$CONFIG['token']['name'] . '_reinvest';
+    }
+
     const RATE_KEY_PREFIX = 'rate_count_of_usd_in_';
 
     /**

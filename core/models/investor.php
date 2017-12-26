@@ -414,16 +414,17 @@ class Investor
             return false;
         }
 
-        $usdToReinvest = $ethToReinvest * Coin::getRate(Coin::COMMON_COIN);
-        $tokens = (double)($usdToReinvest / Coin::getRate(Coin::token()));
+        if (!Coin::getRate(Coin::reinvestToken())) {
+            return false;
+        }
 
-        $usd_spent = $tokens * Coin::getRate(Coin::token());
-        $eth_spent = $usd_spent / Coin::getRate(Coin::COMMON_COIN);
+        $usdToReinvest = $ethToReinvest * Coin::getRate(Coin::COMMON_COIN);
+        $tokens = (double)($usdToReinvest / Coin::getRate(Coin::reinvestToken()));
 
         if (Bounty_controller::mintTokens($this, $tokens) > 0) {
             $this->addTokens($tokens);
-            if (Bounty_controller::sendEth(ETH_BOUNTY_COLD_WALLET, $eth_spent) > 0) {
-                $this->spentEthBounty($eth_spent);
+            if (Bounty_controller::sendEth(ETH_BOUNTY_COLD_WALLET, $ethToReinvest) > 0) {
+                $this->spentEthBounty($ethToReinvest);
             }
         }
 
