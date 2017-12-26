@@ -133,3 +133,6 @@ Logs,Логи
 Alarm messages,Тревожные сообщения
 Delete,Удалить
 Friend email,Почта друга
+wrong credentials,неверные учетные данные
+not a valid eth address,недействительный eth адрес
+not a valid email,недействительная почта

@@ -133,3 +133,6 @@ Logs,Logs
 Alarm messages,Alarm messages
 Delete,Delete
 Friend email,Friend email
+wrong credentials,wrong credentials
+not a valid eth address,not a valid eth address
+not a valid email,not a valid email

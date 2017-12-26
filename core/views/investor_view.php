@@ -20,7 +20,7 @@ class Investor_view
                     <form class="login col s12" action="<?= Investor_controller::LOGIN_URL ?>" method="post">
                         <?php if (isset($_GET['err'])) { ?>
                             <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
-                                : <?= $_GET['err_text'] ?></label>
+                                : <?= Translate::td($_GET['err_text']) ?></label>
                         <?php } ?>
                         <input type="email" name="email" placeholder="E-MAIL">
                         <input type="password" name="password" placeholder="<?= Translate::td('Password') ?>">
@@ -58,7 +58,7 @@ class Investor_view
                     <form class="registration col s12" action="<?= Investor_controller::REGISTER_URL ?>" method="post">
                         <?php if (isset($_GET['err'])) { ?>
                             <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
-                                : <?= $_GET['err_text'] ?></label>
+                                : <?= Translate::td($_GET['err_text']) ?></label>
                         <?php } ?>
                         <input type="text" name="firstname" placeholder="<?= Translate::td('First name') ?>">
                         <input type="text" name="lastname" placeholder="<?= Translate::td('Last name') ?>">
@@ -90,7 +90,7 @@ class Investor_view
                     <form class="registration col s12" action="<?= Investor_controller::RECOVER_URL ?>" method="post">
                         <?php if (isset($_GET['err'])) { ?>
                             <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
-                                : <?= $_GET['err_text'] ?></label>
+                                : <?= Translate::td($_GET['err_text']) ?></label>
                         <?php } ?>
                         <?php if ($message) { ?>
                             <label class="blue-text"><?= $message ?></label>
@@ -120,7 +120,7 @@ class Investor_view
                     <form class="registration col s12" action="<?= Investor_controller::SET_ETH_ADDRESS ?>" method="post">
                         <?php if (isset($_GET['err'])) { ?>
                             <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
-                                : <?= $_GET['err_text'] ?></label>
+                                : <?= Translate::td($_GET['err_text']) ?></label>
                         <?php } ?>
                         <input type="text" name="eth_address" placeholder="<?= Translate::td('ETH-ADDRESS') ?>">
                         <div class="row center">

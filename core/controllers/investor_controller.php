@@ -83,7 +83,7 @@ class Investor_controller
                 Utility::location(self::BASE_URL);
             }
             Base_view::$TITLE = 'Registration';
-            Base_view::$MENU_POINT = Menu_point::Login;
+            Base_view::$MENU_POINT = Menu_point::Register;
             echo Base_view::header();
             echo Investor_view::registerForm();
             echo Base_view::footer();
