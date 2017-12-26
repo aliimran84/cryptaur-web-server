@@ -110,6 +110,7 @@ nav a.button-collapse i {
     text-transform: uppercase;
 }
 .content form .btn {
+    background: #0074ff;
     border: 1px solid #95989a;
     border-radius: 10px;
 }
@@ -256,9 +257,6 @@ footer .row {
 }
 .content section.stage-one,
 .content section.my-contribution {
-}
-.content section.my-group {
-    min-height: 500px;
 }
 .content section.stage-one h3,
 .content section.my-contribution h3,
@@ -463,7 +461,7 @@ footer .row {
 .dashboard .indicators {
     background: #001dff;
     margin: 0;
-    padding: 20px 0;
+    padding: 35px 0;
 }
 .dashboard .tokens-info {
     background: #3303b5;
@@ -478,16 +476,17 @@ footer .row {
     text-align: center;
 }
 .dashboard .tokens-info h3 {
-    font-size: 1.5rem;
+    font-size: 1.2rem;
+    margin: 0 0 15px 0;
     font-weight: 100;
 }
 .dashboard .tokens-info h4 {
-    font-size: 1.3rem;
-    font-weight: 300;
+    font-size: 1.1rem;
+    font-weight: 400;
     margin: 5px 0;
 }
 .dashboard .tokens-info h5 {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: 100;
     margin: 5px 0;
 }
@@ -500,10 +499,11 @@ footer .row {
     margin: 0;
 }
 .dashboard .indicators h4 {
-    font-size: 1.8rem;
+    font-size: 1.3rem;
     text-align: center;
     font-weight: 300;
     margin-bottom: 10px;
+    text-transform: uppercase;
 }
 .dashboard .indicators h3 {
     font-size: 2rem;
@@ -608,6 +608,7 @@ footer .row {
 .dashboard .my-group .main-panel-block.tree {
     overflow-x: auto;
     padding-bottom: 40px;
+    min-height: 350px;
 }
 .dashboard .my-group .main-panel-block.tree ul li {
     width: 310px;

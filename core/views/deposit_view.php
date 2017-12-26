@@ -85,80 +85,74 @@ class Deposit_view
 
     static public function transactions()
     {
-        ob_start() ?>
-
-        <div class="container">
+        ob_start();
+        $deposits = Deposit::investorDeposits(Application::$authorizedInvestor->id);
+        if (!$deposits) {
+            ?>
+            <h3><?= Translate::td('There are no transactions yet') ?></h3>
+            <?= Wallet_view::newContribution() ?>
             <?php
-            $deposits = Deposit::investorDeposits(Application::$authorizedInvestor->id);
-            if (!$deposits) {
-                ?>
-                <h3><?= Translate::td('There is no transaction yet') ?></h3>
-                <?= Wallet_view::newContribution() ?>
-                <?php
-            } else {
-                ?>
-                <div class="head-collapsible">
-                    <div class="row">
-                        <div class="col s1 collapsible-col center"><?= Translate::td('Type') ?></div>
-                        <div class="col s4 collapsible-col"><?= Translate::td('Date') ?></div>
-                        <div class="col s4 collapsible-col"><?= Translate::td('Description') ?></div>
-                        <div class="col s2 collapsible-col"><?= Translate::td('Amount') ?></div>
-                        <div class="col s1 collapsible-col"></div>
-                    </div>
+        } else {
+            ?>
+            <div class="head-collapsible">
+                <div class="row">
+                    <div class="col s1 collapsible-col center"><?= Translate::td('Type') ?></div>
+                    <div class="col s4 collapsible-col"><?= Translate::td('Date') ?></div>
+                    <div class="col s4 collapsible-col"><?= Translate::td('Description') ?></div>
+                    <div class="col s2 collapsible-col"><?= Translate::td('Amount') ?></div>
+                    <div class="col s1 collapsible-col"></div>
                 </div>
-                <ul class="collapsible" data-collapsible="accordion">
-                    <?php
-                    foreach ($deposits as &$deposit) {
-                        ?>
-                        <li>
-                            <div class="collapsible-header">
-                                <div class="row">
-                                    <div class="col s1 collapsible-col center">
-                                        <?= Translate::td('Send') ?>
-                                    </div>
-                                    <div class="col s4 collapsible-col">
-                                        <?= DB::timetostr($deposit->datetime) ?>
-                                    </div>
-                                    <div class="col s4 collapsible-col">
-                                        <?php
-                                        if ($deposit->is_donation) {
-                                            echo Translate::td('Transferred as donation');
+            </div>
+            <ul class="collapsible" data-collapsible="accordion">
+                <?php
+                foreach ($deposits as &$deposit) {
+                    ?>
+                    <li>
+                        <div class="collapsible-header">
+                            <div class="row">
+                                <div class="col s1 collapsible-col center">
+                                    <?= Translate::td('Send') ?>
+                                </div>
+                                <div class="col s4 collapsible-col">
+                                    <?= DB::timetostr($deposit->datetime) ?>
+                                </div>
+                                <div class="col s4 collapsible-col">
+                                    <?php
+                                    if ($deposit->is_donation) {
+                                        echo Translate::td('Transferred as donation');
+                                    } else {
+                                        if ($deposit->used_in_minting) {
+                                            echo Translate::td('Used in minting');
                                         } else {
-                                            if ($deposit->used_in_minting) {
-                                                echo Translate::td('Used in minting');
-                                            } else {
-                                                echo Translate::td('Not used in minting');
-                                            }
+                                            echo Translate::td('Not used in minting');
                                         }
-                                        ?>
-                                    </div>
-                                    <div class="col s2 collapsible-col">
-                                        <?= $deposit->amount ?> <?= $deposit->coin ?>
-                                    </div>
-                                    <div class="col s1 collapsible-col">
-                                        <i class="material-icons">keyboard_arrow_right</i>
-                                    </div>
+                                    }
+                                    ?>
+                                </div>
+                                <div class="col s2 collapsible-col">
+                                    <?= $deposit->amount ?> <?= $deposit->coin ?>
+                                </div>
+                                <div class="col s1 collapsible-col">
+                                    <i class="material-icons">keyboard_arrow_right</i>
                                 </div>
                             </div>
-                            <div class="collapsible-body">
-                                <div class="row">
-                                    <div class="col s1"></div>
-                                    <div class="col s10">
-                                        <p><?= Translate::td('Converted to') ?> <?= $deposit->usd ?> USD</p>
-                                        <p><?= Translate::td('Order Id') ?>:#<?= $deposit->id ?></p>
-                                        <p>txid: <?= $deposit->txid ?></p>
-                                        <p>vout: <?= $deposit->vout ?></p>
-                                    </div>
-                                    <div class="col s1"></div>
+                        </div>
+                        <div class="collapsible-body">
+                            <div class="row">
+                                <div class="col s1"></div>
+                                <div class="col s10">
+                                    <p><?= Translate::td('Converted to') ?> <?= $deposit->usd ?> USD</p>
+                                    <p><?= Translate::td('Order Id') ?>:#<?= $deposit->id ?></p>
+                                    <p>txid: <?= $deposit->txid ?></p>
+                                    <p>vout: <?= $deposit->vout ?></p>
                                 </div>
+                                <div class="col s1"></div>
                             </div>
-                        </li>
-                    <?php } ?>
-                </ul>
-            <?php } ?>
-        </div>
-
-        <?php
+                        </div>
+                    </li>
+                <?php } ?>
+            </ul>
+        <?php }
         return ob_get_clean();
     }
 }
