@@ -63,9 +63,10 @@ class Investor_view
                         <input type="text" name="firstname" placeholder="<?= Translate::td('First name') ?>">
                         <input type="text" name="lastname" placeholder="<?= Translate::td('Last name') ?>">
                         <input type="email" name="email" placeholder="Email">
-                        <input type="password" name="password" placeholder="<?= Translate::td('Password') ?>">
                         <input type="text" name="eth_address" placeholder="<?= Translate::td('ETH-ADDRESS') ?>">
                         <input type="text" name="referrer_code" value="<?= $referrer_code ?>" placeholder="<?= Translate::td('REFERRER CODE') ?>">
+                        <input type="password" name="password" pattern=".{6,120}" placeholder="<?= Translate::td('Password') ?>">
+                        <span><?= Translate::td('Password need more than 6 characters') ?></span>
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Register') ?>
@@ -173,7 +174,8 @@ class Investor_view
                     </div>
                     <div class="row">
                         <?= Translate::td('Password') ?> (<?= Translate::td('left it empty to not to change') ?>):
-                        <input type="password" name="password" value="">
+                        <input type="password" name="password" value="" pattern=".{6,120}">
+                        <span><?= Translate::td('Password need more than 6 characters') ?></span>
                     </div>
                     <div class="row">
                         <?= Coin::token() ?>: <strong><?= Application::$authorizedInvestor->tokens_count ?></strong>
