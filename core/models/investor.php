@@ -548,7 +548,7 @@ class Investor
             if (!isset(self::$investors_referrals_compressed[$this->id])) {
                 $subquery = "
                     SELECT
-                        `investor_id`, `referral_id`, '1' as `level`
+                        `investor_id`, `referral_id`, CAST('1' as UNSIGNED) as `level`
                     FROM
                         `investors_referrals_compressed`
                     WHERE
@@ -558,12 +558,12 @@ class Investor
                 for ($i = 2; $i <= $levels; ++$i) {
                     $subquery = "
                         SELECT
-                            `investor_id`, `referral_id`, '$i' as `level`
+                            `investor_id`, `referral_id`, CAST('$i' as UNSIGNED) as `level`
                         FROM
                             `investors_referrals_compressed`
                         WHERE
                             `investor_id` in (" . preg_replace(
-                            "/`investor_id`, `referral_id`, '[0-9]+' as `level`/",
+                            "/`investor_id`, `referral_id`, CAST\('[0-9]+' as UNSIGNED\) as `level`/",
                             '`referral_id`',
                             $subquery
                         ) . ")
