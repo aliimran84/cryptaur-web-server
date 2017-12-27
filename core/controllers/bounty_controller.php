@@ -39,7 +39,7 @@ class Bounty_controller
         if ($percentsForReinvesting < 0 && $percentsForReinvesting > 100) {
             Utility::location(Dashboard_controller::BASE_URL);
         }
-        if (Application::$authorizedInvestor->eth_bounty === 0) {
+        if (Application::$authorizedInvestor->eth_bounty == 0) {
             Utility::location(Dashboard_controller::BASE_URL);
         }
         if (!Bounty::withdrawIsOn() || !Bounty::reinvestIsOn()) {
@@ -64,6 +64,8 @@ class Bounty_controller
      */
     static public function mintTokens(&$investor, $tokens, &$deposit = null)
     {
+        var_dump('mint');
+        exit;
         $gethClient = new Client(ETH_TOKENS_NODE_URL);
 
         if (!$gethClient->call('personal_unlockAccount', [

@@ -152,7 +152,7 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
         $duration = (time() - $startTime) + 1;
         $currentCount = $i + $offset;
         $speed = number_format($currentCount / $duration, 5);
-        if ($speed === 0) {
+        if ($speed == 0) {
             $remained = 1;
         } else {
             $remained = (int)($usersCount - $currentCount) / $speed;
