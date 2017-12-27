@@ -56,18 +56,18 @@ for ($offset = $startOffset; $offset < $usersCount; $offset += $limitSize) {
                     SELECT sum( amount ) AS amount
                     FROM syndicates_cashbackbonus
                     WHERE
-                        recipient_id = 52 AND
+                        recipient_id = ? AND
                         STATUS = 3
                 ) -
                 (
                     SELECT sum( amount ) / 1000000000000000000 AS amount
                     FROM transactions_history
                     WHERE
-                        account_id = 52 AND
+                        account_id = ? AND
                         type = 1
                 ) 
             ) AS eth_bounty
-        ;")[0]['eth_bounty'];
+        ;", [$user['id'], $user['id']])[0]['eth_bounty'];
 
         DB::set(
             "UPDATE `investors` SET `eth_bounty` = ? WHERE `id` = ? LIMIT 1;",
