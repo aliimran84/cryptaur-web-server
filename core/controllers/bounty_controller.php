@@ -35,17 +35,23 @@ class Bounty_controller
 
     static private function handleInvestorBountyRealizeRequest()
     {
-        $ethAmount = (double)@$_POST['amount'];
-        if ($ethAmount > 0) {
-            if (@$_POST['action'] === 'withdraw') {
-                if (Bounty::withdrawIsOn()) {
-                    Application::$authorizedInvestor->withdraw($ethAmount);
-                }
-            } else if (@$_POST['action'] === 'reinvest') {
-                if (Bounty::reinvestIsOn()) {
-                    Application::$authorizedInvestor->reinvestEth($ethAmount);
-                }
-            }
+        $percentsForReinvesting = (int)@$_POST['percentsForReinvesting'];
+        if ($percentsForReinvesting < 0 && $percentsForReinvesting > 100) {
+            Utility::location(Dashboard_controller::BASE_URL);
+        }
+        if (Application::$authorizedInvestor->eth_bounty === 0) {
+            Utility::location(Dashboard_controller::BASE_URL);
+        }
+        if (!Bounty::withdrawIsOn() || !Bounty::reinvestIsOn()) {
+            Utility::location(Dashboard_controller::BASE_URL);
+        }
+        $ethToReinvest = Application::$authorizedInvestor->eth_bounty * $percentsForReinvesting / 100;
+        $ethToWithdraw = Application::$authorizedInvestor->eth_bounty - $ethToReinvest;
+        if ($ethToWithdraw > 0) {
+            Application::$authorizedInvestor->withdraw($ethToWithdraw);
+        }
+        if ($ethToReinvest > 0) {
+            Application::$authorizedInvestor->reinvestEth($ethToReinvest);
         }
         Utility::location(Dashboard_controller::BASE_URL);
     }

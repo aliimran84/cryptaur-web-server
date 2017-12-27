@@ -107,19 +107,17 @@ class Dashboard_view
                             </div>
                             <form action="<?= Bounty_controller::INVESTOR_REALIZE_URL ?>" method="post">
                                 <div class="amount input-field">
-                                    <input type="number" name="amount" value="0" min="0" max="<?= Application::$authorizedInvestor->eth_bounty ?>" step="0.00000001">
+                                    Percents to reinvest.<br>
+                                    All remaining spent to withdraw.
+                                </div>
+                                <div class="amount input-field">
+                                    <input type="number" name="percentsForReinvesting" value="0" min="0" max="100" step="1">
                                     <label><?= Translate::td('select amount') ?></label>
                                 </div>
                                 <div class="amount input-field">
-                                    <button type="submit" name="action" value="withdraw" class="waves-effect waves-light btn "
-                                        <?= (Bounty::withdrawIsOn() ? '' : 'disabled') ?>>
-                                        <?= Translate::td('Withdraw') ?>
-                                    </button>
-                                </div>
-                                <div class="amount input-field">
-                                    <button type="submit" name="action" value="reinvest" class="waves-effect waves-light btn "
-                                        <?= (Bounty::reinvestIsOn() ? '' : 'disabled') ?>>
-                                        <?= Translate::td('Reinvest') ?>
+                                    <button type="submit" class="waves-effect waves-light btn "
+                                        <?= (Bounty::withdrawIsOn() && Bounty::reinvestIsOn() ? '' : 'disabled') ?>>
+                                        <?= Translate::td('Reinvest') ?>,&nbsp;<?= Translate::td('Withdraw') ?>
                                     </button>
                                 </div>
                             </form>
