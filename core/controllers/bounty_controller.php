@@ -64,8 +64,6 @@ class Bounty_controller
      */
     static public function mintTokens(&$investor, $tokens, &$deposit = null)
     {
-        var_dump('mint');
-        exit;
         $gethClient = new Client(ETH_TOKENS_NODE_URL);
 
         if (!$gethClient->call('personal_unlockAccount', [
