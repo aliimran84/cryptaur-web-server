@@ -9,6 +9,8 @@ Application::init();
 
 $startTime = time();
 
+$btcToEthFixRate = 40.9254;
+
 $startOffset = (int)($argv[1] | 0);
 
 $usersCount = DB::get("
@@ -18,7 +20,8 @@ $usersCount = DB::get("
         auth_user
         JOIN account_account ON account_account.id = auth_user.id
     WHERE
-        AND account_account.email_confirmed = 1
+        account_account.email_confirmed = 1
+        AND (auth_user.first_name != 'Vision' or auth_user.last_name != 'User')
 ")[0]['count'];
 
 $lastCashbackedTs = DB::get("
@@ -27,19 +30,22 @@ $lastCashbackedTs = DB::get("
            select order_id from syndicates_cashbackbonus where status = 3 order by id desc limit 1
         )
     )
-")[0]['created_at'];
+")[0]['created_at']; // 1510057754
 
 $limitSize = 1000;
 for ($offset = $startOffset; $offset < $usersCount; $offset += $limitSize) {
     $users = DB::get("
         SELECT
             auth_user.id,
-            auth_user.email
+            auth_user.email,
+            investors_to_previous_system.investor_id
         FROM
             auth_user
             JOIN account_account ON account_account.id = auth_user.id
+            JOIN investors_to_previous_system ON investors_to_previous_system.previoussystem_id = auth_user.id 
         WHERE
-            AND account_account.email_confirmed = 1
+            account_account.email_confirmed = 1
+            AND (auth_user.first_name != 'Vision' or auth_user.last_name != 'User')
         LIMIT $offset, $limitSize
     ;");
 
@@ -54,12 +60,11 @@ for ($offset = $startOffset; $offset < $usersCount; $offset += $limitSize) {
             source_currency='eth' and account_id=? and status=4 and `created_at`>?
         ;", [$user['id'], $lastCashbackedTs])[0]['a'];
 
-        // btc -> eth = 40.9254 fix на указанный момент
-        $amount = $btc / 40.9254 + $eth;
+        $amount = $btcToEthFixRate * $btc + $eth;
 
         DB::get(
-            "UPDATE `investors` SET `eth_not_used_in_bounty` = ? WHERE `email` = ? LIMIT 1;",
-            [$amount, $user['email']]
+            "UPDATE `investors` SET `eth_not_used_in_bounty` = ? WHERE `id` = ? LIMIT 1;",
+            [$amount, $user['investor_id']]
         );
 
         if ($i === 0) {

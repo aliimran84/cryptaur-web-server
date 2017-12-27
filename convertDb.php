@@ -9,6 +9,8 @@ use core\models\Wallet;
 
 Application::init();
 
+$btcToEthFixRate = 40.9254;
+
 $startTime = time();
 
 $usersCount = DB::get("
@@ -97,8 +99,7 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
             source_currency='eth' and account_id=? and status=4 and `created_at`>?
         ;", [$user['id'], $lastCashbackedTs])[0]['a'];
 
-        // btc -> eth = 40.9254 fix на указанный момент
-        $amountEth = $btc / 40.9254 + $eth;
+        $amountEth = $btcToEthFixRate * $btc / +$eth;
 
         DB::set("
             INSERT INTO `investors`
