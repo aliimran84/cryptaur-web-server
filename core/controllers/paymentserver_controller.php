@@ -128,14 +128,7 @@ class PaymentServer_controller
             }
             return 2;
         } else if ($message['reason'] === self::NOTIFY_REASON_ALARM) {
-            $mess = "";
-            foreach ($message as $key=>$item) {
-                $mess .= $key;
-                $mess .= ": ";
-                $mess .= $item;
-                $mess .= "\n";
-            }
-            Administrator::setAlarmMessage($mess);
+            Administrator::setAlarmMessage(json_encode($message, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
             return 3;
         }
 
