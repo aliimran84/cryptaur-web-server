@@ -97,6 +97,15 @@ class Configuration
             DEFINE('EMAIL_FROM_EMAIL', $config['email_smtp']['from_email']);
         }
 
+        if (!isset($config['gauthify'])) {
+            $needConfigure = true;
+            $config['!_gauthify'] = [
+                'token' => ''
+            ];
+        } else {
+            DEFINE('GAUTHIFY_TOKEN', $config['gauthify']['token']);
+        }
+
         if (!isset($config['coins'])) {
             $coins = [
                 'ETH' => [
