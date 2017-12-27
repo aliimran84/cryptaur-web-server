@@ -345,7 +345,7 @@ class Investor_controller
                 <p style="font-size: 14px;font-style: normal;font-weight: 400;line-height: 1.8;margin: 0;text-align: justify;padding: 10px 20px 0px;"><a href="$url">$url</a></p>
                 <p style="font-size: 14px;font-style: normal;font-weight: 400;line-height: 1.8;margin: 0;text-align: justify;padding: 10px 20px 0px;">Link will be working for 48 hours.</p>
 EOT;
-            Email::send($investor->email, [], Translate::td('Forgot password'), $html, true);
+            Email::send($investor->email, [], Translate::td('Password recovery'), $html, true);
         }
         self::handleLoginForm(Translate::td('If the user exists then he was sent a new password'));
     }
