@@ -109,6 +109,7 @@ class Dashboard_view
                                 <div class="amount input-field">
                                     <p>Percents to reinvest: <input type="text" class="reinvest" value="<?= Application::$authorizedInvestor->eth_bounty ?>"></p>
                                     <p>All remaining spent to withdraw: <input type="text" class="withdraw" value="0"></p>
+                                    <input type="text" class="percents" name="percentsForReinvesting" value="100">
                                 </div>
                                 <div class="amount input-field">
 <!--                                    <input type="number" name="percentsForReinvesting" value="0" min="0" max="100" step="1">-->
@@ -116,7 +117,6 @@ class Dashboard_view
                                     <p class="range-field">
                                         <input type="range" min="0" max="100" value="100"/>
                                     </p>
-                                    <p class="range-field-percents">100%</p>
                                 </div>
                                 <div class="amount input-field">
                                     <button type="submit" class="waves-effect waves-light btn "

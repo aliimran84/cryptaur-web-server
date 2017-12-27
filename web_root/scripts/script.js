@@ -105,13 +105,13 @@ var inputRange = $('.range-field input[type=range]');
 var reinvest = $('form.reinvest-form input.reinvest'),
     reinvestVal = reinvest.val(),
     withdraw = $('form.reinvest-form input.withdraw'),
-    inputRangeLabel = $('.range-field-percents');
+    inputRangeLabel = $('form.reinvest-form input.percents');
 $(inputRange).on("input change", function() {
     var percents = $(this).val(),
         tmpReinvest = (reinvestVal * (percents/100)).toFixed(8),
         tmpWithdraw = (reinvestVal - tmpReinvest).toFixed(8);
 
-    inputRangeLabel.text(percents + "%");
+    inputRangeLabel.val(percents);
     reinvest.val(tmpReinvest);
     withdraw.val(tmpWithdraw);
 
