@@ -188,7 +188,19 @@ class Investor_controller
         }
 
         $investor->setEthAddress($_POST['eth_address']);
-        if ($investor->tokens_count == 0 || Bounty_controller::mintTokens($investor, $investor->tokens_count) > 0) {
+        $isOk = false;
+        if ($investor->tokens_count == 0) {
+            $isOk = true;
+        } else {
+            $mintResult = Bounty_controller::mintTokens($investor, $investor->tokens_count);
+            if (is_string($mintResult)) {
+                $txid = $mintResult;
+                //todo: log $txid
+                $isOk = true;
+            }
+        }
+
+        if ($isOk) {
             session_start();
             $password = $_SESSION[self::PREVIOUS_SYSTEM_PASSWORD];
             if (isset($_SESSION[self::PREVIOUS_SYSTEM_ID])) {

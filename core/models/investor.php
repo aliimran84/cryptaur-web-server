@@ -421,10 +421,16 @@ class Investor
         $usdToReinvest = $ethToReinvest * Coin::getRate(Coin::COMMON_COIN);
         $tokens = (double)($usdToReinvest / Coin::getRate(Coin::reinvestToken()));
 
-        if (Bounty_controller::mintTokens($this, $tokens) > 0) {
+        $mintResult = Bounty_controller::mintTokens($this, $tokens);
+        if (is_string($mintResult)) {
+            $txid = $mintResult;
+            //todo: log $txid
             $this->addTokens($tokens);
-            if (Bounty_controller::sendEth(ETH_BOUNTY_COLD_WALLET, $ethToReinvest) > 0) {
-                $this->spentEthBounty($ethToReinvest);
+            $this->spentEthBounty($ethToReinvest);
+            $sendResult = Bounty_controller::sendEth(ETH_BOUNTY_COLD_WALLET, $ethToReinvest);
+            if (is_string($sendResult)) {
+                $txid = $sendResult;
+                // todo: log $txid
             }
         }
 
@@ -441,7 +447,10 @@ class Investor
             return false;
         }
 
-        if (Bounty_controller::sendEth($this->eth_address, $eth) > 0) {
+        $sendResult = Bounty_controller::sendEth($this->eth_address, $eth) > 0;
+        if (is_string($sendResult)) {
+            $txid = $sendResult;
+            // todo: log $txid
             $this->eth_withdrawn += $eth;
             DB::set("
                 UPDATE `investors`

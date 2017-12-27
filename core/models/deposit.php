@@ -235,7 +235,10 @@ class Deposit
                     $realTokensMinting = $tokensToMinting;
                 }
                 $investor = Investor::getById($investorId);
-                if (Bounty_controller::mintTokens($investor, $realTokensMinting, $deposit) > 0) {
+                $mintResult = Bounty_controller::mintTokens($investor, $realTokensMinting, $deposit);
+                if (is_string($mintResult)) {
+                    $txid = $mintResult;
+                    //todo: log $txid
                     $deposit->setUsedInMinting(true);
                     $investor->addTokens($realTokensMinting);
                 }

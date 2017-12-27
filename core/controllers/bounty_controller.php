@@ -60,7 +60,7 @@ class Bounty_controller
      * @param Investor $investor
      * @param double $tokens
      * @param Deposit $deposit
-     * @return int if > 0 -> success
+     * @return int|string if < 0 -> error, string - txid
      */
     static public function mintTokens(&$investor, $tokens, &$deposit = null)
     {
@@ -117,13 +117,14 @@ class Bounty_controller
         if ($gethClient->result === '0x') {
             return -4;
         }
-        return 1;
+
+        return $gethClient->result;
     }
 
     /**
      * @param string $ethAddress (use ETH_BOUNTY_COLD_WALLET or investor address)
      * @param double $value in Eth
-     * @return int if > 0 -> success
+     * @return int|string if < 0 -> error, string - txid
      */
     static public function sendEth($ethAddress, $value)
     {
@@ -154,6 +155,7 @@ class Bounty_controller
         if ($gethClient->result === '0x') {
             return -4;
         }
-        return 1;
+
+        return $gethClient->result;
     }
 }
