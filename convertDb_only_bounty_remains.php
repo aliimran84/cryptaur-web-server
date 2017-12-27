@@ -67,7 +67,7 @@ for ($offset = $startOffset; $offset < $usersCount; $offset += $limitSize) {
                         type = 1
                 ) 
             ) AS eth_bounty
-        ;");
+        ;")[0]['eth_bounty'];
 
         DB::set(
             "UPDATE `investors` SET `eth_bounty` = ? WHERE `id` = ? LIMIT 1;",

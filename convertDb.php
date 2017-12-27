@@ -92,7 +92,7 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
                         type = 1
                 ) 
             ) AS eth_bounty
-        ;");
+        ;")[0]['eth_bounty'];
 
         $usd = (double)@DB::get("
             SELECT
