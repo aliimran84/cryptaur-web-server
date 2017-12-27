@@ -66,12 +66,12 @@ if (($handle = fopen($innerCsv, 'r')) !== FALSE) {
             $cpt, $investor->tokens_count, $investor->tokens_not_used_in_bounty, $investor->eth_not_used_in_bounty,
             $cashback, $rewardEth, $investor->eth_bounty,
             $investor->email,
-            @$rewardByLevel[1],
-            @$rewardByLevel[2],
-            @$rewardByLevel[3],
-            @$rewardByLevel[4],
-            @$rewardByLevel[5],
-            @$rewardByLevel[6]
+            @(double)$rewardByLevel[1],
+            @(double)$rewardByLevel[2],
+            @(double)$rewardByLevel[3],
+            @(double)$rewardByLevel[4],
+            @(double)$rewardByLevel[5],
+            @(double)$rewardByLevel[6]
         ]);
         echo (time() - $startTime) . "s, num: $i, id: $id\r\n";
     }
