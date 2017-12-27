@@ -9,7 +9,7 @@ use core\translate\Translate;
 
 class Investor_view
 {
-    static public function loginForm()
+    static public function loginForm($message = '')
     {
         ob_start();
         ?>
@@ -21,6 +21,9 @@ class Investor_view
                         <?php if (isset($_GET['err'])) { ?>
                             <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
                                 : <?= Translate::td($_GET['err_text']) ?></label>
+                        <?php } ?>
+                        <?php if ($message) { ?>
+                            <label class="blue-text"><?= $message ?></label>
                         <?php } ?>
                         <input type="email" name="email" placeholder="E-MAIL">
                         <input type="password" name="password" placeholder="<?= Translate::td('Password') ?>">

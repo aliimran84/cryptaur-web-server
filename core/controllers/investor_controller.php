@@ -58,14 +58,7 @@ class Investor_controller
         }, self::SET_ETH_ADDRESS, Router::POST_METHOD);
 
         Router::register(function () {
-            if (Application::$authorizedInvestor) {
-                Utility::location(self::BASE_URL);
-            }
-            Base_view::$TITLE = 'Login';
-            Base_view::$MENU_POINT = Menu_point::Login;
-            echo Base_view::header();
-            echo Investor_view::loginForm();
-            echo Base_view::footer();
+            self::handleLoginForm();
         }, self::LOGIN_URL, Router::GET_METHOD);
         Router::register(function () {
             self::handleLoginRequest();
@@ -220,6 +213,18 @@ class Investor_controller
         Utility::location(self::BASE_URL);
     }
 
+    static private function handleLoginForm($message = '')
+    {
+        if (Application::$authorizedInvestor) {
+            Utility::location(self::BASE_URL);
+        }
+        Base_view::$TITLE = 'Login';
+        Base_view::$MENU_POINT = Menu_point::Login;
+        echo Base_view::header();
+        echo Investor_view::loginForm($message);
+        echo Base_view::footer();
+    }
+
     static private function handleLoginRequest()
     {
         $investorId = @Investor::getInvestorIdByEmailPassword($_POST['email'], $_POST['password']);
@@ -327,7 +332,7 @@ class Investor_controller
 EOT;
             Email::send($investor->email, [], Translate::td('Forgot password'), $html, true);
         }
-        self::handleRecoverForm(Translate::td('If the user exists then he was sent a new password'));
+        self::handleLoginForm(Translate::td('If the user exists then he was sent a new password'));
     }
 
     static private function handleChangePassword()
