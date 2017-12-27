@@ -277,22 +277,27 @@ class Investor_controller
     {
         if (!filter_var(@$_POST['email'], FILTER_VALIDATE_EMAIL)) {
             self::handleRegistrationForm($_POST, 'not a valid email');
+            return;
         }
         if (!Utility::validateEthAddress(@$_POST['eth_address'])) {
             self::handleRegistrationForm($_POST, 'not a valid eth address');
+            return;
         }
         if (Investor::isExistWithParams($_POST['email'])) {
             self::handleRegistrationForm($_POST, 'email already in use');
+            return;
         }
         $referrerId = 0;
         if (@$_POST['referrer_code']) {
             $referrerId = Investor::getReferrerIdByCode(@$_POST['referrer_code']);
             if (!$referrerId) {
                 self::handleRegistrationForm($_POST, 'not a valid referrer code');
+                return;
             }
         }
         if (!self::verifyPassword(@$_POST['password'])) {
             self::handleRegistrationForm($_POST, 'not a valid password, use more than 6 characters');
+            return;
         }
 
         $confirmationUrl = self::urlForRegistration($_POST['email'], @$_POST['firstname'], @$_POST['lastname'], $_POST['eth_address'], $referrerId, $_POST['password']);
