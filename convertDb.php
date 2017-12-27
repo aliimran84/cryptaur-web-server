@@ -31,7 +31,7 @@ $lastCashbackedTs = DB::get("
            select order_id from syndicates_cashbackbonus where status = 3 order by id desc limit 1
         )
     )
-")[0]['created_at'];
+")[0]['created_at']; // 1510057754
 
 $previousIdToNew = [];
 
@@ -73,9 +73,26 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
             select sum(amount) as b1 from syndicates_cashbackbonus where recipient_id=? and status=3
         ", [$user['id']])[0]['b1'];
         $b2 = (double)@DB::get("
-            select sum(amount)/1000000000000000000 from transactions_history where account_id = ? and type = 1
+            select sum(amount)/1000000000000000000 as b2 from transactions_history where account_id = ? and type = 1
         ", [$user['id']])[0]['b2'];
-        $bounty = (double)($b1 - $b2);
+        $bounty_remains = (double)@DB::get("
+            SELECT (
+                (
+                    SELECT sum( amount ) AS amount
+                    FROM syndicates_cashbackbonus
+                    WHERE
+                        recipient_id = 52 AND
+                        STATUS = 3
+                ) -
+                (
+                    SELECT sum( amount ) / 1000000000000000000 AS amount
+                    FROM transactions_history
+                    WHERE
+                        account_id = 52 AND
+                        type = 1
+                ) 
+            ) AS eth_bounty
+        ;");
 
         $usd = (double)@DB::get("
             SELECT
@@ -118,7 +135,7 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
                 $user['password'],
                 '', 0,
                 $tokens, $tokens_not_used_in_bounty,
-                $amountEth, $bounty
+                $amountEth, $bounty_remains
             ]
         );
         $id = DB::lastInsertId();
