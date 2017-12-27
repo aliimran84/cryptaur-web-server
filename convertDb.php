@@ -58,7 +58,6 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
             AND (auth_user.first_name != 'Vision' or auth_user.last_name != 'User')
         LIMIT $offset, $limitSize
     ;");
-//        AND auth_user.is_staff = 0
 
     foreach ($users as $i => $user) {
         $tokens = (double)@DB::get("
@@ -84,16 +83,6 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
             ) AS eth_bounty
         ;", [$user['id'], $user['id']])[0]['eth_bounty'];
 
-        $usd = (double)@DB::get("
-            SELECT
-                sum( exchanged_amount ) / 100 as usd
-            FROM
-                exchange_exchangeorder
-            WHERE
-                account_id = ?
-                AND `status` = 4
-        ", [$user['id']])[0]['usd'];
-
         $refId = @(int)$previousIdToNew[$user['invited_by_id']];
 
         $btc = (double)@DB::get("
@@ -106,7 +95,7 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
             source_currency='eth' and account_id=? and status=4 and `created_at`>?
         ;", [$user['id'], $lastCashbackedTs])[0]['a'];
 
-        $amountEth = $btcToEthFixRate * $btc +$eth;
+        $amountEth = $btcToEthFixRate * $btc + $eth;
 
         DB::set("
             INSERT INTO `investors`
@@ -136,8 +125,60 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
                 `previoussystem_id` = ?
         ", [$id, $user['id']]);
         $previousIdToNew[$user['id']] = $id;
-        $wallet = Wallet::registerWallet($id, 'usd', '');
-        $wallet->addToWallet($usd, $usd);
+
+        $transactions = @DB::get("
+            select * from exchange_exchangeorder where
+            (source_currency='eth' or source_currency='btc') and account_id=? and status=4
+        ;", [$user['id']]);
+
+        $ethCoinAmount = 0;
+        $ethUsdAmount = 0;
+        $btcCoinAmount = 0;
+        $btcUsdAmount = 0;
+        foreach ($transactions as $transaction) {
+            if ($transaction['source_currency'] === 'eth') {
+                $ethCoinAmount += $transaction['amount_to_exchange'];
+                $ethUsdAmount += $transaction['exchanged_amount'] / 100;
+            } else if ($transaction['source_currency'] === 'btc') {
+                $btcCoinAmount += $transaction['amount_to_exchange'];
+                $btcUsdAmount += $transaction['exchanged_amount'] / 100;;
+            }
+            DB::set("
+                INSERT INTO `deposits`
+                SET
+                    `investor_id` = ?,  `coin` = ?, `txid` = ?,
+                    `vout` = 0, `amount` = ?, `usd` = ?,
+                    `rate` = ?,
+                    `datetime` = ?,
+                    `is_donation` = 0,
+                    `registered` = 1,
+                    `used_in_minting` = 1
+            ;", [
+                $id, strtolower($transaction['source_currency']), $transaction['withdrawal_transaction_id'],
+                $transaction['amount_to_exchange'], $transaction['exchanged_amount'] / 100,
+                $transaction['exchanged_amount'] / 100 / $transaction['amount_to_exchange'],
+                DB::timetostr($transaction['created_at'])
+            ]);
+        }
+
+        DB::set("
+            INSERT INTO `wallets`
+            SET
+                `investor_id` = ?,
+                `coin` = 'btc',
+                `address`= '',
+                `balance` = ?,
+                `usd_used`= ?
+        ;", [$id, $btcCoinAmount, $btcUsdAmount]);
+        DB::set("
+            INSERT INTO `wallets`
+            SET
+                `investor_id` = ?,
+                `coin` = 'eth',
+                `address`= '',
+                `balance` = ?,
+                `usd_used`= ?
+        ;", [$id, $ethCoinAmount, $ethUsdAmount]);
 
         $duration = (time() - $startTime) + 1;
         $currentCount = $i + $offset;
