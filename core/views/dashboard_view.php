@@ -116,6 +116,7 @@ class Dashboard_view
                                     <p class="range-field">
                                         <input type="range" min="0" max="100" value="100"/>
                                     </p>
+                                    <p class="range-field-percents">100%</p>
                                 </div>
                                 <div class="amount input-field">
                                     <button type="submit" class="waves-effect waves-light btn "

@@ -553,8 +553,21 @@ footer .row {
     font-weight: 500;
     text-transform: uppercase;
 }
+.dashboard .main-panel-block .amount.input-field .range-field-percents {
+    width: 18%;
+    text-align: center;
+}
+.dashboard .main-panel-block .amount.input-field .range-field-percents,
+.dashboard .main-panel-block .amount.input-field .range-field {
+    display: inline-block;
+}
 .dashboard .main-panel-block .amount.input-field .range-field {
     margin: 25px 0 0;
+    width: 80%;
+}
+.dashboard .main-panel-block .amount.input-field .range-field {
+    margin: 25px 0 0;
+    width: 80%;
 }
 .dashboard .main-panel-block .amount.input-field .range-field .thumb {
     background-color: #0074ff;

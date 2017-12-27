@@ -104,12 +104,14 @@ catalogItemCounter('.wallet_view-new_contribution-input_amount');
 var inputRange = $('.range-field input[type=range]');
 var reinvest = $('form.reinvest-form input.reinvest'),
     reinvestVal = reinvest.val(),
-    withdraw = $('form.reinvest-form input.withdraw')
+    withdraw = $('form.reinvest-form input.withdraw'),
+    inputRangeLabel = $('.range-field-percents');
 $(inputRange).on("input change", function() {
     var percents = $(this).val(),
         tmpReinvest = (reinvestVal * (percents/100)).toFixed(8),
         tmpWithdraw = (reinvestVal - tmpReinvest).toFixed(8);
 
+    inputRangeLabel.text(percents + "%");
     reinvest.val(tmpReinvest);
     withdraw.val(tmpWithdraw);
 
