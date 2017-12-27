@@ -33,8 +33,6 @@ echo "Email: {$i->email}\r\n";
 
 echo "Tokens amount: {$i->tokens_count}\r\n";
 
-echo "Round 2 tokens: {$i->tokens_not_used_in_bounty}\r\n";
-
 echo "Not used bounty: {$i->eth_bounty}\r\n";
 
 $rewardByLevel = [];

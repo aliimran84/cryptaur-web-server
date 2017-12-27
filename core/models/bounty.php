@@ -56,12 +56,12 @@ class Bounty
     }
 
     /**
-     * Wright rewardForInvestor to eth_bounty for all investors and set 0 tokens_not_used_in_bounty
+     * Write rewardForInvestor to eth_bounty for all investors and set 0 eth_not_used_in_bounty
      */
     static public function fixBounty()
     {
         // взять всех инвесторов, для каждого посчитать rewardForInvestor, полученное значение добавить в eth_bounty
-        // по окончанию для всех нужно обнулить tokens_not_used_in_bounty обнулить
+        // по окончанию для всех нужно обнулить eth_not_used_in_bounty обнулить
         // todo: fill body
     }
 

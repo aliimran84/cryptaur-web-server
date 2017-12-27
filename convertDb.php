@@ -65,16 +65,6 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
             select sum(amount)/100000000 as tokens from transactions_history where
             account_id=? and type=0
         ;", [$user['id']])[0]['tokens'];
-        $tokens_not_used_in_bounty = (double)@DB::get("
-            select sum(amount)/100000000 as tokens from transactions_history where
-            account_id=? and type=0 and `timestamp`>?
-        ;", [$user['id'], $lastCashbackedTs])[0]['tokens'];
-        $b1 = (double)@DB::get("
-            select sum(amount) as b1 from syndicates_cashbackbonus where recipient_id=? and status=3
-        ", [$user['id']])[0]['b1'];
-        $b2 = (double)@DB::get("
-            select sum(amount)/1000000000000000000 as b2 from transactions_history where account_id = ? and type = 1
-        ", [$user['id']])[0]['b2'];
         $bounty_remains = (double)@DB::get("
             SELECT (
                 (
@@ -116,7 +106,7 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
             source_currency='eth' and account_id=? and status=4 and `created_at`>?
         ;", [$user['id'], $lastCashbackedTs])[0]['a'];
 
-        $amountEth = $btcToEthFixRate * $btc / +$eth;
+        $amountEth = $btcToEthFixRate * $btc +$eth;
 
         DB::set("
             INSERT INTO `investors`
@@ -126,7 +116,7 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
                 `email` = ?, `firstname` = ?, `lastname` = ?,
                 `password_hash` = ?,
                 `eth_address` = ?, `eth_withdrawn` = ?,
-                `tokens_count` = ?, `tokens_not_used_in_bounty` = ?,
+                `tokens_count` = ?,
                 `eth_not_used_in_bounty` = ?, `eth_bounty` = ?
         ", [
                 $user['phone_number'], $refId, $user['referral'],
@@ -134,7 +124,7 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
                 $user['email'], $user['first_name'], $user['last_name'],
                 $user['password'],
                 '', 0,
-                $tokens, $tokens_not_used_in_bounty,
+                $tokens,
                 $amountEth, $bounty_remains
             ]
         );

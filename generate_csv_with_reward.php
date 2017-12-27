@@ -21,7 +21,7 @@ if (($handle = fopen($innerCsv, 'r')) !== FALSE) {
     fgetcsv($handle, 1000, ","); // skip 1st line
     fputcsv($fp, [
         'Account Id', 'Parent Id', 'address', 'ETH', 'BTC',
-        'CPT', 'CPT_2', 'Round2CPT_2', 'Round2ETH_2',
+        'CPT', 'CPT_2', 'Round2ETH_2',
         'cashback', 'cashback_2', 'NOT_USED_CASHBACK_2',
         'Email_2',
         'LEVEL_1_CASHBACK_2',
@@ -63,7 +63,7 @@ if (($handle = fopen($innerCsv, 'r')) !== FALSE) {
 
         fputcsv($fp, [
             $id, $ref, $addr, $eth, $btc,
-            $cpt, $investor->tokens_count, $investor->tokens_not_used_in_bounty, $investor->eth_not_used_in_bounty,
+            $cpt, $investor->tokens_count, $investor->eth_not_used_in_bounty,
             $cashback, $rewardEth, $investor->eth_bounty,
             $investor->email,
             @(double)$rewardByLevel[1],
