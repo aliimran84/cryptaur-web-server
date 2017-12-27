@@ -371,7 +371,7 @@ EOT;
             Utility::location(self::RECOVER_URL . '?err=4&err_text=link is outdated');
         }
         $investor->changePassword($data['password']);
-        self::handleRecoverForm(Translate::td('Password successfully chagned'));
+        self::handleRecoverForm(Translate::td('Password successfully changed'));
     }
 
     static private function handleRegistrationConfirmationRequest()

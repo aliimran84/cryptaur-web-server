@@ -42,10 +42,10 @@ Cryptaur login,Cryptaur login
 Password,Password
 Forgot your account login,Forgot your account login
 Recover,Recover
-Forgot password,Forgot password
-Password successfully chagned,Password successfully chagned
-Password need more than 6 characters,Password need more than 6 characters
-If the user exists then he was sent a new password,If the user exists then he was sent a new password
+Password recovery,Password recovery
+Password successfully changed,Password successfully changed
+Password must be more than 6 symbols,Password must be more than 6 symbols
+"If the user exists then he was sent a new password","If the user exists then he was sent a new password"
 "left it empty to not to change","left it empty to not to change"
 Not a member yet,Not a member yet
 Cryptaur registration,Cryptaur registration
@@ -137,3 +137,4 @@ Friend email,Friend email
 wrong credentials,wrong credentials
 not a valid eth address,not a valid eth address
 not a valid email,not a valid email
+email already in use,email already in use

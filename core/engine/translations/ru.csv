@@ -42,10 +42,10 @@ Cryptaur login,Cryptaur авторизация
 Password,Пароль
 Forgot your account login,Забыли имя пользователя кабинета
 Recover,Восстановить
-Forgot password,Забыл пароль
-Password successfully chagned,Пароль успешно изменен
-Password need more than 6 characters,Пароль должен быть не менее 6 символов
-If the user exists then he was sent a new password,Если пользователь существует то ему был отправлен новый пароль
+Password recovery,Восстановление пароля
+Password successfully changed,Пароль успешно изменен
+Password must be more than 6 symbols,Пароль должен быть не менее 6 символов
+"If the user exists then he was sent a new password","Если пользователь существует, то ему был отправлен новый пароль"
 "left it empty to not to change","оставьте пустым, чтобы не менять"
 Not a member yet,Ещё не зарегистрированы
 Cryptaur registration,Cryptaur регистрация
@@ -137,3 +137,4 @@ Friend email,Почта друга
 wrong credentials,неверные учетные данные
 not a valid eth address,недействительный eth адрес
 not a valid email,недействительная почта
+email already in use,электронный адрес уже занят
