@@ -49,9 +49,19 @@ class Investor_view
         return ob_get_clean();
     }
 
-    static public function registerForm()
+    /**
+     * @param [] $data
+     * @param string $error
+     * @return string HTML
+     */
+    static public function registerForm($data = [], $error = '')
     {
-        $referrer_code = @$_GET['referrer_code'];
+        $referrer_code = '';
+        if (isset($_GET['referrer_code'])) {
+            $referrer_code = $_GET['referrer_code'];
+        } else if (isset($data['referrer_code'])) {
+            $referrer_code = $data['referrer_code'];
+        }
         ob_start();
         ?>
         <div class="row">
@@ -63,10 +73,13 @@ class Investor_view
                             <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
                                 : <?= Translate::td($_GET['err_text']) ?></label>
                         <?php } ?>
-                        <input type="text" name="firstname" placeholder="<?= Translate::td('First name') ?>">
-                        <input type="text" name="lastname" placeholder="<?= Translate::td('Last name') ?>">
-                        <input type="email" name="email" placeholder="Email">
-                        <input type="text" name="eth_address" placeholder="<?= Translate::td('ETH-ADDRESS') ?>">
+                        <?php if ($error) { ?>
+                            <label class="red-text"><?= Translate::td('Error') ?>: <?= Translate::td($error) ?></label>
+                        <?php } ?>
+                        <input type="text" name="firstname" placeholder="<?= Translate::td('First name') ?>" value="<?= @$data['firstname'] ?>">
+                        <input type="text" name="lastname" placeholder="<?= Translate::td('Last name') ?>" value="<?= @$data['lastname'] ?>">
+                        <input type="email" name="email" placeholder="Email" value="<?= @$data['email'] ?>">
+                        <input type="text" name="eth_address" placeholder="<?= Translate::td('ETH-ADDRESS') ?>" value="<?= @$data['eth_address'] ?>">
                         <input type="text" name="referrer_code" value="<?= $referrer_code ?>" placeholder="<?= Translate::td('REFERRER CODE') ?>">
                         <input type="password" name="password" pattern=".{6,120}" placeholder="<?= Translate::td('Password') ?>">
                         <span><?= Translate::td('Password need more than 6 characters') ?></span>

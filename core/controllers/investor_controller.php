@@ -72,14 +72,7 @@ class Investor_controller
         }, self::LOGOUT_URL);
 
         Router::register(function () {
-            if (Application::$authorizedInvestor) {
-                Utility::location(self::BASE_URL);
-            }
-            Base_view::$TITLE = 'Registration';
-            Base_view::$MENU_POINT = Menu_point::Register;
-            echo Base_view::header();
-            echo Investor_view::registerForm();
-            echo Base_view::footer();
+            self::handleRegistrationForm();
         }, self::REGISTER_URL, Router::GET_METHOD);
 
         Router::register(function () {
@@ -256,6 +249,22 @@ class Investor_controller
     }
 
     /**
+     * @param [] $data
+     * @param string $error
+     */
+    static private function handleRegistrationForm($data = [], $error = '')
+    {
+        if (Application::$authorizedInvestor) {
+            Utility::location(self::BASE_URL);
+        }
+        Base_view::$TITLE = 'Registration';
+        Base_view::$MENU_POINT = Menu_point::Register;
+        echo Base_view::header();
+        echo Investor_view::registerForm($data, $error);
+        echo Base_view::footer();
+    }
+
+    /**
      * @param string $password
      * @return bool
      */
@@ -267,24 +276,25 @@ class Investor_controller
     static private function handleRegistrationRequest()
     {
         if (!filter_var(@$_POST['email'], FILTER_VALIDATE_EMAIL)) {
-            Utility::location(self::REGISTER_URL . '?err=1&err_text=not a valid email');
+            self::handleRegistrationForm($_POST, 'not a valid email');
         }
         if (!Utility::validateEthAddress(@$_POST['eth_address'])) {
-            Utility::location(self::REGISTER_URL . '?err=2&err_text=not a valid eth address');
+            self::handleRegistrationForm($_POST, 'not a valid eth address');
         }
         if (Investor::isExistWithParams($_POST['email'])) {
-            Utility::location(self::REGISTER_URL . '?err=3&err_text=email already in use');
+            self::handleRegistrationForm($_POST, 'email already in use');
         }
         $referrerId = 0;
         if (@$_POST['referrer_code']) {
             $referrerId = Investor::getReferrerIdByCode(@$_POST['referrer_code']);
             if (!$referrerId) {
-                Utility::location(self::REGISTER_URL . '?err=4&err_text=not a valid referrer code');
+                self::handleRegistrationForm($_POST, 'not a valid referrer code');
             }
         }
         if (!self::verifyPassword(@$_POST['password'])) {
-            Utility::location(self::REGISTER_URL . '?err=5&err_text=not a valid password, use more than 6 characters');
+            self::handleRegistrationForm($_POST, 'not a valid password, use more than 6 characters');
         }
+
         $confirmationUrl = self::urlForRegistration($_POST['email'], @$_POST['firstname'], @$_POST['lastname'], $_POST['eth_address'], $referrerId, $_POST['password']);
         Email::send($_POST['email'], [], 'Cryptaur: email confirmation', "<a href=\"$confirmationUrl\">Confirm email to finish registration</a>");
 
