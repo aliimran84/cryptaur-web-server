@@ -105,14 +105,17 @@ class Dashboard_view
                             <div class="amount-wallet">
                                 <?= Application::$authorizedInvestor->eth_bounty ?> <?= Coin::COMMON_COIN ?>
                             </div>
-                            <form action="<?= Bounty_controller::INVESTOR_REALIZE_URL ?>" method="post">
+                            <form class="reinvest-form" action="<?= Bounty_controller::INVESTOR_REALIZE_URL ?>" method="post">
                                 <div class="amount input-field">
-                                    Percents to reinvest.<br>
-                                    All remaining spent to withdraw.
+                                    <p>Percents to reinvest: <input type="text" class="reinvest" value="<?= Application::$authorizedInvestor->eth_bounty ?>"></p>
+                                    <p>All remaining spent to withdraw: <input type="text" class="withdraw" value="0"></p>
                                 </div>
                                 <div class="amount input-field">
-                                    <input type="number" name="percentsForReinvesting" value="0" min="0" max="100" step="1">
-                                    <label><?= Translate::td('select amount') ?></label>
+<!--                                    <input type="number" name="percentsForReinvesting" value="0" min="0" max="100" step="1">-->
+<!--                                    <label>--><?//= Translate::td('select amount') ?><!--</label>-->
+                                    <p class="range-field">
+                                        <input type="range" min="0" max="100" value="100"/>
+                                    </p>
                                 </div>
                                 <div class="amount input-field">
                                     <button type="submit" class="waves-effect waves-light btn "

@@ -100,3 +100,17 @@ function catalogItemCounter(field){
 }
 
 catalogItemCounter('.wallet_view-new_contribution-input_amount');
+
+var inputRange = $('.range-field input[type=range]');
+var reinvest = $('form.reinvest-form input.reinvest'),
+    reinvestVal = reinvest.val(),
+    withdraw = $('form.reinvest-form input.withdraw')
+$(inputRange).on("input change", function() {
+    var percents = $(this).val(),
+        tmpReinvest = (reinvestVal * (percents/100)).toFixed(8),
+        tmpWithdraw = (reinvestVal - tmpReinvest).toFixed(8);
+
+    reinvest.val(tmpReinvest);
+    withdraw.val(tmpWithdraw);
+
+});

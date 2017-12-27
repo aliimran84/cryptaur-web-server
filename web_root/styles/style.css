@@ -553,8 +553,18 @@ footer .row {
     font-weight: 500;
     text-transform: uppercase;
 }
+.dashboard .main-panel-block .amount.input-field .range-field {
+    margin: 25px 0 0;
+}
+.dashboard .main-panel-block .amount.input-field .range-field .thumb {
+    background-color: #0074ff;
+    top: -20px !important;
+}
+.dashboard .main-panel-block .amount.input-field input[type=range]::-webkit-slider-thumb{background-color:#0074ff;}
+.dashboard .main-panel-block .amount.input-field input[type=range]::-moz-range-thumb{background:#0074ff;}
+.dashboard .main-panel-block .amount.input-field input[type=range]::-ms-thumb{background:#0074ff}
 .dashboard .main-panel-block .amount.input-field .btn {
-    width: 50%;
+    width: 100%;
     border: 1px solid #0074ff;
     background: transparent;
     color: #0074ff;
