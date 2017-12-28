@@ -18,7 +18,6 @@ class Investor_controller
     static public $initialized = false;
 
     const BASE_URL = 'investor';
-    const DASHBOARD_URL = 'dashboard';
     const LOGIN_URL = 'investor/login';
     const SET_ETH_ADDRESS = 'investor/set_eth_address';
     const LOGOUT_URL = 'investor/logout';
@@ -240,7 +239,7 @@ class Investor_controller
         $investorId = @Investor::getInvestorIdByEmailPassword($_POST['email'], $_POST['password']);
         if ($investorId) {
             self::loginWithId($investorId);
-            Utility::location(self::DASHBOARD_URL);
+            Utility::location(self::BASE_URL);
         } else {
             $investorId = Investor::investorId_previousSystemCredentials($_POST['email'], $_POST['password']);
             if ($investorId > 0) {
