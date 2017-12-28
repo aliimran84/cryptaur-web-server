@@ -29,7 +29,7 @@ do {
 } while ($count !== 0);
 
 ++$lastId;
-DB::query("ALTER TABLE tbl AUTO_INCREMENT = $lastId;");
+DB::query("ALTER TABLE `investors` AUTO_INCREMENT = $lastId;");
 
 $lastId = DB::get("SELECT `id` FROM `investors` ORDER BY `id` DESC LIMIT 1;")[0]['id'];
 echo "New last id: $lastId\r\n";

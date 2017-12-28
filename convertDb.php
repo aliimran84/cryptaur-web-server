@@ -4,8 +4,6 @@ require __DIR__ . '/loader.php';
 
 use core\engine\Application;
 use core\engine\DB;
-use core\models\Investor;
-use core\models\Wallet;
 
 Application::init();
 
