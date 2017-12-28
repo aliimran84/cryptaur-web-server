@@ -45,8 +45,8 @@ class Bounty_controller
         if (!Bounty::withdrawIsOn() || !Bounty::reinvestIsOn()) {
             Utility::location(Dashboard_controller::BASE_URL);
         }
-        $ethToReinvest = Application::$authorizedInvestor->eth_bounty * $percentsForReinvesting / 100;
-        $ethToWithdraw = Application::$authorizedInvestor->eth_bounty - $ethToReinvest;
+        $ethToReinvest = Utility::minPrecisionNumber(Application::$authorizedInvestor->eth_bounty * $percentsForReinvesting / 100);
+        $ethToWithdraw = Utility::minPrecisionNumber(Application::$authorizedInvestor->eth_bounty - $ethToReinvest);
         if ($ethToWithdraw > 0) {
             Application::$authorizedInvestor->withdraw($ethToWithdraw);
         }
@@ -87,7 +87,7 @@ class Bounty_controller
         // $mintTokens_keccak256 = '24b35ef299a7626e8b3733ca6233658c9943b9876310b76bc78416948e554ed8';
         $mintTokens_selector = '24b35ef2';
         $minter = $investor->eth_address;
-        $tokensWithoutDecimals = (double)($tokens * pow(10, 8));
+        $tokensWithoutDecimals = Utility::mul($tokens, '100000000');
         $coin = '';
         $txid = '';
         if (!is_null($deposit)) {
@@ -96,7 +96,7 @@ class Bounty_controller
         }
 
         $minter_geth = str_pad(preg_replace('/^0x(.*)$/', '$1', $minter), 64, '0', STR_PAD_LEFT);
-        $tokens_geth = str_pad(dechex($tokensWithoutDecimals), 64, '0', STR_PAD_LEFT);
+        $tokens_geth = str_pad(Utility::hex($tokensWithoutDecimals), 64, '0', STR_PAD_LEFT);
         $coin_geth = str_pad(bin2hex($coin), 64, '0', STR_PAD_LEFT);
         $txid_geth = str_pad(preg_replace('/^0x(.*)$/', '$1', $txid), 64, '0', STR_PAD_LEFT);
 
@@ -110,7 +110,7 @@ class Bounty_controller
             'to' => ETH_TOKENS_CONTRACT,
             'value' => '0x0',
             'data' => $mint_call,
-            'gas' => "0x" . dechex(500000)
+            'gas' => "0x" . Utility::hex(900000)
         ]);
         if (!$gethClient->call('eth_sendTransaction', [
             [
@@ -118,7 +118,7 @@ class Bounty_controller
                 'to' => ETH_TOKENS_CONTRACT,
                 'value' => '0x0',
                 'data' => $mint_call,
-                'gas' => "0x" . dechex(500000)
+                'gas' => "0x" . Utility::hex(900000)
             ]
         ])) {
             return -3;
@@ -155,15 +155,15 @@ class Bounty_controller
             '_value' => $value,
             'from' => ETH_BOUNTY_DISPENSER,
             'to' => $ethAddress,
-            'value' => "0x" . Utility::bcdechex(\bcmul($value, '1000000000000000000')),
-            'gas' => "0x" . dechex(100000)
+            'value' => "0x" . Utility::hex(Utility::mul($value, '1000000000000000000')),
+            'gas' => "0x" . Utility::hex(200000)
         ]);
         if (!$gethClient->call('eth_sendTransaction', [
             [
                 'from' => ETH_BOUNTY_DISPENSER,
                 'to' => $ethAddress,
-                'value' => "0x" . Utility::bcdechex(\bcmul($value, '1000000000000000000')),
-                'gas' => "0x" . dechex(100000)
+                'value' => "0x" . Utility::hex(Utility::mul($value, '1000000000000000000')),
+                'gas' => "0x" . Utility::hex(200000)
             ]
         ])) {
             return -3;

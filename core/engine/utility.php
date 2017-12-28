@@ -2,9 +2,6 @@
 
 namespace core\engine;
 
-use core\controllers\Investor_controller;
-use core\views\Base_view;
-
 class Utility
 {
     /**
@@ -202,6 +199,38 @@ class Utility
         } else {
             return self::bcdechex($remain) . dechex($last);
         }
+    }
+
+    /**
+     * @param string|number $dec
+     * @return string
+     */
+    static public function hex($dec)
+    {
+        return self::bcdechex(number_format($dec, 0, '.', ''));
+    }
+
+    /**
+     * @param double $dec
+     * @return double
+     */
+    static public function minPrecisionNumber($dec)
+    {
+        return (double)number_format($dec, 18, '.', '');
+    }
+
+    /**
+     * @param string|number $dec1
+     * @param string|number $dec2
+     * @return double
+     */
+    static public function mul($dec1, $dec2)
+    {
+        return bcmul(
+            number_format($dec1, 18, '.', ''),
+            number_format($dec2, 18, '.', ''),
+            18
+        );
     }
 
     static public function microtime_float()
