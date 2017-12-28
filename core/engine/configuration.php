@@ -97,13 +97,15 @@ class Configuration
             DEFINE('EMAIL_FROM_EMAIL', $config['email_smtp']['from_email']);
         }
 
-        if (!isset($config['gauthify'])) {
+        if (!isset($config['2fa'])) {
             $needConfigure = true;
-            $config['!_gauthify'] = [
-                'token' => ''
+            $config['!_2fa'] = [
+                'gauthify_token' => '',
+                'use_2fa' => false
             ];
         } else {
-            DEFINE('GAUTHIFY_TOKEN', $config['gauthify']['token']);
+            DEFINE('GAUTHIFY_TOKEN', $config['2fa']['gauthify_token']);
+            DEFINE('USE_2FA', $config['2fa']['use_2fa']);
         }
 
         if (!isset($config['coins'])) {
