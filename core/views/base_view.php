@@ -114,7 +114,6 @@ class Base_view
             <li class="<?= self::activeMenuItem(Menu_point::Logout) ?>">
                 <a href="<?= Investor_controller::LOGOUT_URL ?>"><?= Translate::td('Logout') ?></a></li>
         <?php } else { ?>
-            <li class="<?= self::activeMenuItem(Menu_point::About) ?>"><a href=""><?= Translate::td('About') ?></a></li>
             <li class="<?= self::activeMenuItem(Menu_point::Login) ?>"><a href="<?= Investor_controller::LOGIN_URL ?>"><?= Translate::td('Login') ?></a>
             </li>
             <li class="<?= self::activeMenuItem(Menu_point::Register) ?>">
