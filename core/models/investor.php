@@ -51,6 +51,7 @@ class Investor
                 `tokens_count` double(20, 8) UNSIGNED DEFAULT '0',
                 `eth_not_used_in_bounty` double(20, 8) UNSIGNED DEFAULT '0',
                 `eth_bounty` double(20, 8) UNSIGNED DEFAULT '0',
+                `eth_new_bounty` double(20, 8) UNSIGNED DEFAULT '0',
                 `phone` varchar(254) DEFAULT '',
                 PRIMARY KEY (`id`)
             )
@@ -392,21 +393,39 @@ class Investor
         return true;
     }
 
+    public function addEthBounty($ethBounty)
+    {
+        if ($ethBounty > $this->eth_bounty) {
+            return false;
+        }
+
+        $this->eth_bounty += $ethBounty;
+        DB::set("
+            UPDATE `investors`
+            SET
+                `eth_bounty` = ?
+            WHERE
+                `id` = ?
+            LIMIT 1
+        ;", [$this->eth_bounty, $this->id]);
+        return true;
+    }
+
     /**
      * @param double $ethToReinvest
      * @return bool
      */
     public function reinvestEth($ethToReinvest)
     {
-        if ($ethToReinvest > $this->eth_bounty) {
-            return false;
-        }
-
         if (!@ETH_BOUNTY_COLD_WALLET) {
             return false;
         }
 
         if (!Coin::getRate(Coin::reinvestToken())) {
+            return false;
+        }
+
+        if (!$this->spentEthBounty($ethToReinvest)) {
             return false;
         }
 
@@ -422,7 +441,6 @@ class Investor
                 'time' => time()
             ]);
             $this->addTokens($tokens);
-            $this->spentEthBounty($ethToReinvest);
             $sendResult = Bounty_controller::sendEth(ETH_BOUNTY_COLD_WALLET, $ethToReinvest);
             if (is_string($sendResult)) {
                 $txid = $sendResult;
@@ -432,6 +450,8 @@ class Investor
                     'time' => time()
                 ]);
             }
+        } else {
+            $this->addEthBounty($ethToReinvest);
         }
 
         return true;
@@ -443,7 +463,7 @@ class Investor
      */
     public function withdraw($eth)
     {
-        if ($eth > $this->eth_bounty) {
+        if (!$this->spentEthBounty($eth)) {
             return false;
         }
 
@@ -464,7 +484,8 @@ class Investor
                     `id` = ?
                 LIMIT 1
             ;", [$this->eth_withdrawn, $this->id]);
-            $this->spentEthBounty($eth);
+        } else {
+            $this->addEthBounty($eth);
         }
 
         return true;
