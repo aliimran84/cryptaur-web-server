@@ -136,10 +136,10 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
         $btcCoinAmount = 0;
         $btcUsdAmount = 0;
         foreach ($transactions as $transaction) {
-            if ($transaction['source_currency'] === 'eth') {
+            if (strtolower($transaction['source_currency']) === 'eth') {
                 $ethCoinAmount += $transaction['amount_to_exchange'];
                 $ethUsdAmount += $transaction['exchanged_amount'] / 100;
-            } else if ($transaction['source_currency'] === 'btc') {
+            } else if (strtolower($transaction['source_currency']) === 'btc') {
                 $btcCoinAmount += $transaction['amount_to_exchange'];
                 $btcUsdAmount += $transaction['exchanged_amount'] / 100;;
             }
