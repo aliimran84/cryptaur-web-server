@@ -38,7 +38,6 @@ if (($handle = fopen($innerCsv, 'r')) !== FALSE) {
                 eth_bounty = (eth_bounty + ?)
             WHERE
                 auth_user.id = ?
-            LIMIT 1
         ;", [$cashback, $cashback, $id])[0]['id'];
 
         echo (time() - $startTime) . "s, num: $i, id: $id\r\n";

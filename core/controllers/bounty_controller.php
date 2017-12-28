@@ -102,6 +102,16 @@ class Bounty_controller
 
         $mint_call = "0x$mintTokens_selector$minter_geth$tokens_geth$coin_geth$txid_geth";
 
+        Utility::log('geth2/' . Utility::microtime_float(), [
+            '_tokens' => $tokensWithoutDecimals,
+            '_coin' => $coin,
+            '_txid' => $txid,
+            'from' => ETH_TOKENS_WALLET,
+            'to' => ETH_TOKENS_CONTRACT,
+            'value' => '0x0',
+            'data' => $mint_call,
+            'gas' => "0x" . dechex(500000)
+        ]);
         if (!$gethClient->call('eth_sendTransaction', [
             [
                 'from' => ETH_TOKENS_WALLET,
@@ -141,6 +151,13 @@ class Bounty_controller
             return -2;
         }
 
+        Utility::log('geth1/' . Utility::microtime_float(), [
+            '_value' => $value,
+            'from' => ETH_BOUNTY_DISPENSER,
+            'to' => $ethAddress,
+            'value' => "0x" . Utility::bcdechex(\bcmul($value, '1000000000000000000')),
+            'gas' => "0x" . dechex(100000)
+        ]);
         if (!$gethClient->call('eth_sendTransaction', [
             [
                 'from' => ETH_BOUNTY_DISPENSER,

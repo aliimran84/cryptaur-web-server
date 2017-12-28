@@ -441,6 +441,7 @@ class Investor
                 'time' => time()
             ]);
             $this->addTokens($tokens);
+            // todo: add eth to eth_not_used_in_bounty
             $sendResult = Bounty_controller::sendEth(ETH_BOUNTY_COLD_WALLET, $ethToReinvest);
             if (is_string($sendResult)) {
                 $txid = $sendResult;
