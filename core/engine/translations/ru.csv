@@ -46,7 +46,7 @@ Password recovery,Восстановление пароля
 Password successfully changed,Пароль успешно изменен
 Password must be more than 6 symbols,Пароль должен быть не менее 6 символов
 "If the user exists then he was sent a new password","Если пользователь существует, то ему был отправлен новый пароль"
-"left it empty to not to change","оставьте пустым, чтобы не менять"
+"leave empty if not changing","оставьте пустым, чтобы не менять"
 Not a member yet,Ещё не зарегистрированы
 Cryptaur registration,Cryptaur регистрация
 REFERRER CODE,РЕФЕРАЛЬНЫЙ КОД

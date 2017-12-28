@@ -189,7 +189,7 @@ class Investor_view
                         <strong><?= Application::$authorizedInvestor->eth_bounty ?></strong>
                     </div>
                     <div class="row">
-                        <?= Translate::td('Password') ?> (<?= Translate::td('left it empty to not to change') ?>):
+                        <?= Translate::td('Password') ?> (<?= Translate::td('leave empty if not changing') ?>):
                         <input type="password" name="password" value="" pattern=".{6,120}">
                         <span><?= Translate::td('Password must be more than 6 symbols') ?></span>
                     </div>
