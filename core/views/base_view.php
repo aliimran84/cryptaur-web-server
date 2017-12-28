@@ -104,7 +104,6 @@ class Base_view
             <li class="<?= self::activeMenuItem(Menu_point::Admin_logout) ?>">
                 <a href="<?= Administrator_controller::LOGOUT_URL ?>"><?= Translate::td('Logout') ?></a></li>
         <?php } elseif (Application::$authorizedInvestor) { ?>
-            <li class="<?= self::activeMenuItem(Menu_point::About) ?>"><a href=""><?= Translate::td('About') ?></a></li>
             <li class="<?= self::activeMenuItem(Menu_point::Dashboard) ?>">
                 <a href="<?= Dashboard_controller::BASE_URL ?>"><?= Translate::td('Dashboard') ?></a></li>
             <li class="<?= self::activeMenuItem(Menu_point::Transactions) ?>">
