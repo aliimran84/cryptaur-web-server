@@ -84,11 +84,11 @@ class Dashboard_view
                         <h3><?= Coin::token() ?> <?= Investor::totalTokens() ?></h3>
                     </div>
                     <div class="col s12 m4">
-                        <h4><?= Translate::td('Total BTC contributed') ?></h4>
+                        <h4><?= Translate::td('Total coin contributed', ['coin' => 'BTC']) ?></h4>
                         <h3>BTC <?= (int)Wallet::totalCoinsUsed('btc') ?></h3>
                     </div>
                     <div class="col s12 m4">
-                        <h4><?= Translate::td('Total ETH contributed') ?></h4>
+                        <h4><?= Translate::td('Total coin contributed', ['coin' => 'ETH']) ?></h4>
                         <h3>ETH <?= (int)Wallet::totalCoinsUsed('eth') ?></h3>
                     </div>
                 </div>
