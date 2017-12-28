@@ -273,10 +273,10 @@ class Dashboard_view
                     </div>
                 </div>
                 <div class="row">
-                    <p class="after-compression">
-                        <input type="checkbox" id="after-compression"/>
-                        <label for="after-compression"><?= Translate::td('After compression') ?></label>
-                    </p>
+<!--                    <p class="after-compression">-->
+<!--                        <input type="checkbox" id="after-compression"/>-->
+<!--                        <label for="after-compression">--><?//= Translate::td('After compression') ?><!--</label>-->
+<!--                    </p>-->
                     <div class="main-panel-block tree before-compression active">
                         <ul class="first-level">
                             <?php if ($referrer) { ?>

@@ -141,7 +141,7 @@ class Base_view
                         <p>Copyright &copy; 2017. <?= Translate::td('All right reserved') ?>.</p>
                     </div>
                     <div class="col s12 m6 terms-and-conditions">
-                        <p><?= Translate::td('Terms and Conditions') ?></p>
+                        <a target="_blank" href="https://cryptaur.com/terms-and-conditions"><?= Translate::td('Terms and Conditions') ?></a>
                     </div>
                 </div>
             </div>
