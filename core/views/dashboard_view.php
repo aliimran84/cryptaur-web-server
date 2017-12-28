@@ -257,8 +257,7 @@ class Dashboard_view
                 </div>
                 <div class="row">
                     <div class="col s12 l4 main-panel-block">
-                        <h3><?= Translate::td('Raised by group') ?>:
-                            US$ <?= Bounty::rewardForInvestor(Application::$authorizedInvestor) ?></h3>
+                        <h3>BTC: <?= (int)Wallet::totalCoinsUsed('btc') ?> / ETH: <?= (int)Wallet::totalCoinsUsed('eth') ?></h3>
                     </div>
                     <div class="col s12 l4 main-panel-block">
                         <h3>
