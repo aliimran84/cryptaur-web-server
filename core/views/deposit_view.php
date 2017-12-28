@@ -141,7 +141,6 @@ class Deposit_view
                             <div class="row">
                                 <div class="col s1"></div>
                                 <div class="col s10">
-                                    <p><?= Translate::td('Converted to') ?> <?= $deposit->usd ?> USD</p>
                                     <p><?= Translate::td('Order Id') ?>:#<?= $deposit->id ?></p>
                                     <p>txid: <?= $deposit->txid ?></p>
                                     <p>vout: <?= $deposit->vout ?></p>

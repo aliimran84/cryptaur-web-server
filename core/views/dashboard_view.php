@@ -84,12 +84,12 @@ class Dashboard_view
                         <h3><?= Coin::token() ?> <?= Investor::totalTokens() ?></h3>
                     </div>
                     <div class="col s12 m4">
-                        <h4><?= Translate::td('Total funds raised') ?></h4>
-                        <h3>US$ <?= (int)Wallet::totalUsdUsed() ?></h3>
+                        <h4><?= Translate::td('Total BTC contributed') ?></h4>
+                        <h3>BTC <?= (int)Wallet::totalCoinsUsed('btc') ?></h3>
                     </div>
                     <div class="col s12 m4">
-                        <h4><?= Translate::td('Total participants') ?></h4>
-                        <h3><?= Investor::totalInvestors() ?></h3>
+                        <h4><?= Translate::td('Total ETH contributed') ?></h4>
+                        <h3>ETH <?= (int)Wallet::totalCoinsUsed('eth') ?></h3>
                     </div>
                 </div>
                 <section class="my-tokens">
@@ -107,13 +107,14 @@ class Dashboard_view
                             </div>
                             <form class="reinvest-form" action="<?= Bounty_controller::INVESTOR_REALIZE_URL ?>" method="post">
                                 <div class="amount input-field">
-                                    <p>Percents to reinvest: <input type="text" class="reinvest" value="<?= Application::$authorizedInvestor->eth_bounty ?>"></p>
-                                    <p>All remaining spent to withdraw: <input type="text" class="withdraw" value="0"></p>
+                                    <p>Percents to reinvest:
+                                        <input type="text" class="reinvest" value="<?= Application::$authorizedInvestor->eth_bounty ?>">
+                                    </p>
+                                    <p>All remaining spent to withdraw: <input type="text" class="withdraw" value="0">
+                                    </p>
                                     <input type="text" class="percents" name="percentsForReinvesting" value="100">
                                 </div>
                                 <div class="amount input-field">
-<!--                                    <input type="number" name="percentsForReinvesting" value="0" min="0" max="100" step="1">-->
-<!--                                    <label>--><?//= Translate::td('select amount') ?><!--</label>-->
                                     <p class="range-field">
                                         <input type="range" min="0" max="100" value="100"/>
                                     </p>
@@ -173,7 +174,7 @@ class Dashboard_view
                             <li>
                                 <h2>
                                     <?= $i + 1 ?> <?= Translate::td('Level') ?>: <?= $value ?>%,<br>
-                                    US$ <?= number_format(@$rewardByLevel[$i + 1], 2) ?>
+                                    <?= Coin::COMMON_COIN ?> <?= number_format(@$rewardByLevel[$i + 1], 2) ?>
                                 </h2>
                             </li>
                         <?php } ?>
@@ -208,8 +209,6 @@ class Dashboard_view
                     ?>
                     <li><span><?= $coin ?></span><span><?= $balance ?></span></li>
                 <?php } ?>
-                <li><h5><?= Translate::td('Total in USD') ?></h5><h5>
-                        $<?= Application::$authorizedInvestor->usdUsed() ?></h5></li>
                 <li><h5><?= Translate::td('Withdrawn') ?></h5><h5><?= Application::$authorizedInvestor->eth_withdrawn ?>
                         ETH</h5></li>
             </ul>
@@ -228,8 +227,16 @@ class Dashboard_view
         ?>
         <div class="tree-block">
             <h2><?= $investor->firstname ?> <?= $investor->lastname ?></h2>
-            <p><?= Translate::td('Contributed') ?></p>
-            <h3>US$ <?= $investor->usdUsed() ?></h3>
+            <h3><?= Coin::token() ?> <?= $investor->tokens_count ?></h3>
+            <p>
+                <?= Translate::td('Contributed') ?>
+                <?php
+                foreach ($investor->coinsUsed() as $coin => $balance) {
+                    $coin = strtoupper($coin);
+                    echo "<br>$coin $balance";
+                }
+                ?>
+            </p>
         </div>
         <?php
         return ob_get_clean();
