@@ -16,9 +16,6 @@ use core\models\Investor;
 use core\models\PaymentServer;
 use core\models\Wallet;
 use core\translate\Translate;
-use core\views\Base_view;
-use core\views\Menu_point;
-use core\views\Wallet_view;
 
 class Application
 {
@@ -64,6 +61,9 @@ class Application
         }
 
         Router::registerDefault(function () {
+            if (self::$authorizedAdministrator) {
+                Utility::location(Administrator_controller::LOGS);
+            }
             if (self::$authorizedInvestor) {
                 Utility::location(Dashboard_controller::BASE_URL);
             }
