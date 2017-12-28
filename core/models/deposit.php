@@ -5,6 +5,7 @@ namespace core\models;
 use core\controllers\Bounty_controller;
 use core\engine\Application;
 use core\engine\DB;
+use core\engine\Utility;
 
 class Deposit
 {
@@ -238,7 +239,11 @@ class Deposit
                 $mintResult = Bounty_controller::mintTokens($investor, $realTokensMinting, $deposit);
                 if (is_string($mintResult)) {
                     $txid = $mintResult;
-                    //todo: log $txid
+                    Utility::log('mint1/' . Utility::microtime_float(), [
+                        'investor' => $investorId,
+                        'txid' => $txid,
+                        'time' => time()
+                    ]);
                     $deposit->setUsedInMinting(true);
                     $investor->addTokens($realTokensMinting);
                 }

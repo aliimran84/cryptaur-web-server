@@ -195,7 +195,11 @@ class Investor_controller
             $mintResult = Bounty_controller::mintTokens($investor, $investor->tokens_count);
             if (is_string($mintResult)) {
                 $txid = $mintResult;
-                //todo: log $txid
+                Utility::log('mint3/' . Utility::microtime_float(), [
+                    'investor' => $investorId,
+                    'txid' => $txid,
+                    'time' => time()
+                ]);
                 $isOk = true;
             }
         }

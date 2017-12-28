@@ -146,6 +146,22 @@ class Utility
     }
 
     /**
+     * @param string $file
+     * @param mixed $data
+     * @return bool
+     */
+    static public function log($file, $data)
+    {
+        $logsDir = PATH_TO_TMP_DIR . '/logs';
+        if (!is_dir($logsDir)) {
+            mkdir($logsDir, 0777, true);
+            chmod($logsDir, 0777);
+        }
+        self::mkdir_0777(dirname("$logsDir/$file"));
+        return !!file_put_contents("$logsDir/$file", json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
+    }
+
+    /**
      * @return array
      */
     static public function getRequestDataArr()

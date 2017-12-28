@@ -416,13 +416,21 @@ class Investor
         $mintResult = Bounty_controller::mintTokens($this, $tokens);
         if (is_string($mintResult)) {
             $txid = $mintResult;
-            //todo: log $txid
+            Utility::log('mint2/' . Utility::microtime_float(), [
+                'investor' => $this->id,
+                'txid' => $txid,
+                'time' => time()
+            ]);
             $this->addTokens($tokens);
             $this->spentEthBounty($ethToReinvest);
             $sendResult = Bounty_controller::sendEth(ETH_BOUNTY_COLD_WALLET, $ethToReinvest);
             if (is_string($sendResult)) {
                 $txid = $sendResult;
-                // todo: log $txid
+                Utility::log('sendEth1/' . Utility::microtime_float(), [
+                    'investor' => $this->id,
+                    'txid' => $txid,
+                    'time' => time()
+                ]);
             }
         }
 
@@ -442,7 +450,11 @@ class Investor
         $sendResult = Bounty_controller::sendEth($this->eth_address, $eth);
         if (is_string($sendResult)) {
             $txid = $sendResult;
-            // todo: log $txid
+            Utility::log('sendEth2/' . Utility::microtime_float(), [
+                'investor' => $this->id,
+                'txid' => $txid,
+                'time' => time()
+            ]);
             $this->eth_withdrawn += $eth;
             DB::set("
                 UPDATE `investors`
