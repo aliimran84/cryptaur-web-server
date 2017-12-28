@@ -22,7 +22,7 @@ class Dashboard_view
             <div class="col s12 m3 left-panel">
                 <h3><?= Translate::td('Token sale') ?></h3>
                 <div class="row">
-                    <div class="stage active">
+                    <div class="stage">
                         <h2><?= Translate::td('Stage') ?> 1</h2>
                         <p><?= Translate::td('Nov') ?> 27, 2017</p>
                         <p><?= Translate::td('Dec') ?> 07, 2017</p>
@@ -32,7 +32,7 @@ class Dashboard_view
                     </div>
                 </div>
                 <div class="row">
-                    <div class="stage ">
+                    <div class="stage active">
                         <h2><?= Translate::td('Stage') ?> 2</h2>
                         <p><?= Translate::td('Jan') ?> 22, 2018</p>
                         <p><?= Translate::td('Jan') ?> 31, 2018</p>
