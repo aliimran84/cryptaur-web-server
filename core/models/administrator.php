@@ -24,6 +24,16 @@ class Administrator
             DEFAULT CHARSET utf8
             DEFAULT COLLATE utf8_general_ci
         ;");
+        DB::query("
+            CREATE TABLE IF NOT EXISTS `alarm_messages` (
+                `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `message` text NULL,
+                PRIMARY KEY (`id`)
+            )
+            DEFAULT CHARSET utf8
+            DEFAULT COLLATE utf8_general_ci
+        ;");
+
     }
 
     /**
