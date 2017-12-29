@@ -71,15 +71,6 @@ class Investor_view
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Login') ?>
                             </button>
-                            <!--<p>Forgot your account password? <a href="#">Recover</a></p>-->
-                        </div>
-                        <h5><?= Translate::td('Forgot your account login') ?>?</h5>
-                        <div class="row center">
-                            <a href="<?= Investor_controller::RECOVER_URL ?>" class="waves-effect waves-light btn btn-login"><?= Translate::td('Recover') ?></a>
-                        </div>
-                        <h5><?= Translate::td('Not a member yet') ?>?</h5>
-                        <div class="row center">
-                            <a href="<?= Investor_controller::REGISTER_URL ?>" class="waves-effect waves-light btn btn-login"><?= Translate::td('Register') ?></a>
                         </div>
                     </form>
                 </div>

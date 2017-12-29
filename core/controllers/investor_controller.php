@@ -19,6 +19,7 @@ class Investor_controller
 
     const BASE_URL = 'investor';
     const LOGIN_URL = 'investor/login';
+    const SECONDFACTOR_URL = 'investor/secondfactor';
     const SET_ETH_ADDRESS = 'investor/set_eth_address';
     const LOGOUT_URL = 'investor/logout';
     const RECOVER_URL = 'investor/recover';
@@ -28,10 +29,16 @@ class Investor_controller
     const REGISTER_CONFIRMATION_URL = 'investor/register_confirm';
     const SETTINGS_URL = 'investor/settings';
     const INVITE_FRIENDS_URL = 'investor/invite_friends';
-
+    
     const SESSION_KEY = 'authorized_investor_id';
     const PREVIOUS_SYSTEM_ID = 'previous_system_authorized_investor_id';
     const PREVIOUS_SYSTEM_PASSWORD = 'previous_system_authorized_investor_password';
+    
+    const PREVIOUS_2FA_LOGIN_FLAG = 'previous_system_2fa_login_flag';
+    const PREVIOUS_2FA_PASSWORD_TMP = 'previous_system_2fa_password_tmp';
+    const SESSION_KEY_TMP = 'authorized_investor_id_tmp';
+    const SFA_OTP_ID = 'secondfactor_otp_id';
+    const SFA_UNIQUE_ID = 'secondfactor_unique_id';
 
     static public function init()
     {
@@ -63,6 +70,13 @@ class Investor_controller
         Router::register(function () {
             self::handleLoginRequest();
         }, self::LOGIN_URL, Router::POST_METHOD);
+
+        Router::register(function () {
+            self::handleSecondfactorForm();
+        }, self::SECONDFACTOR_URL, Router::GET_METHOD);
+        Router::register(function () {
+            self::handleSecondfactorRequest();
+        }, self::SECONDFACTOR_URL, Router::POST_METHOD);
 
         Router::register(function () {
             if (!Application::$authorizedInvestor) {
@@ -133,6 +147,14 @@ class Investor_controller
     {
         session_start();
         $_SESSION[self::SESSION_KEY] = $investorId;
+        session_write_close();
+    }
+    
+    static private function previousPreLogin($investorId, $password)
+    {
+        session_start();
+        $_SESSION[self::PREVIOUS_SYSTEM_ID] = $investorId;
+        $_SESSION[self::PREVIOUS_SYSTEM_PASSWORD] = $password;
         session_write_close();
     }
 
@@ -233,25 +255,122 @@ class Investor_controller
         echo Investor_view::loginForm($message);
         echo Base_view::footer();
     }
+    
+    static private function sent2FaOtpRequest($investorId)
+    {
+        //TODO - make some rework when 2fa by user's wish will be implemented
+        $user = Investor::getById($investorId);
+        $email = $user->email;
+        $ga_id = "ga_id_$investorId";
+        $ga_user = \core\gauthify\GAuthify::get_user($ga_id); //get user from GAuthify
+        if(is_null($ga_user)) { //else create it
+            $ga_user = \core\gauthify\GAuthify::create_user($ga_id, md5($ga_user), $email);
+        }
+        $result = \core\gauthify\GAuthify::send_email($ga_id);
+        if(!is_null($result)) {
+            session_start();
+            $_SESSION[self::SFA_UNIQUE_ID] = $ga_id;
+            $_SESSION[self::SFA_OTP_ID] = $result['otp_id'];
+            session_write_close();
+            return TRUE;
+        }
+        return FALSE;
+    }
 
     static private function handleLoginRequest()
     {
         $investorId = @Investor::getInvestorIdByEmailPassword($_POST['email'], $_POST['password']);
         if ($investorId) {
-            self::loginWithId($investorId);
-            Utility::location(self::BASE_URL);
+            $sfa_used = self::sent2FaOtpRequest($investorId); //TRUE if user USE the 2FA
+            if(USE_2FA == FALSE || $sfa_used == FALSE) {
+                self::loginWithId($investorId);
+                Utility::location(self::BASE_URL);
+            }
+            elseif($sfa_used) {
+                session_start();
+                $_SESSION[self::SESSION_KEY_TMP] = $investorId;
+                $_SESSION[self::PREVIOUS_2FA_LOGIN_FLAG] = FALSE;
+                session_write_close();
+                Utility::location(self::SECONDFACTOR_URL);
+            }
         } else {
             $investorId = Investor::investorId_previousSystemCredentials($_POST['email'], $_POST['password']);
             if ($investorId > 0) {
-                session_start();
-                $_SESSION[self::PREVIOUS_SYSTEM_ID] = $investorId;
-                $_SESSION[self::PREVIOUS_SYSTEM_PASSWORD] = $_POST['password'];
-                session_write_close();
+                $sfa_used = self::sent2FaOtpRequest($investorId); //TRUE if user USE the 2FA
+                if(USE_2FA == FALSE || $sfa_used == FALSE) {
+                    self::previousPreLogin($investorId, $_POST['password']);
+                    Utility::location(self::SET_ETH_ADDRESS);
+                }
+                elseif($sfa_used) {
+                    session_start();
+                    $_SESSION[self::PREVIOUS_2FA_PASSWORD_TMP] = $_POST['password'];
+                    $_SESSION[self::SESSION_KEY_TMP] = $investorId;
+                    $_SESSION[self::PREVIOUS_2FA_LOGIN_FLAG] = TRUE;
+                    session_write_close();
+                    Utility::location(self::SECONDFACTOR_URL);
+                }
+            }
+        }
+        Utility::location(self::LOGIN_URL . '?err=3671&err_text=wrong credentials');
+    }
+
+    static private function handleSecondfactorForm($message = '')
+    {
+        if (Application::$authorizedInvestor) {
+            Utility::location(self::BASE_URL);
+        }
+        Base_view::$TITLE = 'Second Factor Authentication';
+        Base_view::$MENU_POINT = Menu_point::Login;
+        echo Base_view::header();
+        echo Investor_view::secondfactorForm($message);
+        echo Base_view::footer();
+    }
+
+    static private function handleSecondfactorRequest()
+    {
+        if (
+            !isset($_SESSION[self::PREVIOUS_2FA_LOGIN_FLAG]) ||
+            !isset($_SESSION[self::SESSION_KEY_TMP]) ||
+            !isset($_SESSION[self::SFA_OTP_ID]) ||
+            !isset($_SESSION[self::SFA_UNIQUE_ID]) ||
+            !isset($_POST['otp'])
+        ) {
+            Utility::location(self::BASE_URL);
+        }
+        
+        $unique_id = $_SESSION[self::SFA_UNIQUE_ID];
+        $otp_id = $_SESSION[self::SFA_OTP_ID];
+        $investorId = $_SESSION[self::SESSION_KEY_TMP];
+        $p_login = $_SESSION[self::PREVIOUS_2FA_LOGIN_FLAG];
+        $password_tmp = isset($_SESSION[self::PREVIOUS_2FA_PASSWORD_TMP]) ? $_SESSION[self::PREVIOUS_2FA_PASSWORD_TMP] : NULL;
+        
+        session_start();
+        unset($_SESSION[self::SFA_OTP_ID]);
+        unset($_SESSION[self::SFA_UNIQUE_ID]);
+        unset($_SESSION[self::SESSION_KEY_TMP]);
+        unset($_SESSION[self::PREVIOUS_2FA_LOGIN_FLAG]);
+        if(isset($_SESSION[self::PREVIOUS_2FA_PASSWORD_TMP]))
+        {
+            unset($_SESSION[self::PREVIOUS_2FA_PASSWORD_TMP]);
+        }
+        session_write_close();
+        
+        $otp = $_POST['otp'];
+        $checked = \core\gauthify\GAuthify::check($unique_id, $otp, $otp_id);
+        if($checked == 1) {
+            if($p_login === FALSE) {
+                self::loginWithId($investorId);
+                Utility::location(self::BASE_URL);
+            }
+            elseif(
+                $p_login === TRUE && 
+                !is_null($password_tmp)
+            ) {
+                self::previousPreLogin($investorId, $password_tmp);
                 Utility::location(self::SET_ETH_ADDRESS);
             }
         }
-
-        Utility::location(self::LOGIN_URL . '?err=3671&err_text=wrong credentials');
+        Utility::location(self::LOGIN_URL . '?err=3671&err_text=wrong authentication code');
     }
 
     static private function handleLogoutRequest()
