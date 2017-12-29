@@ -59,10 +59,11 @@ class Bounty_controller
     /**
      * @param Investor $investor
      * @param double $tokens
-     * @param Deposit $deposit
+     * @param string $coin
+     * @param string $txid
      * @return int|string if < 0 -> error, string - txid
      */
-    static public function mintTokens(&$investor, $tokens, &$deposit = null)
+    static public function mintTokens(&$investor, $tokens, $coin = '', $txid = '')
     {
         if (!Deposit::mintingIsOn()) {
             return -8321;
@@ -88,12 +89,6 @@ class Bounty_controller
         $mintTokens_selector = '24b35ef2';
         $minter = $investor->eth_address;
         $tokensWithoutDecimals = Utility::mul($tokens, '100000000');
-        $coin = '';
-        $txid = '';
-        if (!is_null($deposit)) {
-            $coin = $deposit->coin;
-            $txid = $deposit->txid;
-        }
 
         $minter_geth = str_pad(preg_replace('/^0x(.*)$/', '$1', $minter), 64, '0', STR_PAD_LEFT);
         $tokens_geth = str_pad(Utility::hex($tokensWithoutDecimals), 64, '0', STR_PAD_LEFT);
