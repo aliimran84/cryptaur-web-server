@@ -7,6 +7,6 @@ use core\models\Investor;
 
 Application::init();
 
-Investor::fill_referalsCompressedTable_forAll(function ($i, $all) {
+Investor::fill_referralsCompressedTable_forAll(function ($i, $all) {
     echo "Fill for $i/$all\r\n";
 });

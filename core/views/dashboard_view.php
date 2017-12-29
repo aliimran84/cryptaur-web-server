@@ -247,8 +247,8 @@ class Dashboard_view
     static public function myGroup()
     {
         $referrer = Investor::getById(Application::$authorizedInvestor->referrer_id);
-        Application::$authorizedInvestor->initReferalls(count(Bounty::program()));
-        Application::$authorizedInvestor->initCompressedReferalls(count(Bounty::program()));
+        Application::$authorizedInvestor->initReferrals(count(Bounty::program()));
+        Application::$authorizedInvestor->initCompressedReferrals(count(Bounty::program()));
         ob_start();
         ?>
 

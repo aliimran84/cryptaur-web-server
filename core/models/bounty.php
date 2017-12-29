@@ -38,7 +38,7 @@ class Bounty
         }
 
         if ($level === 0) {
-            $investor->initCompressedReferalls(count(self::program()));
+            $investor->initCompressedReferrals(count(self::program()));
         } else {
             $reward += $investor->eth_not_used_in_bounty * self::program()[$level - 1] / 100;
             $rewardPerLevel[$level] += $reward;

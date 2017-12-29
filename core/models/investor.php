@@ -368,7 +368,7 @@ class Investor
         // то следует выполнить заполнение таблицы
         if (!$oldCollapseState) {
             if (self::isInvestorCollapseInCompress($this)) {
-                $this->fill_referalsCompressedTable();
+                $this->fill_referralsCompressedTable();
             }
         }
     }
@@ -564,7 +564,7 @@ class Investor
     /**
      * @param int $levels
      */
-    public function initReferalls($levels)
+    public function initReferrals($levels)
     {
         if ($levels < 1) {
             return;
@@ -574,16 +574,16 @@ class Investor
             $this->compressed_referrals = $this->referrals; // todo: it's fake! maked for more speed
         }
         foreach ($this->referrals as &$referral) {
-            $referral->initReferalls($levels - 1);
+            $referral->initReferrals($levels - 1);
         }
     }
 
     /**
      * @param int $levels
      */
-    public function initCompressedReferalls($levels)
+    public function initCompressedReferrals($levels)
     {
-        self::initReferalls($levels); // todo: it's fake! maked for more speed
+        self::initReferrals($levels); // todo: it's fake! maked for more speed
         return;
 
         if ($levels < 1) {
@@ -643,7 +643,7 @@ class Investor
         }
 
         foreach ($this->compressed_referrals as &$investor) {
-            $investor->initCompressedReferalls($levels - 1);
+            $investor->initCompressedReferrals($levels - 1);
         }
     }
 
@@ -651,7 +651,7 @@ class Investor
     {
         $count = 0;
         if ($isFirst) {
-            $this->initReferalls(count(Bounty::program()));
+            $this->initReferrals(count(Bounty::program()));
         }
         if (is_null($this->referrals) || count($this->referrals) === 0) {
             return 0;
@@ -667,7 +667,7 @@ class Investor
     {
         $count = 0;
         if ($isFirst) {
-            $this->initCompressedReferalls(count(Bounty::program()));
+            $this->initCompressedReferrals(count(Bounty::program()));
         }
         foreach ($this->compressed_referrals as &$referral) {
             ++$count;
@@ -676,7 +676,7 @@ class Investor
         return $count;
     }
 
-    static public function fill_referalsCompressedTable_forAll($callback = null)
+    static public function fill_referralsCompressedTable_forAll($callback = null)
     {
         DB::set("DELETE FROM `investors_referrals_compressed`;");
         $investors_data = @DB::get("
@@ -689,14 +689,14 @@ class Investor
         ;", [Deposit::minimalTokensForBounty()]);
         foreach ($investors_data as $i => $investor_data) {
             $investor = self::getById($investor_data['id']);
-            $investor->fill_referalsCompressedTable();
+            $investor->fill_referralsCompressedTable();
             if (is_callable($callback)) {
                 call_user_func($callback, $i, count($investors_data));
             }
         }
     }
 
-    public function fill_referalsCompressedTable()
+    public function fill_referralsCompressedTable()
     {
         // это будет заполнятся только для тех, кто участвует в компрессии
         if (self::isInvestorCollapseInCompress($this)) {
