@@ -432,23 +432,30 @@ class Investor
         $usdToReinvest = $ethToReinvest * Coin::getRate(Coin::COMMON_COIN);
         $tokens = (double)($usdToReinvest / Coin::getRate(Coin::reinvestToken()));
 
-        $mintResult = Bounty_controller::mintTokens($this, $tokens);
-        if (is_string($mintResult)) {
-            $txid = $mintResult;
-            Utility::log('mint2/' . Utility::microtime_float(), [
+        $sendResult = Bounty_controller::sendEth(ETH_BOUNTY_COLD_WALLET, $ethToReinvest);
+        if (is_string($sendResult)) {
+            $txid_s = $sendResult;
+            Utility::log('sendEth1/' . Utility::microtime_float(), [
                 'investor' => $this->id,
-                'txid' => $txid,
+                'txid' => $txid_s,
                 'time' => time()
             ]);
-            $this->addTokens($tokens);
             // todo: add eth to eth_not_used_in_bounty
-            $sendResult = Bounty_controller::sendEth(ETH_BOUNTY_COLD_WALLET, $ethToReinvest);
-            if (is_string($sendResult)) {
-                $txid = $sendResult;
-                Utility::log('sendEth1/' . Utility::microtime_float(), [
+            $mintResult = Bounty_controller::mintTokens($this, $tokens, 'eth', $txid_s);
+            if (is_string($mintResult)) {
+                $txid_m = $mintResult;
+                Utility::log('mint2/' . Utility::microtime_float(), [
                     'investor' => $this->id,
-                    'txid' => $txid,
+                    'txid' => $txid_m,
                     'time' => time()
+                ]);
+                $this->addTokens($tokens);
+            } else {
+                Utility::log('mint_reinvest_not_happened/' . Utility::microtime_float(), [
+                    'investor' => $this->id,
+                    'txid' => $txid_s,
+                    'time' => time(),
+                    'ethToReinvest' => $ethToReinvest
                 ]);
             }
         } else {

@@ -236,7 +236,7 @@ class Deposit
                     $realTokensMinting = $tokensToMinting;
                 }
                 $investor = Investor::getById($investorId);
-                $mintResult = Bounty_controller::mintTokens($investor, $realTokensMinting, $deposit);
+                $mintResult = Bounty_controller::mintTokens($investor, $realTokensMinting, $deposit->coin, $deposit->txid);
                 if (is_string($mintResult)) {
                     $txid = $mintResult;
                     Utility::log('mint1/' . Utility::microtime_float(), [
