@@ -11,18 +11,8 @@ Application::init();
 Router::register(function () {
     $bountyInfo = @DB::get("
         SELECT
-            count( * ) AS realized_bounty 
-        FROM
-            investors 
-        WHERE
-            eth_bounty = 0 
-            AND eth_new_bounty > 0 UNION
-        SELECT
-            count( * ) AS with_bounty 
-        FROM
-            investors 
-        WHERE
-            eth_new_bounty > 0
+            ( SELECT count( * ) FROM investors WHERE eth_bounty = 0 AND eth_new_bounty > 0 ) AS realized_bounty,
+            ( SELECT count( * ) FROM investors WHERE eth_new_bounty > 0 ) AS with_bounty
     ")[0];
     echo "with_bounty: {$bountyInfo['with_bounty']}<br>";
     echo "realized_bounty {$bountyInfo['realized_bounty']}";
