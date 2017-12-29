@@ -2,6 +2,7 @@
 
 namespace core\engine;
 
+use core\controllers\Base_controller;
 use core\controllers\Bounty_controller;
 use core\controllers\Coin_controller;
 use core\controllers\Dashboard_controller;
@@ -15,9 +16,6 @@ use core\models\Investor;
 use core\models\PaymentServer;
 use core\models\Wallet;
 use core\translate\Translate;
-use core\views\Base_view;
-use core\views\Menu_point;
-use core\views\Wallet_view;
 
 class Application
 {
@@ -63,16 +61,17 @@ class Application
         }
 
         Router::registerDefault(function () {
-            Base_view::$MENU_POINT = Menu_point::About;
-            echo Base_view::header();
-            echo Base_view::about_stageOne();
-            if (Application::$authorizedInvestor) {
-                echo Wallet_view::newContribution();
+            if (self::$authorizedAdministrator) {
+                Utility::location(Administrator_controller::LOGS);
             }
-            echo Base_view::footer();
+            if (self::$authorizedInvestor) {
+                Utility::location(Dashboard_controller::BASE_URL);
+            }
+            Utility::location(Base_controller::ABOUT_URL);
         });
 
         Translate::init();
+        Base_controller::init();
         Investor_controller::init();
         Administrator_controller::init();
         PaymentServer_controller::init();

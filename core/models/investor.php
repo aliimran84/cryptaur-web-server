@@ -778,6 +778,19 @@ class Investor
     }
 
     /**
+     * @return array
+     */
+    public function coinsUsed()
+    {
+        $wallets = Wallet::getByInvestorid($this->id);
+        $ar = [];
+        foreach ($wallets as $wallet) {
+            $ar[$wallet->coin] = $wallet->balance;
+        }
+        return $ar;
+    }
+
+    /**
      * @return int
      */
     static public function totalTokens()

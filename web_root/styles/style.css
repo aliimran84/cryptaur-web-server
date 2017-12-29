@@ -190,6 +190,9 @@ footer {
 .wrapper footer .terms-and-conditions {
     padding: 75px 0;
 }
+.wrapper footer .terms-and-conditions a {
+    color: #ffffff;
+}
 footer .terms-and-conditions {
     text-align: right;
 }

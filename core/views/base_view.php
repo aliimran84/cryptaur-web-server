@@ -104,7 +104,6 @@ class Base_view
             <li class="<?= self::activeMenuItem(Menu_point::Admin_logout) ?>">
                 <a href="<?= Administrator_controller::LOGOUT_URL ?>"><?= Translate::td('Logout') ?></a></li>
         <?php } elseif (Application::$authorizedInvestor) { ?>
-            <li class="<?= self::activeMenuItem(Menu_point::About) ?>"><a href=""><?= Translate::td('About') ?></a></li>
             <li class="<?= self::activeMenuItem(Menu_point::Dashboard) ?>">
                 <a href="<?= Dashboard_controller::BASE_URL ?>"><?= Translate::td('Dashboard') ?></a></li>
             <li class="<?= self::activeMenuItem(Menu_point::Transactions) ?>">
@@ -115,7 +114,6 @@ class Base_view
             <li class="<?= self::activeMenuItem(Menu_point::Logout) ?>">
                 <a href="<?= Investor_controller::LOGOUT_URL ?>"><?= Translate::td('Logout') ?></a></li>
         <?php } else { ?>
-            <li class="<?= self::activeMenuItem(Menu_point::About) ?>"><a href=""><?= Translate::td('About') ?></a></li>
             <li class="<?= self::activeMenuItem(Menu_point::Login) ?>"><a href="<?= Investor_controller::LOGIN_URL ?>"><?= Translate::td('Login') ?></a>
             </li>
             <li class="<?= self::activeMenuItem(Menu_point::Register) ?>">
@@ -142,7 +140,7 @@ class Base_view
                         <p>Copyright &copy; 2017. <?= Translate::td('All right reserved') ?>.</p>
                     </div>
                     <div class="col s12 m6 terms-and-conditions">
-                        <p><?= Translate::td('Terms and Conditions') ?></p>
+                        <a target="_blank" href="https://cryptaur.com/terms-and-conditions"><?= Translate::td('Terms and Conditions') ?></a>
                     </div>
                 </div>
             </div>

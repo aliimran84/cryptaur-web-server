@@ -77,7 +77,7 @@ for ($offset = $startOffset; $offset < $usersCount; $offset += $limitSize) {
         if ($i === 0) {
             $duration = (time() - $startTime) + 1;
             $currentCount = $i + $offset;
-            $speed = number_format($currentCount / $duration, 5);
+            $speed = number_format($currentCount / $duration, 5, '.', '');
             if ($speed == 0) {
                 $remained = 1;
             } else {

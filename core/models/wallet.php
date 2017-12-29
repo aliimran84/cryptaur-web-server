@@ -184,4 +184,16 @@ class Wallet
         ;")[0]['total_usdUsed'];
         return $usdUsed;
     }
+
+    /**
+     * @param string $coin
+     * @return double
+     */
+    static public function totalCoinsUsed($coin)
+    {
+        return (double)@DB::get("
+            SELECT SUM(`balance`) as `total` FROM `wallets`
+            WHERE `coin` = ?
+        ;", [$coin])[0]['total'];
+    }
 }

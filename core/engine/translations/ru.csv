@@ -49,7 +49,7 @@ Password recovery,Восстановление пароля
 Password successfully changed,Пароль успешно изменен
 Password must be more than 6 symbols,Пароль должен быть не менее 6 символов
 "If the user exists then he was sent a new password","Если пользователь существует, то ему был отправлен новый пароль"
-"left it empty to not to change","оставьте пустым, чтобы не менять"
+"leave empty if not changing","оставьте пустым, чтобы не менять"
 Not a member yet,Ещё не зарегистрированы
 Cryptaur registration,Cryptaur регистрация
 REFERRER CODE,РЕФЕРАЛЬНЫЙ КОД
@@ -85,7 +85,7 @@ Cryptaur admin settings,Cryptaur настройки администратора
 Cryptaur administators list,Cryptaur список администраторов
 Coins rates (deposits) count of usd in one coin,Цены на монеты (депозиты)<br>количество usd в одной монете
 Stage,Этап
-Total tokens issued,Выпущено общее количество токенов
+Total tokens issued,Всего выпущено токенов
 Total funds raised,Общий объем привлеченных средств
 Total participants,Всего участников
 My tokens,Мои токены
@@ -94,6 +94,7 @@ Withdraw,Вывод
 Reinvest,Реинвестировать
 Level,Уровень
 Purchased,Купленные
+Total coin contributed,Всего %%coin%% внесено
 Contributed,Внесенные
 Total in USD,Всего в USD
 Withdrawn,Выведено
@@ -103,7 +104,7 @@ Participants,Участники
 Invite friend,Пригласить друга
 Invite friends,Пригласить друзей
 After compression,После компрессии
-participants in level,участники уровня
+participants in level,участника на уровне
 January,Январь
 February,Февраль
 March,Март

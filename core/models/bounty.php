@@ -20,7 +20,7 @@ class Bounty
     }
 
     /**
-     * reward in US$
+     * reward in ETH
      * @param Investor $investor
      * @param [] [0=>1, 1=>5, ...]
      * @param int $level

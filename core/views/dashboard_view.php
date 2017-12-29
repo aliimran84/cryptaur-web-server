@@ -22,7 +22,7 @@ class Dashboard_view
             <div class="col s12 m3 left-panel">
                 <h3><?= Translate::td('Token sale') ?></h3>
                 <div class="row">
-                    <div class="stage active">
+                    <div class="stage">
                         <h2><?= Translate::td('Stage') ?> 1</h2>
                         <p><?= Translate::td('Nov') ?> 27, 2017</p>
                         <p><?= Translate::td('Dec') ?> 07, 2017</p>
@@ -32,7 +32,7 @@ class Dashboard_view
                     </div>
                 </div>
                 <div class="row">
-                    <div class="stage ">
+                    <div class="stage active">
                         <h2><?= Translate::td('Stage') ?> 2</h2>
                         <p><?= Translate::td('Jan') ?> 22, 2018</p>
                         <p><?= Translate::td('Jan') ?> 31, 2018</p>
@@ -84,12 +84,12 @@ class Dashboard_view
                         <h3><?= Coin::token() ?> <?= Investor::totalTokens() ?></h3>
                     </div>
                     <div class="col s12 m4">
-                        <h4><?= Translate::td('Total funds raised') ?></h4>
-                        <h3>US$ <?= (int)Wallet::totalUsdUsed() ?></h3>
+                        <h4><?= Translate::td('Total coin contributed', ['coin' => 'BTC']) ?></h4>
+                        <h3>BTC <?= (int)Wallet::totalCoinsUsed('btc') ?></h3>
                     </div>
                     <div class="col s12 m4">
-                        <h4><?= Translate::td('Total participants') ?></h4>
-                        <h3><?= Investor::totalInvestors() ?></h3>
+                        <h4><?= Translate::td('Total coin contributed', ['coin' => 'ETH']) ?></h4>
+                        <h3>ETH <?= (int)Wallet::totalCoinsUsed('eth') ?></h3>
                     </div>
                 </div>
                 <section class="my-tokens">
@@ -107,13 +107,14 @@ class Dashboard_view
                             </div>
                             <form class="reinvest-form" action="<?= Bounty_controller::INVESTOR_REALIZE_URL ?>" method="post">
                                 <div class="amount input-field">
-                                    <p>Percents to reinvest: <input type="text" class="reinvest" value="<?= Application::$authorizedInvestor->eth_bounty ?>"></p>
-                                    <p>All remaining spent to withdraw: <input type="text" class="withdraw" value="0"></p>
+                                    <p>Percents to reinvest:
+                                        <input type="text" class="reinvest" value="<?= Application::$authorizedInvestor->eth_bounty ?>">
+                                    </p>
+                                    <p>All remaining spent to withdraw: <input type="text" class="withdraw" value="0">
+                                    </p>
                                     <input type="text" class="percents" name="percentsForReinvesting" value="100">
                                 </div>
                                 <div class="amount input-field">
-<!--                                    <input type="number" name="percentsForReinvesting" value="0" min="0" max="100" step="1">-->
-<!--                                    <label>--><?//= Translate::td('select amount') ?><!--</label>-->
                                     <p class="range-field">
                                         <input type="range" min="0" max="100" value="100"/>
                                     </p>
@@ -173,7 +174,7 @@ class Dashboard_view
                             <li>
                                 <h2>
                                     <?= $i + 1 ?> <?= Translate::td('Level') ?>: <?= $value ?>%,<br>
-                                    US$ <?= number_format(@$rewardByLevel[$i + 1], 2) ?>
+                                    <?= Coin::COMMON_COIN ?> <?= number_format(@$rewardByLevel[$i + 1], 2, '.', '') ?>
                                 </h2>
                             </li>
                         <?php } ?>
@@ -208,8 +209,6 @@ class Dashboard_view
                     ?>
                     <li><span><?= $coin ?></span><span><?= $balance ?></span></li>
                 <?php } ?>
-                <li><h5><?= Translate::td('Total in USD') ?></h5><h5>
-                        $<?= Application::$authorizedInvestor->usdUsed() ?></h5></li>
                 <li><h5><?= Translate::td('Withdrawn') ?></h5><h5><?= Application::$authorizedInvestor->eth_withdrawn ?>
                         ETH</h5></li>
             </ul>
@@ -228,8 +227,16 @@ class Dashboard_view
         ?>
         <div class="tree-block">
             <h2><?= $investor->firstname ?> <?= $investor->lastname ?></h2>
-            <p><?= Translate::td('Contributed') ?></p>
-            <h3>US$ <?= $investor->usdUsed() ?></h3>
+            <h3><?= Coin::token() ?> <?= $investor->tokens_count ?></h3>
+            <p>
+                <?= Translate::td('Contributed') ?>
+                <?php
+                foreach ($investor->coinsUsed() as $coin => $balance) {
+                    $coin = strtoupper($coin);
+                    echo "<br>$coin $balance";
+                }
+                ?>
+            </p>
         </div>
         <?php
         return ob_get_clean();
@@ -250,8 +257,7 @@ class Dashboard_view
                 </div>
                 <div class="row">
                     <div class="col s12 l4 main-panel-block">
-                        <h3><?= Translate::td('Raised by group') ?>:
-                            US$ <?= Bounty::rewardForInvestor(Application::$authorizedInvestor) ?></h3>
+                        <h3>BTC: <?= (int)Wallet::totalCoinsUsed('btc') ?> / ETH: <?= (int)Wallet::totalCoinsUsed('eth') ?></h3>
                     </div>
                     <div class="col s12 l4 main-panel-block">
                         <h3>
@@ -266,10 +272,10 @@ class Dashboard_view
                     </div>
                 </div>
                 <div class="row">
-                    <p class="after-compression">
-                        <input type="checkbox" id="after-compression"/>
-                        <label for="after-compression"><?= Translate::td('After compression') ?></label>
-                    </p>
+<!--                    <p class="after-compression">-->
+<!--                        <input type="checkbox" id="after-compression"/>-->
+<!--                        <label for="after-compression">--><?//= Translate::td('After compression') ?><!--</label>-->
+<!--                    </p>-->
                     <div class="main-panel-block tree before-compression active">
                         <ul class="first-level">
                             <?php if ($referrer) { ?>
