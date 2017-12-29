@@ -259,7 +259,10 @@ class Dashboard_view
                 </div>
                 <div class="row">
                     <div class="col s12 l4 main-panel-block">
+                        <?php /*
                         <h3>BTC: <?= (int)Wallet::totalCoinsUsed('btc') ?> / ETH: <?= (int)Wallet::totalCoinsUsed('eth') ?></h3>
+                        */ ?>
+                        <h3>ETH REWARD: <?= Bounty::rewardForInvestor(Application::$authorizedInvestor) ?></h3>
                     </div>
                     <div class="col s12 l4 main-panel-block">
                         <h3>
@@ -274,10 +277,12 @@ class Dashboard_view
                     </div>
                 </div>
                 <div class="row">
-<!--                    <p class="after-compression">-->
-<!--                        <input type="checkbox" id="after-compression"/>-->
-<!--                        <label for="after-compression">--><?//= Translate::td('After compression') ?><!--</label>-->
-<!--                    </p>-->
+                    <!--                    <p class="after-compression">-->
+                    <!--                        <input type="checkbox" id="after-compression"/>-->
+                    <!--                        <label for="after-compression">-->
+                    <?//= Translate::td('After compression')
+                    ?><!--</label>-->
+                    <!--                    </p>-->
                     <div class="main-panel-block tree before-compression active">
                         <ul class="first-level">
                             <?php if ($referrer) { ?>
