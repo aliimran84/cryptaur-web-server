@@ -258,6 +258,10 @@ class Investor_controller
     
     static private function sent2FaOtpRequest($investorId)
     {
+        if(USE_2FA == FALSE)
+        {
+            return FALSE;
+        }
         //TODO - make some rework when 2fa by user's wish will be implemented
         $user = Investor::getById($investorId);
         $email = $user->email;
