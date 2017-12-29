@@ -80,7 +80,7 @@ class Dashboard_view
                 </div>
                 <div class="row indicators">
                     <div class="col s12 m4">
-                        <h4><?= Translate::td('Total tokens issued') ?></h4>
+                        <h4><?= Translate::td('Total tokens minted') ?></h4>
                         <h3><?= Coin::token() ?> <?= Investor::totalTokens() ?></h3>
                     </div>
                     <div class="col s12 m4">
