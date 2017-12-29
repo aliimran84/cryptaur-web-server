@@ -107,6 +107,7 @@ class Dashboard_view
                             </div>
                             <form class="reinvest-form" action="<?= Bounty_controller::INVESTOR_REALIZE_URL ?>" method="post">
                                 <div class="amount input-field">
+                                    <p class="range-field__label title"><?= Translate::td('Split bounty between reinvest and withdraw') ?></p>
                                     <p><?= Translate::td('Part to reinvest') ?>:</p>
                                     <input type="text" disabled class="reinvest" value="<?= Application::$authorizedInvestor->eth_bounty ?>">
                                     <br>
@@ -118,7 +119,7 @@ class Dashboard_view
                                     <p class="range-field">
                                         <input type="range" min="0" max="100" value="100"/>
                                     </p>
-                                    <p class="range-field__label"><?= Translate::td('Bounty distribution with by mean of slider') ?></p>
+                                    <p class="range-field__label"><?= Translate::td('Drag slider to adjust values') ?></p>
                                 </div>
                                 <div class="amount input-field">
                                     <button type="submit" class="waves-effect waves-light btn "

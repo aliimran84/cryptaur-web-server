@@ -145,4 +145,5 @@ not a valid email,not a valid email
 email already in use,email already in use
 Part to reinvest,Part to reinvest
 Part to withdraw,Part to withdraw
-Bounty distribution with by mean of slider,Bounty distribution with by mean of slider
+Split bounty between reinvest and withdraw,Split bounty between reinvest and withdraw
+Drag slider to adjust values,Drag slider to adjust values
