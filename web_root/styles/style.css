@@ -543,7 +543,7 @@ footer .row {
     margin: 30px 40px;
 }
 .dashboard .main-panel-block .amount {
-    margin: 10px 40px;
+    margin: 10px 40px 0;
 }
 .dashboard .my-contribution .my-contribution-block {
     padding: 15px 0 0 0;
@@ -557,7 +557,7 @@ footer .row {
     text-transform: uppercase;
 }
 .dashboard .main-panel-block .amount.input-field .range-field {
-    margin: 25px 0 0;
+    margin: 0;
     width: 100%;
 }
 .dashboard .main-panel-block .amount.input-field input.percents {
@@ -747,6 +747,27 @@ footer .row {
     font-weight: 500;
     margin: 0;
     color: #404040;
+}
+.dashboard.content .reinvest-form p {
+    margin: 0;
+    display: inline-block;
+}
+.dashboard.content .reinvest-form .reinvest,
+.dashboard.content .reinvest-form .withdraw {
+    border: none;
+    background: transparent;
+    color: #000000;
+    display: inline-block;
+    padding: 0;
+    width: auto;
+    margin-bottom: 5px;
+    font-size: 15px;
+    height: 22px;
+}
+.dashboard.content .reinvest-form .range-field__label {
+    text-align: center;
+    display: block;
+    margin-bottom: 20px;
 }
 .dashboard.content .left-panel .stage.active,
 .dashboard.content .left-panel .current-stage h2,
