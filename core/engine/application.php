@@ -67,7 +67,7 @@ class Application
             if (self::$authorizedInvestor) {
                 Utility::location(Dashboard_controller::BASE_URL);
             }
-            Utility::location(Base_controller::ABOUT_URL);
+            Utility::location(Investor_controller::LOGIN_URL);
         });
 
         Translate::init();
