@@ -297,7 +297,9 @@ class Dashboard_view
                                         <?= self::investorCard(Application::$authorizedInvestor) ?>
                                         <div class="line-right"></div>
                                         <div class="participants-block">
-                                            <h2><?= count(Application::$authorizedInvestor->referrals) ?> <?= Translate::td('participants in level') ?>
+                                            <h2>
+                                                <?= Translate::td('Participants in level') ?>:
+                                                <?= count(Application::$authorizedInvestor->referrals) ?>
                                                 <i class="material-icons">expand_more</i></h2>
                                         </div>
                                         <?php if ($referrer) { ?>
@@ -326,8 +328,10 @@ class Dashboard_view
                                         <?= self::investorCard(Application::$authorizedInvestor) ?>
                                         <div class="line-right"></div>
                                         <div class="participants-block">
-                                            <h2><?= count(Application::$authorizedInvestor->compressed_referrals) ?>
-                                                <?= Translate::td('participants in level') ?><i class="material-icons">expand_more</i>
+                                            <h2>
+                                                <?= Translate::td('Participants in level') ?>:
+                                                <?= count(Application::$authorizedInvestor->compressed_referrals) ?>
+                                                <i class="material-icons">expand_more</i>
                                             </h2>
                                         </div>
                                         <?php if ($referrer) { ?>
@@ -366,7 +370,9 @@ class Dashboard_view
                     <?php if ($referral->referrals) { ?>
                         <div class="line-right"></div>
                         <div class="participants-block">
-                            <h2><?= count($referral->referrals) ?> <?= Translate::td('participants in level') ?>
+                            <h2>
+                                <?= Translate::td('Participants in level') ?>:
+                                <?= count($referral->referrals) ?>
                                 <i class="material-icons">expand_more</i></h2>
                         </div>
                     <?php } ?>
@@ -403,7 +409,9 @@ class Dashboard_view
                     <?php if ($referral->compressed_referrals) { ?>
                         <div class="line-right"></div>
                         <div class="participants-block">
-                            <h2><?= count($referral->compressed_referrals) ?> <?= Translate::td('participants in level') ?>
+                            <h2>
+                                <?= Translate::td('Participants in level') ?>:
+                                <?= count($referral->compressed_referrals) ?>
                                 <i class="material-icons">expand_more</i></h2>
                         </div>
                     <?php } ?>
