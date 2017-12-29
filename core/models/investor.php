@@ -4,6 +4,7 @@ namespace core\models;
 
 use core\controllers\Bounty_controller;
 use core\controllers\Investor_controller;
+use core\engine\Application;
 use core\engine\DB;
 use core\engine\Utility;
 
@@ -567,6 +568,9 @@ class Investor
     public function initReferrals($levels)
     {
         if ($levels < 1) {
+            return;
+        }
+        if ((@$_SERVER['REMOTE_ADDR']) && Application::executedTime() > 0.9) { // todo: it's prevent large time execution, but return wrong data
             return;
         }
         if (is_null($this->referrals)) {
