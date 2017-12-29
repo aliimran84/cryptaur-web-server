@@ -39,6 +39,9 @@ Key id,Key id
 Secret key,Secret key
 Set,Задать
 Cryptaur login,Cryptaur авторизация
+Second Factor Authentication,Двухфакторная авторизация
+Authentication code,Код авторизации
+Authentication code has been sended to your email,Код авторизации был отправлен на ваш почтовый адрес
 Password,Пароль
 Forgot your account login,Забыли имя пользователя кабинета
 Recover,Восстановить
@@ -135,6 +138,7 @@ Alarm messages,Тревожные сообщения
 Delete,Удалить
 Friend email,Почта друга
 wrong credentials,неверные учетные данные
+wrong authentication code,неверный код авторизации
 not a valid eth address,недействительный eth адрес
 not a valid email,недействительная почта
 email already in use,электронный адрес уже занят
