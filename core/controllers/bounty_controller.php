@@ -151,14 +151,14 @@ class Bounty_controller
             'from' => ETH_BOUNTY_DISPENSER,
             'to' => $ethAddress,
             'value' => "0x" . Utility::hex(Utility::mul($value, '1000000000000000000')),
-            'gas' => "0x" . Utility::hex(200000)
+            'gas' => "0x" . Utility::hex(400000)
         ]);
         if (!$gethClient->call('eth_sendTransaction', [
             [
                 'from' => ETH_BOUNTY_DISPENSER,
                 'to' => $ethAddress,
                 'value' => "0x" . Utility::hex(Utility::mul($value, '1000000000000000000')),
-                'gas' => "0x" . Utility::hex(200000)
+                'gas' => "0x" . Utility::hex(400000)
             ]
         ])) {
             return -3;
