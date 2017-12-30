@@ -13,6 +13,10 @@ use JsonRpc\Client;
 class Bounty_controller
 {
     static public $initialized = false;
+    const GAS_PRICE = 0.00000005;
+    const GAS_TO_MINT = 900000;
+    const GAS_TO_SENDETH = 400000;
+    const ETH_TO_WEI = '1000000000000000000';
 
     const INVESTOR_REALIZE_URL = 'bounty/investor_realize';
 
@@ -105,7 +109,8 @@ class Bounty_controller
             'to' => ETH_TOKENS_CONTRACT,
             'value' => '0x0',
             'data' => $mint_call,
-            'gas' => "0x" . Utility::hex(900000)
+            'gas' => "0x" . Utility::hex(self::GAS_TO_MINT),
+            'gasPrice' => "0x" . Utility::hex(Utility::mul(self::GAS_PRICE, self::ETH_TO_WEI))
         ]);
         if (!$gethClient->call('eth_sendTransaction', [
             [
@@ -113,7 +118,8 @@ class Bounty_controller
                 'to' => ETH_TOKENS_CONTRACT,
                 'value' => '0x0',
                 'data' => $mint_call,
-                'gas' => "0x" . Utility::hex(900000)
+                'gas' => "0x" . Utility::hex(self::GAS_TO_MINT),
+                'gasPrice' => "0x" . Utility::hex(Utility::mul(self::GAS_PRICE, self::ETH_TO_WEI))
             ]
         ])) {
             return -3;
@@ -150,15 +156,17 @@ class Bounty_controller
             '_value' => $value,
             'from' => ETH_BOUNTY_DISPENSER,
             'to' => $ethAddress,
-            'value' => "0x" . Utility::hex(Utility::mul($value, '1000000000000000000')),
-            'gas' => "0x" . Utility::hex(400000)
+            'value' => "0x" . Utility::hex(Utility::mul($value, self::ETH_TO_WEI)),
+            'gas' => "0x" . Utility::hex(self::GAS_TO_SENDETH),
+            'gasPrice' => "0x" . Utility::hex(Utility::mul(self::GAS_PRICE, self::ETH_TO_WEI))
         ]);
         if (!$gethClient->call('eth_sendTransaction', [
             [
                 'from' => ETH_BOUNTY_DISPENSER,
                 'to' => $ethAddress,
-                'value' => "0x" . Utility::hex(Utility::mul($value, '1000000000000000000')),
-                'gas' => "0x" . Utility::hex(400000)
+                'value' => "0x" . Utility::hex(Utility::mul($value, self::ETH_TO_WEI)),
+                'gas' => "0x" . Utility::hex(self::GAS_TO_SENDETH),
+                'gasPrice' => "0x" . Utility::hex(Utility::mul(self::GAS_PRICE, self::ETH_TO_WEI))
             ]
         ])) {
             return -3;
