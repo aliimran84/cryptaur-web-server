@@ -61,6 +61,11 @@ class Dashboard_view
                         <!--                        </div>-->
                     </div>
                 </div>
+                <div class="row">
+                    <div style="text-align: center;">
+                        <img src="/images/cpt-coin.gif" style="width: 90%; max-width: 235px;">
+                    </div>
+                </div>
             </div>
             <div class="col s12 m9 main-panel">
                 <div class="row tokens-info">
