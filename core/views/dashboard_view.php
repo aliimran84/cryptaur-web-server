@@ -230,6 +230,7 @@ class Dashboard_view
         <div class="tree-block">
             <h2><?= $investor->firstname ?> <?= $investor->lastname ?></h2>
             <h3><?= Coin::token() ?> <?= $investor->tokens_count ?></h3>
+            <?php /* // todo: временно убираю, т.к. на больших деревьях ну очень долго отрабатывается
             <p>
                 <?= Translate::td('Contributed') ?>
                 <?php
@@ -239,6 +240,7 @@ class Dashboard_view
                 }
                 ?>
             </p>
+            */ ?>
         </div>
         <?php
         return ob_get_clean();
