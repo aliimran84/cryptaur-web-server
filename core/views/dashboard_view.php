@@ -63,7 +63,7 @@ class Dashboard_view
                 </div>
                 <div class="row">
                     <div style="text-align: center;">
-                        <img src="/images/cpt-coin.gif" style="width: 90%; max-width: 235px;">
+                        <img src="/images/cpt-coin-260.gif" style="width: 90%; max-width: 235px;" alt="cpt-coin">
                     </div>
                 </div>
             </div>
