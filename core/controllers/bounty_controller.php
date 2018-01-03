@@ -49,7 +49,7 @@ class Bounty_controller
         if (!Bounty::withdrawIsOn() || !Bounty::reinvestIsOn()) {
             Utility::location(Dashboard_controller::BASE_URL);
         }
-        $ethToReinvest = Utility::minPrecisionNumber(Application::$authorizedInvestor->eth_bounty * $percentsForReinvesting / 100);
+        $ethToReinvest = Utility::minPrecisionNumber(Application::$authorizedInvestor->eth_bounty * ($percentsForReinvesting / 100));
         $ethToWithdraw = Utility::minPrecisionNumber(Application::$authorizedInvestor->eth_bounty - $ethToReinvest);
         if ($ethToWithdraw > 0) {
             Application::$authorizedInvestor->withdraw($ethToWithdraw);
