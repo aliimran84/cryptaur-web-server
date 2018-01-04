@@ -143,7 +143,7 @@ class Investor_controller
         session_abort();
     }
 
-    static private function loginWithId($investorId)
+    static public function loginWithId($investorId)
     {
         session_start();
         $_SESSION[self::SESSION_KEY] = $investorId;
@@ -374,7 +374,7 @@ class Investor_controller
                 Utility::location(self::SET_ETH_ADDRESS);
             }
         }
-        Utility::location(self::LOGIN_URL . '?err=3671&err_text=wrong authentication code');
+        Utility::location(self::LOGIN_URL . '?err=6538&err_text=wrong authentication code');
     }
 
     static private function handleLogoutRequest()
