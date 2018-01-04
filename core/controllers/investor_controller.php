@@ -20,7 +20,7 @@ class Investor_controller
     const BASE_URL = 'investor';
     const LOGIN_URL = 'investor/login';
     const SECONDFACTOR_URL = 'investor/secondfactor';
-    const SET_ETH_ADDRESS = 'investor/set_eth_address';
+    const SET_EMPTY_ETH_ADDRESS = 'investor/set_eth_address';
     const LOGOUT_URL = 'investor/logout';
     const RECOVER_URL = 'investor/recover';
     const CHANGE_PASSWORD_URL = 'investor/changepassword';
@@ -31,8 +31,6 @@ class Investor_controller
     const INVITE_FRIENDS_URL = 'investor/invite_friends';
 
     const SESSION_KEY = 'authorized_investor_id';
-    const PREVIOUS_SYSTEM_ID = 'previous_system_authorized_investor_id';
-    const PREVIOUS_SYSTEM_PASSWORD = 'previous_system_authorized_investor_password';
 
     const PREVIOUS_2FA_LOGIN_FLAG = 'previous_system_2fa_login_flag';
     const PREVIOUS_2FA_PASSWORD_TMP = 'previous_system_2fa_password_tmp';
@@ -58,11 +56,11 @@ class Investor_controller
         }, self::BASE_URL);
 
         Router::register(function () {
-            self::handleEthSetForm();
-        }, self::SET_ETH_ADDRESS, Router::GET_METHOD);
+            self::handleEmptyEthSetForm();
+        }, self::SET_EMPTY_ETH_ADDRESS, Router::GET_METHOD);
         Router::register(function () {
-            self::handleEthSetPost();
-        }, self::SET_ETH_ADDRESS, Router::POST_METHOD);
+            self::handleEmptyEthSetPost();
+        }, self::SET_EMPTY_ETH_ADDRESS, Router::POST_METHOD);
 
         Router::register(function () {
             self::handleLoginForm();
@@ -150,29 +148,13 @@ class Investor_controller
         session_write_close();
     }
 
-    static private function previousPreLogin($investorId, $password)
+    static private function handleEmptyEthSetForm()
     {
-        session_start();
-        $_SESSION[self::PREVIOUS_SYSTEM_ID] = $investorId;
-        $_SESSION[self::PREVIOUS_SYSTEM_PASSWORD] = $password;
-        session_write_close();
-    }
-
-    static private function handleEthSetForm()
-    {
-        session_start();
-        $investorId = 0;
-        if (isset($_SESSION[self::PREVIOUS_SYSTEM_ID])) {
-            $investorId = $_SESSION[self::PREVIOUS_SYSTEM_ID];
-        }
-        session_abort();
-        if (!$investorId) {
+        if (!Application::$authorizedInvestor) {
             Utility::location(self::LOGIN_URL);
         }
-
-        $investor = Investor::getById($investorId);
-        if ($investor->eth_address) {
-            Utility::location(self::LOGIN_URL);
+        if (Application::$authorizedInvestor->eth_address) {
+            Utility::location(self::BASE_URL);
         }
 
         Base_view::$TITLE = 'Set eth address';
@@ -181,64 +163,55 @@ class Investor_controller
         echo Base_view::footer();
     }
 
-    static private function handleEthSetPost()
+    static private function handleEmptyEthSetPost()
     {
-        session_start();
-        $investorId = 0;
-        if (isset($_SESSION[self::PREVIOUS_SYSTEM_ID]) && isset($_SESSION[self::PREVIOUS_SYSTEM_PASSWORD])) {
-            $investorId = $_SESSION[self::PREVIOUS_SYSTEM_ID];
-        } else {
-            Utility::location(self::LOGIN_URL);
-        }
-        session_abort();
+        $investor = Application::$authorizedInvestor;
 
-        if (!$investorId) {
+        if (!$investor) {
             Utility::location(self::LOGIN_URL);
-        }
-
-        $investor = Investor::getById($investorId);
-        if (is_null($investor)) {
-            Utility::location(self::LOGIN_URL);
-        }
-
-        if (!Utility::validateEthAddress(@$_POST['eth_address'])) {
-            Utility::location(self::SET_ETH_ADDRESS . '?err=1&err_text=not a valid eth address');
         }
 
         if ($investor->eth_address) {
-            Utility::location(self::LOGIN_URL);
+            Utility::location(self::BASE_URL);
+        }
+
+        if (!Utility::validateEthAddress(@$_POST['eth_address'])) {
+            Utility::location(self::SET_EMPTY_ETH_ADDRESS . '?err=1731&err_text=not a valid eth address');
         }
 
         $investor->setEthAddress($_POST['eth_address']);
-        $isOk = false;
-        if ($investor->tokens_count == 0) {
-            $isOk = true;
-        } else {
-            $mintResult = Bounty_controller::mintTokens($investor, $investor->tokens_count);
-            if (is_string($mintResult)) {
-                $txid = $mintResult;
-                Utility::log('mint3/' . Utility::microtime_float(), [
-                    'investor' => $investorId,
-                    'txid' => $txid,
-                    'time' => time()
-                ]);
-                $isOk = true;
-            }
-        }
 
-        if ($isOk) {
-            session_start();
-            $password = $_SESSION[self::PREVIOUS_SYSTEM_PASSWORD];
-            if (isset($_SESSION[self::PREVIOUS_SYSTEM_ID])) {
-                unset($_SESSION[self::PREVIOUS_SYSTEM_ID]);
-                unset($_SESSION[self::PREVIOUS_SYSTEM_PASSWORD]);
+        if (count(DB::get(
+                "
+                SELECT `id`
+                FROM `investors_waiting_tokens`
+                WHERE `investor_id` = ?
+                LIMIT 1;
+            ",
+                [$investor->id]
+            )) > 0) {
+            $isOk = false;
+            if ($investor->tokens_count == 0) {
+                $isOk = true;
+            } else {
+                $mintResult = Bounty_controller::mintTokens($investor, $investor->tokens_count);
+                if (is_string($mintResult)) {
+                    $txid = $mintResult;
+                    Utility::log('mint3/' . Utility::microtime_float(), [
+                        'investor' => $investor->id,
+                        'txid' => $txid,
+                        'time' => time()
+                    ]);
+                    $isOk = true;
+                }
             }
-            session_write_close();
-            $investor->changePassword($password);
-            self::loginWithId($investorId);
-        } else {
-            $investor->setEthAddress('');
-            Utility::location(self::SET_ETH_ADDRESS . '?err=8472&err_text=cant mint tokens right now');
+
+            if ($isOk) {
+                DB::set("DELETE FROM `investors_waiting_tokens` WHERE `investor_id` = ?", [$investor->id]);
+            } else {
+                $investor->setEthAddress('');
+                Utility::location(self::SET_EMPTY_ETH_ADDRESS . '?err=8472&err_text=cant mint tokens right now');
+            }
         }
 
         Utility::location(self::BASE_URL);
@@ -285,11 +258,12 @@ class Investor_controller
         $email = trim(@$_POST['email']);
         $password = trim(@$_POST['password']);
         $investorId = @Investor::getInvestorIdByEmailPassword($email, $password);
+        $investor = null;
         if ($investorId) {
             $sfa_used = self::sent2FaOtpRequest($investorId); //TRUE if user USE the 2FA
             if (USE_2FA == FALSE || $sfa_used == FALSE) {
                 self::loginWithId($investorId);
-                Utility::location(self::BASE_URL);
+                $investor = Investor::getById($investorId);
             } elseif ($sfa_used) {
                 session_start();
                 $_SESSION[self::SESSION_KEY_TMP] = $investorId;
@@ -300,9 +274,16 @@ class Investor_controller
         } else {
             $investorId = Investor::investorId_previousSystemCredentials($email, $password);
             if ($investorId > 0) {
-                self::previousPreLogin($investorId, $password);
-                Utility::location(self::SET_ETH_ADDRESS);
+                self::loginWithId($investorId);
+                $investor = Investor::getById($investorId);
+                $investor->changePassword($password);
             }
+        }
+        if ($investor) {
+            if (!$investor->eth_address) {
+                Utility::location(self::SET_EMPTY_ETH_ADDRESS);
+            }
+            Utility::location(self::BASE_URL);
         }
         Utility::location(self::LOGIN_URL . '?err=3671&err_text=wrong credentials');
     }
@@ -357,8 +338,8 @@ class Investor_controller
                 $p_login === TRUE &&
                 !is_null($password_tmp)
             ) {
-                self::previousPreLogin($investorId, $password_tmp);
-                Utility::location(self::SET_ETH_ADDRESS);
+//                self::previousPreLogin($investorId, $password_tmp);
+                Utility::location(self::SET_EMPTY_ETH_ADDRESS);
             }
         }
         Utility::location(self::LOGIN_URL . '?err=6538&err_text=wrong authentication code');
@@ -541,7 +522,10 @@ EOT;
     static private function handleSettingsForm()
     {
         if (!Application::$authorizedInvestor) {
-            Utility::location(self::BASE_URL);
+            Utility::location(self::LOGIN_URL);
+        }
+        if (!Application::$authorizedInvestor->eth_address) {
+            Utility::location(Investor_controller::SET_EMPTY_ETH_ADDRESS);
         }
 
         Base_view::$TITLE = 'Settings';
@@ -567,6 +551,9 @@ EOT;
     {
         if (!Application::$authorizedInvestor) {
             Utility::location(self::BASE_URL);
+        }
+        if (!Application::$authorizedInvestor->eth_address) {
+            Utility::location(Investor_controller::SET_EMPTY_ETH_ADDRESS);
         }
 
         Base_view::$TITLE = 'Invite friends';

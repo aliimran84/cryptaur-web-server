@@ -165,7 +165,7 @@ class Investor_view
             <div class="col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
                 <h3><?= Translate::td('Investor eth setup') ?></h3>
                 <div class="row">
-                    <form class="registration col s12" action="<?= Investor_controller::SET_ETH_ADDRESS ?>" method="post">
+                    <form class="registration col s12" action="<?= Investor_controller::SET_EMPTY_ETH_ADDRESS ?>" method="post">
                         <?php if (isset($_GET['err'])) { ?>
                             <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
                                 : <?= Translate::td($_GET['err_text']) ?></label>
