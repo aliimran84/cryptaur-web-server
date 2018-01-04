@@ -44,7 +44,7 @@ class Email
         $smtp_login = EMAIL_LOGIN;
         $smtp_password = EMAIL_PASSWORD;
         $smtp_port = EMAIL_PORT;
-        $secure = 'ssl';
+        $secure = EMAIL_SECURE;
 
         $reply_to = EMAIL_REPLY_TO_EMAIL;
 
@@ -132,7 +132,11 @@ class Email
         }
 
         //send the message, check for errors
-        return $mail->send();
+        if (!$mail->send()) {
+            error_log("Email SMPT error: {$mail->ErrorInfo}");
+            return false;
+        }
+        return true;
     }
 
     static private function wrapMessageInTemplate($message)

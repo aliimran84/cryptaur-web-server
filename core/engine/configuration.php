@@ -81,6 +81,7 @@ class Configuration
                 'port' => 0,
                 'login' => '',
                 'password' => '',
+                'secure' => 'tls',
                 'reply_to_email' => '',
                 'reply_to_name' => '',
                 'from_email' => '',
@@ -90,6 +91,7 @@ class Configuration
             DEFINE('EMAIL_HOST', $config['email_smtp']['host']);
             DEFINE('EMAIL_PORT', $config['email_smtp']['port']);
             DEFINE('EMAIL_LOGIN', $config['email_smtp']['login']);
+            DEFINE('EMAIL_SECURE', $config['email_smtp']['secure']);
             DEFINE('EMAIL_PASSWORD', $config['email_smtp']['password']);
             DEFINE('EMAIL_REPLY_TO_EMAIL', $config['email_smtp']['reply_to_email']);
             DEFINE('EMAIL_REPLY_TO_NAME', $config['email_smtp']['reply_to_name']);
