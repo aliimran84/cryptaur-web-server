@@ -209,7 +209,7 @@ class Investor_view
                     </div>
                     <div class="row">
                         <?= Translate::td('Eth address') ?>:
-                        <strong><?= Application::$authorizedInvestor->eth_address ?></strong>
+                        <input type="text" name="eth_address" placeholder="eth-address" value="<?= Application::$authorizedInvestor->eth_address ?>" autocomplete="nope">
                     </div>
                     <div class="row">
                         <?= Translate::td('Eth withdrawn') ?>:

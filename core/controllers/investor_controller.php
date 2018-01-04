@@ -544,6 +544,9 @@ EOT;
         if (self::verifyPassword(@$_POST['password'])) {
             Application::$authorizedInvestor->changePassword(@$_POST['password']);
         }
+        if (Utility::validateEthAddress(@$_POST['eth_address'])) {
+            Application::$authorizedInvestor->setEthAddress(@$_POST['eth_address']);
+        }
         Utility::location(self::SETTINGS_URL);
     }
 

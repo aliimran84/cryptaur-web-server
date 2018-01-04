@@ -85,6 +85,18 @@ class Investor
             DEFAULT COLLATE utf8_general_ci
         ;");
         DB::query("
+            CREATE TABLE IF NOT EXISTS `investors_ethaddresses` (
+                `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `investor_id` int(10) UNSIGNED DEFAULT '0',
+                `eth_address` varchar(50) DEFAULT '',
+                `datetime` datetime(0) NOT NULL,
+                PRIMARY KEY (`id`),
+                INDEX `investor_id_index`(`investor_id`) USING HASH
+            )
+            DEFAULT CHARSET utf8
+            DEFAULT COLLATE utf8_general_ci
+        ;");
+        DB::query("
             CREATE TABLE IF NOT EXISTS `investors_waiting_tokens` (
                 `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
                 `investor_id` int(10) UNSIGNED DEFAULT '0',
@@ -262,12 +274,17 @@ class Investor
                 $referrer_id, $referrer_code,
                 DB::timetostr(time()),
                 $email, $firstname, $lastname,
-                $password_hash, $eth_address, 0,
+                $password_hash, '', 0,
                 0
             ]
         );
 
-        return DB::lastInsertId();
+        $investorId = DB::lastInsertId();
+        if ($investorId > 0) {
+            self::setEthAddress_static($investorId, $eth_address);
+        }
+
+        return $investorId;
     }
 
     /**
@@ -287,11 +304,17 @@ class Investor
     }
 
     /**
+     * @param int $investorId
      * @param string $eth_address
      */
-    public function setEthAddress($eth_address)
+    static public function setEthAddress_static($investorId, $eth_address)
     {
-        $this->eth_address = $eth_address;
+        $eth_address = strtolower($eth_address);
+        $investor = self::getById($investorId);
+        if ($investor->eth_address == $eth_address) {
+            return;
+        }
+        $investor->eth_address = $eth_address;
         DB::set("
             UPDATE `investors`
             SET
@@ -299,7 +322,23 @@ class Investor
             WHERE
                 `id` = ?
             LIMIT 1
-        ", [$eth_address, $this->id]);
+        ", [$eth_address, $investorId]);
+        DB::set("
+            INSERT INTO `investors_ethaddresses`
+            SET
+                `investor_id` = ?,
+                `eth_address` = ?,
+                `datetime` = NOW()
+            ", [$investorId, $eth_address]
+        );
+    }
+
+    /**
+     * @param string $eth_address
+     */
+    public function setEthAddress($eth_address)
+    {
+        self::setEthAddress_static($this->id, $eth_address);
     }
 
     /**
