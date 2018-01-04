@@ -115,7 +115,7 @@ class Wallet_view
                 <div class="row">
                     <div class="col s12 offset-m3 m6">
                         <div class="row">
-                            <form>
+                            <form autocomplete="off">
                                 <div class="input-field col s6 m6">
                                     <select class="wallet_view-new_contribution-select_coins">
                                         <?php foreach (Coin::coins() as $coin) { ?>

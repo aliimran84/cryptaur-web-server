@@ -110,7 +110,7 @@ class Dashboard_view
                             <div class="amount-wallet">
                                 <?= Application::$authorizedInvestor->eth_bounty ?> <?= Coin::COMMON_COIN ?>
                             </div>
-                            <form class="reinvest-form" action="<?= Bounty_controller::INVESTOR_REALIZE_URL ?>" method="post">
+                            <form class="reinvest-form" action="<?= Bounty_controller::INVESTOR_REALIZE_URL ?>" method="post" autocomplete="off">
                                 <div class="amount input-field">
                                     <p class="range-field__label title"><?= Translate::td('Split bounty between reinvest and withdraw') ?></p>
                                     <p><?= Translate::td('Part to reinvest') ?>:</p>

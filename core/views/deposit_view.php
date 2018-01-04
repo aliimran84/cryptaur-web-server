@@ -19,7 +19,7 @@ class Deposit_view
         ob_start();
         ?>
         <div class="row card administrator-settings-block">
-            <form class="registration col s12" action="<?= Deposit_controller::TOKENS_SET_URL ?>" method="post">
+            <form class="registration col s12" action="<?= Deposit_controller::TOKENS_SET_URL ?>" method="post" autocomplete="off">
                 <h5 class="center"><?= Translate::td('Set minimal values') ?></h5>
                 <label><?= Translate::td('Minimal tokens for minting') ?>:</label>
                 <input type="number"
@@ -50,7 +50,7 @@ class Deposit_view
         ob_start();
         ?>
         <div class="row card administrator-settings-block">
-            <form class="registration col s12" action="<?= Deposit_controller::PERMISSIONS_SET_URL ?>" method="post">
+            <form class="registration col s12" action="<?= Deposit_controller::PERMISSIONS_SET_URL ?>" method="post" autocomplete="off">
                 <h5 class="center"><?= Translate::td('Set permissions values') ?></h5>
                 <label><?= Translate::td('Receiving deposits is on') ?>:</label>
                 <input type="number"

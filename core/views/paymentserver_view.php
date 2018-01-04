@@ -17,7 +17,7 @@ class PaymentServer_view
         ob_start();
         ?>
         <div class="row card administrator-settings-block">
-            <form class="registration col s12" action="<?= PaymentServer_controller::SET_URL ?>" method="post">
+            <form class="registration col s12" action="<?= PaymentServer_controller::SET_URL ?>" method="post" autocomplete="off">
                 <h5 class="center"><?= Translate::td('Payment server') ?></h5>
                 <?php if (isset($_GET['err'])) {
                     // todo: decode error
