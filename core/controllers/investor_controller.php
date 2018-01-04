@@ -300,18 +300,8 @@ class Investor_controller
         } else {
             $investorId = Investor::investorId_previousSystemCredentials($email, $password);
             if ($investorId > 0) {
-                $sfa_used = self::sent2FaOtpRequest($investorId); //TRUE if user USE the 2FA
-                if (USE_2FA == FALSE || $sfa_used == FALSE) {
-                    self::previousPreLogin($investorId, $password);
-                    Utility::location(self::SET_ETH_ADDRESS);
-                } elseif ($sfa_used) {
-                    session_start();
-                    $_SESSION[self::PREVIOUS_2FA_PASSWORD_TMP] = $password;
-                    $_SESSION[self::SESSION_KEY_TMP] = $investorId;
-                    $_SESSION[self::PREVIOUS_2FA_LOGIN_FLAG] = TRUE;
-                    session_write_close();
-                    Utility::location(self::SECONDFACTOR_URL);
-                }
+                self::previousPreLogin($investorId, $password);
+                Utility::location(self::SET_ETH_ADDRESS);
             }
         }
         Utility::location(self::LOGIN_URL . '?err=3671&err_text=wrong credentials');
