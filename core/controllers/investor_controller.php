@@ -29,11 +29,11 @@ class Investor_controller
     const REGISTER_CONFIRMATION_URL = 'investor/register_confirm';
     const SETTINGS_URL = 'investor/settings';
     const INVITE_FRIENDS_URL = 'investor/invite_friends';
-    
+
     const SESSION_KEY = 'authorized_investor_id';
     const PREVIOUS_SYSTEM_ID = 'previous_system_authorized_investor_id';
     const PREVIOUS_SYSTEM_PASSWORD = 'previous_system_authorized_investor_password';
-    
+
     const PREVIOUS_2FA_LOGIN_FLAG = 'previous_system_2fa_login_flag';
     const PREVIOUS_2FA_PASSWORD_TMP = 'previous_system_2fa_password_tmp';
     const SESSION_KEY_TMP = 'authorized_investor_id_tmp';
@@ -149,7 +149,7 @@ class Investor_controller
         $_SESSION[self::SESSION_KEY] = $investorId;
         session_write_close();
     }
-    
+
     static private function previousPreLogin($investorId, $password)
     {
         session_start();
@@ -255,11 +255,10 @@ class Investor_controller
         echo Investor_view::loginForm($message);
         echo Base_view::footer();
     }
-    
+
     static private function sent2FaOtpRequest($investorId)
     {
-        if(USE_2FA == FALSE)
-        {
+        if (USE_2FA == FALSE) {
             return FALSE;
         }
         //TODO - make some rework when 2fa by user's wish will be implemented
@@ -267,11 +266,11 @@ class Investor_controller
         $email = $user->email;
         $ga_id = "ga_id_$investorId";
         $ga_user = \core\gauthify\GAuthify::get_user($ga_id); //get user from GAuthify
-        if(is_null($ga_user)) { //else create it
+        if (is_null($ga_user)) { //else create it
             $ga_user = \core\gauthify\GAuthify::create_user($ga_id, md5($ga_user), $email);
         }
         $result = \core\gauthify\GAuthify::send_email($ga_id);
-        if(!is_null($result)) {
+        if (!is_null($result)) {
             session_start();
             $_SESSION[self::SFA_UNIQUE_ID] = $ga_id;
             $_SESSION[self::SFA_OTP_ID] = $result['otp_id'];
@@ -283,14 +282,15 @@ class Investor_controller
 
     static private function handleLoginRequest()
     {
-        $investorId = @Investor::getInvestorIdByEmailPassword($_POST['email'], $_POST['password']);
+        $email = trim(@$_POST['email']);
+        $password = trim(@$_POST['password']);
+        $investorId = @Investor::getInvestorIdByEmailPassword($email, $password);
         if ($investorId) {
             $sfa_used = self::sent2FaOtpRequest($investorId); //TRUE if user USE the 2FA
-            if(USE_2FA == FALSE || $sfa_used == FALSE) {
+            if (USE_2FA == FALSE || $sfa_used == FALSE) {
                 self::loginWithId($investorId);
                 Utility::location(self::BASE_URL);
-            }
-            elseif($sfa_used) {
+            } elseif ($sfa_used) {
                 session_start();
                 $_SESSION[self::SESSION_KEY_TMP] = $investorId;
                 $_SESSION[self::PREVIOUS_2FA_LOGIN_FLAG] = FALSE;
@@ -298,16 +298,15 @@ class Investor_controller
                 Utility::location(self::SECONDFACTOR_URL);
             }
         } else {
-            $investorId = Investor::investorId_previousSystemCredentials($_POST['email'], $_POST['password']);
+            $investorId = Investor::investorId_previousSystemCredentials($email, $password);
             if ($investorId > 0) {
                 $sfa_used = self::sent2FaOtpRequest($investorId); //TRUE if user USE the 2FA
-                if(USE_2FA == FALSE || $sfa_used == FALSE) {
-                    self::previousPreLogin($investorId, $_POST['password']);
+                if (USE_2FA == FALSE || $sfa_used == FALSE) {
+                    self::previousPreLogin($investorId, $password);
                     Utility::location(self::SET_ETH_ADDRESS);
-                }
-                elseif($sfa_used) {
+                } elseif ($sfa_used) {
                     session_start();
-                    $_SESSION[self::PREVIOUS_2FA_PASSWORD_TMP] = $_POST['password'];
+                    $_SESSION[self::PREVIOUS_2FA_PASSWORD_TMP] = $password;
                     $_SESSION[self::SESSION_KEY_TMP] = $investorId;
                     $_SESSION[self::PREVIOUS_2FA_LOGIN_FLAG] = TRUE;
                     session_write_close();
@@ -341,33 +340,31 @@ class Investor_controller
         ) {
             Utility::location(self::BASE_URL);
         }
-        
+
         $unique_id = $_SESSION[self::SFA_UNIQUE_ID];
         $otp_id = $_SESSION[self::SFA_OTP_ID];
         $investorId = $_SESSION[self::SESSION_KEY_TMP];
         $p_login = $_SESSION[self::PREVIOUS_2FA_LOGIN_FLAG];
         $password_tmp = isset($_SESSION[self::PREVIOUS_2FA_PASSWORD_TMP]) ? $_SESSION[self::PREVIOUS_2FA_PASSWORD_TMP] : NULL;
-        
+
         session_start();
         unset($_SESSION[self::SFA_OTP_ID]);
         unset($_SESSION[self::SFA_UNIQUE_ID]);
         unset($_SESSION[self::SESSION_KEY_TMP]);
         unset($_SESSION[self::PREVIOUS_2FA_LOGIN_FLAG]);
-        if(isset($_SESSION[self::PREVIOUS_2FA_PASSWORD_TMP]))
-        {
+        if (isset($_SESSION[self::PREVIOUS_2FA_PASSWORD_TMP])) {
             unset($_SESSION[self::PREVIOUS_2FA_PASSWORD_TMP]);
         }
         session_write_close();
-        
+
         $otp = $_POST['otp'];
         $checked = \core\gauthify\GAuthify::check($unique_id, $otp, $otp_id);
-        if($checked == 1) {
-            if($p_login === FALSE) {
+        if ($checked == 1) {
+            if ($p_login === FALSE) {
                 self::loginWithId($investorId);
                 Utility::location(self::BASE_URL);
-            }
-            elseif(
-                $p_login === TRUE && 
+            } elseif (
+                $p_login === TRUE &&
                 !is_null($password_tmp)
             ) {
                 self::previousPreLogin($investorId, $password_tmp);
@@ -414,33 +411,39 @@ class Investor_controller
 
     static private function handleRegistrationRequest()
     {
-        if (!filter_var(@$_POST['email'], FILTER_VALIDATE_EMAIL)) {
+        $email = trim(@$_POST['email']);
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             self::handleRegistrationForm($_POST, 'not a valid email');
             return;
         }
-        if (!Utility::validateEthAddress(@$_POST['eth_address'])) {
-            self::handleRegistrationForm($_POST, 'not a valid eth address');
-            return;
-        }
-        if (Investor::isExistWithParams($_POST['email'])) {
+        if (Investor::isExistWithParams($email)) {
             self::handleRegistrationForm($_POST, 'email already in use');
             return;
         }
+        $eth_address = trim(@$_POST['eth_address']);
+        if (!Utility::validateEthAddress($eth_address)) {
+            self::handleRegistrationForm($_POST, 'not a valid eth address');
+            return;
+        }
         $referrerId = 0;
-        if (@$_POST['referrer_code']) {
-            $referrerId = Investor::getReferrerIdByCode(@$_POST['referrer_code']);
+        $referrer_code = trim(@$_POST['referrer_code']);
+        if ($referrer_code) {
+            $referrerId = Investor::getReferrerIdByCode($referrer_code);
             if (!$referrerId) {
                 self::handleRegistrationForm($_POST, 'not a valid referrer code');
                 return;
             }
         }
-        if (!self::verifyPassword(@$_POST['password'])) {
+        $password = trim(@$_POST['password']);
+        if (!self::verifyPassword($password)) {
             self::handleRegistrationForm($_POST, 'not a valid password, use more than 6 characters');
             return;
         }
 
-        $confirmationUrl = self::urlForRegistration($_POST['email'], @$_POST['firstname'], @$_POST['lastname'], $_POST['eth_address'], $referrerId, $_POST['password']);
-        Email::send($_POST['email'], [], 'Cryptaur: email confirmation', "<a href=\"$confirmationUrl\">Confirm email to finish registration</a>");
+        $firstname = trim(@$_POST['firstname']);
+        $lastname = trim(@$_POST['lastname']);
+        $confirmationUrl = self::urlForRegistration($email, $firstname, $lastname, $eth_address, $referrerId, $password);
+        Email::send($email, [], 'Cryptaur: email confirmation', "<a href=\"$confirmationUrl\">Confirm email to finish registration</a>");
 
         Base_view::$TITLE = 'Email confirmation info';
         Base_view::$MENU_POINT = Menu_point::Register;
