@@ -144,6 +144,7 @@ wrong authentication code,неверный код авторизации
 not a valid eth address,недействительный eth адрес
 not a valid email,недействительная почта
 email already in use,электронный адрес уже занят
+cant mint tokens right now,невозможно отчеканить токены прямо сейчас
 Part to reinvest,Часть для реинвестирования
 Part to withdraw,Часть для вывода
 Split bounty between reinvest and withdraw,Распределить баунти между реинвестицией/выводом

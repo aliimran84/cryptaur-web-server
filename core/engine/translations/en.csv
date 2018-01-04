@@ -144,6 +144,7 @@ wrong authentication code,wrong authentication code
 not a valid eth address,not a valid eth address
 not a valid email,not a valid email
 email already in use,email already in use
+cant mint tokens right now,cant mint tokens right now
 Part to reinvest,Part to reinvest
 Part to withdraw,Part to withdraw
 Split bounty between reinvest and withdraw,Split bounty between reinvest and withdraw
