@@ -84,6 +84,16 @@ class Investor
             DEFAULT CHARSET utf8
             DEFAULT COLLATE utf8_general_ci
         ;");
+        DB::query("
+            CREATE TABLE IF NOT EXISTS `investors_waiting_tokens` (
+                `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `investor_id` int(10) UNSIGNED DEFAULT '0',
+                PRIMARY KEY (`id`),
+                INDEX `investor_id_index`(`investor_id`) USING HASH
+            )
+            DEFAULT CHARSET utf8
+            DEFAULT COLLATE utf8_general_ci
+        ;");
     }
 
     static private function createWithDataFromDB($data)
