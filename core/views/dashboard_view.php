@@ -117,7 +117,7 @@ class Dashboard_view
                                     <input type="text" disabled class="reinvest" value="<?= number_format(Application::$authorizedInvestor->eth_bounty, 8, '.', '') ?>">
                                     <br>
                                     <p><?= Translate::td('Part to withdraw') ?>:</p>
-                                    <input type="text" disabled class="withdraw" value="0">
+                                    <input type="text" disabled class="withdraw" value="0.00000000">
                                     <input type="text" class="percents" name="percentsForReinvesting" value="100">
                                 </div>
                                 <div class="amount input-field">
@@ -217,9 +217,12 @@ class Dashboard_view
                     <li><span><?= $coin ?></span><span><?= number_format($balance, 4, '.', '') ?></span></li>
                 <?php } ?>
                 <li>
-                    <h5><?= Translate::td('Withdrawn') ?></h5>
-                    <h5><?= number_format(Application::$authorizedInvestor->eth_withdrawn, 4, '.', '') ?>
-                        ETH</h5>
+                    <h5>
+                        <?= Translate::td('Withdrawn') ?>
+                    </h5><h5>
+                        <?= number_format(Application::$authorizedInvestor->eth_withdrawn, 4, '.', '') ?>
+                        ETH
+                    </h5>
                 </li>
             </ul>
         </div>
