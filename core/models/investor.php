@@ -483,34 +483,48 @@ class Investor
         $usdToReinvest = $ethToReinvest * Coin::getRate(Coin::COMMON_COIN);
         $tokens = (double)($usdToReinvest / Coin::getRate(Coin::reinvestToken()));
 
-        $sendResult = Bounty_controller::sendEth(ETH_BOUNTY_COLD_WALLET, $ethToReinvest);
-        if (is_string($sendResult)) {
-            $txid_s = $sendResult;
-            Utility::log('sendEth1/' . Utility::microtime_float(), [
+        list($sendCode, $sendStr) = Bounty_controller::sendEth(ETH_BOUNTY_COLD_WALLET, $ethToReinvest);
+        if ($sendCode === 0) {
+            $txid_s = $sendStr;
+            Utility::log('sendEth1_ok/' . Utility::microtime_float(), [
                 'investor' => $this->id,
                 'txid' => $txid_s,
-                'time' => time()
+                'time' => time(),
+                'eth_address' => $this->eth_address,
+                'ethToReinvest' => $ethToReinvest
             ]);
             // todo: add eth to eth_not_used_in_bounty
-            $mintResult = Bounty_controller::mintTokens($this, $tokens, 'eth', $txid_s);
-            if (is_string($mintResult)) {
-                $txid_m = $mintResult;
+            list($mintCode, $mintStr) = Bounty_controller::mintTokens($this, $tokens, 'eth', $txid_s);
+            if ($mintCode === 0) {
+                $txid_m = $mintStr;
                 Utility::log('mint2/' . Utility::microtime_float(), [
                     'investor' => $this->id,
                     'txid' => $txid_m,
-                    'time' => time()
+                    'time' => time(),
+                    'eth_address' => $this->eth_address,
+                    'ethToReinvest' => $ethToReinvest,
+                    'tokens' => $tokens
                 ]);
                 $this->addTokens($tokens);
             } else {
-                Utility::log('mint_reinvest_not_happened/' . Utility::microtime_float(), [
+                Utility::log('mint2_err/' . Utility::microtime_float(), [
                     'investor' => $this->id,
-                    'txid' => $txid_s,
-                    'time' => time(),
-                    'ethToReinvest' => $ethToReinvest
+                    'code' => $mintCode,
+                    'str' => $mintStr,
+                    'eth_address' => $this->eth_address,
+                    'tokens' => $this->tokens_count
                 ]);
             }
         } else {
             $this->addEthBounty($ethToReinvest);
+            Utility::log('sendEth1_err/' . Utility::microtime_float(), [
+                'investor' => $this->id,
+                'code' => $sendCode,
+                'str' => $sendStr,
+                'time' => time(),
+                'eth_address' => $this->eth_address,
+                'ethToReinvest' => $ethToReinvest
+            ]);
         }
 
         return true;
@@ -526,13 +540,15 @@ class Investor
             return false;
         }
 
-        $sendResult = Bounty_controller::sendEth($this->eth_address, $eth);
-        if (is_string($sendResult)) {
-            $txid = $sendResult;
-            Utility::log('sendEth2/' . Utility::microtime_float(), [
+        list($sendCode, $sendStr) = Bounty_controller::sendEth($this->eth_address, $eth);
+        if ($sendCode === 0) {
+            $txid = $sendStr;
+            Utility::log('sendEth2_ok/' . Utility::microtime_float(), [
                 'investor' => $this->id,
                 'txid' => $txid,
-                'time' => time()
+                'time' => time(),
+                'eth_address' => $this->eth_address,
+                'ethToReinvest' => $eth
             ]);
             $this->eth_withdrawn += $eth;
             DB::set("
@@ -545,6 +561,14 @@ class Investor
             ;", [$this->eth_withdrawn, $this->id]);
         } else {
             $this->addEthBounty($eth);
+            Utility::log('sendEth2_err/' . Utility::microtime_float(), [
+                'investor' => $this->id,
+                'code' => $sendCode,
+                'str' => $sendStr,
+                'time' => time(),
+                'eth_address' => $this->eth_address,
+                'ethToReinvest' => $eth
+            ]);
         }
 
         return true;

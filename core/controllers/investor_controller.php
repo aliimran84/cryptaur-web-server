@@ -194,15 +194,25 @@ class Investor_controller
             if ($investor->tokens_count == 0) {
                 $isOk = true;
             } else {
-                $mintResult = Bounty_controller::mintTokens($investor, $investor->tokens_count);
-                if (is_string($mintResult)) {
-                    $txid = $mintResult;
-                    Utility::log('mint3/' . Utility::microtime_float(), [
+                list($mintCode, $mintStr) = Bounty_controller::mintTokens($investor, $investor->tokens_count);
+                if ($mintCode === 0) {
+                    $txid = $mintStr;
+                    Utility::log('mint3_ok/' . Utility::microtime_float(), [
                         'investor' => $investor->id,
                         'txid' => $txid,
-                        'time' => time()
+                        'time' => time(),
+                        'eth_address' => $investor->eth_address,
+                        'tokens' => $investor->tokens_count
                     ]);
                     $isOk = true;
+                } else {
+                    Utility::log('mint3_err/' . Utility::microtime_float(), [
+                        'investor' => $investor->id,
+                        'code' => $mintCode,
+                        'str' => $mintStr,
+                        'eth_address' => $investor->eth_address,
+                        'tokens' => $investor->tokens_count
+                    ]);
                 }
             }
 

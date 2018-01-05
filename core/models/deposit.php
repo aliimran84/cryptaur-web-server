@@ -236,16 +236,26 @@ class Deposit
                     $realTokensMinting = $tokensToMinting;
                 }
                 $investor = Investor::getById($investorId);
-                $mintResult = Bounty_controller::mintTokens($investor, $realTokensMinting, $deposit->coin, $deposit->txid);
-                if (is_string($mintResult)) {
-                    $txid = $mintResult;
+                list($mintCode, $mintStr) = Bounty_controller::mintTokens($investor, $realTokensMinting, $deposit->coin, $deposit->txid);
+                if ($mintCode === 0) {
+                    $txid = $mintStr;
                     Utility::log('mint1/' . Utility::microtime_float(), [
                         'investor' => $investorId,
                         'txid' => $txid,
-                        'time' => time()
+                        'time' => time(),
+                        'eth_address' => $investor->eth_address,
+                        'tokens' => $realTokensMinting
                     ]);
                     $deposit->setUsedInMinting(true);
                     $investor->addTokens($realTokensMinting);
+                } else {
+                    Utility::log('mint1_err/' . Utility::microtime_float(), [
+                        'investor' => $investor->id,
+                        'code' => $mintCode,
+                        'str' => $mintStr,
+                        'eth_address' => $investor->eth_address,
+                        'tokens' => $investor->tokens_count
+                    ]);
                 }
             }
         }
