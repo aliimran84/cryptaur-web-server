@@ -446,7 +446,7 @@ class Investor
 
     public function addEthBounty($ethBounty)
     {
-        if ($ethBounty > $this->eth_bounty) {
+        if ($ethBounty < 0) {
             return false;
         }
 
