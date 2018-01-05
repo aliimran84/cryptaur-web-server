@@ -108,13 +108,13 @@ class Dashboard_view
                         <div class="col s12 m6 main-panel-block">
                             <h3><?= Translate::td('Bounty') ?></h3>
                             <div class="amount-wallet">
-                                <?= Application::$authorizedInvestor->eth_bounty ?> <?= Coin::COMMON_COIN ?>
+                                <?= number_format(Application::$authorizedInvestor->eth_bounty, 8, '.', '') ?> <?= Coin::COMMON_COIN ?>
                             </div>
-                            <form class="reinvest-form" action="<?= Bounty_controller::INVESTOR_REALIZE_URL ?>" method="post" autocomplete="off">
+                            <form class="reinvest-form" action="<?= Bounty_controller::INVESTOR_REALIZE_URL ?>" method="post">
                                 <div class="amount input-field">
                                     <p class="range-field__label title"><?= Translate::td('Split bounty between reinvest and withdraw') ?></p>
                                     <p><?= Translate::td('Part to reinvest') ?>:</p>
-                                    <input type="text" disabled class="reinvest" value="<?= Application::$authorizedInvestor->eth_bounty ?>">
+                                    <input type="text" disabled class="reinvest" value="<?= number_format(Application::$authorizedInvestor->eth_bounty, 8, '.', '') ?>">
                                     <br>
                                     <p><?= Translate::td('Part to withdraw') ?>:</p>
                                     <input type="text" disabled class="withdraw" value="0">
@@ -214,10 +214,13 @@ class Dashboard_view
                         $balance = $wallet->balance;
                     }
                     ?>
-                    <li><span><?= $coin ?></span><span><?= $balance ?></span></li>
+                    <li><span><?= $coin ?></span><span><?= number_format($balance, 4, '.', '') ?></span></li>
                 <?php } ?>
-                <li><h5><?= Translate::td('Withdrawn') ?></h5><h5><?= Application::$authorizedInvestor->eth_withdrawn ?>
-                        ETH</h5></li>
+                <li>
+                    <h5><?= Translate::td('Withdrawn') ?></h5>
+                    <h5><?= number_format(Application::$authorizedInvestor->eth_withdrawn, 4, '.', '') ?>
+                        ETH</h5>
+                </li>
             </ul>
         </div>
         <?php
