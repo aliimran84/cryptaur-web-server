@@ -500,7 +500,7 @@ class Investor
                 'txid' => $txid_s,
                 'time' => time(),
                 'eth_address' => $this->eth_address,
-                'ethToReinvest' => $ethToReinvest
+                'eth' => $ethToReinvest
             ]);
             // todo: add eth to eth_not_used_in_bounty
             list($mintCode, $mintStr) = Bounty_controller::mintTokens($this, $tokens, 'eth', $txid_s);
@@ -511,7 +511,7 @@ class Investor
                     'txid' => $txid_m,
                     'time' => time(),
                     'eth_address' => $this->eth_address,
-                    'ethToReinvest' => $ethToReinvest,
+                    'eth' => $ethToReinvest,
                     'tokens' => $tokens
                 ]);
                 $this->addTokens($tokens);
@@ -521,6 +521,7 @@ class Investor
                     'code' => $mintCode,
                     'str' => $mintStr,
                     'eth_address' => $this->eth_address,
+                    'eth' => $ethToReinvest,
                     'tokens' => $this->tokens_count
                 ]);
             }
@@ -532,7 +533,7 @@ class Investor
                 'str' => $sendStr,
                 'time' => time(),
                 'eth_address' => $this->eth_address,
-                'ethToReinvest' => $ethToReinvest
+                'eth' => $ethToReinvest
             ]);
         }
 
@@ -557,7 +558,7 @@ class Investor
                 'txid' => $txid,
                 'time' => time(),
                 'eth_address' => $this->eth_address,
-                'ethToReinvest' => $eth
+                'eth' => $eth
             ]);
             $this->eth_withdrawn += $eth;
             DB::set("
@@ -576,7 +577,7 @@ class Investor
                 'str' => $sendStr,
                 'time' => time(),
                 'eth_address' => $this->eth_address,
-                'ethToReinvest' => $eth
+                'eth' => $eth
             ]);
         }
 
