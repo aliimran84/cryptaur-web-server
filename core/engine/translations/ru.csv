@@ -149,3 +149,4 @@ Part to reinvest,Часть для реинвестирования
 Part to withdraw,Часть для вывода
 Split bounty between reinvest and withdraw,Распределить баунти между реинвестицией/выводом
 Drag slider to adjust values,Изменяйте значения с помощью ползунка
+"Bounty was not withdrawn or reinvested. Maybe the service is overloaded. Try in a few minutes.","Баунти не было выведено и (или) реинвестировано. Возможно, сервис перегружен. Попробуйте через несколько минут."

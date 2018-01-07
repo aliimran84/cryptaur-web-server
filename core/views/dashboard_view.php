@@ -13,6 +13,8 @@ use core\translate\Translate;
 
 class Dashboard_view
 {
+    const BOUNTY_ERR = 'bounty_err';
+
     static public function view()
     {
         ob_start();
@@ -116,6 +118,16 @@ class Dashboard_view
                             </div>
                             <form class="reinvest-form" action="<?= Bounty_controller::INVESTOR_REALIZE_URL ?>" method="post">
                                 <div class="amount input-field">
+                                    <?php
+                                    if (@$_GET[self::BOUNTY_ERR]) {
+                                        ?>
+                                        <p class="range-field__label title red-text">
+                                            <?= Translate::td('Bounty was not withdrawn or reinvested. Maybe the service is overloaded. Try in a few minutes.') ?>
+                                            (<?= $_GET[self::BOUNTY_ERR] ?>)
+                                        </p>
+                                        <?php
+                                    }
+                                    ?>
                                     <p class="range-field__label title"><?= Translate::td('Split bounty between reinvest and withdraw') ?></p>
                                     <p><?= Translate::td('Part to reinvest') ?>:</p>
                                     <input type="text" disabled class="reinvest" value="<?= number_format(Application::$authorizedInvestor->eth_bounty, 8, '.', '') ?>">

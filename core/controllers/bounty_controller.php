@@ -8,6 +8,7 @@ use core\engine\Utility;
 use core\models\Bounty;
 use core\models\Deposit;
 use core\models\Investor;
+use core\views\Dashboard_view;
 use JsonRpc\Client;
 
 class Bounty_controller
@@ -41,22 +42,28 @@ class Bounty_controller
     {
         $percentsForReinvesting = (int)@$_POST['percentsForReinvesting'];
         if ($percentsForReinvesting < 0 && $percentsForReinvesting > 100) {
-            Utility::location(Dashboard_controller::BASE_URL);
+            Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7252');
         }
         if (Application::$authorizedInvestor->eth_bounty == 0) {
-            Utility::location(Dashboard_controller::BASE_URL);
+            Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7253');
         }
         if (!Bounty::withdrawIsOn() || !Bounty::reinvestIsOn()) {
-            Utility::location(Dashboard_controller::BASE_URL);
+            Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7254');
         }
         $ethToReinvest = Utility::minPrecisionNumber(Application::$authorizedInvestor->eth_bounty * ($percentsForReinvesting / 100));
         $ethToWithdraw = Utility::minPrecisionNumber(Application::$authorizedInvestor->eth_bounty - $ethToReinvest);
+
         if ($ethToWithdraw > 0) {
-            Application::$authorizedInvestor->withdraw($ethToWithdraw);
+            if (!Application::$authorizedInvestor->withdraw($ethToWithdraw)) {
+                Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7256');
+            }
         }
         if ($ethToReinvest > 0) {
-            Application::$authorizedInvestor->reinvestEth($ethToReinvest);
+            if (!Application::$authorizedInvestor->reinvestEth($ethToReinvest)) {
+                Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7257');
+            }
         }
+
         Utility::location(Dashboard_controller::BASE_URL);
     }
 
