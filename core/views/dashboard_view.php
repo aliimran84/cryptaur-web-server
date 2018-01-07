@@ -197,7 +197,9 @@ class Dashboard_view
                             <li>
                                 <h2>
                                     <?= $i + 1 ?> <?= Translate::td('Level') ?>: <?= $value ?>%,<br>
+                                    <?php /*
                                     <?= Coin::COMMON_COIN ?> <?= number_format(@$rewardByLevel[$i + 1], 2, '.', '') ?>
+                                    */ ?>
                                 </h2>
                             </li>
                         <?php } ?>
