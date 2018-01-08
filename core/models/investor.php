@@ -159,7 +159,7 @@ class Investor
         $investorData = @DB::get("
             SELECT `investors`.*, `investors_referrals_tokens`.`tokens_count` as `referrals_tokens_count`
             FROM `investors`
-            JOIN `investors_referrals_tokens` on `investors_referrals_tokens`.`investor_id` = `investors`.`id`
+            LEFT JOIN `investors_referrals_tokens` on `investors_referrals_tokens`.`investor_id` = `investors`.`id`
             WHERE
                 `id` = ?
             LIMIT 1
@@ -186,7 +186,7 @@ class Investor
         $investorData = @DB::get("
             SELECT `investors`.*, `investors_referrals_tokens`.`tokens_count` as `referrals_tokens_count`
             FROM `investors`
-            JOIN `investors_referrals_tokens` on `investors_referrals_tokens`.`investor_id` = `investors`.`id`
+            LEFT JOIN `investors_referrals_tokens` on `investors_referrals_tokens`.`investor_id` = `investors`.`id`
             WHERE
                 `email` = ?
             LIMIT 1
@@ -393,9 +393,9 @@ class Investor
     {
         $investorsData = @DB::get("
             SELECT `investors`.*, `investors_referrals_tokens`.`tokens_count` as `referrals_tokens_count` FROM investors
-            JOIN `investors_referrals_tokens` on `investors_referrals_tokens`.`investor_id` = `investors`.`id`
-            where id in (SELECT
-                `referrer_id`
+            LEFT JOIN `investors_referrals_tokens` on `investors_referrals_tokens`.`investor_id` = `investors`.`id`
+            where id in (
+                SELECT `referrer_id`
                 FROM
                 (
                         SELECT `referrer_id`
