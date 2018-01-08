@@ -22,6 +22,7 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
             *
         FROM
             `investors`
+        ORDER BY `id`
         LIMIT $offset, $limitSize
     ;");
 

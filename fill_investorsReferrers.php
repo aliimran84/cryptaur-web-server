@@ -22,6 +22,7 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
             `id`
         FROM
             `investors`
+        ORDER BY `id`
         LIMIT $offset, $limitSize
     ;");
 
@@ -32,7 +33,7 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
             (
                 ?,
                 (
-                    SELECT referrers FROM (
+                    SELECT CAST(referrers as CHAR(10000)) as referrers FROM (
                         SELECT referrer_id, @g := IF(@g = '', referrer_id, concat(@g, ',', referrer_id)) as referrers
                         FROM
                                 `investors`,

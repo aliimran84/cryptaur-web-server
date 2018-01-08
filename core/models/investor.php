@@ -332,7 +332,7 @@ class Investor
             (
                 ?,
                 (
-                    SELECT referrers FROM (
+                    SELECT CAST(referrers as CHAR(10000)) as referrers FROM (
                         SELECT referrer_id, @g := IF(@g = '', referrer_id, concat(@g, ',', referrer_id)) as referrers
                         FROM
                                 `investors`,
@@ -436,17 +436,10 @@ class Investor
         $investorsData = @DB::get("
             SELECT `investors`.*, `investors_referrals_tokens`.`tokens_count` as `referrals_tokens_count` FROM investors
             LEFT JOIN `investors_referrals_tokens` on `investors_referrals_tokens`.`investor_id` = `investors`.`id`
-            where id in (
-                SELECT `referrer_id`
-                FROM
-                (
-                        SELECT `referrer_id`
-                        FROM
-                            `investors`,
-                            ( SELECT @pv := ? ) AS `initialisation`
-                        WHERE `id` = @pv AND @pv := `referrer_id`
-                        ORDER BY `id` DESC
-                ) AS tmp
+            WHERE `id` IN (
+                SELECT `referrers`
+                FROM `investors_referrers`
+                WHERE `investor_id` = ?
             )
         ;", [$investor_id]);
         $investors = [];
@@ -486,18 +479,12 @@ class Investor
             LIMIT 1
         ;", [$this->tokens_count, $this->id]);
         DB::set("
-            UPDATE investors_referrals_tokens 
-            SET investors_referrals_tokens.tokens_count = investors_referrals_tokens.tokens_count + ? 
-            WHERE
-            investor_id IN (
-                SELECT
-                referrer_id 
-                FROM
-                (
-                    SELECT referrer_id FROM investors,
-                    ( SELECT @pv := ? ) initialisation
-                    WHERE id = @pv AND @pv := referrer_id ORDER BY id DESC
-                ) AS tmp 
+            UPDATE `investors_referrals_tokens`
+            SET `investors_referrals_tokens`.`tokens_count` = `investors_referrals_tokens`.`tokens_count` + ?
+            WHERE `investor_id` IN (
+                SELECT `referrers`
+                FROM `investors_referrers`
+                WHERE `investor_id` = ?
             )
         ;", [$addedTokensCount, $this->id]);
 
