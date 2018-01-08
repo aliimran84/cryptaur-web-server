@@ -107,6 +107,15 @@ class Investor
             DEFAULT COLLATE utf8_general_ci
         ;");
         DB::query("
+            CREATE TABLE IF NOT EXISTS `investors_referrals_tokens` (
+                `investor_id` int(10) UNSIGNED NOT NULL,
+                `tokens_count` double(20, 8) UNSIGNED NULL DEFAULT 0,
+                PRIMARY KEY (`investor_id`)
+            )
+            DEFAULT CHARSET utf8
+            DEFAULT COLLATE utf8_general_ci
+        ;");
+        DB::query("
             CREATE TABLE IF NOT EXISTS `investors_stage_0_bounty` (
                 `investor_id` int(10) UNSIGNED NOT NULL,
                 `eth_bounty` double(20, 8) UNSIGNED NULL DEFAULT 0,
