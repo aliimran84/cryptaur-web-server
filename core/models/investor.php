@@ -326,6 +326,30 @@ class Investor
             ]
         );
 
+        DB::set("
+            INSERT INTO `investors_referrers` (`investor_id`, `referrers`)
+            VALUES
+            (
+                ?,
+                (
+                    SELECT referrers FROM (
+                        SELECT referrer_id, @g := IF(@g = '', referrer_id, concat(@g, ',', referrer_id)) as referrers
+                        FROM
+                                `investors`,
+                                ( SELECT @g := '' ) AS `tmp`,
+                                ( SELECT @pv :=  ? ) AS `initialisation`
+                        WHERE `id` = @pv AND @pv := `referrer_id`
+                        ORDER BY `id` DESC
+                        ) AS tmp
+                        ORDER BY referrer_id ASC
+                        LIMIT 1
+                )
+            )
+            ;", [
+                $investorId, $investorId
+            ]
+        );
+
         return $investorId;
     }
 
