@@ -305,7 +305,7 @@ class Dashboard_view
                     <div class="col s12 l4 main-panel-block">
                         <h3>
                             <?= Translate::td('Participants') ?>:
-                            <?= Application::$authorizedInvestor->referralsCount() ?>
+                            <?= Application::$authorizedInvestor->referralsCount() + 1 ?>
                         </h3>
                     </div>
                     <div class="col s12 l4 main-panel-block">
