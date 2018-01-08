@@ -88,19 +88,19 @@ class Dashboard_view
                 <div class="row indicators">
                     <div class="col s12 m3">
                         <h4><?= Translate::td('Total tokens minted') ?></h4>
-                        <h3><?= Coin::token() ?> <?= Investor::totalTokens() ?></h3>
+                        <h3><?= Coin::token() ?> <?= number_format(Investor::totalTokens(), 0, '.', '&nbsp;') ?></h3>
                     </div>
                     <div class="col s12 m3">
                         <h4><?= Translate::td('Total participants') ?></h4>
-                        <h3><?= Investor::totalInvestors() ?></h3>
+                        <h3><?= number_format(Investor::totalInvestors(), 0, '.', '&nbsp;') ?></h3>
                     </div>
                     <div class="col s12 m3">
                         <h4><?= Translate::td('Total coin contributed', ['coin' => 'BTC']) ?></h4>
-                        <h3>BTC <?= (int)Wallet::totalCoinsUsed('btc') ?></h3>
+                        <h3>BTC <?= number_format(Wallet::totalCoinsUsed('btc'), 0, '.', '&nbsp;') ?></h3>
                     </div>
                     <div class="col s12 m3">
                         <h4><?= Translate::td('Total coin contributed', ['coin' => 'ETH']) ?></h4>
-                        <h3>ETH <?= (int)Wallet::totalCoinsUsed('eth') ?></h3>
+                        <h3>ETH <?= number_format(Wallet::totalCoinsUsed('eth'), 0, '.', '&nbsp;') ?></h3>
                     </div>
                 </div>
                 <section class="my-tokens">
@@ -290,10 +290,17 @@ class Dashboard_view
                 </div>
                 <div class="row">
                     <div class="col s12 l4 main-panel-block">
+                        <h3>
+                            CPT:
+                            <?= number_format(
+                                Application::$authorizedInvestor->referrals_tokens_count +
+                                Application::$authorizedInvestor->tokens_count,
+                                0, '.', '&nbsp;'
+                            ) ?>
+                        </h3>
                         <?php /*
                         <h3>BTC: <?= (int)Wallet::totalCoinsUsed('btc') ?> / ETH: <?= (int)Wallet::totalCoinsUsed('eth') ?></h3>
                         */ ?>
-                        <h3>ETH REWARD: <?= Bounty::rewardForInvestor(Application::$authorizedInvestor) ?></h3>
                     </div>
                     <div class="col s12 l4 main-panel-block">
                         <h3>
