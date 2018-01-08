@@ -20,6 +20,7 @@ class Investor
     public $eth_address = '';
     public $eth_withdrawn = 0;
     public $tokens_count = 0;
+    public $referrals_tokens_count = 0;
     public $eth_not_used_in_bounty = 0;
     public $eth_bounty = 0;
     public $phone = '';
@@ -142,6 +143,7 @@ class Investor
         $instance->eth_not_used_in_bounty = $data['eth_not_used_in_bounty'];
         $instance->eth_bounty = $data['eth_bounty'];
         $instance->phone = $data['phone'];
+        $instance->referrals_tokens_count = $data['referrals_tokens_count'];
         return $instance;
     }
 
@@ -155,7 +157,9 @@ class Investor
             return Investor::$storage[$id];
         }
         $investorData = @DB::get("
-            SELECT * FROM `investors`
+            SELECT `investors`.*, `investors_referrals_tokens`.`tokens_count` as `referrals_tokens_count`
+            FROM `investors`
+            JOIN `investors_referrals_tokens` on `investors_referrals_tokens`.`investor_id` = `investors`.`id`
             WHERE
                 `id` = ?
             LIMIT 1
@@ -180,7 +184,9 @@ class Investor
             return Investor::$storage[$email];
         }
         $investorData = @DB::get("
-            SELECT * FROM `investors`
+            SELECT `investors`.*, `investors_referrals_tokens`.`tokens_count` as `referrals_tokens_count`
+            FROM `investors`
+            JOIN `investors_referrals_tokens` on `investors_referrals_tokens`.`investor_id` = `investors`.`id`
             WHERE
                 `email` = ?
             LIMIT 1
@@ -379,21 +385,27 @@ class Investor
     }
 
     /**
-     * return array of investors from target investor to
+     * return array of investors from target investor to (without target)
      * @param int $investor_id
      * @return Investor[]
      */
     static public function referrersToRoot($investor_id)
     {
         $investorsData = @DB::get("
-            SELECT
-                * 
-            FROM
-                ( SELECT * FROM investors ORDER BY id DESC ) AS investors_sorted,
-                ( SELECT @temp_referrer_id := ? ) AS initialisation 
-            WHERE
-                id = @temp_referrer_id 
-                AND ( referrer_id = 0 OR @temp_referrer_id := referrer_id )
+            SELECT `investors`.*, `investors_referrals_tokens`.`tokens_count` as `referrals_tokens_count` FROM investors
+            JOIN `investors_referrals_tokens` on `investors_referrals_tokens`.`investor_id` = `investors`.`id`
+            where id in (SELECT
+                `referrer_id`
+                FROM
+                (
+                        SELECT `referrer_id`
+                        FROM
+                            `investors`,
+                            ( SELECT @pv := ? ) AS `initialisation`
+                        WHERE `id` = @pv AND @pv := `referrer_id`
+                        ORDER BY `id` DESC
+                ) AS tmp
+            )
         ;", [$investor_id]);
         $investors = [];
         foreach ($investorsData as $investorData) {
