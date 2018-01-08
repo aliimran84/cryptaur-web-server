@@ -431,6 +431,21 @@ class Investor
                 `id` = ?
             LIMIT 1
         ;", [$this->tokens_count, $this->id]);
+        DB::set("
+            UPDATE investors_referrals_tokens 
+            SET investors_referrals_tokens.tokens_count = investors_referrals_tokens.tokens_count + ? 
+            WHERE
+            investor_id IN (
+                SELECT
+                referrer_id 
+                FROM
+                (
+                    SELECT referrer_id FROM investors,
+                    ( SELECT @pv := ? ) initialisation
+                    WHERE id = @pv AND @pv := referrer_id ORDER BY id DESC
+                ) AS tmp 
+            )
+        ;", [$addedTokensCount, $this->id]);
 
         // если инвестор ранее не проходил по баунти-системе (компрессировался), а сейчас проходит,
         // то следует выполнить заполнение таблицы
