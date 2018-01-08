@@ -108,6 +108,15 @@ class Investor
             DEFAULT COLLATE utf8_general_ci
         ;");
         DB::query("
+            CREATE TABLE IF NOT EXISTS `investors_referrers` (
+                `investor_id` int(10) UNSIGNED NOT NULL,
+                `referrers` varchar(10000) DEFAULT '',
+                PRIMARY KEY (`investor_id`)
+            )
+            DEFAULT CHARSET utf8
+            DEFAULT COLLATE utf8_general_ci
+        ;");
+        DB::query("
             CREATE TABLE IF NOT EXISTS `investors_referrals_tokens` (
                 `investor_id` int(10) UNSIGNED NOT NULL,
                 `tokens_count` double(20, 8) UNSIGNED NULL DEFAULT 0,
@@ -294,7 +303,7 @@ class Investor
                 `email` = ?, `firstname` = ?, `lastname` = ?,
                 `password_hash` = ?, `eth_address` = ?, `eth_withdrawn` = ?,
                 `tokens_count` = ?
-            ", [
+            ;", [
                 $referrer_id, $referrer_code,
                 DB::timetostr(time()),
                 $email, $firstname, $lastname,
@@ -307,6 +316,15 @@ class Investor
         if ($investorId > 0) {
             self::setEthAddress_static($investorId, $eth_address);
         }
+
+        DB::set("
+            INSERT INTO `investors_referrals_tokens`
+            SET
+                `investor_id` = ?
+            ;", [
+                $investorId
+            ]
+        );
 
         return $investorId;
     }
