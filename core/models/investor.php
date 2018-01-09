@@ -158,7 +158,7 @@ class Investor
         $instance->referrals_totals = [
             Coin::token() => 0
         ];
-        foreach (json_decode($data['referrals_totals']) as $referrals_total) {
+        foreach (json_decode($data['referrals_totals'], true) as $referrals_total) {
             $instance->referrals_totals[$referrals_total['coin']] = $referrals_total['sum'];
         }
         return $instance;
