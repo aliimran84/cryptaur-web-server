@@ -37,7 +37,6 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
     ;");
 
     $query = '';
-
     foreach ($users as $i => $user) {
         $query .= "
             UPDATE `investors_referrals` SET `referrals` = IF(`referrals` = '', {$user['id']}, concat(`referrals`, ',', {$user['id']}))
@@ -48,7 +47,6 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
             ))
         ;\r\n";
     }
-
     DB::multi_query($query);
 
     $duration = (time() - $startTime) + 1;

@@ -16,12 +16,25 @@ $usersCount = DB::get("
 
 echo "start {$usersCount}\r\n";
 
-DB::set("
-    UPDATE `investors_referrals_totals`
-    SET `sum` = 0
-;");
+$token = Coin::token();
+$query = "
+    INSERT INTO `investors_referrals_totals` ( investor_id, coin )
+    SELECT investors.id, '$token'
+    FROM investors
+    WHERE investors.id not in (select investor_id from investors_referrals_totals);
+    ;\r\n";
+foreach (Coin::coins() as $coin) {
+    $query .= "
+        INSERT INTO `investors_referrals_totals` ( investor_id, coin )
+        SELECT investors.id, '$coin'
+        FROM investors
+        WHERE investors.id not in (select investor_id from investors_referrals_totals);
+        ;\r\n";
+}
+$query .= "UPDATE `investors_referrals_totals` SET `sum` = 0;\r\n";
+DB::multi_query($query);
 
-$limitSize = 1000;
+$limitSize = 500;
 for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
     $users = DB::get("
         SELECT
@@ -39,33 +52,36 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
         LIMIT $offset, $limitSize
     ;");
 
+    $query = '';
     foreach ($users as $i => $user) {
-        DB::set("
+        $query .= "
             UPDATE `investors_referrals_totals`
-            SET `sum` = `sum` + ?
+            SET `sum` = `sum` + {$user['tokens_count']}
             WHERE
-                `coin` = ? AND
+                `coin` = '$token' AND
                 FIND_IN_SET (`investor_id`, (
                     SELECT `referrers`
                     FROM `investors_referrers`
-                    WHERE `investor_id` = ?
+                    WHERE `investor_id` = {$user['id']}
                 ))
-        ;", [$user['tokens_count'], Coin::token(), $user['id']]);
+        ;\r\n";
         $wallets = json_decode($user['wallets'], true);
         foreach ($wallets as $wallet) {
-            DB::set("
+            $query .= "
                 UPDATE `investors_referrals_totals`
-                SET `sum` = `sum` + ?
+                SET `sum` = `sum` + {$wallet['balance']}
                 WHERE
-                    `coin` = ? AND
+                    `coin` = '{$wallet['coin']}' AND
                     FIND_IN_SET (`investor_id`, (
                         SELECT `referrers`
                         FROM `investors_referrers`
-                        WHERE `investor_id` = ?
+                        WHERE `investor_id` = {$user['id']}
                     ))
-            ;", [$wallet['balance'], $wallet['coin'], $user['id']]);
+            ;";
         }
     }
+    DB::multi_query($query);
+
     $duration = (time() - $startTime) + 1;
     $currentCount = $offset;
     $speed = number_format($currentCount / $duration, 5, '.', '');
