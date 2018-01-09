@@ -15,7 +15,17 @@ $usersCount = DB::get("
 
 echo "start {$usersCount}\r\n";
 
-$limitSize = 1000;
+DB::multi_query("
+    INSERT INTO investors_referrals ( investor_id, referrals )
+    SELECT id, '' 
+    FROM investors
+    WHERE id not in (select investor_id from investors_referrals);
+
+    UPDATE `investors_referrals`
+    SET `referrals` = '';
+");
+
+$limitSize = 500;
 for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
     $users = DB::get("
         SELECT
@@ -26,19 +36,21 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
         LIMIT $offset, $limitSize
     ;");
 
+    $query = '';
+
     foreach ($users as $i => $user) {
-        DB::set("
-                UPDATE `investors_referrals` SET `referrals` = IF(`referrals` = '', ?, concat(`referrals`, ',', ?))
-                WHERE `investor_id` IN (
-                    SELECT `referrers`
-                    FROM `investors_referrers`
-                    WHERE `investor_id` = ?
-                )
-            ;", [
-                $user['id'], $user['id'], $user['id']
-            ]
-        );
+        $query = "
+            UPDATE `investors_referrals` SET `referrals` = IF(`referrals` = '', {$user['id']}, concat(`referrals`, ',', {$user['id']}))
+            WHERE `investor_id` IN (
+                SELECT `referrers`
+                FROM `investors_referrers`
+                WHERE `investor_id` = {$user['id']}
+            )
+        ;\r\n\r\n";
     }
+
+    DB::multi_query($query);
+
     $duration = (time() - $startTime) + 1;
     $currentCount = $offset;
     $speed = number_format($currentCount / $duration, 5, '.', '');
