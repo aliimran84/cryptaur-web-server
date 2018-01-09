@@ -192,6 +192,12 @@ class Investor_view
             <div class="col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
                 <form action="<?= Investor_controller::SETTINGS_URL ?>" method="post" autocomplete="off">
                     <h3><?= Translate::td('Investor settings') ?></h3>
+                    <?php if (isset($_GET['password_err'])) { ?>
+                        <label class="red-text"><?= Translate::td('Password must be more than 6 symbols') ?></label>
+                    <?php } ?>
+                    <?php if (isset($_GET['eth_address_err'])) { ?>
+                        <label class="red-text"><?= Translate::td('not a valid eth address') ?></label>
+                    <?php } ?>
                     <div class="row">
                         <?= Translate::td('Email') ?>: <strong><?= Application::$authorizedInvestor->email ?></strong>
                     </div>
@@ -222,7 +228,10 @@ class Investor_view
                     <div class="row">
                         <?= Translate::td('Password') ?> (<?= Translate::td('leave empty if not changing') ?>):
                         <input type="password" name="password" value="" pattern=".{6,120}" autocomplete="new-password">
-                        <span><?= Translate::td('Password must be more than 6 symbols') ?></span>
+                        <span>
+                            <?= Translate::td('Password must be more than 6 symbols') ?>.
+                            <?= Translate::td('Spaces not valid') ?>.
+                        </span>
                     </div>
                     <div class="row">
                         <?= Coin::token() ?>: <strong><?= Application::$authorizedInvestor->tokens_count ?></strong>

@@ -387,7 +387,7 @@ class Investor_controller
      */
     static private function verifyPassword($password)
     {
-        return !!preg_match('/^[0-9A-Za-z?!@#$%\-\_\.,;:]{6,50}$/', $password);
+        return !!preg_match('/^[0-9A-Za-z!"#$%&\'()*+,-./:;<=>?@\[\]^_`{|}~]{6,50}$/', $password);
     }
 
     static private function handleRegistrationRequest()
@@ -551,13 +551,18 @@ EOT;
             Utility::location(self::BASE_URL);
         }
         Application::$authorizedInvestor->setFirstnameLastName(@$_POST['firstname'], @$_POST['lastname']);
+        $urlErrors = [];
         if (self::verifyPassword(@$_POST['password'])) {
             Application::$authorizedInvestor->changePassword(@$_POST['password']);
+        } else if (@strlen($_POST['password']) > 0) {
+            $urlErrors[] = 'password_err=1';
         }
         if (Utility::validateEthAddress(@$_POST['eth_address'])) {
             Application::$authorizedInvestor->setEthAddress(@$_POST['eth_address']);
+        } else if (@strlen($_POST['eth_address']) > 0) {
+            $urlErrors[] = 'eth_address_err=1';
         }
-        Utility::location(self::SETTINGS_URL);
+        Utility::location(self::SETTINGS_URL . '?' . implode('&', $urlErrors));
     }
 
     static public function handleInviteFriendsForm($message = '')

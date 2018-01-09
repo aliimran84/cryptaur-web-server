@@ -48,6 +48,7 @@ Recover,Recover
 Password recovery,Password recovery
 Password successfully changed,Password successfully changed
 Password must be more than 6 symbols,Password must be more than 6 symbols
+Spaces not valid,Spaces not valid
 "If the user exists then he was sent a new password","If the user exists then he was sent a new password"
 "leave empty if not changing","leave empty if not changing"
 Not a member yet,Not a member yet

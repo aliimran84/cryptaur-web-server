@@ -48,6 +48,7 @@ Recover,Восстановить
 Password recovery,Восстановление пароля
 Password successfully changed,Пароль успешно изменен
 Password must be more than 6 symbols,Пароль должен быть не менее 6 символов
+Spaces not valid,Пробелы недопустимы
 "If the user exists then he was sent a new password","Если пользователь существует, то ему был отправлен новый пароль"
 "leave empty if not changing","оставьте пустым, чтобы не менять"
 Not a member yet,Ещё не зарегистрированы
