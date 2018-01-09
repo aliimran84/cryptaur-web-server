@@ -4,6 +4,7 @@ require __DIR__ . '/loader.php';
 
 use core\engine\Application;
 use core\engine\DB;
+use core\models\Coin;
 
 Application::init();
 
@@ -49,7 +50,7 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
                     FROM `investors_referrers`
                     WHERE `investor_id` = ?
                 )
-        ;", [$user['tokens_count'], $user['id']]);
+        ;", [$user['tokens_count'], Coin::token(), $user['id']]);
         $wallets = json_decode($user['wallets'], true);
         foreach ($wallets as $wallet) {
             DB::set("
@@ -62,7 +63,7 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
                         FROM `investors_referrers`
                         WHERE `investor_id` = ?
                     )
-            ;", [$wallet['balance'], $user['id']]);
+            ;", [$wallet['balance'], $wallet['coin'], $user['id']]);
         }
     }
     $duration = (time() - $startTime) + 1;
