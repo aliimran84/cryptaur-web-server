@@ -55,12 +55,12 @@ class Wallet
             UPDATE `investors_referrals_totals`
             SET `sum` = `sum` + ?
             WHERE
-                `coin` = ?
-                `investor_id` IN (
+                `coin` = ? AND
+                FIND_IN_SET (`investor_id`, (
                     SELECT `referrers`
                     FROM `investors_referrers`
                     WHERE `investor_id` = ?
-                )
+                ))
         ;", [$amount, $this->coin, $this->id]);
     }
 

@@ -119,11 +119,11 @@ class Investor
         DB::query("
             CREATE TABLE IF NOT EXISTS `investors_referrals` (
                 `investor_id` int(10) UNSIGNED NOT NULL,
-                `referrals` varchar(20000) DEFAULT '',
+                `referrals` mediumtext DEFAULT '',
                 PRIMARY KEY (`investor_id`)
             )
-            DEFAULT CHARSET utf8
-            DEFAULT COLLATE utf8_general_ci
+            DEFAULT CHARSET latin1
+            DEFAULT COLLATE latin1_general_ci
         ;");
         DB::query("
             CREATE TABLE IF NOT EXISTS `investors_referrals_totals` (
@@ -487,11 +487,11 @@ class Investor
                     ) FROM `investors_referrals_totals` WHERE `investor_id` = `investors`.`id`
                 ) as `referrals_totals`
             FROM `investors`
-            WHERE `id` IN (
+            WHERE FIND_IN_SET (`id`, (
                 SELECT `referrers`
                 FROM `investors_referrers`
                 WHERE `investor_id` = ?
-            )
+            ))
         ;", [$investor_id]);
         $investors = [];
         foreach ($investorsData as $investorData) {
@@ -534,11 +534,11 @@ class Investor
             SET `sum` = `sum` + ?
             WHERE
                 `coin` = ? AND
-                `investor_id` IN (
+                FIND_IN_SET (`investor_id`, (
                     SELECT `referrers`
                     FROM `investors_referrers`
                     WHERE `investor_id` = ?
-                )
+                ))
         ;", [$addedTokensCount, Coin::token(), $this->id]);
 
         // если инвестор ранее не проходил по баунти-системе (компрессировался), а сейчас проходит,

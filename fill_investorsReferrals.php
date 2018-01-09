@@ -41,11 +41,11 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
     foreach ($users as $i => $user) {
         $query .= "
             UPDATE `investors_referrals` SET `referrals` = IF(`referrals` = '', {$user['id']}, concat(`referrals`, ',', {$user['id']}))
-            WHERE `investor_id` IN (
+            WHERE FIND_IN_SET(`investor_id`, (
                 SELECT `referrers`
                 FROM `investors_referrers`
                 WHERE `investor_id` = {$user['id']}
-            )
+            ))
         ;\r\n";
     }
 

@@ -45,11 +45,11 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
             SET `sum` = `sum` + ?
             WHERE
                 `coin` = ? AND
-                `investor_id` IN (
+                FIND_IN_SET (`investor_id`, (
                     SELECT `referrers`
                     FROM `investors_referrers`
                     WHERE `investor_id` = ?
-                )
+                ))
         ;", [$user['tokens_count'], Coin::token(), $user['id']]);
         $wallets = json_decode($user['wallets'], true);
         foreach ($wallets as $wallet) {
@@ -58,11 +58,11 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
                 SET `sum` = `sum` + ?
                 WHERE
                     `coin` = ? AND
-                    `investor_id` IN (
+                    FIND_IN_SET (`investor_id`, (
                         SELECT `referrers`
                         FROM `investors_referrers`
                         WHERE `investor_id` = ?
-                    )
+                    ))
             ;", [$wallet['balance'], $wallet['coin'], $user['id']]);
         }
     }
