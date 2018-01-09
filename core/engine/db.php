@@ -68,6 +68,16 @@ class DB
     }
 
     /**
+     * @param $query
+     * @return bool
+     */
+    static public function multi_query($query)
+    {
+        $db = self::inst();
+        return $db->_connection->multi_query($query);
+    }
+
+    /**
      * @param \mysqli_stmt $statement
      * @return array
      */
