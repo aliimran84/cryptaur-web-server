@@ -51,6 +51,17 @@ class Wallet
                 `id` = ?
             LIMIT 1
         ;", [$this->balance, $this->usd_used, $this->id]);
+        DB::set("
+            UPDATE `investors_referrals_totals`
+            SET `sum` = `sum` + ?
+            WHERE
+                `coin` = ?
+                `investor_id` IN (
+                    SELECT `referrers`
+                    FROM `investors_referrers`
+                    WHERE `investor_id` = ?
+                )
+        ;", [$amount, $this->coin, $this->id]);
     }
 
     static private function createWithDataFromDB($data)

@@ -20,7 +20,7 @@ class Investor
     public $eth_address = '';
     public $eth_withdrawn = 0;
     public $tokens_count = 0;
-    public $referrals_tokens_count = 0;
+    public $referrals_totals = [];
     public $eth_not_used_in_bounty = 0;
     public $eth_bounty = 0;
     public $phone = '';
@@ -117,10 +117,13 @@ class Investor
             DEFAULT COLLATE utf8_general_ci
         ;");
         DB::query("
-            CREATE TABLE IF NOT EXISTS `investors_referrals_tokens` (
+            CREATE TABLE IF NOT EXISTS `investors_referrals_totals` (
+                `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
                 `investor_id` int(10) UNSIGNED NOT NULL,
-                `tokens_count` double(20, 8) UNSIGNED NULL DEFAULT 0,
-                PRIMARY KEY (`investor_id`)
+                `coin` varchar(32) NOT NULL,
+                `sum` double(20, 8) UNSIGNED NULL DEFAULT 0,
+                PRIMARY KEY (`id`),
+                INDEX `investor_id_index`(`investor_id`) USING HASH
             )
             DEFAULT CHARSET utf8
             DEFAULT COLLATE utf8_general_ci
@@ -152,7 +155,12 @@ class Investor
         $instance->eth_not_used_in_bounty = $data['eth_not_used_in_bounty'];
         $instance->eth_bounty = $data['eth_bounty'];
         $instance->phone = $data['phone'];
-        $instance->referrals_tokens_count = $data['referrals_tokens_count'];
+        $instance->referrals_totals = [
+            Coin::token() => 0
+        ];
+        foreach (json_decode($data['referrals_totals']) as $referrals_total) {
+            $instance->referrals_totals[$referrals_total['coin']] = $referrals_total['sum'];
+        }
         return $instance;
     }
 
@@ -166,9 +174,16 @@ class Investor
             return Investor::$storage[$id];
         }
         $investorData = @DB::get("
-            SELECT `investors`.*, `investors_referrals_tokens`.`tokens_count` as `referrals_tokens_count`
+            SELECT
+                `investors`.*,
+                (
+                    SELECT CONCAT(
+                        '[',
+                        GROUP_CONCAT(JSON_OBJECT('coin', coin, 'sum', sum)),
+                        ']'
+                    ) FROM `investors_referrals_totals` WHERE `investor_id` = `investors`.`id`
+                ) as `referrals_totals`
             FROM `investors`
-            LEFT JOIN `investors_referrals_tokens` on `investors_referrals_tokens`.`investor_id` = `investors`.`id`
             WHERE
                 `id` = ?
             LIMIT 1
@@ -193,9 +208,16 @@ class Investor
             return Investor::$storage[$email];
         }
         $investorData = @DB::get("
-            SELECT `investors`.*, `investors_referrals_tokens`.`tokens_count` as `referrals_tokens_count`
+            SELECT
+                `investors`.*,
+                (
+                    SELECT CONCAT(
+                        '[',
+                        GROUP_CONCAT(JSON_OBJECT('coin', coin, 'sum', sum)),
+                        ']'
+                    ) FROM `investors_referrals_totals` WHERE `investor_id` = `investors`.`id`
+                ) as `referrals_totals`
             FROM `investors`
-            LEFT JOIN `investors_referrals_tokens` on `investors_referrals_tokens`.`investor_id` = `investors`.`id`
             WHERE
                 `email` = ?
             LIMIT 1
@@ -318,13 +340,25 @@ class Investor
         }
 
         DB::set("
-            INSERT INTO `investors_referrals_tokens`
+            INSERT INTO `investors_referrals_totals`
             SET
-                `investor_id` = ?
+                `investor_id` = ?,
+                `coin` = ?
             ;", [
-                $investorId
+                $investorId, Coin::token()
             ]
         );
+        foreach (Coin::coins() as $coin) {
+            DB::set("
+                INSERT INTO `investors_referrals_totals`
+                SET
+                    `investor_id` = ?,
+                    `coin` = ?
+                ;", [
+                    $investorId, $coin
+                ]
+            );
+        }
 
         DB::set("
             INSERT INTO `investors_referrers` (`investor_id`, `referrers`)
@@ -434,8 +468,16 @@ class Investor
     static public function referrersToRoot($investor_id)
     {
         $investorsData = @DB::get("
-            SELECT `investors`.*, `investors_referrals_tokens`.`tokens_count` as `referrals_tokens_count` FROM investors
-            LEFT JOIN `investors_referrals_tokens` on `investors_referrals_tokens`.`investor_id` = `investors`.`id`
+            SELECT
+                `investors`.*,
+                (
+                    SELECT CONCAT(
+                        '[',
+                        GROUP_CONCAT(JSON_OBJECT('coin', coin, 'sum', sum)),
+                        ']'
+                    ) FROM `investors_referrals_totals` WHERE `investor_id` = `investors`.`id`
+                ) as `referrals_totals`
+            FROM `investors`
             WHERE `id` IN (
                 SELECT `referrers`
                 FROM `investors_referrers`
@@ -479,14 +521,16 @@ class Investor
             LIMIT 1
         ;", [$this->tokens_count, $this->id]);
         DB::set("
-            UPDATE `investors_referrals_tokens`
-            SET `investors_referrals_tokens`.`tokens_count` = `investors_referrals_tokens`.`tokens_count` + ?
-            WHERE `investor_id` IN (
-                SELECT `referrers`
-                FROM `investors_referrers`
-                WHERE `investor_id` = ?
-            )
-        ;", [$addedTokensCount, $this->id]);
+            UPDATE `investors_referrals_totals`
+            SET `sum` = `sum` + ?
+            WHERE
+                `coin` = ?
+                `investor_id` IN (
+                    SELECT `referrers`
+                    FROM `investors_referrers`
+                    WHERE `investor_id` = ?
+                )
+        ;", [$addedTokensCount, Coin::token(), $this->id]);
 
         // если инвестор ранее не проходил по баунти-системе (компрессировался), а сейчас проходит,
         // то следует выполнить заполнение таблицы
