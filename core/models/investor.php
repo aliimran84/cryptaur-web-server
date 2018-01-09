@@ -117,6 +117,15 @@ class Investor
             DEFAULT COLLATE utf8_general_ci
         ;");
         DB::query("
+            CREATE TABLE IF NOT EXISTS `investors_referrals` (
+                `investor_id` int(10) UNSIGNED NOT NULL,
+                `referrals` varchar(20000) DEFAULT '',
+                PRIMARY KEY (`investor_id`)
+            )
+            DEFAULT CHARSET utf8
+            DEFAULT COLLATE utf8_general_ci
+        ;");
+        DB::query("
             CREATE TABLE IF NOT EXISTS `investors_referrals_totals` (
                 `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
                 `investor_id` int(10) UNSIGNED NOT NULL,
