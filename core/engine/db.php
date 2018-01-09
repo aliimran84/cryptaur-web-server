@@ -69,12 +69,15 @@ class DB
 
     /**
      * @param $query
-     * @return bool
      */
     static public function multi_query($query)
     {
         $db = self::inst();
-        return $db->_connection->multi_query($query);
+        if ($db->_connection->multi_query($query)) {
+            do {
+                self::error("multi_query error: {$db->_connection->error}");
+            } while ($db->_connection->next_result());
+        }
     }
 
     /**

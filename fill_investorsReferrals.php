@@ -39,14 +39,14 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
     $query = '';
 
     foreach ($users as $i => $user) {
-        $query = "
+        $query .= "
             UPDATE `investors_referrals` SET `referrals` = IF(`referrals` = '', {$user['id']}, concat(`referrals`, ',', {$user['id']}))
             WHERE `investor_id` IN (
                 SELECT `referrers`
                 FROM `investors_referrers`
                 WHERE `investor_id` = {$user['id']}
             )
-        ;\r\n\r\n";
+        ;\r\n";
     }
 
     DB::multi_query($query);
