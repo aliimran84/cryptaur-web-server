@@ -98,7 +98,8 @@ class Base_view
             <li class="<?= self::activeMenuItem(Menu_point::Administrator_settings) ?>">
                 <a href="<?= Administrator_controller::SETTINGS ?>"><?= Translate::td('Settings') ?></a></li>
             <li class="<?= self::activeMenuItem(Menu_point::Administrators_list) ?>">
-                <a href="<?= Administrator_controller::ADMINISTRATORS_LIST ?>"><?= Translate::td('Administrators') ?></a></li>
+                <a href="<?= Administrator_controller::ADMINISTRATORS_LIST ?>"><?= Translate::td('Administrators') ?></a>
+            </li>
             <li class="login <?= self::activeMenuItem(Menu_point::Admin_login) ?>">
                 Admin: <?= Application::$authorizedAdministrator->email ?></li>
             <li class="<?= self::activeMenuItem(Menu_point::Admin_logout) ?>">
@@ -107,14 +108,16 @@ class Base_view
             <li class="<?= self::activeMenuItem(Menu_point::Dashboard) ?>">
                 <a href="<?= Dashboard_controller::BASE_URL ?>"><?= Translate::td('Dashboard') ?></a></li>
             <li class="<?= self::activeMenuItem(Menu_point::Transactions) ?>">
-                <a href="<?= Deposit_controller::TRANSACTIONS_URL ?>"><?= Translate::td('Transactions history') ?></a></li>
+                <a href="<?= Deposit_controller::TRANSACTIONS_URL ?>"><?= Translate::td('Transactions history') ?></a>
+            </li>
             <li class="<?= self::activeMenuItem(Menu_point::Settings) ?>">
                 <a href="<?= Investor_controller::SETTINGS_URL ?>"><?= Translate::td('Settings') ?></a></li>
             <li class="login <?= self::activeMenuItem(Menu_point::Login) ?>"><?= Application::$authorizedInvestor->email ?></li>
             <li class="<?= self::activeMenuItem(Menu_point::Logout) ?>">
                 <a href="<?= Investor_controller::LOGOUT_URL ?>"><?= Translate::td('Logout') ?></a></li>
         <?php } else { ?>
-            <li class="<?= self::activeMenuItem(Menu_point::Login) ?>"><a href="<?= Investor_controller::LOGIN_URL ?>"><?= Translate::td('Login') ?></a>
+            <li class="<?= self::activeMenuItem(Menu_point::Login) ?>">
+                <a href="<?= Investor_controller::LOGIN_URL ?>"><?= Translate::td('Login') ?></a>
             </li>
             <li class="<?= self::activeMenuItem(Menu_point::Register) ?>">
                 <a href="<?= Investor_controller::REGISTER_URL ?>"><?= Translate::td('Register') ?></a></li>
@@ -137,7 +140,14 @@ class Base_view
             <div class="container">
                 <div class="row">
                     <div class="col s12 m6 copyright">
-                        <p>Copyright &copy; 2017. <?= Translate::td('All right reserved') ?>.</p>
+                        <p>
+                            Copyright &copy; 2017. <?= Translate::td('All right reserved') ?>.
+                            <?php
+                            if (@$_GET['executed_time']) {
+                                echo Application::executedTime();
+                            }
+                            ?>
+                        </p>
                     </div>
                     <div class="col s12 m6 terms-and-conditions">
                         <a target="_blank" href="https://cryptaur.com/terms-and-conditions"><?= Translate::td('Terms and Conditions') ?></a>
@@ -183,7 +193,8 @@ class Base_view
                     <div class="row">
                         <p class="header"><?= Translate::td('Referral Program') ?>:</p>
                         <p>
-                            <?= Translate::td('Anyone can get registered and participate in the token sale (see Terms and Conditions for legal restrictions). A new participant can get registered either directly at the web page of the project or using a group invite link from an existing participant. Newly registered participants can invite further potential participants by sending them their group invite links. The following reward system is applicable to all participants (newly registered or registered earlier) who have at least 10000 CPTs in their Cryptaur wallet (cumulatively from all the previous presale and sale stages) on the CPTs purchased during the token sale by those they invited') ?>:
+                            <?= Translate::td('Anyone can get registered and participate in the token sale (see Terms and Conditions for legal restrictions). A new participant can get registered either directly at the web page of the project or using a group invite link from an existing participant. Newly registered participants can invite further potential participants by sending them their group invite links. The following reward system is applicable to all participants (newly registered or registered earlier) who have at least 10000 CPTs in their Cryptaur wallet (cumulatively from all the previous presale and sale stages) on the CPTs purchased during the token sale by those they invited') ?>
+                            :
                         </p>
                     </div>
                     <div class="row">
