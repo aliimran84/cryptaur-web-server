@@ -85,7 +85,7 @@ class Bounty_controller
         if (!$gethClient->call('personal_unlockAccount', [
             ETH_TOKENS_WALLET,
             ETH_TOKENS_PASSWORD,
-            5
+            30
         ])) {
             return [-1, ''];
         }
@@ -151,7 +151,7 @@ class Bounty_controller
         if (!$gethClient->call('personal_unlockAccount', [
             ETH_BOUNTY_DISPENSER,
             ETH_BOUNTY_PASSWORD,
-            5
+            30
         ])) {
             return [-1, ''];
         }
