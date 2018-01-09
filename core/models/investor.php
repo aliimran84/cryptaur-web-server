@@ -524,7 +524,7 @@ class Investor
             UPDATE `investors_referrals_totals`
             SET `sum` = `sum` + ?
             WHERE
-                `coin` = ?
+                `coin` = ? AND
                 `investor_id` IN (
                     SELECT `referrers`
                     FROM `investors_referrers`
