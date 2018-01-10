@@ -106,39 +106,6 @@ class Administrator_view
         return ob_get_clean();
     }
 
-    static public function Email()
-    {
-        ob_start();
-        ?>
-        <div class="email">
-            <div class="logo-block">
-                <a href="https://cryptaur.com" class="logo"><img src="images/CRYPTAUR_written.png" alt="cryptaur"></a>
-            </div>
-            <div class="menu">
-                <ul>
-                    <li><a href="https://cryptaur.com/home_ru">Home</a></li>
-                    <li><a href="https://cryptaur.com/home_ru#contacts">Contract</a></li>
-                </ul>
-            </div>
-            <div class="message">
-                <h3>Invite</h3>
-                <h5>Alexey Rytikov has invited you to join the group</h5>
-                <p>Hello</p>
-                <p>Alexey Rytikov has invited you to join the group Equinox and participate in Cryptaur pre-sale/token sale.</p>
-                <p>Please follow this <a href="#">link</a> to accept the invitation:</p>
-                <p><a href="http://wallet.cryptaur.com/syndicates/join/6a3c5bf4">http://wallet.cryptaur.com/syndicates/join/6a3c5bf4</a></p>
-            </div>
-            <div class="logo-block-footer">
-                <a href="https://cryptaur.com" class="logo"><img src="images/CRYPTAUR_AVECTYPOCENTRE.png" alt="cryptaur"></a>
-            </div>
-            <div class="footer">
-                <p>If you would like to stop receiving invites from other people, follow the <a href="#">link</a></p>
-            </div>
-        </div>
-        <?php
-        return ob_get_clean();
-    }
-
     static public function logsList()
     {
         ob_start();
