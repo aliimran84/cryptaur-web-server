@@ -52,7 +52,7 @@ class Base_view
         ob_start();
         ?>
         <div class="nav-wrapper">
-            <a href="#" class="brand-logo">crypt<span>aur</span></a>
+            <a href="https://cryptaur.com" class="brand-logo">crypt<span>aur</span></a>
             <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <?= self::menuList() ?>
