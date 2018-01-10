@@ -387,7 +387,7 @@ class Investor_controller
      */
     static private function verifyPassword($password)
     {
-        return !!preg_match('/^[0-9A-Za-z!"#$%&\'()*+,-./:;<=>?@\[\]^_`{|}~]{6,50}$/', $password);
+        return !!preg_match('/^[0-9A-Za-z!"#$%&\'()*+,-.\/:;<=>?@\[\]^_`{|}~]{6,50}$/', $password);
     }
 
     static private function handleRegistrationRequest()
