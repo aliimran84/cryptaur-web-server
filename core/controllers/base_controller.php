@@ -14,7 +14,7 @@ class Base_controller
     static public $initialized = false;
 
     const ABOUT_URL = 'about';
-    const ICOINFO_URL = 'ico/info';
+    const ICOINFO_URL = 'total_info';
 
     static public function init()
     {
@@ -45,6 +45,7 @@ class Base_controller
 
     static private function handleIcoInfo()
     {
+        header("Access-Control-Allow-Origin: *");
         $eth = DB::get("SELECT SUM(`balance`) AS `sum` FROM `wallets` WHERE `coin`='eth';")[0]['sum'];
         $btc = DB::get("SELECT SUM(`balance`) AS `sum` FROM `wallets` WHERE `coin`='btc';")[0]['sum'];
         echo json_encode([
