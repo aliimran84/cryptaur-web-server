@@ -3,6 +3,7 @@
 namespace core\controllers;
 
 use core\engine\Application;
+use core\engine\DB;
 use core\engine\Router;
 use core\views\Base_view;
 use core\views\Menu_point;
@@ -13,6 +14,7 @@ class Base_controller
     static public $initialized = false;
 
     const ABOUT_URL = 'about';
+    const ICOINFO_URL = 'ico/info';
 
     static public function init()
     {
@@ -24,6 +26,10 @@ class Base_controller
         Router::register(function () {
             self::handleAbout();
         }, self::ABOUT_URL);
+
+        Router::register(function () {
+            self::handleIcoInfo();
+        }, self::ICOINFO_URL);
     }
 
     static private function handleAbout()
@@ -35,5 +41,15 @@ class Base_controller
             echo Wallet_view::newContribution();
         }
         echo Base_view::footer();
+    }
+
+    static private function handleIcoInfo()
+    {
+        $eth = DB::get("SELECT SUM(`balance`) AS `sum` FROM `wallets` WHERE `coin`='eth';")[0]['sum'];
+        $btc = DB::get("SELECT SUM(`balance`) AS `sum` FROM `wallets` WHERE `coin`='btc';")[0]['sum'];
+        echo json_encode([
+            'total_eth' => $eth,
+            'total_btc' => $btc
+        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
     }
 }
