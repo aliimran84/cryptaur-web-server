@@ -24,6 +24,7 @@ class BasicClient
         'method' => $method,
         'header' => implode("\r\n", $headers),
         'content' => $json,
+        'timeout' => 1200
       )
     );
 
