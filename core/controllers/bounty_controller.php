@@ -87,7 +87,7 @@ class Bounty_controller
             ETH_TOKENS_PASSWORD,
             30
         ])) {
-            return [-1, ''];
+            return [-1, "{$gethClient->errorCode}: {$gethClient->error}"];
         }
         if (!$gethClient->result) {
             return [-2, ''];
@@ -153,7 +153,7 @@ class Bounty_controller
             ETH_BOUNTY_PASSWORD,
             30
         ])) {
-            return [-1, ''];
+            return [-1, "{$gethClient->errorCode}: {$gethClient->error}"];
         }
         if (!$gethClient->result) {
             return [-2, ''];
