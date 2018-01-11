@@ -123,7 +123,7 @@ class Administrator_controller
             Base_view::$TITLE = 'Logs';
             Base_view::$MENU_POINT = Menu_point::Administrator_logs;
             echo Base_view::header();
-            echo Administrator_view::logsList();
+//            echo Administrator_view::logsList();
             echo Base_view::footer();
         }, self::LOGS, Router::GET_METHOD);
         Router::register(function () {
