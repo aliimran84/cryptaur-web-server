@@ -2,6 +2,12 @@
 
 namespace core\gauthify;
 
+class variants_2FA
+{
+    const email = 'EMAIL';
+    const sms = 'SMS';
+}
+
 class GAuthify
 {
     const PATH_TO_GAUTHIFYERRORS = PATH_TO_TMP_DIR . '/gauthify-errors.log';

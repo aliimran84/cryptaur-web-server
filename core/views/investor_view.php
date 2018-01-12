@@ -65,7 +65,7 @@ class Investor_view
                         <?php if ($message) { ?>
                             <label class="blue-text"><?= $message ?></label>
                         <?php } ?>
-                        <h5><?= Translate::td('Authentication code has been sended to your email') ?></h5>
+                        <h5><?= Translate::td('Authentication code has been sended using preferred method') ?></h5>
                         <input type="password" name="otp" placeholder="<?= Translate::td('Authentication code') ?>" autocomplete="new-password">
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
@@ -233,6 +233,37 @@ class Investor_view
                             <?= Translate::td('Spaces not valid') ?>.
                         </span>
                     </div>
+                    <?php if (USE_2FA == TRUE): ?>
+                    <div class="row">
+                        <?= Translate::td('Preferred second factor authentication method') ?>:
+                        <select name="2fa_method">
+                            <option 
+                                <?php if (Application::$authorizedInvestor->preferred_2fa == ""): ?>
+                                selected="" 
+                                <?php endif; ?>
+                                value="NULL"
+                            >
+                                <?= Translate::td('Do not use') ?>
+                            </option>
+                            <option 
+                                <?php if (Application::$authorizedInvestor->preferred_2fa == \core\gauthify\variants_2FA::email): ?>
+                                selected="" 
+                                <?php endif; ?>
+                                value="<?= \core\gauthify\variants_2FA::email ?>"
+                            >
+                                <?= \core\gauthify\variants_2FA::email ?>
+                            </option>
+                            <!--<option 
+                                <?php if (Application::$authorizedInvestor->preferred_2fa == \core\gauthify\variants_2FA::sms): ?>
+                                selected="" 
+                                <?php endif; ?>
+                                value="<?= \core\gauthify\variants_2FA::sms ?>"
+                            >
+                                <?= \core\gauthify\variants_2FA::sms ?>
+                            </option>-->
+                        </select>
+                    </div>
+                    <?php endif; ?>
                     <div class="row">
                         <?= Coin::token() ?>: <strong><?= Application::$authorizedInvestor->tokens_count ?></strong>
                     </div>

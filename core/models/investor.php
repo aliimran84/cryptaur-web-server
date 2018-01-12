@@ -24,6 +24,7 @@ class Investor
     public $eth_not_used_in_bounty = 0;
     public $eth_bounty = 0;
     public $phone = '';
+    public $preferred_2fa = '';
     /**
      * @var null|Investor[]
      */
@@ -146,6 +147,17 @@ class Investor
             DEFAULT CHARSET utf8
             DEFAULT COLLATE utf8_general_ci
         ;");
+        DB::query("
+            CREATE TABLE IF NOT EXISTS `investors_2fa_choice` (
+                `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `investor_id` int(10) UNSIGNED NOT NULL,
+                `choice` varchar(32) DEFAULT NULL,
+                PRIMARY KEY (`id`),
+                UNIQUE `investor_id_index`(`investor_id`) USING HASH
+            )
+            DEFAULT CHARSET utf8
+            DEFAULT COLLATE utf8_general_ci
+        ;");
     }
 
     static private function createWithDataFromDB($data)
@@ -167,6 +179,7 @@ class Investor
         $instance->referrals_totals = [
             Coin::token() => 0
         ];
+        $instance->preferred_2fa = $data['preferred_2fa'];
         foreach (json_decode($data['referrals_totals'], true) as $referrals_total) {
             $instance->referrals_totals[$referrals_total['coin']] = $referrals_total['sum'];
         }
@@ -191,10 +204,12 @@ class Investor
                         GROUP_CONCAT(JSON_OBJECT('coin', coin, 'sum', sum)),
                         ']'
                     ) FROM `investors_referrals_totals` WHERE `investor_id` = `investors`.`id`
-                ) as `referrals_totals`
+                ) as `referrals_totals`,
+                `investors_2fa_choice`.`choice` as `preferred_2fa`
             FROM `investors`
+            LEFT JOIN `investors_2fa_choice` ON `investors`.`id` = `investors_2fa_choice`.`investor_id`
             WHERE
-                `id` = ?
+                `investors`.`id` = ?
             LIMIT 1
         ;", [$id])[0];
 
@@ -225,10 +240,12 @@ class Investor
                         GROUP_CONCAT(JSON_OBJECT('coin', coin, 'sum', sum)),
                         ']'
                     ) FROM `investors_referrals_totals` WHERE `investor_id` = `investors`.`id`
-                ) as `referrals_totals`
+                ) as `referrals_totals`,
+                `investors_2fa_choice`.`choice` as `preferred_2fa`
             FROM `investors`
+            LEFT JOIN `investors_2fa_choice` ON `investors`.`id` = `investors_2fa_choice`.`investor_id`
             WHERE
-                `email` = ?
+                `investors`.`email` = ?
             LIMIT 1
         ;", [$email])[0];
 
@@ -478,6 +495,18 @@ class Investor
                 `id` = ?
             LIMIT 1
         ", [$firstname, $lastname, $this->id]);
+    }
+
+    /**
+     * @param string $method
+     */
+    public function set2faMethod($method)
+    {
+        $this->preferred_2fa = $method;
+        DB::set("
+            INSERT INTO `investors_2fa_choice` (`investor_id`, `choice`) VALUES (?, ?)
+            ON DUPLICATE KEY UPDATE `choice` = ?
+        ", [$this->id, $method, $method]);
     }
 
     /**

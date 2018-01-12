@@ -244,15 +244,16 @@ class Investor_controller
         if (USE_2FA == FALSE) {
             return FALSE;
         }
-        //TODO - make some rework when 2fa by user's wish will be implemented
         $user = Investor::getById($investorId);
-        $email = $user->email;
         $ga_id = "ga_id_$investorId";
-        $ga_user = \core\gauthify\GAuthify::get_user($ga_id); //get user from GAuthify
-        if (is_null($ga_user)) { //else create it
-            $ga_user = \core\gauthify\GAuthify::create_user($ga_id, md5($ga_user), $email);
+        $result;
+        if ($user->preferred_2fa == "") {
+            return FALSE;
+        } elseif ($user->preferred_2fa == \core\gauthify\variants_2FA::email) {
+            $result = \core\gauthify\GAuthify::send_email($ga_id);
+        } elseif ($user->preferred_2fa == \core\gauthify\variants_2FA::sms) {
+            $result = \core\gauthify\GAuthify::send_sms($ga_id);
         }
-        $result = \core\gauthify\GAuthify::send_email($ga_id);
         if (!is_null($result)) {
             session_start();
             $_SESSION[self::SFA_UNIQUE_ID] = $ga_id;
@@ -561,6 +562,24 @@ EOT;
             Application::$authorizedInvestor->setEthAddress(@$_POST['eth_address']);
         } else if (@strlen($_POST['eth_address']) > 0) {
             $urlErrors[] = 'eth_address_err=1';
+        }
+        if (
+            USE_2FA == TRUE && 
+            (
+                @$_POST['2fa_method'] == \core\gauthify\variants_2FA::email
+                //TODO uncomment sms check when phone numbers implemented
+                //|| @$_POST['2fa_method'] == \core\gauthify\variants_2FA::sms
+            )
+        )
+        {
+            $ga_id = "ga_id_".Application::$authorizedInvestor->id;
+            $ga_user = \core\gauthify\GAuthify::get_user($ga_id); //get user from GAuthify
+            if (is_null($ga_user)) { //create it, if no user
+                $ga_user = \core\gauthify\GAuthify::create_user($ga_id, md5($ga_user), Application::$authorizedInvestor->email);
+            }
+            Application::$authorizedInvestor->set2faMethod($_POST['2fa_method']);
+        } else {
+            Application::$authorizedInvestor->set2faMethod(NULL);
         }
         Utility::location(self::SETTINGS_URL . '?' . implode('&', $urlErrors));
     }

@@ -41,7 +41,7 @@ Set,Set
 Cryptaur login,Cryptaur login
 Second factor authentication,Second factor authentication
 Authentication code,Authentication code
-Authentication code has been sended to your email,Authentication code has been sended to your email
+Authentication code has been sended using preferred method,Authentication code has been sended using preferred method
 Password,Password
 Forgot your account login,Forgot your account login
 Recover,Recover
@@ -151,3 +151,5 @@ Part to withdraw,Part to withdraw
 Split bounty between reinvest and withdraw,Split bounty between reinvest and withdraw
 Drag slider to adjust values,Drag slider to adjust values
 "Bounty was not withdrawn or reinvested. Maybe the service is overloaded. Try in a few minutes.","Bounty was not withdrawn or reinvested. Maybe the service is overloaded. Try in a few minutes."
+Preferred second factor authentication method,Preferred second factor authentication method
+Do not use,Do not use

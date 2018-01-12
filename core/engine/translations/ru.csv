@@ -41,7 +41,7 @@ Set,Задать
 Cryptaur login,Cryptaur авторизация
 Second Factor Authentication,Двухфакторная авторизация
 Authentication code,Код авторизации
-Authentication code has been sended to your email,Код авторизации был отправлен на ваш почтовый адрес
+Authentication code has been sended using preferred method,Код авторизации был отправлен выбранным методом
 Password,Пароль
 Forgot your account login,Забыли имя пользователя кабинета
 Recover,Восстановить
@@ -151,3 +151,5 @@ Part to withdraw,Часть для вывода
 Split bounty between reinvest and withdraw,Распределить баунти между реинвестицией/выводом
 Drag slider to adjust values,Изменяйте значения с помощью ползунка
 "Bounty was not withdrawn or reinvested. Maybe the service is overloaded. Try in a few minutes.","Баунти не было выведено и (или) реинвестировано. Возможно, сервис перегружен. Попробуйте через несколько минут."
+Preferred second factor authentication method,Предпочтительный метод двухфакторной авторизации
+Do not use,Не использовать
