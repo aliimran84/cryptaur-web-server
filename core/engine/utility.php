@@ -61,7 +61,6 @@ class Utility
         return !!preg_match("/^0x[a-fA-F0-9]{40}$/", $eth_address);
     }
 
-
     /**
      * @param string $url
      * @param array $data
@@ -74,6 +73,29 @@ class Utility
         curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($curl, CURLOPT_TIMEOUT, 3);
+        $response = curl_exec($curl);
+        curl_close($curl);
+        return $response;
+    }
+
+    /**
+     * @param string $url
+     * @param array $data
+     * @param string $hmac_key
+     * @return mixed
+     */
+    static public function httpPostWithHmac($url, $data = [], $hmac_key = '')
+    {
+        $query = http_build_query($data);
+        $hmac_signature = hash_hmac('sha256', $query, pack("H*", $hmac_key));
+        $curl = curl_init($url);
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $query);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, [
+            "HMAC-Signature: $hmac_signature"
+        ]);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_TIMEOUT, 10);
         $response = curl_exec($curl);
         curl_close($curl);
         return $response;
