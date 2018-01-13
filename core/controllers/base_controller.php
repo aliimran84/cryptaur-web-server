@@ -15,6 +15,9 @@ class Base_controller
 
     const ABOUT_URL = 'about';
     const ICOINFO_URL = 'total_info';
+    const ICOINFO2_URL = 'ico/info';
+
+    const ICOINFO_FILE = PATH_TO_TMP_DIR . '/ico_info.json';
 
     static public function init()
     {
@@ -30,6 +33,9 @@ class Base_controller
         Router::register(function () {
             self::handleIcoInfo();
         }, self::ICOINFO_URL);
+        Router::register(function () {
+            self::handleIcoInfo();
+        }, self::ICOINFO2_URL);
     }
 
     static private function handleAbout()
@@ -46,11 +52,6 @@ class Base_controller
     static private function handleIcoInfo()
     {
         header("Access-Control-Allow-Origin: *");
-        $eth = DB::get("SELECT SUM(`balance`) AS `sum` FROM `wallets` WHERE `coin`='eth';")[0]['sum'];
-        $btc = DB::get("SELECT SUM(`balance`) AS `sum` FROM `wallets` WHERE `coin`='btc';")[0]['sum'];
-        echo json_encode([
-            'total_eth' => $eth,
-            'total_btc' => $btc
-        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        echo file_get_contents(self::ICOINFO_FILE);
     }
 }
