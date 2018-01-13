@@ -167,6 +167,7 @@ class Configuration
         DEFINE('ETH_TOKENS_CONTRACT', $config['eth']['tokens_contract']);
         DEFINE('ETH_TOKENS_WALLET', $config['eth']['tokens_wallet']);
         DEFINE('ETH_TOKENS_PASSWORD', $config['eth']['tokens_password']);
+        DEFINE('ETH_TOKENS_NODE_URL', $config['eth']['tokens_node_url']);
         DEFINE('ETH_QUEUE_URL', $config['eth']['queue_url']);
         DEFINE('ETH_QUEUE_KEY', $config['eth']['queue_key']);
 
