@@ -410,7 +410,7 @@ class Investor
             ]
         );
         DB::set("
-            UPDATE `investors_referrals` SET `referrals` = IF(`referrals` = '', ?, concat(`referrals`, ',', ?}))
+            UPDATE `investors_referrals` SET `referrals` = IF(`referrals` = '', ?, concat(`referrals`, ',', ?))
             WHERE FIND_IN_SET(`investor_id`, (
                 SELECT `referrers`
                 FROM `investors_referrers`
