@@ -260,4 +260,17 @@ class Utility
         list($usec, $sec) = explode(" ", microtime());
         return ((float)$usec + (float)$sec);
     }
+
+    static public function uuid()
+    {
+        list($usec, $sec) = explode(" ", microtime());
+        $mtime = str_pad(substr(((float)$usec + (float)$sec) * 10000, 0, 14), 14, 0);
+        $mtime = substr_replace($mtime, '-', 2, 0);
+        return sprintf('%04x%04x-%04x-%04x-%02x%s',
+            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0x0fff) | 0x4000,
+            mt_rand(0, 255), $mtime
+        );
+    }
 }
