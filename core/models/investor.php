@@ -661,20 +661,23 @@ class Investor
                 'eth' => $ethToReinvest
             ]);
             // todo: add eth to eth_not_used_in_bounty
-            list($mintCode, $mintStr) = Bounty_controller::mintTokens($this, $tokens, 'eth', $txid_s);
+            $data = [
+                'investorId' => $this->id,
+                'tokens' => $tokens
+            ];
+            list($mintCode, $mintStr) = EthQueue::mintTokens(EthQueue::TYPE_MINT_REINVEST, $data, $this->eth_address, $tokens, 'eth', $txid_s);
             if ($mintCode === 0) {
-                $txid_m = $mintStr;
-                Utility::log('mint2/' . Utility::microtime_float(), [
+                $uuid = $mintStr;
+                Utility::log('mint2new_ok/' . Utility::microtime_float(), [
                     'investor' => $this->id,
-                    'txid' => $txid_m,
+                    'uuid' => $uuid,
                     'time' => time(),
                     'eth_address' => $this->eth_address,
                     'eth' => $ethToReinvest,
                     'tokens' => $tokens
                 ]);
-                $this->addTokens($tokens);
             } else {
-                Utility::log('mint2_err/' . Utility::microtime_float(), [
+                Utility::log('mint2new_err/' . Utility::microtime_float(), [
                     'investor' => $this->id,
                     'code' => $mintCode,
                     'str' => $mintStr,

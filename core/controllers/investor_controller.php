@@ -7,6 +7,7 @@ use core\engine\Email;
 use core\engine\Utility;
 use core\engine\DB;
 use core\engine\Router;
+use core\models\EthQueue;
 use core\models\Investor;
 use core\translate\Translate;
 use core\views\Base_view;
@@ -194,10 +195,14 @@ class Investor_controller
             if ($investor->tokens_count == 0) {
                 $isOk = true;
             } else {
-                list($mintCode, $mintStr) = Bounty_controller::mintTokens($investor, $investor->tokens_count);
+                $data = [
+                    'investorId' => $investor->id,
+                    'tokens' => $investor->tokens_count
+                ];
+                list($mintCode, $mintStr) = EthQueue::mintTokens(EthQueue::TYPE_MINT_OLD_INVESTOR_INIT, $data, $investor->eth_address, $investor->tokens_count);
                 if ($mintCode === 0) {
                     $txid = $mintStr;
-                    Utility::log('mint3_ok/' . Utility::microtime_float(), [
+                    Utility::log('mint3new_ok/' . Utility::microtime_float(), [
                         'investor' => $investor->id,
                         'txid' => $txid,
                         'time' => time(),
@@ -206,7 +211,7 @@ class Investor_controller
                     ]);
                     $isOk = true;
                 } else {
-                    Utility::log('mint3_err/' . Utility::microtime_float(), [
+                    Utility::log('mint3new_err/' . Utility::microtime_float(), [
                         'investor' => $investor->id,
                         'code' => $mintCode,
                         'str' => $mintStr,
@@ -564,15 +569,14 @@ EOT;
             $urlErrors[] = 'eth_address_err=1';
         }
         if (
-            USE_2FA == TRUE && 
+            USE_2FA == TRUE &&
             (
                 @$_POST['2fa_method'] == \core\gauthify\variants_2FA::email
                 //TODO uncomment sms check when phone numbers implemented
                 //|| @$_POST['2fa_method'] == \core\gauthify\variants_2FA::sms
             )
-        )
-        {
-            $ga_id = "ga_id_".Application::$authorizedInvestor->id;
+        ) {
+            $ga_id = "ga_id_" . Application::$authorizedInvestor->id;
             $ga_user = \core\gauthify\GAuthify::get_user($ga_id); //get user from GAuthify
             if (is_null($ga_user)) { //create it, if no user
                 $ga_user = \core\gauthify\GAuthify::create_user($ga_id, md5($ga_user), Application::$authorizedInvestor->email);
