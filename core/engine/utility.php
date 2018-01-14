@@ -265,12 +265,14 @@ class Utility
     {
         list($usec, $sec) = explode(" ", microtime());
         $mtime = str_pad(substr(((float)$usec + (float)$sec) * 10000, 0, 14), 14, 0);
-        $mtime = substr_replace($mtime, '-', 2, 0);
-        return sprintf('%04x%04x-%04x-%04x-%02x%s',
-            mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+        $mtime = substr_replace(substr_replace($mtime, '-', 8, 0), '-', 13, 0);
+        return sprintf('%s%02x-%04x-%04x%04x%04x',
+            $mtime,
+            mt_rand(0, 255),
             mt_rand(0, 0xffff),
-            mt_rand(0, 0x0fff) | 0x4000,
-            mt_rand(0, 255), $mtime
+            mt_rand(0, 0xffff),
+            mt_rand(0, 0x0fff),
+            mt_rand(0, 0xffff)
         );
     }
 }
