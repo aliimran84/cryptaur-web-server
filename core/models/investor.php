@@ -57,7 +57,7 @@ class Investor
                 `eth_new_bounty` double(20, 8) UNSIGNED DEFAULT '0',
                 `phone` varchar(254) DEFAULT '',
                 PRIMARY KEY (`id`),
-                INDEX `referrer_id_index`(`referrer_id`) USING HASH,
+                INDEX `referrer_id_index`(`referrer_id`) USING HASH
             )
             DEFAULT CHARSET utf8
             DEFAULT COLLATE utf8_general_ci
