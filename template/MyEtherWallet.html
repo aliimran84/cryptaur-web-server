@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My ether wallet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="styles/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="styles/bundle.min.css?rev=e54926af15fddd6feeeba4353092444f">
+</head>
+<body>
+
+<nav>
+    <div class="nav-wrapper">
+        <a href="#" class="brand-logo">crypt<span>aur</span></a>
+        <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Transactions history</a></li>
+            <li><a href="#">Settings</a></li>
+            <li class="login">name@mail.com</li>
+            <li><a href="#">Logout</a></li>
+            <li><a class="dropdown-button" href="#!" data-activates="dropdown_flag"><img src="images/flag_usa.png" /><i class="material-icons right">keyboard_arrow_down</i></a></li>
+        </ul>
+        <ul class="side-nav" id="mobile-demo">
+            <li><a href="#">About</a></li>
+            <li><a href="#">Dashboard</a></li>
+            <li><a href="#">Transactions history</a></li>
+            <li><a href="#">Settings</a></li>
+            <li><a href="#">Logout</a></li>
+        </ul>
+    </div>
+    <ul id="dropdown_flag" class="dropdown-content">
+        <li><a href="#!"><img src="images/flag_usa.png" /></a></li>
+        <li><a href="#!"><img src="images/flag_rus.png" /></a></li>
+    </ul>
+</nav>
+<div class="wrapper">
+    <div class="content">
+        <section class="ether-wallet">
+            <div class="row">
+                <h3>My Ether Wallet</h3>
+            </div>
+            <div class="row">
+                <form action="#" method="post">
+                    <div class="col s12 m7 l7">
+                        <div class="input-field">
+                            <p>To Address</p>
+                            <input type="text" name="address" value="" placeholder="0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544">
+                        </div>
+                        <div class="input-field">
+                            <p>Amount to Send</p>
+                            <input type="number" name="amount" value="" placeholder="Amount">
+                            <select>
+                                <option value="ETH" selected>ETH</option>
+                                <option value="CPT">CPT</option>
+                            </select>
+                            <a href="#">Send Entire Balance</a>
+                        </div>
+                        <div class="input-field">
+                            <button class="waves-effect waves-light btn btn-generate-transaction">Generate Transaction</button>
+                        </div>
+                    </div>
+                    <div class="personal-data col s12 m5 l5">
+                        <p>Account Address</p>
+                        <p class="account-address">0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544</p>
+                        <p>Account Balance</p>
+                        <p class="account-balance">0 ETH</p>
+                        <p>Transaction History</p>
+                        <a href="https://etherscan.io">ETH (https://etherscan.io)</a><br>
+                        <a href="https://ethplorer.io/">Tokens (Ethplorer.io)</a>
+                        <div class="buy-eth">
+                            <div class="row">
+                                <div class="col s12 m12 l8">
+                                    <p class="buy-text">Aw...you don't have any ETH</p>
+                                    <p class="buy-text">Buy ETH with USD</p>
+                                </div>
+                                <div class="coinbase-block col s12 m12 l4">
+                                    <p class="coinbase">coinbase</p>
+                                    <a href class="waves-effect waves-light btn btn-price">1 ETH = 1300.00 USD</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </div>
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col s12 m6 copyright">
+                    <p>Copyright &copy; 2017. All right reserved.</p>
+                </div>
+                <div class="col s12 m6 terms-and-conditions">
+                    <p>Terms and Conditions</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
+
+<script type="text/javascript" src="scripts/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="scripts/materialize.min.js"></script>
+<script type="text/javascript" src="scripts/script.js"></script>
+
+</body>
+</html>
