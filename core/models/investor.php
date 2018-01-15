@@ -120,7 +120,7 @@ class Investor
         DB::query("
             CREATE TABLE IF NOT EXISTS `investors_referrals` (
                 `investor_id` int(10) UNSIGNED NOT NULL,
-                `referrals` mediumtext DEFAULT '',
+                `referrals` mediumtext,
                 PRIMARY KEY (`investor_id`)
             )
             DEFAULT CHARSET latin1
