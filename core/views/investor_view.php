@@ -277,6 +277,64 @@ class Investor_view
         return ob_get_clean();
     }
 
+    static public function myetherwallet()
+    {
+        ob_start();
+        ?>
+
+        <section class="ether-wallet">
+            <div class="row">
+                <h3><?= Translate::td('My Ether Wallet') ?></h3>
+            </div>
+            <div class="row">
+                <form action="#" method="post">
+                    <div class="col s12 m7 l7">
+                        <div class="input-field">
+                            <p><?= Translate::td('To Address') ?></p>
+                            <input type="text" name="address" value="" placeholder="0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544">
+                        </div>
+                        <div class="input-field">
+                            <p><?= Translate::td('Amount to Send') ?></p>
+                            <input type="number" name="amount" value="" placeholder="<?= Translate::td('Amount') ?>">
+                            <select>
+                                <option value="ETH" selected>ETH</option>
+                                <option value="CPT">CPT</option>
+                            </select>
+                            <a href="#"><?= Translate::td('Send Entire Balance') ?></a>
+                        </div>
+                        <div class="input-field">
+                            <button class="waves-effect waves-light btn btn-generate-transaction"><?= Translate::td('Generate Transaction') ?></button>
+                        </div>
+                    </div>
+                    <div class="personal-data col s12 m5 l5">
+                        <p><?= Translate::td('Account Address') ?></p>
+                        <p class="account-address">0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544</p>
+                        <p><?= Translate::td('Account Balance') ?></p>
+                        <p class="account-balance">0 ETH</p>
+                        <p><?= Translate::td('Transaction History') ?></p>
+                        <a href="https://etherscan.io">ETH (https://etherscan.io)</a><br>
+                        <a href="https://ethplorer.io/">Tokens (Ethplorer.io)</a>
+                        <div class="buy-eth">
+                            <div class="row">
+                                <div class="col s12 m12 l8">
+                                    <p class="buy-text">Aw...you don't have any ETH</p>
+                                    <p class="buy-text">Buy ETH with USD</p>
+                                </div>
+                                <div class="coinbase-block col s12 m12 l4">
+                                    <p class="coinbase">coinbase</p>
+                                    <a href class="waves-effect waves-light btn btn-price">1 ETH = 1300.00 USD</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <?php
+        return ob_get_clean();
+    }
+
     static public function invite_friends($message = '')
     {
         ob_start();

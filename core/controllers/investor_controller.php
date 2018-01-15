@@ -24,6 +24,7 @@ class Investor_controller
     const SET_EMPTY_ETH_ADDRESS = 'investor/set_eth_address';
     const LOGOUT_URL = 'investor/logout';
     const RECOVER_URL = 'investor/recover';
+    const MYETHERWALLET_URL = 'investor/myetherwallet';
     const CHANGE_PASSWORD_URL = 'investor/changepassword';
     const REGISTER_URL = 'investor/register';
     const PREVIOUS_SYSTEM_REGISTER_URL = 'syndicates/join';
@@ -118,6 +119,10 @@ class Investor_controller
         Router::register(function () {
             self::handleSettingsForm();
         }, self::SETTINGS_URL, Router::GET_METHOD);
+
+        Router::register(function () {
+            self::handleMyEtherWalletForm();
+        }, self::MYETHERWALLET_URL, Router::GET_METHOD);
 
         Router::register(function () {
             self::handleSettingsRequest();
@@ -548,6 +553,22 @@ EOT;
         Base_view::$MENU_POINT = Menu_point::Settings;
         echo Base_view::header();
         echo Investor_view::settings();
+        echo Base_view::footer();
+    }
+
+    static private function handleMyEtherWalletForm()
+    {
+        if (!Application::$authorizedInvestor) {
+            Utility::location(self::LOGIN_URL);
+        }
+        if (!Application::$authorizedInvestor->eth_address) {
+            Utility::location(Investor_controller::SET_EMPTY_ETH_ADDRESS);
+        }
+
+        Base_view::$TITLE = 'MyEtherWallet';
+        Base_view::$MENU_POINT = Menu_point::Settings;
+        echo Base_view::header();
+        echo Investor_view::myetherwallet();
         echo Base_view::footer();
     }
 

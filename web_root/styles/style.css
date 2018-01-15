@@ -262,6 +262,7 @@ footer .row {
 .content section.my-contribution {
 }
 .content section.stage-one h3,
+.content section.ether-wallet h3,
 .content section.my-contribution h3,
 .content section.my-tokens h3,
 .content section.my-group h3 {
@@ -314,9 +315,11 @@ footer .row {
 .content section.my-contribution p a{
     text-decoration: underline;
 }
+.content section.ether-wallet .select-wrapper span.caret,
 .content section.my-contribution .select-wrapper span.caret {
     right: 15px;
 }
+.content section.ether-wallet input.select-dropdown,
 .content section.my-contribution input.select-dropdown {
     box-sizing: inherit;
     -webkit-box-sizing: inherit;
@@ -324,13 +327,70 @@ footer .row {
     border-radius: 12px;
     border: 1px solid #9e9e9e;
 }
+.content section.ether-wallet input.select-dropdown {
+    border-radius: 8px;
+}
+.content section.ether-wallet p {
+    font-weight: 500;
+}
+.content section.ether-wallet p.account-address {
+    word-wrap: break-word;
+}
+.content section.ether-wallet p.account-address,
+.content section.ether-wallet p.account-balance {
+    font-weight: 300;
+    margin-left: 10px;
+}
+.content section.ether-wallet .buy-eth {
+    background: #001dff;
+    margin-top: 1rem;
+}
+.content section.ether-wallet .buy-eth p {
+    color: #ffffff;
+}
+.content sectino.ether-wallet .coinbase {
+    margin-top: 1rem;
+}
+.content section.ether-wallet .personal-data a {
+    margin-left: 10px;
+}
+.content section.ether-wallet .personal-data p.coinbase {
+    text-align: center;
+    margin: 15px 0;
+}
+.content section.ether-wallet .personal-data a.btn-price {
+    margin-left: 0;
+    margin-bottom: 15px;
+    padding: 0px 18px;
+    border: 0;
+    font-size: 12px;
+}
+.content section.ether-wallet .personal-data .buy-text:nth-child(odd) {
+    font-weight: 300;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+.content section.ether-wallet .personal-data .buy-text:nth-child(even) {
+    font-size: 24px;
+    text-align: center;
+}
+.content section.ether-wallet .btn-generate-transaction {
+    margin: 25px 0;
+}
+.content section.ether-wallet .coinbase-block {
+    text-align: center;
+}
+.content section.ether-wallet .dropdown-content.select-dropdown,
 .content section.my-contribution .dropdown-content.select-dropdown {
     border: 1px solid #9e9e9e;
     border-radius: 12px;
 }
+.content section.ether-wallet .dropdown-content.select-dropdown li,
 .content section.my-contribution .dropdown-content.select-dropdown li {
     border-bottom: 1px solid #9e9e9e;
 }
+.content section.ether-wallet .dropdown-content li>span,
 .content section.my-contribution .dropdown-content li>span {
     color: #404040;
 }
@@ -411,6 +471,7 @@ footer .row {
     border-left-style: solid;
 }
 .content section.my-contribution .btn-send,
+.content section.ether-wallet .btn-generate-transaction,
 .content section.my-contribution .btn-contribute {
     padding: 0;
     width: 100%;
@@ -443,6 +504,20 @@ footer .row {
     display: block;
     text-align: center;
     margin-bottom: 5px;
+}
+.content section.ether-wallet input[type='number'] {
+    width: 65%;
+}
+.content section.ether-wallet .select-wrapper {
+    width: 33%;
+    float: right;
+}
+.content section.ether-wallet input::-webkit-outer-spin-button,
+.content section.ether-wallet input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+}
+.content section.ether-wallet .personal-data {
+    margin-top: 1rem;
 }
 .wrapper .content .tabs {
     overflow-x: hidden;

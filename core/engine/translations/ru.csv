@@ -153,3 +153,12 @@ Drag slider to adjust values,Изменяйте значения с помощь
 "Bounty was not withdrawn or reinvested. Maybe the service is overloaded. Try in a few minutes.","Баунти не было выведено и (или) реинвестировано. Возможно, сервис перегружен. Попробуйте через несколько минут."
 Preferred second factor authentication method,Предпочтительный метод двухфакторной авторизации
 Do not use,Не использовать
+My Ether Wallet,ETH кошелёк
+To Address,Адрес получателя
+Amount to Send,Сумма перевода
+Amount,Сумма
+Send Entire Balance,Перевести весь доступный баланс
+Generate Transaction,Сформировать транзакцию
+Account Address,Адрес (номер) счета
+Account Balance,Баланс счёта
+Transaction History,История транзакций
