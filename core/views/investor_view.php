@@ -110,26 +110,7 @@ class Investor_view
                         <input type="text" name="firstname" placeholder="<?= Translate::td('First name') ?>" value="<?= @$data['firstname'] ?>">
                         <input type="text" name="lastname" placeholder="<?= Translate::td('Last name') ?>" value="<?= @$data['lastname'] ?>">
                         <input type="email" name="email" placeholder="Email" value="<?= @$data['email'] ?>" autocomplete="nope">
-                        <select class="select-wallet">
-                            <option value="choose" disabled selected><?= Translate::td('Choose type wallet') ?></option>
-                            <option value="inner-wallet"><?= Translate::td('Inner wallet') ?></option>
-                            <option value="external-wallet"><?= Translate::td('External wallet') ?></option>
-                        </select>
-                        <div class="block_inner-wallet">
-                            <input type="text" name="eth_address" placeholder="<?= Translate::td('ETH-ADDRESS') ?>" value="" autocomplete="nope">
-                        </div>
-                        <div class="block_external-wallet">
-                            <input type="text" name="eth_address" placeholder="<?= Translate::td('ETH-ADDRESS') ?>" value="" autocomplete="nope">
-                        </div>
-                        <!-- Modal Structure -->
-                        <div id="modal_external-wallet" class="modal">
-                            <div class="modal-content">
-                                <h4><?= Translate::td('Warning') ?></h4>
-                                <p><input type="checkbox" id="warning_1" class="warning"/><label for="warning_1"><?= Translate::td('You control private key from the specified address') ?></label></p>
-                                <p><input type="checkbox" id="warning_2" class="warning"/><label for="warning_2"><?= Translate::td('The specified address is not the depository address of crypto exchange') ?></label></p>
-                                <p><input type="checkbox" id="warning_3" class="warning"/><label for="warning_3"><?= Translate::td('The specified address corresponds to a wallet that supports ERC20 token standard, for example, MyEtherWallet') ?></label></p>
-                            </div>
-                        </div>
+                        <input type="text" name="eth_address" placeholder="<?= Translate::td('ETH-ADDRESS') ?>" value="<?= @$data['eth_address'] ?>" autocomplete="nope">
                         <input type="text" name="referrer_code" value="<?= $referrer_code ?>" placeholder="<?= Translate::td('REFERRER CODE') ?>" autocomplete="nope">
                         <input type="password" name="password" pattern=".{6,120}" placeholder="<?= Translate::td('Password') ?>" autocomplete="new-password">
                         <span><?= Translate::td('Password must be more than 6 symbols') ?></span>
@@ -233,27 +214,8 @@ class Investor_view
                         <strong><?= Application::$authorizedInvestor->referrer_code ?></strong>
                     </div>
                     <div class="row">
-                        <select class="select-wallet">
-                            <option value="inner-wallet" selected><?= Translate::td('Inner wallet') ?></option>
-                            <option value="external-wallet"><?= Translate::td('External wallet') ?></option>
-                        </select>
-                        <div class="block_inner-wallet">
-                            <p><?= Translate::td('Eth address') ?>:</p>
-                            <input type="text" name="eth_address" placeholder="<?= Translate::td('ETH-ADDRESS') ?>" value="<?= Application::$authorizedInvestor->eth_address ?>" autocomplete="nope" readonly class="eth_address">
-                        </div>
-                        <div class="block_external-wallet">
-                            <p><?= Translate::td('Eth address') ?>:</p>
-                            <input type="text" name="external_eth_address" placeholder="<?= Translate::td('ETH-ADDRESS') ?>" value="" autocomplete="nope">
-                        </div>
-                        <!-- Modal Structure -->
-                        <div id="modal_external-wallet" class="modal">
-                            <div class="modal-content">
-                                <h4><?= Translate::td('Warning') ?></h4>
-                                <p><input type="checkbox" id="warning_1" class="warning"/><label for="warning_1"><?= Translate::td('You control private key from the specified address') ?></label></p>
-                                <p><input type="checkbox" id="warning_2" class="warning"/><label for="warning_2"><?= Translate::td('The specified address is not the depository address of crypto exchange') ?></label></p>
-                                <p><input type="checkbox" id="warning_3" class="warning"/><label for="warning_3"><?= Translate::td('The specified address corresponds to a wallet that supports ERC20 token standard, for example, MyEtherWallet') ?></label></p>
-                            </div>
-                        </div>
+                        <?= Translate::td('Eth address') ?>:
+                        <input type="text" name="eth_address" placeholder="eth-address" value="<?= Application::$authorizedInvestor->eth_address ?>" autocomplete="nope">
                     </div>
                     <div class="row">
                         <?= Translate::td('Eth withdrawn') ?>:
@@ -272,35 +234,35 @@ class Investor_view
                         </span>
                     </div>
                     <?php if (USE_2FA == TRUE): ?>
-                    <div class="row">
-                        <?= Translate::td('Preferred second factor authentication method') ?>:
-                        <select name="2fa_method">
-                            <option 
-                                <?php if (Application::$authorizedInvestor->preferred_2fa == ""): ?>
-                                selected="" 
-                                <?php endif; ?>
-                                value="NULL"
-                            >
-                                <?= Translate::td('Do not use') ?>
-                            </option>
-                            <option 
-                                <?php if (Application::$authorizedInvestor->preferred_2fa == \core\gauthify\variants_2FA::email): ?>
-                                selected="" 
-                                <?php endif; ?>
-                                value="<?= \core\gauthify\variants_2FA::email ?>"
-                            >
-                                <?= \core\gauthify\variants_2FA::email ?>
-                            </option>
-                            <!--<option 
+                        <div class="row">
+                            <?= Translate::td('Preferred second factor authentication method') ?>:
+                            <select name="2fa_method">
+                                <option
+                                    <?php if (Application::$authorizedInvestor->preferred_2fa == ""): ?>
+                                        selected=""
+                                    <?php endif; ?>
+                                        value="NULL"
+                                >
+                                    <?= Translate::td('Do not use') ?>
+                                </option>
+                                <option
+                                    <?php if (Application::$authorizedInvestor->preferred_2fa == \core\gauthify\variants_2FA::email): ?>
+                                        selected=""
+                                    <?php endif; ?>
+                                        value="<?= \core\gauthify\variants_2FA::email ?>"
+                                >
+                                    <?= \core\gauthify\variants_2FA::email ?>
+                                </option>
+                                <!--<option
                                 <?php if (Application::$authorizedInvestor->preferred_2fa == \core\gauthify\variants_2FA::sms): ?>
-                                selected="" 
+                                selected=""
                                 <?php endif; ?>
                                 value="<?= \core\gauthify\variants_2FA::sms ?>"
                             >
                                 <?= \core\gauthify\variants_2FA::sms ?>
                             </option>-->
-                        </select>
-                    </div>
+                            </select>
+                        </div>
                     <?php endif; ?>
                     <div class="row">
                         <?= Coin::token() ?>: <strong><?= Application::$authorizedInvestor->tokens_count ?></strong>
@@ -351,8 +313,12 @@ class Investor_view
                         <p class="account-balance">0 ETH</p>
                         <p class="account-balance">0 CPT</p>
                         <p><?= Translate::td('Transaction History') ?></p>
-                        <a href="https://etherscan.io/address/0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544">ETH (https://etherscan.io)</a><br>
-                        <a href="https://ethplorer.io/address/0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544">Tokens (Ethplorer.io)</a>
+                        <a href="https://etherscan.io/address/0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544">
+                            ETH (https://etherscan.io)
+                        </a><br>
+                        <a href="https://ethplorer.io/address/0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544">
+                            Tokens (Ethplorer.io)
+                        </a>
                     </div>
                 </form>
             </div>
