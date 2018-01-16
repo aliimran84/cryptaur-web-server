@@ -381,15 +381,41 @@ footer .row {
 .content section.ether-wallet .coinbase-block {
     text-align: center;
 }
+.content .settings-block .select-wrapper.select-wallet .caret {
+    z-index: 10;
+    right: 10px;
+}
+.content .settings-block .dropdown-content.select-dropdown,
 .content section.ether-wallet .dropdown-content.select-dropdown,
 .content section.my-contribution .dropdown-content.select-dropdown {
     border: 1px solid #9e9e9e;
-    border-radius: 12px;
+    border-radius: 8px;
 }
+.content #modal_external-wallet .modal-content {
+    padding: 24px 40px;
+}
+.content #modal_external-wallet .modal-content h4 {
+    text-align: center;
+}
+.content #modal_external-wallet .modal-content .material-icons {
+    font-size: 1.5rem;
+    margin-right: 10px;
+    top: 4px;
+    position: relative;
+    color: #0074ff;
+}
+.content .settings-block input[type='text'].eth_address:read-only,
+.content .settings-block input[type='text'].eth_address:focus {
+    border: 0 !important;
+    background: transparent;
+    padding: 0;
+}
+.content .settings-block .dropdown-content.select-dropdown li,
 .content section.ether-wallet .dropdown-content.select-dropdown li,
 .content section.my-contribution .dropdown-content.select-dropdown li {
     border-bottom: 1px solid #9e9e9e;
 }
+.content .settings-block .dropdown-content li>span,
 .content section.ether-wallet .dropdown-content li>span,
 .content section.my-contribution .dropdown-content li>span {
     color: #404040;

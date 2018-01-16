@@ -189,7 +189,7 @@ class Investor_view
         ob_start();
         ?>
         <div class="row">
-            <div class="col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
+            <div class="settings-block col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
                 <form action="<?= Investor_controller::SETTINGS_URL ?>" method="post" autocomplete="off">
                     <h3><?= Translate::td('Investor settings') ?></h3>
                     <?php if (isset($_GET['password_err'])) { ?>
@@ -214,8 +214,29 @@ class Investor_view
                         <strong><?= Application::$authorizedInvestor->referrer_code ?></strong>
                     </div>
                     <div class="row">
-                        <?= Translate::td('Eth address') ?>:
-                        <input type="text" name="eth_address" placeholder="eth-address" value="<?= Application::$authorizedInvestor->eth_address ?>" autocomplete="nope">
+                        <select class="select-wallet">
+                            <option value="inner-wallet" selected><?= Translate::td('Inner wallet') ?></option>
+                            <option value="external-wallet"><?= Translate::td('External wallet') ?></option>
+                        </select>
+                        <div class="block_inner-wallet">
+                            <p><?= Translate::td('Eth address') ?>:</p>
+                            <input type="text" name="eth_address" placeholder="eth-address" value="<?= Application::$authorizedInvestor->eth_address ?>" autocomplete="nope" readonly class="eth_address">
+                        </div>
+                        <!-- Modal Structure -->
+                        <div id="modal_external-wallet" class="modal">
+                            <div class="modal-content">
+                                <h4><?= Translate::td('Warning') ?></h4>
+                                <ul>
+                                    <li><i class="large material-icons">check</i><?= Translate::td('You control private key from the specified address') ?></li>
+                                    <li><i class="large material-icons">check</i><?= Translate::td('The specified address is not the depository address of crypto exchange') ?></li>
+                                    <li><i class="large material-icons">check</i><?= Translate::td('The specified address corresponds to a wallet that supports ERC20 token standard, for example, MyEtherWallet') ?></li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="block_external-wallet">
+                            <p><?= Translate::td('Eth address') ?>:</p>
+                            <input type="text" name="external_eth_address" placeholder="eth-address" value="<?= Application::$authorizedInvestor->eth_address ?>" autocomplete="nope">
+                        </div>
                     </div>
                     <div class="row">
                         <?= Translate::td('Eth withdrawn') ?>:

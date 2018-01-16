@@ -14,8 +14,6 @@ function conversionHeightLineBottom(tree) {
     }
 }
 $(document).ready(function(){
-    $('ul.tabs').tabs();
-
     $(".dropdown-button").dropdown();
     $('select').material_select();
     $('.collapsible').collapsible();
@@ -60,64 +58,3 @@ $(document).ready(function(){
         });
     });
 });
-
-function catalogItemCounter(field){
-
-    var fieldCount = function(el) {
-        var min = el.attr('min') || false,
-            max = el.attr('max') || false,
-            step = Number(el.attr('step')) || 1,
-            btnUp = el.parent().find('span.btn-up'),
-            btnDown = el.parent().find('span.btn-down');
-
-        function init(el) {
-            if(!el.attr('disabled')){
-                btnDown.on('click', decrement);
-                btnUp.on('click', increment);
-            }
-
-            function decrement() {
-                var value = Number(el[0].value);
-                value = (value - step).toFixed(8);
-                if(!min || value >= min)
-                    el[0].value = value;
-            };
-
-            function increment() {
-                var value = Number(el[0].value);
-                value = (value + step).toFixed(8);
-                if(!max || value <= max)
-                    el[0].value = value;
-            };
-        }
-        el.each(function() {
-            init($(this));
-        });
-    };
-    $(field).each(function(){
-        fieldCount($(this));
-    });
-}
-
-catalogItemCounter('.wallet_view-new_contribution-input_amount');
-
-var inputRange = $('.range-field input[type=range]');
-var reinvest = $('form.reinvest-form input.reinvest'),
-    reinvestVal = reinvest.val(),
-    withdraw = $('form.reinvest-form input.withdraw'),
-    inputRangeLabel = $('form.reinvest-form input.percents');
-$(inputRange).on("input change", function() {
-    var percents = $(this).val(),
-        tmpReinvest = (reinvestVal * (percents/100)).toFixed(8),
-        tmpWithdraw = (reinvestVal - tmpReinvest).toFixed(8);
-
-    inputRangeLabel.val(percents);
-    reinvest.val(tmpReinvest);
-    withdraw.val(tmpWithdraw);
-
-});
-
-window.intercomSettings = {
-    app_id: "igb92dwc"
-};
-(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/igb92dwc';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()
