@@ -163,7 +163,11 @@ class Investor_controller
 
         Base_view::$TITLE = 'Set eth address';
         echo Base_view::header();
-        echo Investor_view::ethSetupForm();
+        if ($_GET['test']) {
+            echo Investor_view::ethSetupForm2();
+        } else {
+            echo Investor_view::ethSetupForm();
+        }
         echo Base_view::footer();
     }
 
@@ -386,7 +390,11 @@ class Investor_controller
         Base_view::$TITLE = 'Registration';
         Base_view::$MENU_POINT = Menu_point::Register;
         echo Base_view::header();
-        echo Investor_view::registerForm($data, $error);
+        if ($_GET['test']) {
+            echo Investor_view::registerForm2($data, $error);
+        } else {
+            echo Investor_view::registerForm($data, $error);
+        }
         echo Base_view::footer();
     }
 
@@ -550,7 +558,11 @@ EOT;
         Base_view::$TITLE = 'Settings';
         Base_view::$MENU_POINT = Menu_point::Settings;
         echo Base_view::header();
-        echo Investor_view::settings();
+        if ($_GET['test']) {
+            echo Investor_view::settings2();
+        } else {
+            echo Investor_view::settings();
+        }
         echo Base_view::footer();
     }
 
