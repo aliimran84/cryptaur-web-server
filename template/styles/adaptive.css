@@ -28,9 +28,6 @@
     nav .nav-wrapper #nav-mobile .login {
         display: none;
     }
-    .content section.ether-wallet .personal-data a.btn-price {
-        line-height: 18px;
-    }
 }
 @media screen and (max-width: 1201px){
     nav .nav-wrapper #nav-mobile li a {

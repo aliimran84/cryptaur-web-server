@@ -303,7 +303,7 @@ class Investor_view
                             <a href="#"><?= Translate::td('Send Entire Balance') ?></a>
                         </div>
                         <div class="input-field">
-                            <button class="waves-effect waves-light btn btn-generate-transaction"><?= Translate::td('Generate Transaction') ?></button>
+                            <button class="waves-effect waves-light btn btn-generate-transaction"><?= Translate::td('Send') ?></button>
                         </div>
                     </div>
                     <div class="personal-data col s12 m5 l5">
@@ -311,16 +311,13 @@ class Investor_view
                         <p class="account-address">0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544</p>
                         <p><?= Translate::td('Account Balance') ?></p>
                         <p class="account-balance">0 ETH</p>
+                        <p class="account-balance">0 CPT</p>
                         <p><?= Translate::td('Transaction History') ?></p>
-                        <a href="https://etherscan.io">ETH (https://etherscan.io)</a><br>
-                        <a href="https://ethplorer.io/">Tokens (Ethplorer.io)</a>
+                        <a href="https://etherscan.io/address/0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544">ETH (https://etherscan.io)</a><br>
+                        <a href="https://ethplorer.io/address/0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544">Tokens (Ethplorer.io)</a>
                         <div class="buy-eth">
                             <div class="row">
-                                <div class="col s12 m12 l8">
-                                    <p class="buy-text">Aw...you don't have any ETH</p>
-                                    <p class="buy-text">Buy ETH with USD</p>
-                                </div>
-                                <div class="coinbase-block col s12 m12 l4">
+                                <div class="coinbase-block col s12">
                                     <p class="coinbase">coinbase</p>
                                     <a href class="waves-effect waves-light btn btn-price">1 ETH = 1300.00 USD</a>
                                 </div>
