@@ -14,7 +14,37 @@ function conversionHeightLineBottom(tree) {
     }
 }
 $(document).ready(function(){
+    var optionSelected = $('select.select-wallet :selected');
+    $('.modal').modal({
+        complete: function() {
+            if ($('#warning_1').prop('checked') && $('#warning_1').prop('checked') && $('#warning_1').prop('checked')) {
+                $('.block_external-wallet').css('display', 'block');
+            } else {
+                if (this.$el.closest('.settings-block').length) {
+                    $('select.select-wallet').material_select();
+                    $('.select-wallet .select-dropdown').val(optionSelected.text());
+                    if (optionSelected.val() == 'inner-wallet') {
+                        $('.block_inner-wallet').css('display', 'block');
+                        $('.block_external-wallet').css('display', 'none');
+                    } else if (optionSelected.val() == 'external-wallet') {
+                        $('.block_inner-wallet').css('display', 'none');
+                        $('.block_external-wallet').css('display', 'block');
+                    }
+                } else {
+                    var optionDisabled = $('select.select-wallet option[value="choose"]');
+                    $('select.select-wallet').material_select();
+                    $('.select-wallet .select-dropdown').val(optionDisabled.text());
+                }
+            }
+        }
+    });
     $('ul.tabs').tabs();
+
+    if ($('select.select-wallet').val() == 'inner-wallet') {
+        $('.block_external-wallet').css('display', 'none');
+    } else if ($('select.select-wallet').val() == 'external-wallet') {
+        $('.block_inner-wallet').css('display', 'none');
+    }
 
     $(".dropdown-button").dropdown();
     $('select').material_select();
@@ -59,6 +89,27 @@ $(document).ready(function(){
             }
         });
     });
+
+    $('.warning').change(function () {
+        var checked = false;
+        $('.warning').each(function (i, el) {
+            checked += $(el).prop('checked');
+        });
+        if (checked == $('.warning').length)
+            $('#modal_external-wallet').modal('close');
+    });
+
+    $('select.select-wallet').change(function () {
+        var value = $(this).val();
+        if (value == 'inner-wallet') {
+            $('.block_inner-wallet').css('display', 'block');
+            $('.block_external-wallet').css('display', 'none');
+        } else if (value == 'external-wallet') {
+            $('.block_inner-wallet').css('display', 'none');
+            $('#modal_external-wallet').modal('open');
+        }
+    });
+
 });
 
 function catalogItemCounter(field){

@@ -348,7 +348,7 @@ footer .row {
 .content section.ether-wallet .buy-eth p {
     color: #ffffff;
 }
-.content sectino.ether-wallet .coinbase {
+.content section.ether-wallet .coinbase {
     margin-top: 1rem;
 }
 .content section.ether-wallet .personal-data a {
@@ -381,11 +381,13 @@ footer .row {
 .content section.ether-wallet .coinbase-block {
     text-align: center;
 }
-.content .settings-block .select-wrapper.select-wallet .caret {
+.content .settings-block .select-wrapper.select-wallet .caret,
+.content .registration .select-wrapper.select-wallet .caret {
     z-index: 10;
     right: 10px;
 }
 .content .settings-block .dropdown-content.select-dropdown,
+.content .registration .dropdown-content.select-dropdown,
 .content section.ether-wallet .dropdown-content.select-dropdown,
 .content section.my-contribution .dropdown-content.select-dropdown {
     border: 1px solid #9e9e9e;
@@ -410,18 +412,37 @@ footer .row {
     background: transparent;
     padding: 0;
 }
+.content .registration .block_inner-wallet,
+.content .registration .block_external-wallet {
+    display: none;
+}
 .content .settings-block .dropdown-content.select-dropdown li,
+.content .registration .dropdown-content.select-dropdown li,
 .content section.ether-wallet .dropdown-content.select-dropdown li,
 .content section.my-contribution .dropdown-content.select-dropdown li {
     border-bottom: 1px solid #9e9e9e;
 }
 .content .settings-block .dropdown-content li>span,
+.content .registration .dropdown-content li>span,
 .content section.ether-wallet .dropdown-content li>span,
 .content section.my-contribution .dropdown-content li>span {
     color: #404040;
 }
-.content section.my-contribution .input-field {
-    text-align: center;
+.content .settings-block [type="checkbox"]:checked+label:before,
+.content .registration [type="checkbox"]:checked+label:before {
+    border-right: 2px solid #0074ff;
+    border-bottom: 2px solid #0074ff;
+}
+.content input#warning_1+label,
+.content input#warning_2+label,
+.content input#warning_3+label {
+    top: 0;
+    color: #000000;
+}
+.content input#warning_1:focus:not([readonly])+label,
+.content input#warning_2:focus:not([readonly])+label,
+.content input#warning_3:focus:not([readonly])+label {
+    color: #000000 !important;
 }
 .content section.my-tokens input[type='number'],
 .content section.my-contribution input[type='number'] {

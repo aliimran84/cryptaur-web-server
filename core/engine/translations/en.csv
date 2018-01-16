@@ -162,3 +162,10 @@ Generate Transaction,Generate Transaction
 Account Address,Account Address
 Account Balance,Account Balance
 Transaction History,Transaction History
+External wallet,External wallet
+Inner wallet,Inner wallet
+Warning,Warning
+You control private key from the specified address,You control private key from the specified address
+The specified address is not the depository address of crypto exchange,The specified address is not the depository address of crypto exchange
+"The specified address corresponds to a wallet that supports ERC20 token standard, for example, MyEtherWallet","The specified address corresponds to a wallet that supports ERC20 token standard, for example, MyEtherWallet"
+Choose type wallet,Choose type wallet

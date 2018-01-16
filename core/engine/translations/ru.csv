@@ -162,3 +162,10 @@ Generate Transaction,Сформировать транзакцию
 Account Address,Адрес (номер) счета
 Account Balance,Баланс счёта
 Transaction History,История транзакций
+External wallet,Внешний кошелёк
+Inner wallet,Внутренний кошелёк
+Warning,Предупреждение
+You control private key from the specified address,Вы контролируюете закрытый ключ от указанного адреса
+The specified address is not the depository address of crypto exchange,Указанный адрес не является депозитным адресом криптовалютной биржи
+"The specified address corresponds to a wallet that supports ERC20 token standard, for example, MyEtherWallet","Указанный адрес соответствует кошельку, поддерживающему стандарт токенов ERC20, например, MyEtherWallet"
+Choose type wallet,Выберите тип кошелька
