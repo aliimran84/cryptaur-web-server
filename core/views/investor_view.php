@@ -353,14 +353,6 @@ class Investor_view
                         <p><?= Translate::td('Transaction History') ?></p>
                         <a href="https://etherscan.io/address/0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544">ETH (https://etherscan.io)</a><br>
                         <a href="https://ethplorer.io/address/0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544">Tokens (Ethplorer.io)</a>
-                        <div class="buy-eth">
-                            <div class="row">
-                                <div class="coinbase-block col s12">
-                                    <p class="coinbase">coinbase</p>
-                                    <a href class="waves-effect waves-light btn btn-price">1 ETH = 1300.00 USD</a>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </form>
             </div>
