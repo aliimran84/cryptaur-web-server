@@ -61,6 +61,12 @@ class Investor_controller
             self::handleEmptyEthSetForm();
         }, self::SET_EMPTY_ETH_ADDRESS, Router::GET_METHOD);
         Router::register(function () {
+            Base_view::$TITLE = 'Set eth address';
+            echo Base_view::header();
+            echo Investor_view::ethSetupForm2();
+            echo Base_view::footer();
+        }, self::SET_EMPTY_ETH_ADDRESS . '/test', Router::GET_METHOD);
+        Router::register(function () {
             self::handleEmptyEthSetPost();
         }, self::SET_EMPTY_ETH_ADDRESS, Router::POST_METHOD);
 
@@ -163,11 +169,7 @@ class Investor_controller
 
         Base_view::$TITLE = 'Set eth address';
         echo Base_view::header();
-        if ($_GET['test']) {
-            echo Investor_view::ethSetupForm2();
-        } else {
-            echo Investor_view::ethSetupForm();
-        }
+        echo Investor_view::ethSetupForm();
         echo Base_view::footer();
     }
 
