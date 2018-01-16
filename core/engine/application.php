@@ -34,6 +34,9 @@ class Application
 
     static public function init()
     {
+        session_start();
+        session_write_close();
+
         self::$startTime = Utility::microtime_float();
 
         define('PATH_TO_WORKING_DIR', __DIR__ . '/../../working_dir');

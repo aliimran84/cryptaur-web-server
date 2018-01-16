@@ -139,12 +139,10 @@ class Investor_controller
 
     static private function detectLoggedInInvestor()
     {
-        session_start();
         $authorizedInvestor = Investor::getById(@$_SESSION[self::SESSION_KEY]);
         if ($authorizedInvestor) {
             Application::$authorizedInvestor = $authorizedInvestor;
         }
-        session_abort();
     }
 
     static public function loginWithId($investorId)

@@ -31,12 +31,10 @@ class Administrator_controller
         }
         self::$initialized = true;
 
-        session_start();
         $authorizedAdministrator = Administrator::getById(@$_SESSION[self::SESSION_KEY]);
         if ($authorizedAdministrator) {
             Application::$authorizedAdministrator = $authorizedAdministrator;
         }
-        session_abort();
 
         Router::register(function () {
             if (Application::$authorizedAdministrator) {
