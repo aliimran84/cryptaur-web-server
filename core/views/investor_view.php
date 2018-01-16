@@ -269,7 +269,36 @@ class Investor_view
                             <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
                                 : <?= Translate::td($_GET['err_text']) ?></label>
                         <?php } ?>
-                        <input type="text" name="eth_address" placeholder="<?= Translate::td('ETH-ADDRESS') ?>" autocomplete="nope">
+
+                        <select class="select-wallet">
+                            <option value="choose" disabled selected><?= Translate::td('Choose type wallet') ?></option>
+                            <option value="inner-wallet"><?= Translate::td('Inner wallet') ?></option>
+                            <option value="external-wallet"><?= Translate::td('External wallet') ?></option>
+                        </select>
+                        <div class="block_inner-wallet">
+                            <p><?= Translate::td('Eth address') ?>:</p>
+                            <input type="text" name="eth_address" placeholder="<?= Translate::td('ETH-ADDRESS') ?>" value="<?= Application::$authorizedInvestor->eth_address ?>" autocomplete="nope" readonly class="eth_address">
+                        </div>
+                        <div class="block_external-wallet">
+                            <p><?= Translate::td('Eth address') ?>:</p>
+                            <input type="text" name="external_eth_address" placeholder="<?= Translate::td('ETH-ADDRESS') ?>" value="" autocomplete="nope">
+                        </div>
+                        <!-- Modal Structure -->
+                        <div id="modal_external-wallet" class="modal">
+                            <div class="modal-content">
+                                <h4><?= Translate::td('Warning') ?></h4>
+                                <p>
+                                    <input type="checkbox" id="warning_1" class="warning"/><label for="warning_1"><?= Translate::td('You control private key from the specified address') ?></label>
+                                </p>
+                                <p>
+                                    <input type="checkbox" id="warning_2" class="warning"/><label for="warning_2"><?= Translate::td('The specified address is not the depository address of crypto exchange') ?></label>
+                                </p>
+                                <p>
+                                    <input type="checkbox" id="warning_3" class="warning"/><label for="warning_3"><?= Translate::td('The specified address corresponds to a wallet that supports ERC20 token standard, for example, MyEtherWallet') ?></label>
+                                </p>
+                            </div>
+                        </div>
+
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Set') ?>
