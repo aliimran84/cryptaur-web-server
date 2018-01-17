@@ -166,7 +166,7 @@ class Configuration
         DEFINE('ETH_TOKENS_WALLET', $config['eth']['tokens_wallet']);
         DEFINE('ETH_TOKENS_PASSWORD', $config['eth']['tokens_password']);
         DEFINE('ETH_TOKENS_NODE_URL', $config['eth']['tokens_node_url']);
-        DEFINE('ETH_QUEUE_URL', $config['eth']['queue_url']);
+        DEFINE('ETH_QUEUE_URL', trim($config['eth']['queue_url'], '/'));
         DEFINE('ETH_QUEUE_KEY', $config['eth']['queue_key']);
 
         // если конфиг отличается после проверки всех параметров

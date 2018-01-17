@@ -662,54 +662,13 @@ class Investor
         $usdToReinvest = $ethToReinvest * Coin::getRate(Coin::COMMON_COIN);
         $tokens = (double)($usdToReinvest / Coin::getRate(Coin::reinvestToken()));
 
-        list($sendCode, $sendStr) = Bounty_controller::sendEth(ETH_BOUNTY_COLD_WALLET, $ethToReinvest);
-        if ($sendCode === 0) {
-            $txid_s = $sendStr;
-            Utility::log('sendEth1_ok/' . Utility::microtime_float(), [
-                'investor' => $this->id,
-                'txid' => $txid_s,
-                'time' => time(),
-                'eth_address' => $this->eth_address,
-                'eth' => $ethToReinvest
-            ]);
-            // todo: add eth to eth_not_used_in_bounty
-            $data = [
-                'investorId' => $this->id,
-                'tokens' => $tokens
-            ];
-            list($mintCode, $mintStr) = EthQueue::mintTokens(EthQueue::TYPE_MINT_REINVEST, $data, $this->eth_address, $tokens, 'eth', $txid_s);
-            if ($mintCode === 0) {
-                $uuid = $mintStr;
-                Utility::log('mint2new_ok/' . Utility::microtime_float(), [
-                    'investor' => $this->id,
-                    'uuid' => $uuid,
-                    'time' => time(),
-                    'eth_address' => $this->eth_address,
-                    'eth' => $ethToReinvest,
-                    'tokens' => $tokens
-                ]);
-            } else {
-                Utility::log('mint2new_err/' . Utility::microtime_float(), [
-                    'investor' => $this->id,
-                    'code' => $mintCode,
-                    'str' => $mintStr,
-                    'eth_address' => $this->eth_address,
-                    'eth' => $ethToReinvest,
-                    'tokens' => $this->tokens_count
-                ]);
-            }
-        } else {
-            $this->addEthBounty($ethToReinvest);
-            Utility::log('sendEth1_err/' . Utility::microtime_float(), [
-                'investor' => $this->id,
-                'code' => $sendCode,
-                'str' => $sendStr,
-                'time' => time(),
-                'eth_address' => $this->eth_address,
-                'eth' => $ethToReinvest
-            ]);
-        }
-
+        $data = [
+            'investorId' => $this->id,
+            'ethToReinvest' => $ethToReinvest,
+            'tokens' => $tokens
+        ];
+        EthQueue::sendEthBounty(EthQueue::TYPE_SENDETH_REINVEST, $data, ETH_BOUNTY_COLD_WALLET, $ethToReinvest);
+        // do mint tokens inside sendEthBounty callback -> EthQueue::checkQueue()
         return true;
     }
 
@@ -723,36 +682,11 @@ class Investor
             return false;
         }
 
-        list($sendCode, $sendStr) = Bounty_controller::sendEth($this->eth_address, $eth);
-        if ($sendCode === 0) {
-            $txid = $sendStr;
-            Utility::log('sendEth2_ok/' . Utility::microtime_float(), [
-                'investor' => $this->id,
-                'txid' => $txid,
-                'time' => time(),
-                'eth_address' => $this->eth_address,
-                'eth' => $eth
-            ]);
-            $this->eth_withdrawn += $eth;
-            DB::set("
-                UPDATE `investors`
-                SET
-                    `eth_withdrawn` = ?
-                WHERE
-                    `id` = ?
-                LIMIT 1
-            ;", [$this->eth_withdrawn, $this->id]);
-        } else {
-            $this->addEthBounty($eth);
-            Utility::log('sendEth2_err/' . Utility::microtime_float(), [
-                'investor' => $this->id,
-                'code' => $sendCode,
-                'str' => $sendStr,
-                'time' => time(),
-                'eth_address' => $this->eth_address,
-                'eth' => $eth
-            ]);
-        }
+        $data = [
+            'investorId' => $this->id,
+            'ethToWithdraw' => $eth
+        ];
+        EthQueue::sendEthBounty(EthQueue::TYPE_SENDETH_WITHDRAW, $data, ETH_BOUNTY_COLD_WALLET, $eth);
 
         return true;
     }

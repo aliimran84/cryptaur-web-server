@@ -229,7 +229,7 @@ class Utility
      */
     static public function hex($dec)
     {
-        return self::bcdechex(number_format($dec, 0, '.', ''));
+        return self::bcdechex(self::int_string($dec));
     }
 
     /**
@@ -238,7 +238,7 @@ class Utility
      */
     static public function minPrecisionNumber($dec)
     {
-        return (double)number_format($dec, 18, '.', '');
+        return (double)self::double_string($dec);
     }
 
     /**
@@ -249,10 +249,28 @@ class Utility
     static public function mul($dec1, $dec2)
     {
         return bcmul(
-            number_format($dec1, 18, '.', ''),
-            number_format($dec2, 18, '.', ''),
+            self::double_string($dec1),
+            self::double_string($dec2),
             18
         );
+    }
+
+    /**
+     * @param double|int|string $dec
+     * @return string
+     */
+    static public function int_string($dec)
+    {
+        return number_format($dec, 0, '.', '');
+    }
+
+    /**
+     * @param double|int|string $dec
+     * @return string
+     */
+    static public function double_string($dec)
+    {
+        return number_format($dec, 20, '.', '');
     }
 
     static public function microtime_float()
