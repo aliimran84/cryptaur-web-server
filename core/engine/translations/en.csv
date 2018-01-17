@@ -170,3 +170,6 @@ I control private key from the specified address,I control private key from the 
 The specified address is not the depository address of crypto exchange,The specified address is not the depository address of crypto exchange
 "The specified address corresponds to a wallet that supports ERC20 token standard, for example, MyEtherWallet","The specified address corresponds to a wallet that supports ERC20 token standard, for example, MyEtherWallet"
 Choose type wallet,Choose type wallet
+Hello,Hello
+I understand,I understand
+"In order to improve the security of tokens CPT, we launched...","In order to improve the security of tokens CPT, we launched an internal wallet. If You want to store the tokens CPT and ETH on own wallet, just click on MY ETHER WALLET, enter your address, the number of tokens or ether to sent, and then click SEND."

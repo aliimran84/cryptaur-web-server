@@ -389,6 +389,23 @@ class Dashboard_view
         </div>
 
         <?php
+        if (@$_SESSION['tester']) {
+            ?>
+            <div id="modal_myetherwallet-info" class="modal">
+                <div class="modal-content">
+                    <h4><?= Translate::td('Hello') ?>!</h4>
+                    <p>
+                        <?= Translate::td('In order to improve the security of tokens CPT, we launched...') ?>
+                    </p>
+                    <br>
+                    <button onclick="$('#modal_myetherwallet-info').modal('close');" class="waves-effect waves-light btn btn-learn-more"><?= Translate::td('I understand') ?></button>
+                </div>
+            </div>
+            <?php
+        }
+        ?>
+
+        <?php
         return ob_get_clean();
     }
 

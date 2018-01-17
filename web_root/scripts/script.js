@@ -119,6 +119,14 @@ $(document).ready(function(){
         }
     });
 
+
+    $('#modal_myetherwallet-info').modal({
+            dismissible: false,
+            inDuration: 300,
+            outDuration: 200
+        }
+    ).modal('open');
+
 });
 
 function catalogItemCounter(field){
