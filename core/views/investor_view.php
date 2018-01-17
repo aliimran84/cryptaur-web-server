@@ -343,7 +343,9 @@ class Investor_view
                     </div>
                     <div class="row">
                         <?= Translate::td('Referrer code') ?>:
-                        <strong><?= Application::$authorizedInvestor->referrer_code ?></strong>
+                        <a href="<?= APPLICATION_URL . '/' . Investor_controller::REGISTER_URL . '?referrer_code=' . Application::$authorizedInvestor->referrer_code ?>">
+                            <strong><?= Application::$authorizedInvestor->referrer_code ?></strong>
+                        </a>
                     </div>
                     <div class="row">
                         <?= Translate::td('Eth address') ?>:
@@ -387,9 +389,9 @@ class Investor_view
                                 </option>
                                 <option
                                     <?php if (Application::$authorizedInvestor->preferred_2fa == \core\secondfactor\variants_2FA::sms): ?>
-                                    selected=""
+                                        selected=""
                                     <?php endif; ?>
-                                    value="<?= \core\secondfactor\variants_2FA::sms ?>"
+                                        value="<?= \core\secondfactor\variants_2FA::sms ?>"
                                 >
                                     <?= \core\secondfactor\variants_2FA::sms ?>
                                 </option>
@@ -440,7 +442,9 @@ class Investor_view
                     </div>
                     <div class="row">
                         <?= Translate::td('Referrer code') ?>:
-                        <strong><?= Application::$authorizedInvestor->referrer_code ?></strong>
+                        <a href="<?= APPLICATION_URL . '/' . Investor_controller::REGISTER_URL . '?referrer_code=' . Application::$authorizedInvestor->referrer_code ?>">
+                            <strong><?= Application::$authorizedInvestor->referrer_code ?></strong>
+                        </a>
                     </div>
                     <div class="row">
                         <select class="select-wallet">
@@ -509,9 +513,9 @@ class Investor_view
                                 </option>
                                 <option
                                     <?php if (Application::$authorizedInvestor->preferred_2fa == \core\secondfactor\variants_2FA::sms): ?>
-                                    selected=""
+                                        selected=""
                                     <?php endif; ?>
-                                    value="<?= \core\secondfactor\variants_2FA::sms ?>"
+                                        value="<?= \core\secondfactor\variants_2FA::sms ?>"
                                 >
                                     <?= \core\secondfactor\variants_2FA::sms ?>
                                 </option>
@@ -565,7 +569,7 @@ class Investor_view
                         <p class="account-address">0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544</p>
                         <p><?= Translate::td('Account Balance') ?></p>
                         <p class="account-balance">0 ETH</p>
-                        <p class="account-balance">0 CPT</p>
+                        <p class="account-balance"><?= Application::$authorizedInvestor->tokens_count ?> CPT</p>
                         <p><?= Translate::td('Transaction History') ?></p>
                         <a href="https://etherscan.io/address/0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544">
                             ETH (https://etherscan.io)
