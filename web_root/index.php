@@ -20,4 +20,18 @@ Router::register(function () {
     echo "remaining bonus {$bountyInfo['remaining_bonus']}<br>";
 }, 'bounty_info');
 
+Router::register(function () {
+    session_start();
+    $_SESSION['tester'] = true;
+    session_write_close();
+    \core\engine\Utility::location();
+}, 'init_tester_status');
+
+Router::register(function () {
+    session_start();
+    $_SESSION['tester'] = false;
+    session_write_close();
+    \core\engine\Utility::location();
+}, 'drop_tester_status');
+
 call_user_func(Router::current());
