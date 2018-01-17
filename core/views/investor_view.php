@@ -330,6 +330,10 @@ class Investor_view
                         <?= Translate::td('Email') ?>: <strong><?= Application::$authorizedInvestor->email ?></strong>
                     </div>
                     <div class="row">
+                        <?= Translate::td('Phone, mobile') ?>:
+                        <input type="text" name="phone" placeholder="phone, mobile" value="<?= Application::$authorizedInvestor->phone ?>" autocomplete="nope">
+                    </div>
+                    <div class="row">
                         <?= Translate::td('First name') ?>:
                         <input type="text" name="firstname" placeholder="first name" value="<?= Application::$authorizedInvestor->firstname ?>" autocomplete="nope">
                     </div>
@@ -374,21 +378,21 @@ class Investor_view
                                     <?= Translate::td('Do not use') ?>
                                 </option>
                                 <option
-                                    <?php if (Application::$authorizedInvestor->preferred_2fa == \core\gauthify\variants_2FA::email): ?>
+                                    <?php if (Application::$authorizedInvestor->preferred_2fa == \core\secondfactor\variants_2FA::email): ?>
                                         selected=""
                                     <?php endif; ?>
-                                        value="<?= \core\gauthify\variants_2FA::email ?>"
+                                        value="<?= \core\secondfactor\variants_2FA::email ?>"
                                 >
-                                    <?= \core\gauthify\variants_2FA::email ?>
+                                    <?= \core\secondfactor\variants_2FA::email ?>
                                 </option>
-                                <!--<option
-                                <?php if (Application::$authorizedInvestor->preferred_2fa == \core\gauthify\variants_2FA::sms): ?>
-                                selected=""
-                                <?php endif; ?>
-                                value="<?= \core\gauthify\variants_2FA::sms ?>"
-                            >
-                                <?= \core\gauthify\variants_2FA::sms ?>
-                            </option>-->
+                                <option
+                                    <?php if (Application::$authorizedInvestor->preferred_2fa == \core\secondfactor\variants_2FA::sms): ?>
+                                    selected=""
+                                    <?php endif; ?>
+                                    value="<?= \core\secondfactor\variants_2FA::sms ?>"
+                                >
+                                    <?= \core\secondfactor\variants_2FA::sms ?>
+                                </option>
                             </select>
                         </div>
                     <?php endif; ?>
@@ -421,6 +425,10 @@ class Investor_view
                     <?php } ?>
                     <div class="row">
                         <?= Translate::td('Email') ?>: <strong><?= Application::$authorizedInvestor->email ?></strong>
+                    </div>
+                    <div class="row">
+                        <?= Translate::td('Phone, mobile') ?>:
+                        <input type="text" name="phone" placeholder="phone, mobile" value="<?= Application::$authorizedInvestor->phone ?>" autocomplete="nope">
                     </div>
                     <div class="row">
                         <?= Translate::td('First name') ?>:
@@ -492,21 +500,21 @@ class Investor_view
                                     <?= Translate::td('Do not use') ?>
                                 </option>
                                 <option
-                                    <?php if (Application::$authorizedInvestor->preferred_2fa == \core\gauthify\variants_2FA::email): ?>
+                                    <?php if (Application::$authorizedInvestor->preferred_2fa == \core\secondfactor\variants_2FA::email): ?>
                                         selected=""
                                     <?php endif; ?>
-                                        value="<?= \core\gauthify\variants_2FA::email ?>"
+                                        value="<?= \core\secondfactor\variants_2FA::email ?>"
                                 >
-                                    <?= \core\gauthify\variants_2FA::email ?>
+                                    <?= \core\secondfactor\variants_2FA::email ?>
                                 </option>
-                                <!--<option
-                                <?php if (Application::$authorizedInvestor->preferred_2fa == \core\gauthify\variants_2FA::sms): ?>
-                                selected=""
-                                <?php endif; ?>
-                                value="<?= \core\gauthify\variants_2FA::sms ?>"
-                            >
-                                <?= \core\gauthify\variants_2FA::sms ?>
-                            </option>-->
+                                <option
+                                    <?php if (Application::$authorizedInvestor->preferred_2fa == \core\secondfactor\variants_2FA::sms): ?>
+                                    selected=""
+                                    <?php endif; ?>
+                                    value="<?= \core\secondfactor\variants_2FA::sms ?>"
+                                >
+                                    <?= \core\secondfactor\variants_2FA::sms ?>
+                                </option>
                             </select>
                         </div>
                     <?php endif; ?>

@@ -508,6 +508,18 @@ class Investor
             ON DUPLICATE KEY UPDATE `choice` = ?
         ", [$this->id, $method, $method]);
     }
+    
+    /**
+     * @param string $phone
+     */
+    public function setPhone($phone)
+    {
+        $this->phone = $phone;
+        DB::set("
+            UPDATE `investors` SET `phone` = ? 
+            WHERE `id` = ?
+        ", [$phone, $this->id]);
+    }
 
     /**
      * return array of investors from target investor to (without target)

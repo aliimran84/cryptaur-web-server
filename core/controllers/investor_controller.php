@@ -33,12 +33,7 @@ class Investor_controller
     const INVITE_FRIENDS_URL = 'investor/invite_friends';
 
     const SESSION_KEY = 'authorized_investor_id';
-
-    const PREVIOUS_2FA_LOGIN_FLAG = 'previous_system_2fa_login_flag';
-    const PREVIOUS_2FA_PASSWORD_TMP = 'previous_system_2fa_password_tmp';
     const SESSION_KEY_TMP = 'authorized_investor_id_tmp';
-    const SFA_OTP_ID = 'secondfactor_otp_id';
-    const SFA_UNIQUE_ID = 'secondfactor_unique_id';
 
     static public function init()
     {
@@ -253,26 +248,21 @@ class Investor_controller
         echo Base_view::footer();
     }
 
-    static private function sent2FaOtpRequest($investorId)
+    static private function sent2FARequest($investorId)
     {
         if (USE_2FA == FALSE) {
             return FALSE;
         }
         $user = Investor::getById($investorId);
-        $ga_id = "ga_id_$investorId";
-        $result;
+        $sended;
         if ($user->preferred_2fa == "") {
             return FALSE;
-        } elseif ($user->preferred_2fa == \core\gauthify\variants_2FA::email) {
-            $result = \core\gauthify\GAuthify::send_email($ga_id);
-        } elseif ($user->preferred_2fa == \core\gauthify\variants_2FA::sms) {
-            $result = \core\gauthify\GAuthify::send_sms($ga_id);
+        } elseif ($user->preferred_2fa == \core\secondfactor\variants_2FA::email) {
+            $sended = \core\secondfactor\API2FA::send_email($user->email);
+        } elseif ($user->preferred_2fa == \core\secondfactor\variants_2FA::sms) {
+            $sended = \core\secondfactor\API2FA::send_sms($user->phone);
         }
-        if (!is_null($result)) {
-            session_start();
-            $_SESSION[self::SFA_UNIQUE_ID] = $ga_id;
-            $_SESSION[self::SFA_OTP_ID] = $result['otp_id'];
-            session_write_close();
+        if ($sended === TRUE) {
             return TRUE;
         }
         return FALSE;
@@ -285,14 +275,13 @@ class Investor_controller
         $investorId = @Investor::getInvestorIdByEmailPassword($email, $password);
         $investor = null;
         if ($investorId) {
-            $sfa_used = self::sent2FaOtpRequest($investorId); //TRUE if user USE the 2FA
+            $sfa_used = self::sent2FARequest($investorId); //TRUE if user USE the 2FA
             if (USE_2FA == FALSE || $sfa_used == FALSE) {
                 self::loginWithId($investorId);
                 $investor = Investor::getById($investorId);
             } elseif ($sfa_used) {
                 session_start();
                 $_SESSION[self::SESSION_KEY_TMP] = $investorId;
-                $_SESSION[self::PREVIOUS_2FA_LOGIN_FLAG] = FALSE;
                 session_write_close();
                 Utility::location(self::SECONDFACTOR_URL);
             }
@@ -328,44 +317,22 @@ class Investor_controller
     static private function handleSecondfactorRequest()
     {
         if (
-            !isset($_SESSION[self::PREVIOUS_2FA_LOGIN_FLAG]) ||
             !isset($_SESSION[self::SESSION_KEY_TMP]) ||
-            !isset($_SESSION[self::SFA_OTP_ID]) ||
-            !isset($_SESSION[self::SFA_UNIQUE_ID]) ||
             !isset($_POST['otp'])
         ) {
             Utility::location(self::BASE_URL);
         }
-
-        $unique_id = $_SESSION[self::SFA_UNIQUE_ID];
-        $otp_id = $_SESSION[self::SFA_OTP_ID];
+        
         $investorId = $_SESSION[self::SESSION_KEY_TMP];
-        $p_login = $_SESSION[self::PREVIOUS_2FA_LOGIN_FLAG];
-        $password_tmp = isset($_SESSION[self::PREVIOUS_2FA_PASSWORD_TMP]) ? $_SESSION[self::PREVIOUS_2FA_PASSWORD_TMP] : NULL;
 
         session_start();
-        unset($_SESSION[self::SFA_OTP_ID]);
-        unset($_SESSION[self::SFA_UNIQUE_ID]);
         unset($_SESSION[self::SESSION_KEY_TMP]);
-        unset($_SESSION[self::PREVIOUS_2FA_LOGIN_FLAG]);
-        if (isset($_SESSION[self::PREVIOUS_2FA_PASSWORD_TMP])) {
-            unset($_SESSION[self::PREVIOUS_2FA_PASSWORD_TMP]);
-        }
         session_write_close();
-
-        $otp = $_POST['otp'];
-        $checked = \core\gauthify\GAuthify::check($unique_id, $otp, $otp_id);
-        if ($checked == 1) {
-            if ($p_login === FALSE) {
-                self::loginWithId($investorId);
-                Utility::location(self::BASE_URL);
-            } elseif (
-                $p_login === TRUE &&
-                !is_null($password_tmp)
-            ) {
-//                self::previousPreLogin($investorId, $password_tmp);
-                Utility::location(self::SET_EMPTY_ETH_ADDRESS);
-            }
+        
+        $checked = \core\secondfactor\API2FA::check($_POST['otp']);
+        if ($checked === TRUE) {
+            self::loginWithId($investorId);
+            Utility::location(self::BASE_URL);
         }
         Utility::location(self::LOGIN_URL . '?err=6538&err_text=wrong authentication code');
     }
@@ -601,19 +568,16 @@ EOT;
         } else if (@strlen($_POST['eth_address']) > 0) {
             $urlErrors[] = 'eth_address_err=1';
         }
+        if (@$_POST['phone'] != "") { //TODO: improve phone checking and make verification?
+            Application::$authorizedInvestor->setPhone($_POST['phone']);
+        }
         if (
             USE_2FA == TRUE &&
             (
-                @$_POST['2fa_method'] == \core\gauthify\variants_2FA::email
-                //TODO uncomment sms check when phone numbers implemented
-                //|| @$_POST['2fa_method'] == \core\gauthify\variants_2FA::sms
+                @$_POST['2fa_method'] == \core\secondfactor\variants_2FA::email
+                || @$_POST['2fa_method'] == \core\secondfactor\variants_2FA::sms
             )
         ) {
-            $ga_id = "ga_id_" . Application::$authorizedInvestor->id;
-            $ga_user = \core\gauthify\GAuthify::get_user($ga_id); //get user from GAuthify
-            if (is_null($ga_user)) { //create it, if no user
-                $ga_user = \core\gauthify\GAuthify::create_user($ga_id, md5($ga_user), Application::$authorizedInvestor->email);
-            }
             Application::$authorizedInvestor->set2faMethod($_POST['2fa_method']);
         } else {
             Application::$authorizedInvestor->set2faMethod(NULL);
