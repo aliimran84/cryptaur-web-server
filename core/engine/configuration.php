@@ -102,11 +102,9 @@ class Configuration
         if (!isset($config['2fa'])) {
             $needConfigure = true;
             $config['!_2fa'] = [
-                'gauthify_token' => '',
                 'use_2fa' => false
             ];
         } else {
-            DEFINE('GAUTHIFY_TOKEN', $config['2fa']['gauthify_token']);
             DEFINE('USE_2FA', $config['2fa']['use_2fa']);
         }
 
