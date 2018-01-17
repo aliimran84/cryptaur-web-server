@@ -545,7 +545,7 @@ EOT;
         }
 
         Base_view::$TITLE = 'MyEtherWallet';
-        Base_view::$MENU_POINT = Menu_point::Settings;
+        Base_view::$MENU_POINT = Menu_point::MY_ether_wallet;
         echo Base_view::header();
         echo Investor_view::myetherwallet();
         echo Base_view::footer();
