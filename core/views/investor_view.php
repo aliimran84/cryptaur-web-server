@@ -173,13 +173,13 @@ class Investor_view
                             <div class="modal-content">
                                 <h4><?= Translate::td('Warning') ?></h4>
                                 <p>
-                                    <input type="checkbox" id="warning_1" class="warning"/><label for="warning_1"><?= Translate::td('You control private key from the specified address') ?></label>
+                                    <input type="checkbox" id="warning_1" class="warning-checkbox"/><label for="warning_1"><?= Translate::td('I control private key from the specified address') ?></label>
                                 </p>
                                 <p>
-                                    <input type="checkbox" id="warning_2" class="warning"/><label for="warning_2"><?= Translate::td('The specified address is not the depository address of crypto exchange') ?></label>
+                                    <input type="checkbox" id="warning_2" class="warning-checkbox"/><label for="warning_2"><?= Translate::td('The specified address is not the depository address of crypto exchange') ?></label>
                                 </p>
                                 <p>
-                                    <input type="checkbox" id="warning_3" class="warning"/><label for="warning_3"><?= Translate::td('The specified address corresponds to a wallet that supports ERC20 token standard, for example, MyEtherWallet') ?></label>
+                                    <input type="checkbox" id="warning_3" class="warning-checkbox"/><label for="warning_3"><?= Translate::td('The specified address corresponds to a wallet that supports ERC20 token standard, for example, MyEtherWallet') ?></label>
                                 </p>
                             </div>
                         </div>
@@ -288,13 +288,13 @@ class Investor_view
                             <div class="modal-content">
                                 <h4><?= Translate::td('Warning') ?></h4>
                                 <p>
-                                    <input type="checkbox" id="warning_1" class="warning"/><label for="warning_1"><?= Translate::td('You control private key from the specified address') ?></label>
+                                    <input type="checkbox" id="warning_1" class="warning-checkbox"/><label for="warning_1"><?= Translate::td('I control private key from the specified address') ?></label>
                                 </p>
                                 <p>
-                                    <input type="checkbox" id="warning_2" class="warning"/><label for="warning_2"><?= Translate::td('The specified address is not the depository address of crypto exchange') ?></label>
+                                    <input type="checkbox" id="warning_2" class="warning-checkbox"/><label for="warning_2"><?= Translate::td('The specified address is not the depository address of crypto exchange') ?></label>
                                 </p>
                                 <p>
-                                    <input type="checkbox" id="warning_3" class="warning"/><label for="warning_3"><?= Translate::td('The specified address corresponds to a wallet that supports ERC20 token standard, for example, MyEtherWallet') ?></label>
+                                    <input type="checkbox" id="warning_3" class="warning-checkbox"/><label for="warning_3"><?= Translate::td('The specified address corresponds to a wallet that supports ERC20 token standard, for example, MyEtherWallet') ?></label>
                                 </p>
                             </div>
                         </div>
@@ -452,13 +452,13 @@ class Investor_view
                             <div class="modal-content">
                                 <h4><?= Translate::td('Warning') ?></h4>
                                 <p>
-                                    <input type="checkbox" id="warning_1" class="warning"/><label for="warning_1"><?= Translate::td('You control private key from the specified address') ?></label>
+                                    <input type="checkbox" id="warning_1" class="warning-checkbox"/><label for="warning_1"><?= Translate::td('I control private key from the specified address') ?></label>
                                 </p>
                                 <p>
-                                    <input type="checkbox" id="warning_2" class="warning"/><label for="warning_2"><?= Translate::td('The specified address is not the depository address of crypto exchange') ?></label>
+                                    <input type="checkbox" id="warning_2" class="warning-checkbox"/><label for="warning_2"><?= Translate::td('The specified address is not the depository address of crypto exchange') ?></label>
                                 </p>
                                 <p>
-                                    <input type="checkbox" id="warning_3" class="warning"/><label for="warning_3"><?= Translate::td('The specified address corresponds to a wallet that supports ERC20 token standard, for example, MyEtherWallet') ?></label>
+                                    <input type="checkbox" id="warning_3" class="warning-checkbox"/><label for="warning_3"><?= Translate::td('The specified address corresponds to a wallet that supports ERC20 token standard, for example, MyEtherWallet') ?></label>
                                 </p>
                             </div>
                         </div>

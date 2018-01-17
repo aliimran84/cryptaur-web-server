@@ -17,7 +17,7 @@ $(document).ready(function(){
     var optionSelected = $('select.select-wallet :selected');
     $('.modal').modal({
         complete: function() {
-            if ($('#warning_1').prop('checked') && $('#warning_1').prop('checked') && $('#warning_1').prop('checked')) {
+            if ($('#warning_1').prop('checked') && $('#warning_2').prop('checked') && $('#warning_3').prop('checked')) {
                 $('.block_external-wallet').css('display', 'block');
             } else {
                 if (this.$el.closest('.settings-block').length) {
@@ -90,12 +90,14 @@ $(document).ready(function(){
         });
     });
 
-    $('.warning').change(function () {
-        var checked = false;
-        $('.warning').each(function (i, el) {
+    var warningCheckBox = $('.warning-checkbox');
+    var checked;
+    warningCheckBox.change(function () {
+        checked = false;
+        warningCheckBox.each(function (i, el) {
             checked += $(el).prop('checked');
         });
-        if (checked == $('.warning').length)
+        if (checked == warningCheckBox.length)
             $('#modal_external-wallet').modal('close');
     });
 
@@ -106,7 +108,14 @@ $(document).ready(function(){
             $('.block_external-wallet').css('display', 'none');
         } else if (value == 'external-wallet') {
             $('.block_inner-wallet').css('display', 'none');
-            $('#modal_external-wallet').modal('open');
+            checked = false;
+            warningCheckBox.each(function (i, el) {
+                checked += $(el).prop('checked');
+            });
+            if (checked != warningCheckBox.length)
+                $('#modal_external-wallet').modal('open');
+            else
+                $('.block_external-wallet').css('display', 'block');
         }
     });
 
