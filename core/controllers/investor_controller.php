@@ -454,7 +454,7 @@ class Investor_controller
                 <p style="font-size: 14px;font-style: normal;font-weight: 400;line-height: 1.8;margin: 0;text-align: justify;padding: 10px 20px 0px;"><a href="$url">$url</a></p>
                 <p style="font-size: 14px;font-style: normal;font-weight: 400;line-height: 1.8;margin: 0;text-align: justify;padding: 10px 20px 0px;">Link will be working for 48 hours.</p>
 EOT;
-            Email::send($investor->email, [], Translate::td('Password recovery'), $html, true);
+            Email::send($investor->email, [], 'Password recovery', $html, true);
         }
         self::handleLoginForm(Translate::td('If the user exists then he was sent a new password'));
     }
@@ -620,7 +620,7 @@ EOT;
 <p style="font-size: 14px;font-style: normal;font-weight: 400;line-height: 1.8;margin: 0;text-align: justify;padding: 10px 20px 0px;">Please follow the <a href="$url">link</a> to accept the invitation:</p>
 <p style="font-size: 14px;font-style: normal;font-weight: 400;line-height: 1.8;margin: 0;text-align: justify;padding: 10px 20px 0px;"><a href="$url">$url</a></p>
 EOT;
-        if (Email::send($email, [], Translate::td('Invite friend'), $html, true)) {
+        if (Email::send($email, [], 'Invite friend', $html, true)) {
             self::handleInviteFriendsForm("$email successfully invited");
         } else {
             Utility::location(self::INVITE_FRIENDS_URL . '?err=2&err_text=can not send email with invite');
