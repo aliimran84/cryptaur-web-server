@@ -381,18 +381,6 @@ class Investor_view
                         </a>
                     </div>
                     <div class="row">
-                        <?= Translate::td('Eth address') ?>:
-                        <input type="text" name="eth_address" placeholder="eth-address" value="<?= Application::$authorizedInvestor->eth_address ?>" autocomplete="nope">
-                    </div>
-                    <div class="row">
-                        <?= Translate::td('Eth withdrawn') ?>:
-                        <strong><?= Application::$authorizedInvestor->eth_withdrawn ?></strong>
-                    </div>
-                    <div class="row">
-                        <?= Translate::td('Eth bounty') ?>:
-                        <strong><?= Application::$authorizedInvestor->eth_bounty ?></strong>
-                    </div>
-                    <div class="row">
                         <?= Translate::td('Password') ?> (<?= Translate::td('leave empty if not changing') ?>):
                         <input type="password" name="password" value="" pattern=".{6,120}" autocomplete="new-password">
                         <span>
@@ -431,9 +419,6 @@ class Investor_view
                             </select>
                         </div>
                     <?php endif; ?>
-                    <div class="row">
-                        <?= Coin::token() ?>: <strong><?= Application::$authorizedInvestor->tokens_count ?></strong>
-                    </div>
                     <button type="submit" class="waves-effect waves-light btn" style="width: 100%">
                         <?= Translate::td('Set') ?>
                     </button>
