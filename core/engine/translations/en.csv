@@ -40,7 +40,14 @@ Secret key,Secret key
 Set,Set
 Cryptaur login,Cryptaur login
 "Two-Factor Authentication","Two-Factor Authentication"
+"You must choose two-factor authentication option","You must choose two-factor authentication option"
+"Two-factor authentication settings","Two-factor authentication settings"
+"You cannot select SMS-based second factor authentication methods without verified phone number","You cannot select SMS-based second factor authentication methods without verified phone number"
+"Phone number verification","Phone number verification"
+"Input code, that you get with SMS","Input code, that you get with SMS"
 Authentication code,Authentication code
+Cancel,Cancel
+Accept,Accept
 Authentication code has been sended using preferred method,Authentication code has been sended using preferred method
 Password,Password
 Forgot your account login,Forgot your account login
@@ -153,7 +160,6 @@ Split bounty between reinvest and withdraw,Split bounty between reinvest and wit
 Drag slider to adjust values,Drag slider to adjust values
 "Bounty was not withdrawn or reinvested. Maybe the service is overloaded. Try in a few minutes.","Bounty was not withdrawn or reinvested. Maybe the service is overloaded. Try in a few minutes."
 Preferred two-factor authentication method,Preferred two-factor authentication method
-Do not use,Do not use
 Cryptaur Ether Wallet,Cryptaur Ether Wallet
 To Address,To Address
 Amount to Send,Amount to Send

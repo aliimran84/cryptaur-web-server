@@ -48,6 +48,61 @@ class Investor_view
         <?php
         return ob_get_clean();
     }
+    
+    static public function secondfactorSetForm($message = '')
+    {
+        $list2FA = \core\secondfactor\variants_2FA::varList();
+        ob_start();
+        ?>
+        <div class="row">
+            <div class="settings-block col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
+                <form action="<?= Investor_controller::SECONDFACTORSET_URL ?>" method="post" autocomplete="off">
+                    <h3><?= Translate::td('Two-factor authentication settings') ?></h3>
+                    <h5 class="blue-text"><?= Translate::td('You must choose two-factor authentication option') ?></h5>
+                    <?php if (isset($_GET['phone_req_err'])) { ?>
+                        <label class="red-text"><?= Translate::td('You cannot select SMS-based second factor authentication methods without verified phone number') ?></label>
+                    <?php } ?>
+                    <div class="row">
+                        <?= Translate::td('Preferred two-factor authentication method') ?>:
+                        <select id="2fa_method" name="2fa_method">
+                            <?php foreach ($list2FA AS $var) { ?>
+                            <option
+                                <?php if (
+                                    Application::$authorizedInvestor->preferred_2fa == $var
+                                    || (Application::$authorizedInvestor->preferred_2fa == "" && $var == \core\secondfactor\variants_2FA::sms)
+                                ) { ?>
+                                    selected=""
+                                <?php } ?>
+                                    value="<?= $var ?>"
+                            >
+                                <?= $var ?>
+                            </option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div 
+                        id="phone_row" 
+                        class="row"
+                        <?php if(
+                            Application::$authorizedInvestor->preferred_2fa != \core\secondfactor\variants_2FA::sms
+                            && Application::$authorizedInvestor->preferred_2fa != \core\secondfactor\variants_2FA::both
+                            && Application::$authorizedInvestor->preferred_2fa != ""
+                        ) { ?>
+                            style="display:none"
+                        <?php } ?>
+                    >
+                        <?= Translate::td('Phone, mobile') ?>:
+                        <input type="text" name="phone" placeholder="phone, mobile" value="<?= Application::$authorizedInvestor->phone ?>" autocomplete="nope">
+                    </div>
+                    <button type="submit" class="waves-effect waves-light btn" style="width: 100%">
+                        <?= Translate::td('Set') ?>
+                    </button>
+                </form>
+            </div>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
 
     static public function secondfactorForm($message = '')
     {
@@ -104,6 +159,42 @@ class Investor_view
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Login') ?>
                             </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+    
+    static public function phoneVerificationForm($message = '')
+    {
+        ob_start();
+        ?>
+        <div class="row">
+            <div class="col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
+                <h3><?= Translate::td('Phone number verification') ?></h3>
+                <div class="row">
+                    <form class="login col s12" action="<?= Investor_controller::PHONEVERIFICATION_URL ?>" method="post" autocomplete="off">
+                        <?php if (isset($_GET['err'])) { ?>
+                            <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
+                                : <?= Translate::td($_GET['err_text']) ?></label>
+                        <?php } ?>
+                        <?php if ($message) { ?>
+                            <label class="blue-text"><?= $message ?></label>
+                        <?php } ?>
+                        <h5><?= Translate::td('Input code, that you get with SMS') ?></h5>
+                        <input type="password" name="otp" placeholder="<?= Translate::td('Authentication code') ?>" autocomplete="new-password">
+                        <div class="row center">
+                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                <?= Translate::td('Accept') ?>
+                            </button>
+                        </div>
+                        <div class="row center">
+                            <a href="<?= Investor_controller::SECONDFACTORSET_URL ?>" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                <?= Translate::td('Cancel') ?>
+                            </a>
                         </div>
                     </form>
                 </div>
@@ -344,7 +435,7 @@ class Investor_view
         <?php
         return ob_get_clean();
     }
-
+    
     static public function settings()
     {
         ob_start();
@@ -361,10 +452,6 @@ class Investor_view
                     <?php } ?>
                     <div class="row">
                         <?= Translate::td('Email') ?>: <strong><?= Application::$authorizedInvestor->email ?></strong>
-                    </div>
-                    <div class="row">
-                        <?= Translate::td('Phone, mobile') ?>:
-                        <input type="text" name="phone" placeholder="phone, mobile" value="<?= Application::$authorizedInvestor->phone ?>" autocomplete="nope">
                     </div>
                     <div class="row">
                         <?= Translate::td('First name') ?>:
@@ -388,37 +475,6 @@ class Investor_view
                             <?= Translate::td('Spaces not valid') ?>.
                         </span>
                     </div>
-                    <?php if (USE_2FA == TRUE): ?>
-                        <div class="row">
-                            <?= Translate::td('Preferred two-factor authentication method') ?>:
-                            <select name="2fa_method">
-                                <option
-                                    <?php if (Application::$authorizedInvestor->preferred_2fa == ""): ?>
-                                        selected=""
-                                    <?php endif; ?>
-                                        value="NULL"
-                                >
-                                    <?= Translate::td('Do not use') ?>
-                                </option>
-                                <option
-                                    <?php if (Application::$authorizedInvestor->preferred_2fa == \core\secondfactor\variants_2FA::email): ?>
-                                        selected=""
-                                    <?php endif; ?>
-                                        value="<?= \core\secondfactor\variants_2FA::email ?>"
-                                >
-                                    <?= \core\secondfactor\variants_2FA::email ?>
-                                </option>
-                                <option
-                                    <?php if (Application::$authorizedInvestor->preferred_2fa == \core\secondfactor\variants_2FA::sms): ?>
-                                        selected=""
-                                    <?php endif; ?>
-                                        value="<?= \core\secondfactor\variants_2FA::sms ?>"
-                                >
-                                    <?= \core\secondfactor\variants_2FA::sms ?>
-                                </option>
-                            </select>
-                        </div>
-                    <?php endif; ?>
                     <button type="submit" class="waves-effect waves-light btn" style="width: 100%">
                         <?= Translate::td('Set') ?>
                     </button>
@@ -431,6 +487,7 @@ class Investor_view
 
     static public function settings2()
     {
+        $list2FA = \core\secondfactor\variants_2FA::varList();
         ob_start();
         ?>
         <div class="row">
@@ -445,10 +502,6 @@ class Investor_view
                     <?php } ?>
                     <div class="row">
                         <?= Translate::td('Email') ?>: <strong><?= Application::$authorizedInvestor->email ?></strong>
-                    </div>
-                    <div class="row">
-                        <?= Translate::td('Phone, mobile') ?>:
-                        <input type="text" name="phone" placeholder="phone, mobile" value="<?= Application::$authorizedInvestor->phone ?>" autocomplete="nope">
                     </div>
                     <div class="row">
                         <?= Translate::td('First name') ?>:
@@ -509,37 +562,6 @@ class Investor_view
                             <?= Translate::td('Spaces not valid') ?>.
                         </span>
                     </div>
-                    <?php if (USE_2FA == TRUE): ?>
-                        <div class="row">
-                            <?= Translate::td('Preferred two-factor authentication method') ?>:
-                            <select name="2fa_method">
-                                <option
-                                    <?php if (Application::$authorizedInvestor->preferred_2fa == ""): ?>
-                                        selected=""
-                                    <?php endif; ?>
-                                        value="NULL"
-                                >
-                                    <?= Translate::td('Do not use') ?>
-                                </option>
-                                <option
-                                    <?php if (Application::$authorizedInvestor->preferred_2fa == \core\secondfactor\variants_2FA::email): ?>
-                                        selected=""
-                                    <?php endif; ?>
-                                        value="<?= \core\secondfactor\variants_2FA::email ?>"
-                                >
-                                    <?= \core\secondfactor\variants_2FA::email ?>
-                                </option>
-                                <option
-                                    <?php if (Application::$authorizedInvestor->preferred_2fa == \core\secondfactor\variants_2FA::sms): ?>
-                                        selected=""
-                                    <?php endif; ?>
-                                        value="<?= \core\secondfactor\variants_2FA::sms ?>"
-                                >
-                                    <?= \core\secondfactor\variants_2FA::sms ?>
-                                </option>
-                            </select>
-                        </div>
-                    <?php endif; ?>
                     <div class="row">
                         <?= Coin::token() ?>: <strong><?= Application::$authorizedInvestor->tokens_count ?></strong>
                     </div>

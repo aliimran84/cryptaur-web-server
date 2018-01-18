@@ -22,6 +22,8 @@ class Investor_controller
     const LOGIN_URL = 'investor/login';
     const SECONDFACTOR_URL = 'investor/two-factor';
     const SECONDFACTORDUAL_URL = 'investor/two-factor-dual';
+    const SECONDFACTORSET_URL = 'investor/two-factor-set';
+    const PHONEVERIFICATION_URL = 'investor/verify_phone';
     const SET_EMPTY_ETH_ADDRESS = 'investor/set_eth_address';
     const LOGOUT_URL = 'investor/logout';
     const RECOVER_URL = 'investor/recover';
@@ -35,6 +37,9 @@ class Investor_controller
 
     const SESSION_KEY = 'authorized_investor_id';
     const SESSION_KEY_TMP = 'authorized_investor_id_tmp';
+    
+    const PHONE_VERIFY_NUMBER = 'phone_verify_number';
+    const CHOSEN_2FA_METHOD = 'chosen_2fa_method';
 
     static public function init()
     {
@@ -86,6 +91,20 @@ class Investor_controller
         Router::register(function () {
             self::handleSecondfactorDualRequest();
         }, self::SECONDFACTORDUAL_URL, Router::POST_METHOD);
+        
+        Router::register(function () {
+            self::handleSecondfactorSetForm();
+        }, self::SECONDFACTORSET_URL, Router::GET_METHOD);
+        Router::register(function () {
+            self::handleSecondfactorSetRequest();
+        }, self::SECONDFACTORSET_URL, Router::POST_METHOD);
+        
+        Router::register(function () {
+            self::handlePhoneVerificationForm();
+        }, self::PHONEVERIFICATION_URL, Router::GET_METHOD);
+        Router::register(function () {
+            self::handlePhoneVerificationRequest();
+        }, self::PHONEVERIFICATION_URL, Router::POST_METHOD);
 
         Router::register(function () {
             if (!Application::$authorizedInvestor) {
@@ -169,6 +188,9 @@ class Investor_controller
         if (Application::$authorizedInvestor->eth_address) {
             Utility::location(self::BASE_URL);
         }
+        if (Application::$authorizedInvestor->preferred_2fa == "") {
+            Utility::location(self::SECONDFACTORSET_URL);
+        }
 
         Base_view::$TITLE = 'Set eth address';
         echo Base_view::header();
@@ -243,6 +265,81 @@ class Investor_controller
 
         Utility::location(self::BASE_URL);
     }
+    
+    static private function handleSecondfactorSetForm($message = '')
+    {
+        if (!Application::$authorizedInvestor) {
+            Utility::location(self::BASE_URL);
+        }
+        Base_view::$TITLE = 'Two-factor authentication settings';
+        Base_view::$MENU_POINT = Menu_point::Settings;
+        echo Base_view::header();
+        echo Investor_view::secondfactorSetForm($message);
+        echo Base_view::footer();
+    }
+    
+    static private function handleSecondfactorSetRequest()
+    {
+        if (!Application::$authorizedInvestor) {
+            Utility::location(self::BASE_URL);
+        }
+        $urlErrors = [];
+        $list2FA = \core\secondfactor\variants_2FA::varList();
+        if (USE_2FA == TRUE && in_array(@$_POST['2fa_method'], $list2FA)) {
+            if (
+                $_POST['2fa_method'] == \core\secondfactor\variants_2FA::sms 
+                || $_POST['2fa_method'] == \core\secondfactor\variants_2FA::both
+                
+            ) {
+                if (@$_POST['phone'] == "") {
+                    $urlErrors[] = 'phone_req_err=1';
+                } else {
+                    if(
+                        application::$authorizedInvestor->phone != ""
+                        && application::$authorizedInvestor->phone == $_POST['phone']
+                    ) {
+                        Application::$authorizedInvestor->set2faMethod($_POST['2fa_method']);
+                    } else {
+                        session_start();
+                        $_SESSION[self::PHONE_VERIFY_NUMBER] = $_POST['phone'];
+                        $_SESSION[self::CHOSEN_2FA_METHOD] = $_POST['2fa_method'];
+                        session_write_close();
+                        //TODO - send code on this phone number
+                        Utility::location(self::PHONEVERIFICATION_URL);
+                    }
+                }
+            } else {
+                Application::$authorizedInvestor->set2faMethod($_POST['2fa_method']);
+            }
+        }
+        Utility::location(self::SECONDFACTORSET_URL . '?' . implode('&', $urlErrors));
+    }
+    
+    static private function handlePhoneVerificationForm($message = '')
+    {
+        if (!Application::$authorizedInvestor) {
+            Utility::location(self::BASE_URL);
+        }
+        Base_view::$TITLE = 'Phone number verification';
+        Base_view::$MENU_POINT = Menu_point::Settings;
+        echo Base_view::header();
+        echo Investor_view::phoneVerificationForm($message);
+        echo Base_view::footer();
+    }
+    
+    static private function handlePhoneVerificationRequest()
+    {
+        if (
+            !Application::$authorizedInvestor
+            || !isset($_SESSION[self::PHONE_VERIFY_NUMBER])
+            || !isset($_SESSION[self::CHOSEN_2FA_METHOD])
+        ) {
+            Utility::location(self::BASE_URL);
+        }
+        //TODO - check sended in handleSecondfactorSetRequest() code
+        Application::$authorizedInvestor->setPhone($_SESSION[self::PHONE_VERIFY_NUMBER]);
+        Application::$authorizedInvestor->set2faMethod($_SESSION[self::CHOSEN_2FA_METHOD]);
+    }
 
     static private function handleLoginForm($message = '')
     {
@@ -255,7 +352,7 @@ class Investor_controller
         echo Investor_view::loginForm($message);
         echo Base_view::footer();
     }
-
+    
     static private function sent2FARequest($investorId)
     {
         if (USE_2FA == FALSE) {
@@ -295,7 +392,7 @@ class Investor_controller
                 session_start();
                 $_SESSION[self::SESSION_KEY_TMP] = $investorId;
                 session_write_close();
-                if ($form_type == 0) {
+                if ($sfa_used == 0) {
                     Utility::location(self::SECONDFACTOR_URL);
                 }
                 else {
@@ -576,6 +673,9 @@ EOT;
         if (!Application::$authorizedInvestor->eth_address) {
             Utility::location(Investor_controller::SET_EMPTY_ETH_ADDRESS);
         }
+        if (USE_2FA == TRUE && Application::$authorizedInvestor->preferred_2fa == "") {
+            Utility::location(self::SECONDFACTORSET_URL);
+        }
 
         Base_view::$TITLE = 'Settings';
         Base_view::$MENU_POINT = Menu_point::Settings;
@@ -595,6 +695,9 @@ EOT;
         }
         if (!Application::$authorizedInvestor->eth_address) {
             Utility::location(Investor_controller::SET_EMPTY_ETH_ADDRESS);
+        }
+        if (USE_2FA == TRUE && Application::$authorizedInvestor->preferred_2fa == "") {
+            Utility::location(self::SECONDFACTORSET_URL);
         }
 
         Base_view::$TITLE = 'CryptaurEtherWallet';
@@ -621,21 +724,6 @@ EOT;
         } else if (@strlen($_POST['eth_address']) > 0) {
             $urlErrors[] = 'eth_address_err=1';
         }
-        if (@$_POST['phone'] != "") { //TODO: improve phone checking and make verification?
-            Application::$authorizedInvestor->setPhone($_POST['phone']);
-        }
-        if (
-            USE_2FA == TRUE &&
-            (
-                @$_POST['2fa_method'] == \core\secondfactor\variants_2FA::email
-                || @$_POST['2fa_method'] == \core\secondfactor\variants_2FA::sms
-                || @$_POST['2fa_method'] == \core\secondfactor\variants_2FA::both
-            )
-        ) {
-            Application::$authorizedInvestor->set2faMethod($_POST['2fa_method']);
-        } else {
-            Application::$authorizedInvestor->set2faMethod(\core\secondfactor\variants_2FA::none);
-        }
         Utility::location(self::SETTINGS_URL . '?' . implode('&', $urlErrors));
     }
 
@@ -646,6 +734,9 @@ EOT;
         }
         if (!Application::$authorizedInvestor->eth_address) {
             Utility::location(Investor_controller::SET_EMPTY_ETH_ADDRESS);
+        }
+        if (USE_2FA == TRUE && Application::$authorizedInvestor->preferred_2fa == "") {
+            Utility::location(self::SECONDFACTORSET_URL);
         }
 
         Base_view::$TITLE = 'Invite friends';
