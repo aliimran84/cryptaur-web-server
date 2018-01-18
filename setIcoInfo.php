@@ -4,11 +4,12 @@ require __DIR__ . '/loader.php';
 
 use core\engine\Application;
 use core\engine\DB;
+use core\engine\Utility;
 
 Application::init();
 
-$eth = DB::get("SELECT SUM(`balance`) AS `sum` FROM `wallets` WHERE `coin`='eth';")[0]['sum'];
-$btc = DB::get("SELECT SUM(`balance`) AS `sum` FROM `wallets` WHERE `coin`='btc';")[0]['sum'];
+$eth = Utility::int_string(DB::get("SELECT SUM(`balance`) AS `sum` FROM `wallets` WHERE `coin`='eth';")[0]['sum']);
+$btc = Utility::int_string(DB::get("SELECT SUM(`balance`) AS `sum` FROM `wallets` WHERE `coin`='btc';")[0]['sum']);
 
 file_put_contents(\core\controllers\Base_controller::ICOINFO_FILE, json_encode([
     'total_eth' => $eth,

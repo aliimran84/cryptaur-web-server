@@ -14,8 +14,6 @@ class Base_controller
     static public $initialized = false;
 
     const ABOUT_URL = 'about';
-    const ICOINFO_URL = 'total_info';
-    const ICOINFO2_URL = 'ico/info';
 
     const ICOINFO_FILE = PATH_TO_TMP_DIR . '/ico_info.json';
 
@@ -29,13 +27,6 @@ class Base_controller
         Router::register(function () {
             self::handleAbout();
         }, self::ABOUT_URL);
-
-        Router::register(function () {
-            self::handleIcoInfo();
-        }, self::ICOINFO_URL);
-        Router::register(function () {
-            self::handleIcoInfo();
-        }, self::ICOINFO2_URL);
     }
 
     static private function handleAbout()
@@ -47,11 +38,5 @@ class Base_controller
             echo Wallet_view::newContribution();
         }
         echo Base_view::footer();
-    }
-
-    static private function handleIcoInfo()
-    {
-        header("Access-Control-Allow-Origin: *");
-        echo file_get_contents(self::ICOINFO_FILE);
     }
 }
