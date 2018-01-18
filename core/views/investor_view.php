@@ -65,7 +65,7 @@ class Investor_view
                         <?php if ($message) { ?>
                             <label class="blue-text"><?= $message ?></label>
                         <?php } ?>
-                        <h5><?= Translate::td('Authentication code has been sended using preferred method') ?></h5>
+                        <h5><?= Translate::td('Authentication code has been sent using preferred method') ?></h5>
                         <input type="password" name="otp" placeholder="<?= Translate::td('Authentication code') ?>" autocomplete="new-password">
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">

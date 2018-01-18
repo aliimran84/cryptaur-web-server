@@ -79,7 +79,7 @@ class Investor_controller
         Router::register(function () {
             self::handleSecondfactorRequest();
         }, self::SECONDFACTOR_URL, Router::POST_METHOD);
-        
+
         Router::register(function () {
             self::handleSecondfactorDualForm();
         }, self::SECONDFACTORDUAL_URL, Router::GET_METHOD);
@@ -263,18 +263,18 @@ class Investor_controller
         }
         $user = Investor::getById($investorId);
         $form_type = 0; //0 - single-code from, 1 - dual-code form
-        $sended;
+        $sent = false;
         if ($user->preferred_2fa == "") {
             return NULL;
         } elseif ($user->preferred_2fa == \core\secondfactor\variants_2FA::email) {
-            $sended = \core\secondfactor\API2FA::send_email($user->email);
+            $sent = \core\secondfactor\API2FA::send_email($user->email);
         } elseif ($user->preferred_2fa == \core\secondfactor\variants_2FA::sms) {
-            $sended = \core\secondfactor\API2FA::send_sms($user->phone);
+            $sent = \core\secondfactor\API2FA::send_sms($user->phone);
         } elseif ($user->preferred_2fa == \core\secondfactor\variants_2FA::both) {
-            $sended = \core\secondfactor\API2FA::send_both($user->email, $user->phone);
+            $sent = \core\secondfactor\API2FA::send_both($user->email, $user->phone);
             $form_type = 1;
         }
-        if ($sended === TRUE) {
+        if ($sent === TRUE) {
             return $form_type;
         }
         return NULL;
@@ -297,8 +297,7 @@ class Investor_controller
                 session_write_close();
                 if ($form_type == 0) {
                     Utility::location(self::SECONDFACTOR_URL);
-                }
-                else {
+                } else {
                     Utility::location(self::SECONDFACTORDUAL_URL);
                 }
             }
@@ -339,13 +338,13 @@ class Investor_controller
         ) {
             Utility::location(self::BASE_URL);
         }
-        
+
         $investorId = $_SESSION[self::SESSION_KEY_TMP];
 
         session_start();
         unset($_SESSION[self::SESSION_KEY_TMP]);
         session_write_close();
-        
+
         $checked = \core\secondfactor\API2FA::check($_POST['otp']);
         if ($checked === TRUE) {
             self::loginWithId($investorId);
@@ -375,13 +374,13 @@ class Investor_controller
         ) {
             Utility::location(self::BASE_URL);
         }
-        
+
         $investorId = $_SESSION[self::SESSION_KEY_TMP];
 
         session_start();
         unset($_SESSION[self::SESSION_KEY_TMP]);
         session_write_close();
-        
+
         $checked = \core\secondfactor\API2FA::check_both($_POST['code_1'], $_POST['code_2']);
         if ($checked === TRUE) {
             self::loginWithId($investorId);
