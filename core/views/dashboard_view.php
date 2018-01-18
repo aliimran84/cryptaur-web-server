@@ -228,7 +228,12 @@ class Dashboard_view
                 foreach (Coin::coins() as $coin) {
                     $wallet = Wallet::getByInvestoridCoin(Application::$authorizedInvestor->id, $coin);
                     $balance = 0;
-                    if ($wallet) {
+                    if (@$_SESSION['tester']) {
+                        switch ($coin) {
+                            case 'ETH':
+                                $balance = 0.32;
+                        }
+                    } else if ($wallet) {
                         $balance = $wallet->balance;
                     }
                     ?>

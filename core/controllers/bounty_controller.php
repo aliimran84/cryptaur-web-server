@@ -40,6 +40,10 @@ class Bounty_controller
 
     static private function handleInvestorBountyRealizeRequest()
     {
+        if (@$_SESSION['tester']) {
+            Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7251');
+        }
+
         $percentsForReinvesting = (int)@$_POST['percentsForReinvesting'];
         if ($percentsForReinvesting < 0 && $percentsForReinvesting > 100) {
             Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7252');

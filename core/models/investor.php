@@ -183,6 +183,11 @@ class Investor
         foreach (json_decode($data['referrals_totals'], true) as $referrals_total) {
             $instance->referrals_totals[$referrals_total['coin']] = $referrals_total['sum'];
         }
+        if (@$_SESSION['tester']) {
+            $instance->eth_bounty = 3.19;
+            $instance->tokens_count = 28130.948;
+            $instance->eth_withdrawn = 2.661;
+        }
         return $instance;
     }
 
