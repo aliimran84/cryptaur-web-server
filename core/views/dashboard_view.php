@@ -396,7 +396,7 @@ class Dashboard_view
         <?php
         if (@$_SESSION['tester']) {
             ?>
-            <div id="modal_myetherwallet-info" class="modal">
+            <div id="modal_cryptauretherwallet-info" class="modal">
                 <div class="modal-content">
                     <h4><?= Translate::td('ATTENTION') ?>!</h4>
                     <p>
@@ -409,7 +409,7 @@ class Dashboard_view
                         <?= Translate::td('PLEASE BE EXTREMELY CAREFUL AND ALWAYS REMEMBER ABOUT CYBER-SECURITY!') ?>
                     </p>
                     <br>
-                    <button onclick="$('#modal_myetherwallet-info').modal('close');" class="waves-effect waves-light btn"><?= Translate::td('YES, I UNDERSTAND AND AGREE') ?>.</button>
+                    <button onclick="$('#modal_cryptauretherwallet-info').modal('close');" class="waves-effect waves-light btn"><?= Translate::td('YES, I UNDERSTAND AND AGREE') ?>.</button>
                 </div>
             </div>
             <?php

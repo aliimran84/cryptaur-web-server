@@ -535,14 +535,14 @@ class Investor_view
         return ob_get_clean();
     }
 
-    static public function myetherwallet()
+    static public function cryptauretherwallet()
     {
         ob_start();
         ?>
 
         <section class="ether-wallet">
             <div class="row">
-                <h3><?= Translate::td('My Ether Wallet') ?></h3>
+                <h3><?= Translate::td('Cryptaur Ether Wallet') ?></h3>
             </div>
             <div class="row">
                 <form action="#" method="post">

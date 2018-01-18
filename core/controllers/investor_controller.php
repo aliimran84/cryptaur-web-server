@@ -24,7 +24,7 @@ class Investor_controller
     const SET_EMPTY_ETH_ADDRESS = 'investor/set_eth_address';
     const LOGOUT_URL = 'investor/logout';
     const RECOVER_URL = 'investor/recover';
-    const MYETHERWALLET_URL = 'investor/myetherwallet';
+    const CRYPTAURETHERWALLET_URL = 'investor/cryptauretherwallet';
     const CHANGE_PASSWORD_URL = 'investor/changepassword';
     const REGISTER_URL = 'investor/register';
     const PREVIOUS_SYSTEM_REGISTER_URL = 'syndicates/join';
@@ -122,8 +122,8 @@ class Investor_controller
         }, self::SETTINGS_URL, Router::GET_METHOD);
 
         Router::register(function () {
-            self::handleMyEtherWalletForm();
-        }, self::MYETHERWALLET_URL, Router::GET_METHOD);
+            self::handleCryptaurEtherWalletForm();
+        }, self::CRYPTAURETHERWALLET_URL, Router::GET_METHOD);
 
         Router::register(function () {
             self::handleSettingsRequest();
@@ -535,7 +535,7 @@ EOT;
         echo Base_view::footer();
     }
 
-    static private function handleMyEtherWalletForm()
+    static private function handleCryptaurEtherWalletForm()
     {
         if (!Application::$authorizedInvestor) {
             Utility::location(self::LOGIN_URL);
@@ -544,10 +544,10 @@ EOT;
             Utility::location(Investor_controller::SET_EMPTY_ETH_ADDRESS);
         }
 
-        Base_view::$TITLE = 'MyEtherWallet';
-        Base_view::$MENU_POINT = Menu_point::MY_ether_wallet;
+        Base_view::$TITLE = 'CryptaurEtherWallet';
+        Base_view::$MENU_POINT = Menu_point::Cryptaur_ether_wallet;
         echo Base_view::header();
-        echo Investor_view::myetherwallet();
+        echo Investor_view::cryptauretherwallet();
         echo Base_view::footer();
     }
 

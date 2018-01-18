@@ -120,7 +120,7 @@ $(document).ready(function(){
     });
 
 
-    $('#modal_myetherwallet-info').modal({
+    $('#modal_cryptauretherwallet-info').modal({
             dismissible: false,
             inDuration: 300,
             outDuration: 200
