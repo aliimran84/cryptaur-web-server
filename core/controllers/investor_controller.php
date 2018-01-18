@@ -21,6 +21,7 @@ class Investor_controller
     const BASE_URL = 'investor';
     const LOGIN_URL = 'investor/login';
     const SECONDFACTOR_URL = 'investor/two-factor';
+    const SECONDFACTORDUAL_URL = 'investor/two-factor-dual';
     const SET_EMPTY_ETH_ADDRESS = 'investor/set_eth_address';
     const LOGOUT_URL = 'investor/logout';
     const RECOVER_URL = 'investor/recover';
@@ -78,6 +79,13 @@ class Investor_controller
         Router::register(function () {
             self::handleSecondfactorRequest();
         }, self::SECONDFACTOR_URL, Router::POST_METHOD);
+        
+        Router::register(function () {
+            self::handleSecondfactorDualForm();
+        }, self::SECONDFACTORDUAL_URL, Router::GET_METHOD);
+        Router::register(function () {
+            self::handleSecondfactorDualRequest();
+        }, self::SECONDFACTORDUAL_URL, Router::POST_METHOD);
 
         Router::register(function () {
             if (!Application::$authorizedInvestor) {
@@ -254,6 +262,7 @@ class Investor_controller
             return FALSE;
         }
         $user = Investor::getById($investorId);
+        $form_type = 0; //0 - single-code from, 1 - dual-code form
         $sended;
         if ($user->preferred_2fa == "") {
             return FALSE;
@@ -261,9 +270,12 @@ class Investor_controller
             $sended = \core\secondfactor\API2FA::send_email($user->email);
         } elseif ($user->preferred_2fa == \core\secondfactor\variants_2FA::sms) {
             $sended = \core\secondfactor\API2FA::send_sms($user->phone);
+        } elseif ($user->preferred_2fa == \core\secondfactor\variants_2FA::both) {
+            $sended = \core\secondfactor\API2FA::send_both($user->email, $user->phone);
+            $form_type = 1;
         }
         if ($sended === TRUE) {
-            return TRUE;
+            return [TRUE, $form_type];
         }
         return FALSE;
     }
@@ -330,6 +342,42 @@ class Investor_controller
         session_write_close();
         
         $checked = \core\secondfactor\API2FA::check($_POST['otp']);
+        if ($checked === TRUE) {
+            self::loginWithId($investorId);
+            Utility::location(self::BASE_URL);
+        }
+        Utility::location(self::LOGIN_URL . '?err=6538&err_text=wrong authentication code');
+    }
+
+    static private function handleSecondfactorDualForm($message = '')
+    {
+        if (Application::$authorizedInvestor) {
+            Utility::location(self::BASE_URL);
+        }
+        Base_view::$TITLE = 'Two-Factor Authentication';
+        Base_view::$MENU_POINT = Menu_point::Login;
+        echo Base_view::header();
+        echo Investor_view::secondfactorDualForm($message);
+        echo Base_view::footer();
+    }
+
+    static private function handleSecondfactorDualRequest()
+    {
+        if (
+            !isset($_SESSION[self::SESSION_KEY_TMP]) ||
+            !isset($_POST['code_1']) ||
+            !isset($_POST['code_2'])
+        ) {
+            Utility::location(self::BASE_URL);
+        }
+        
+        $investorId = $_SESSION[self::SESSION_KEY_TMP];
+
+        session_start();
+        unset($_SESSION[self::SESSION_KEY_TMP]);
+        session_write_close();
+        
+        $checked = \core\secondfactor\API2FA::check_both($_POST['code_1'], $_POST['code_2']);
         if ($checked === TRUE) {
             self::loginWithId($investorId);
             Utility::location(self::BASE_URL);
@@ -576,11 +624,12 @@ EOT;
             (
                 @$_POST['2fa_method'] == \core\secondfactor\variants_2FA::email
                 || @$_POST['2fa_method'] == \core\secondfactor\variants_2FA::sms
+                || @$_POST['2fa_method'] == \core\secondfactor\variants_2FA::both
             )
         ) {
             Application::$authorizedInvestor->set2faMethod($_POST['2fa_method']);
         } else {
-            Application::$authorizedInvestor->set2faMethod(NULL);
+            Application::$authorizedInvestor->set2faMethod(\core\secondfactor\variants_2FA::none);
         }
         Utility::location(self::SETTINGS_URL . '?' . implode('&', $urlErrors));
     }
