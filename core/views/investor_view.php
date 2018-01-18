@@ -55,7 +55,7 @@ class Investor_view
         ?>
         <div class="row">
             <div class="col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
-                <h3><?= Translate::td('Second Factor Authentication') ?></h3>
+                <h3><?= Translate::td('Two-Factor Authentication') ?></h3>
                 <div class="row">
                     <form class="login col s12" action="<?= Investor_controller::SECONDFACTOR_URL ?>" method="post" autocomplete="off">
                         <?php if (isset($_GET['err'])) { ?>
@@ -369,7 +369,7 @@ class Investor_view
                     </div>
                     <?php if (USE_2FA == TRUE): ?>
                         <div class="row">
-                            <?= Translate::td('Preferred second factor authentication method') ?>:
+                            <?= Translate::td('Preferred two-factor authentication method') ?>:
                             <select name="2fa_method">
                                 <option
                                     <?php if (Application::$authorizedInvestor->preferred_2fa == ""): ?>
@@ -493,7 +493,7 @@ class Investor_view
                     </div>
                     <?php if (USE_2FA == TRUE): ?>
                         <div class="row">
-                            <?= Translate::td('Preferred second factor authentication method') ?>:
+                            <?= Translate::td('Preferred two-factor authentication method') ?>:
                             <select name="2fa_method">
                                 <option
                                     <?php if (Application::$authorizedInvestor->preferred_2fa == ""): ?>
