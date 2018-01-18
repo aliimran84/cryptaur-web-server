@@ -259,13 +259,13 @@ class Investor_controller
     static private function sent2FARequest($investorId)
     {
         if (USE_2FA == FALSE) {
-            return FALSE;
+            return NULL;
         }
         $user = Investor::getById($investorId);
         $form_type = 0; //0 - single-code from, 1 - dual-code form
         $sended;
         if ($user->preferred_2fa == "") {
-            return FALSE;
+            return NULL;
         } elseif ($user->preferred_2fa == \core\secondfactor\variants_2FA::email) {
             $sended = \core\secondfactor\API2FA::send_email($user->email);
         } elseif ($user->preferred_2fa == \core\secondfactor\variants_2FA::sms) {
@@ -275,9 +275,9 @@ class Investor_controller
             $form_type = 1;
         }
         if ($sended === TRUE) {
-            return [TRUE, $form_type];
+            return $form_type;
         }
-        return FALSE;
+        return NULL;
     }
 
     static private function handleLoginRequest()
@@ -288,14 +288,19 @@ class Investor_controller
         $investor = null;
         if ($investorId) {
             $sfa_used = self::sent2FARequest($investorId); //TRUE if user USE the 2FA
-            if (USE_2FA == FALSE || $sfa_used == FALSE) {
+            if (USE_2FA == FALSE || is_null($sfa_used)) {
                 self::loginWithId($investorId);
                 $investor = Investor::getById($investorId);
-            } elseif ($sfa_used) {
+            } else {
                 session_start();
                 $_SESSION[self::SESSION_KEY_TMP] = $investorId;
                 session_write_close();
-                Utility::location(self::SECONDFACTOR_URL);
+                if ($form_type == 0) {
+                    Utility::location(self::SECONDFACTOR_URL);
+                }
+                else {
+                    Utility::location(self::SECONDFACTORDUAL_URL);
+                }
             }
         } else {
             $investorId = Investor::investorId_previousSystemCredentials($email, $password);
