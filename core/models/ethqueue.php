@@ -20,6 +20,12 @@ class EthQueue
     public $id = 0;
     public $uuid = '';
     public $datetime = 0;
+    public $datetime_end = 0;
+
+    /**
+     * @var Investor
+     */
+    public $investor = null;
     public $action_type = 0;
     public $is_pending = true;
     public $is_success = false;
@@ -33,6 +39,8 @@ class EthQueue
                 `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT,
                 `uuid` varchar(40) NOT NULL,
                 `datetime` datetime(0) NOT NULL,
+                `datetime_end` datetime(0) NOT NULL,
+                `investor_id` int(10) UNSIGNED NOT NULL,
                 `action_type` tinyint(1) UNSIGNED DEFAULT '0',
                 `is_pending` tinyint(1) UNSIGNED DEFAULT '0',
                 `is_success` tinyint(1) UNSIGNED DEFAULT '0',
@@ -49,12 +57,14 @@ class EthQueue
      * @param array $data
      * @return EthQueue
      */
-    static public function constructFromDbData($data)
+    static private function constructFromDbData($data)
     {
         $instance = new EthQueue();
         $instance->id = $data['id'];
         $instance->uuid = $data['uuid'];
         $instance->datetime = strtotime($data['datetime']);
+        $instance->datetime_end = strtotime($data['datetime_end']);
+        $instance->investor = Investor::getById($data['investor_id']);
         $instance->action_type = $data['action_type'];
         $instance->is_pending = (bool)$data['is_pending'];
         $instance->is_success = (bool)$data['is_success'];
@@ -101,10 +111,11 @@ class EthQueue
 
     /**
      * @param int $actionType
+     * @param int $investorId
      * @param array $data
      * @return EthQueue
      */
-    static private function new_queue($actionType, $data)
+    static private function new_queue($actionType, $investorId, $data)
     {
         $uuid = Utility::uuid();
         $json_data = json_encode($data, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
@@ -112,12 +123,14 @@ class EthQueue
             INSERT INTO `eth_queue` SET
                 `uuid` = ?,
                 `datetime` = NOW(),
+                `datetime_end` = NOW(),
+                `investor_id` = ?
                 `action_type` = ?,
                 `is_pending` = 1,
                 `is_success` = 0,
                 `result` = '',
                 `data` = ?
-        ;", [$uuid, $actionType, $json_data]);
+        ;", [$uuid, $investorId, $actionType, $json_data]);
         $id = DB::lastInsertId();
         $element_data = DB::get("
             SELECT *
@@ -130,16 +143,27 @@ class EthQueue
         return $element;
     }
 
+    private function updateEndDatetime()
+    {
+        $this->datetime_end = time();
+        DB::set("
+            UPDATE `eth_queue` SET
+                `datetime_end` = NOW()
+            WHERE `id` = ?
+        ;", [$this->id]);
+    }
+
     /**
      * @param int $actionType
+     * @param int $investorId
      * @param array $data
      * @param string $ethAddress
      * @param double $ethValue
      * @return array [int, string] if int < 0 -> error, else - uuid
      */
-    static public function sendEthBounty($actionType, $data, $ethAddress, $ethValue)
+    static public function sendEthBounty($actionType, $investorId, $data, $ethAddress, $ethValue)
     {
-        $eth_queue = self::new_queue($actionType, $data);
+        $eth_queue = self::new_queue($actionType, $investorId, $data);
 
         if (!Bounty::reinvestIsOn() && !Bounty::withdrawIsOn()) {
             $eth_queue->handleError();
@@ -162,6 +186,7 @@ class EthQueue
         Utility::log('eth_queue_sendethbounty/' . Utility::microtime_float(), [
             '_uuid' => $eth_queue->uuid,
             '_ethAddress' => $ethAddress,
+            '_investorId' => $eth_queue->investor->id,
             '_ethValue' => $ethValue,
             '_data' => $data,
             'wei' => $weiValue,
@@ -173,6 +198,7 @@ class EthQueue
 
     /**
      * @param int $actionType
+     * @param int $investorId
      * @param array $data
      * @param string $ethAddress
      * @param double $tokens
@@ -180,9 +206,9 @@ class EthQueue
      * @param string $txid
      * @return array [int, string] if int < 0 -> error, else - uuid
      */
-    static public function mintTokens($actionType, $data, $ethAddress, $tokens, $coin = '', $txid = '')
+    static public function mintTokens($actionType, $investorId, $data, $ethAddress, $tokens, $coin = '', $txid = '')
     {
-        $eth_queue = self::new_queue($actionType, $data);
+        $eth_queue = self::new_queue($actionType, $investorId, $data);
 
         if (!Deposit::mintingIsOn()) {
             $eth_queue->handleError();
@@ -208,6 +234,7 @@ class EthQueue
         Utility::log('eth_queue_mint/' . Utility::microtime_float(), [
             '_uuid' => $eth_queue->uuid,
             '_ethAddress' => $ethAddress,
+            '_investorId' => $eth_queue->investor->id,
             '_tokens' => $tokens,
             '_coin' => $coin,
             '_txid' => $txid,
@@ -283,6 +310,7 @@ class EthQueue
 
     private function handleSuccess()
     {
+        $this->updateEndDatetime();
         switch ($this->action_type) {
             case self::TYPE_SENDETH_REINVEST:
                 // todo: add eth to eth_not_used_in_bounty
@@ -292,7 +320,7 @@ class EthQueue
                     'investorId' => $investor->id,
                     'tokens' => $this->data['tokens']
                 ];
-                EthQueue::mintTokens(EthQueue::TYPE_MINT_REINVEST, $data, $investor->eth_address, $this->data['tokens'], 'eth', $txid);
+                EthQueue::mintTokens(EthQueue::TYPE_MINT_REINVEST, $investor->id, $data, $investor->eth_address, $this->data['tokens'], 'eth', $txid);
                 break;
             case self::TYPE_MINT_REINVEST:
                 $investor = Investor::getById($this->data['investorId']);
@@ -321,6 +349,7 @@ class EthQueue
 
     private function handleError()
     {
+        $this->updateEndDatetime();
         $data = $this->data;
         switch ($this->action_type) {
             case self::TYPE_SENDETH_REINVEST:

@@ -240,7 +240,7 @@ class Deposit
                     'investorId' => $investorId,
                     'tokens' => $realTokensMinting
                 ];
-                list($mintCode, $mintStr) = EthQueue::mintTokens(EthQueue::TYPE_MINT_DEPOSIT, $data, $investor->eth_address, $realTokensMinting, $deposit->coin, $deposit->txid);
+                list($mintCode, $mintStr) = EthQueue::mintTokens(EthQueue::TYPE_MINT_DEPOSIT, $investor->id, $data, $investor->eth_address, $realTokensMinting, $deposit->coin, $deposit->txid);
                 if ($mintCode === 0) {
                     $txid = $mintStr;
                     Utility::log('mint1new_ok/' . Utility::microtime_float(), [

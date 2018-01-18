@@ -672,7 +672,7 @@ class Investor
             'ethToReinvest' => $ethToReinvest,
             'tokens' => $tokens
         ];
-        EthQueue::sendEthBounty(EthQueue::TYPE_SENDETH_REINVEST, $data, ETH_BOUNTY_COLD_WALLET, $ethToReinvest);
+        EthQueue::sendEthBounty(EthQueue::TYPE_SENDETH_REINVEST, $this->id, $data, ETH_BOUNTY_COLD_WALLET, $ethToReinvest);
         // do mint tokens inside sendEthBounty callback -> EthQueue::checkQueue()
         return true;
     }
@@ -691,7 +691,7 @@ class Investor
             'investorId' => $this->id,
             'ethToWithdraw' => $eth
         ];
-        EthQueue::sendEthBounty(EthQueue::TYPE_SENDETH_WITHDRAW, $data, ETH_BOUNTY_COLD_WALLET, $eth);
+        EthQueue::sendEthBounty(EthQueue::TYPE_SENDETH_WITHDRAW, $this->id, $data, ETH_BOUNTY_COLD_WALLET, $eth);
 
         return true;
     }

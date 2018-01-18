@@ -110,11 +110,9 @@ class Base_view
             <li class="<?= self::activeMenuItem(Menu_point::Transactions) ?>">
                 <a href="<?= Deposit_controller::TRANSACTIONS_URL ?>"><?= Translate::td('Transactions history') ?></a>
             </li>
-            <?php if (@$_SESSION['tester']) { ?>
-                <li class="<?= self::activeMenuItem(Menu_point::Cryptaur_ether_wallet) ?>">
-                    <a href="<?= Investor_controller::CRYPTAURETHERWALLET_URL ?>"><?= Translate::td('Cryptaur Ether Wallet') ?></a>
-                </li>
-            <?php } ?>
+            <li class="<?= self::activeMenuItem(Menu_point::Cryptaur_ether_wallet) ?>">
+                <a href="<?= Investor_controller::CRYPTAURETHERWALLET_URL ?>"><?= Translate::td('Cryptaur Ether Wallet') ?></a>
+            </li>
             <li class="<?= self::activeMenuItem(Menu_point::Settings) ?>">
                 <a href="<?= Investor_controller::SETTINGS_URL ?>"><?= Translate::td('Settings') ?></a></li>
             <li class="login <?= self::activeMenuItem(Menu_point::Login) ?>"><?= Application::$authorizedInvestor->email ?></li>

@@ -233,7 +233,7 @@ class Investor_controller
                     'investorId' => $investor->id,
                     'tokens' => $investor->tokens_count
                 ];
-                list($mintCode, $mintStr) = EthQueue::mintTokens(EthQueue::TYPE_MINT_OLD_INVESTOR_INIT, $data, $investor->eth_address, $investor->tokens_count);
+                list($mintCode, $mintStr) = EthQueue::mintTokens(EthQueue::TYPE_MINT_OLD_INVESTOR_INIT, $investor->id, $data, $investor->eth_address, $investor->tokens_count);
                 if ($mintCode === 0) {
                     $txid = $mintStr;
                     Utility::log('mint3new_ok/' . Utility::microtime_float(), [
