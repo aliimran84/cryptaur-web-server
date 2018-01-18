@@ -39,7 +39,7 @@ Key id,Key id
 Secret key,Secret key
 Set,Задать
 Cryptaur login,Cryptaur авторизация
-"Second Factor Authentication","Двухфакторная авторизация"
+"Two-Factor Authentication","Двухфакторная авторизация"
 Authentication code,Код авторизации
 Authentication code has been sended using preferred method,Код авторизации был отправлен выбранным методом
 Password,Пароль
@@ -152,7 +152,7 @@ Part to withdraw,Часть для вывода
 Split bounty between reinvest and withdraw,Распределить баунти между реинвестицией/выводом
 Drag slider to adjust values,Изменяйте значения с помощью ползунка
 "Bounty was not withdrawn or reinvested. Maybe the service is overloaded. Try in a few minutes.","Баунти не было выведено и (или) реинвестировано. Возможно, сервис перегружен. Попробуйте через несколько минут."
-Preferred second factor authentication method,Предпочтительный метод двухфакторной авторизации
+Preferred two-factor authentication method,Предпочтительный метод двухфакторной авторизации
 Do not use,Не использовать
 My Ether Wallet,ETH кошелёк
 To Address,Адрес получателя

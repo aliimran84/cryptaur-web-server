@@ -20,7 +20,7 @@ class Investor_controller
 
     const BASE_URL = 'investor';
     const LOGIN_URL = 'investor/login';
-    const SECONDFACTOR_URL = 'investor/secondfactor';
+    const SECONDFACTOR_URL = 'investor/two-factor';
     const SET_EMPTY_ETH_ADDRESS = 'investor/set_eth_address';
     const LOGOUT_URL = 'investor/logout';
     const RECOVER_URL = 'investor/recover';
@@ -307,7 +307,7 @@ class Investor_controller
         if (Application::$authorizedInvestor) {
             Utility::location(self::BASE_URL);
         }
-        Base_view::$TITLE = 'Second Factor Authentication';
+        Base_view::$TITLE = 'Two-Factor Authentication';
         Base_view::$MENU_POINT = Menu_point::Login;
         echo Base_view::header();
         echo Investor_view::secondfactorForm($message);
