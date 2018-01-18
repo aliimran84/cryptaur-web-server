@@ -55,7 +55,7 @@ class Investor_view
         ?>
         <div class="row">
             <div class="col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
-                <h3><?= Translate::td('Second Factor Authentication') ?></h3>
+                <h3><?= Translate::td('Two-Factor Authentication') ?></h3>
                 <div class="row">
                     <form class="login col s12" action="<?= Investor_controller::SECONDFACTOR_URL ?>" method="post" autocomplete="off">
                         <?php if (isset($_GET['err'])) { ?>
@@ -67,6 +67,39 @@ class Investor_view
                         <?php } ?>
                         <h5><?= Translate::td('Authentication code has been sended using preferred method') ?></h5>
                         <input type="password" name="otp" placeholder="<?= Translate::td('Authentication code') ?>" autocomplete="new-password">
+                        <div class="row center">
+                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                <?= Translate::td('Login') ?>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+
+    static public function secondfactorDualForm($message = '')
+    {
+        ob_start();
+        ?>
+        <div class="row">
+            <div class="col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
+                <h3><?= Translate::td('Two-Factor Authentication') ?></h3>
+                <div class="row">
+                    <form class="login col s12" action="<?= Investor_controller::SECONDFACTOR_URL ?>" method="post" autocomplete="off">
+                        <?php if (isset($_GET['err'])) { ?>
+                            <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
+                                : <?= Translate::td($_GET['err_text']) ?></label>
+                        <?php } ?>
+                        <?php if ($message) { ?>
+                            <label class="blue-text"><?= $message ?></label>
+                        <?php } ?>
+                        <h5>SMS:</h5>
+                        <input type="password" name="code_1" placeholder="<?= Translate::td('Authentication code') ?>" autocomplete="new-password">
+                        <h5>Email:</h5>
+                        <input type="password" name="code_2" placeholder="<?= Translate::td('Authentication code') ?>" autocomplete="new-password">
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Login') ?>
@@ -369,7 +402,7 @@ class Investor_view
                     </div>
                     <?php if (USE_2FA == TRUE): ?>
                         <div class="row">
-                            <?= Translate::td('Preferred second factor authentication method') ?>:
+                            <?= Translate::td('Preferred two-factor authentication method') ?>:
                             <select name="2fa_method">
                                 <option
                                     <?php if (Application::$authorizedInvestor->preferred_2fa == ""): ?>
@@ -493,7 +526,7 @@ class Investor_view
                     </div>
                     <?php if (USE_2FA == TRUE): ?>
                         <div class="row">
-                            <?= Translate::td('Preferred second factor authentication method') ?>:
+                            <?= Translate::td('Preferred two-factor authentication method') ?>:
                             <select name="2fa_method">
                                 <option
                                     <?php if (Application::$authorizedInvestor->preferred_2fa == ""): ?>
