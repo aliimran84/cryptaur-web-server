@@ -393,12 +393,18 @@ class Dashboard_view
             ?>
             <div id="modal_myetherwallet-info" class="modal">
                 <div class="modal-content">
-                    <h4><?= Translate::td('Hello') ?>!</h4>
+                    <h4><?= Translate::td('ATTENTION') ?>!</h4>
                     <p>
-                        <?= Translate::td('In order to improve the security of tokens CPT, we launched...') ?>
+                        <?= Translate::td('In order to protect the Cryptaur users and elevate the CPT and ether...') ?>
+                    </p>
+                    <p>
+                        <?= Translate::td('Nevertheless, should you prefer to store your CPT tokens...') ?>
+                    </p>
+                    <p>
+                        <?= Translate::td('PLEASE BE EXTREMELY CAREFUL AND ALWAYS REMEMBER ABOUT CYBER-SECURITY!') ?>
                     </p>
                     <br>
-                    <button onclick="$('#modal_myetherwallet-info').modal('close');" class="waves-effect waves-light btn btn-learn-more"><?= Translate::td('I understand') ?></button>
+                    <button onclick="$('#modal_myetherwallet-info').modal('close');" class="waves-effect waves-light btn"><?= Translate::td('YES, I UNDERSTAND AND AGREE') ?>.</button>
                 </div>
             </div>
             <?php
