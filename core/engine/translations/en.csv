@@ -40,7 +40,14 @@ Secret key,Secret key
 Set,Set
 Cryptaur login,Cryptaur login
 "Two-Factor Authentication","Two-Factor Authentication"
+"You must choose two-factor authentication option","You must choose two-factor authentication option"
+"Two-factor authentication settings","Two-factor authentication settings"
+"You cannot select SMS-based second factor authentication methods without verified phone number","You cannot select SMS-based second factor authentication methods without verified phone number"
+"Phone number verification","Phone number verification"
+"Input code, that you get with SMS","Input code, that you get with SMS"
 Authentication code,Authentication code
+Cancel,Cancel
+Accept,Accept
 Authentication code has been sent using preferred method,Authentication code has been sent using preferred method
 Password,Password
 Forgot your account login,Forgot your account login

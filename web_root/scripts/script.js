@@ -126,7 +126,14 @@ $(document).ready(function(){
             outDuration: 200
         }
     ).modal('open');
-
+    
+    $("#2fa_method").change(function(){
+        var value = $(this).val();
+        if(value == 'SMS' || value == 'SMS&EMAIL')
+            $("#phone_row").show();
+        else
+            $("#phone_row").hide();
+    });
 });
 
 function catalogItemCounter(field){

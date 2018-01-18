@@ -40,7 +40,14 @@ Secret key,Secret key
 Set,Задать
 Cryptaur login,Cryptaur авторизация
 "Two-Factor Authentication","Двухфакторная авторизация"
+"You must choose two-factor authentication option","Выберите способ двухфакторной авторизации"
+"Two-factor authentication settings","Настройки двухфакторной авторизации"
+"You cannot select SMS-based second factor authentication methods without verified phone number","Вы не можете выбрать задействующие SMS методы двухфакторной авторизации без подтверждённого номера телефона"
+"Phone number verification","Подтверждение номера телефона"
+"Input code, that you get with SMS","Введите код, полученный по SMS"
 Authentication code,Код авторизации
+Cancel,Отмена
+Accept,Применить
 Authentication code has been sent using preferred method,Код авторизации был отправлен выбранным методом
 Password,Пароль
 Forgot your account login,Забыли имя пользователя кабинета

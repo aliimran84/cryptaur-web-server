@@ -8,6 +8,15 @@ class variants_2FA
     const email = 'EMAIL';
     const sms = 'SMS';
     const both = 'SMS&EMAIL';
+    
+    /**
+     * @return array
+     */
+    static public function varList()
+    {
+        $oClass = new \ReflectionClass(__CLASS__);
+        return $oClass->getConstants();
+    }
 }
 
 class API2FA
@@ -40,7 +49,7 @@ class API2FA
         }
         return self::$_instance;
     }
-
+    
     /**
      * init
      */
@@ -102,13 +111,8 @@ class API2FA
         $_SESSION[self::SECRET_KEY_EMAIL] = $code_2;
         session_write_close();
         //send SMS
-        $url = self::SMS_SERVICE_URL . 
-            'sender=' . self::SMS_FROM . 
-            '&recipient=' . $phone . 
-            '&message=' . $code_2;
-        $response = file_get_contents($url);
-        $json = json_decode($response);
-        if (!$json || !isset($json['message']) || $json['message'] != 'OK') {
+        $result = self::raw_sms_sender($phone, $code_1);
+        if ($result == FALSE) {
             return FALSE;
         }
         //an now email
@@ -121,11 +125,11 @@ class API2FA
      */
     public static function send_email($email)
     {
-        $code = self::generate_code();
+        $captcha = self::generate_code();
         session_start();
         $_SESSION[self::SECRET_KEY] = $captcha;
         session_write_close();
-        return \core\engine\Email::send($email, [], 'Cryptaur: second factor authorization', "<p>Secret code:</p><p>$code</p>", true);
+        return \core\engine\Email::send($email, [], 'Cryptaur: second factor authorization', "<p>Secret code:</p><p>$captcha</p>", true);
     }
     
     /*
@@ -133,14 +137,19 @@ class API2FA
      */
     public static function send_sms($phone)
     {
-        $code = self::generate_code();
+        $captcha = self::generate_code();
         session_start();
         $_SESSION[self::SECRET_KEY] = $captcha;
         session_write_close();
+        return self::raw_sms_sender($phone, $captcha);
+    }
+    
+    private static function raw_sms_sender($phone, $message)
+    {
         $url = self::SMS_SERVICE_URL . 
             'sender=' . self::SMS_FROM . 
             '&recipient=' . $phone . 
-            '&message=' . $code;
+            '&message=' . $message;
         $response = file_get_contents($url);
         $json = json_decode($response);
         if (!$json || !isset($json['message']) || $json['message'] != 'OK') {
@@ -148,7 +157,8 @@ class API2FA
         }
         return TRUE;
     }
-    
+            
+
     private static function generate_code()
     {
         $letters = 'ABCDEFGKIJKLMNOPQRSTUVWXYZ0123456789';
