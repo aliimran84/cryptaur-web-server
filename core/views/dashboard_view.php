@@ -373,13 +373,15 @@ class Dashboard_view
                                 <ul class="second-level">
                                     <li class="second-level participants">
                                         <?= self::investorCard(Application::$authorizedInvestor) ?>
-                                        <div class="line-right"></div>
-                                        <div class="participants-block">
-                                            <h2>
-                                                <?= Translate::td('Participants in level') ?>:
-                                                <?= count(Application::$authorizedInvestor->referrals) ?>
-                                                <i class="material-icons">expand_more</i></h2>
-                                        </div>
+                                        <?php if (count(Application::$authorizedInvestor->referrals)) { ?>
+                                            <div class="line-right"></div>
+                                            <div class="participants-block">
+                                                <h2>
+                                                    <?= Translate::td('Participants in level') ?>:
+                                                    <?= count(Application::$authorizedInvestor->referrals) ?>
+                                                    <i class="material-icons">expand_more</i></h2>
+                                            </div>
+                                        <?php } ?>
                                         <?php if ($referrer) { ?>
                                             <div class="line-left"></div>
                                         <?php } ?>
