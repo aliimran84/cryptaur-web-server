@@ -24,7 +24,6 @@ class API2FA
     const SECRET_KEY_SMS = 'secret_key_sms';
     const SECRET_KEY_EMAIL = 'secret_key_email';
     const SECRET_KEY = 'secret_key';
-    const SMS_SERVICE_URL = 'https://liketelecom.net/sms014/mc-sms-send.php?';
     const SMS_FROM = 'Cryptaur';
 
     private function __construct()
@@ -146,12 +145,12 @@ class API2FA
     
     private static function raw_sms_sender($phone, $message)
     {
-        $url = self::SMS_SERVICE_URL . 
-            'sender=' . self::SMS_FROM . 
+        $url = SMS_URL . 
+            '?sender=' . self::SMS_FROM . 
             '&recipient=' . $phone . 
             '&message=' . $message;
         $response = file_get_contents($url);
-        $json = json_decode($response);
+        $json = json_decode($response, TRUE);
         if (!$json || !isset($json['message']) || $json['message'] != 'OK') {
             return FALSE;
         }
