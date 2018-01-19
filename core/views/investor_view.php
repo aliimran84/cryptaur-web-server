@@ -597,13 +597,13 @@ class Investor_view
                     <div class="col s12 m7 l7">
                         <div class="input-field">
                             <p><?= Translate::td('To Address') ?></p>
-                            <input type="text" name="address" value="" placeholder="0xDE2C06c6e48CD98f8977794c2f7aa5Eeb93b95f9">
+                            <input type="text" name="address" class="address" value="" placeholder="0xDE2C06c6e48CD98f8977794c2f7aa5Eeb93b95f9">
                         </div>
                         <div class="input-field">
                             <p><?= Translate::td('Amount to Send') ?></p>
-                            <input type="number" name="amount" value="" placeholder="<?= Translate::td('Amount') ?>">
-                            <select>
-                                <option value="ETH" selected>ETH</option>
+                            <input type="number" name="amount" class="amount" value="" placeholder="<?= Translate::td('Amount') ?>">
+                            <select name="token" class="select-token">
+                                <option value="ETH" class="default-option" selected>ETH</option>
                                 <option value="CPT">CPT</option>
                             </select>
                             <!-- <a href="#" onclick="return false;" class="disabled"><?= Translate::td('Send Entire Balance') ?></a> -->
@@ -626,6 +626,18 @@ class Investor_view
                         <a href="https://ethplorer.io/address/<?= Application::$authorizedInvestor->eth_address ?>">
                             Tokens (Ethplorer.io)
                         </a>
+                    </div>
+                    <!-- Modal Structure -->
+                    <div id="modal_warning-wallet" class="modal">
+                        <div class="modal-content">
+                            <h4><?= Translate::td('Warning') ?></h4>
+                            <p>
+                                <input type="checkbox" id="warning_1" class="warning-checkbox"/><label for="warning_1"><?= Translate::td('I confirm that the specified destination address matches the wallet that supports the ERC20 standard') ?></label>
+                            </p>
+                            <p>
+                                <input type="checkbox" id="warning_2" class="warning-checkbox"/><label for="warning_2"><?= Translate::td('I confirm that the indicated address is not the depository address of the exchange') ?></label>
+                            </p>
+                        </div>
                     </div>
                 </form>
             </div>

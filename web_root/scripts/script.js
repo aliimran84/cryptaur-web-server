@@ -17,7 +17,8 @@ function conversionHeightLineBottom(tree) {
     }
 }
 $(document).ready(function(){
-    var optionSelected = $('select.select-wallet :selected');
+    var optionSelected = $('select.select-wallet :selected'),
+        optionSelecteTokenValue = $('select.select-token option.default-option').val();
     $('.modal').modal({
         complete: function() {
             if ($('#warning_1').prop('checked') && $('#warning_2').prop('checked') && $('#warning_3').prop('checked')) {
@@ -38,6 +39,15 @@ $(document).ready(function(){
                     $('select.select-wallet').material_select();
                     $('.select-wallet .select-dropdown').val(optionDisabled.text());
                 }
+            }
+        }
+    });
+    $('#modal_warning-wallet').modal({
+        complete: function() {
+            if (!$('.warning-checkbox').prop('checked')) {
+                console.log('---');
+                $('select.select-token').material_select();
+                $('.select-token .select-dropdown').val(optionSelecteTokenValue);
             }
         }
     });
@@ -96,11 +106,7 @@ $(document).ready(function(){
     var warningCheckBox = $('.warning-checkbox');
     var checked;
     warningCheckBox.change(function () {
-        checked = false;
-        warningCheckBox.each(function (i, el) {
-            checked += $(el).prop('checked');
-        });
-        if (checked == warningCheckBox.length)
+        if (checkWarningCheckBox(warningCheckBox))
             $('#modal_external-wallet').modal('close');
     });
 
@@ -122,7 +128,6 @@ $(document).ready(function(){
         }
     });
 
-
     $('#modal_cryptauretherwallet-info').modal({
             dismissible: false,
             inDuration: 300,
@@ -137,7 +142,33 @@ $(document).ready(function(){
         else
             $("#phone_row").hide();
     });
+
+    $("select.select-token").change(function () {
+        var select = $(this),
+            value = select.val(),
+            modal = $('#modal_warning-wallet');
+        if (value == 'CPT') {
+            warningCheckBox.prop('checked', false);
+            modal.modal('open');
+            warningCheckBox.change(function () {
+                if (checkWarningCheckBox(warningCheckBox)) {
+                    modal.modal('close');
+                }
+            });
+        }
+    });
 });
+
+function checkWarningCheckBox (warningCheckBox) {
+    var checked = false;
+    warningCheckBox.each(function (i, el) {
+        checked += $(el).prop('checked');
+    });
+    if (checked == warningCheckBox.length)
+        return true;
+    else
+        return false;
+}
 
 function catalogItemCounter(field){
 

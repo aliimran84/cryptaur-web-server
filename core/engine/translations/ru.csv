@@ -201,3 +201,5 @@ Ether reinvesting is in queue,Реинвестирование эфира нах
 "Please wait for completion of registration your own Cryptaur Ether Wallet","Пожалуйста, дождитесь окончания регистрации вашего собственного Cryptaur Ether Wallet"
 The page will automatically reboot after 30 seconds,Страница автоматически перезагрузится через 30 секунд
 Cryptaur Ether Waller send functions temporary is off,Функции отправки с Cryptaur Ether Waller временно отключены
+"I confirm that the specified destination address matches the wallet that supports the ERC20 standard","Я подтверждаю, что указанный адрес назначения соответствует кошельку, поддерживающему стандарт ERC20"
+"I confirm that the indicated address is not the depository address of the exchange","Я подтверждаю, что указанный адрес не является депозитным адресом биржи"
