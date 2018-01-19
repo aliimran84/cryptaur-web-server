@@ -101,7 +101,14 @@ class Investor_view
                         <?php } ?>
                     >
                         <?= Translate::td('Phone, mobile') ?>:
-                        <input type="text" name="phone" placeholder="phone, mobile" value="<?= Application::$authorizedInvestor->phone ?>" autocomplete="nope">
+                        <input 
+                            type="text" 
+                            name="phone" 
+                            placeholder="phone, mobile" 
+                            value="<?= \core\engine\Utility::clear_except_numbers(Application::$authorizedInvestor->phone) ?>" 
+                            autocomplete="nope"
+                        >
+                        <span><?= Translate::td('e.g. 79997774433') ?></span>
                     </div>
                     <button type="submit" class="waves-effect waves-light btn" style="width: 100%">
                         <?= Translate::td('Set') ?>
