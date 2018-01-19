@@ -314,21 +314,17 @@ class EthQueue
         switch ($this->action_type) {
             case self::TYPE_SENDETH_REINVEST:
                 // todo: add eth to eth_not_used_in_bounty
-                $investor = Investor::getById($this->data['investorId']);
                 $txid = $this->result;
                 $data = [
-                    'investorId' => $investor->id,
                     'tokens' => $this->data['tokens']
                 ];
-                EthQueue::mintTokens(EthQueue::TYPE_MINT_REINVEST, $investor->id, $data, $investor->eth_address, $this->data['tokens'], 'eth', $txid);
+                EthQueue::mintTokens(EthQueue::TYPE_MINT_REINVEST, $this->investor->id, $data, $investor->eth_address, $this->data['tokens'], 'eth', $txid);
                 break;
             case self::TYPE_MINT_REINVEST:
-                $investor = Investor::getById($this->data['investorId']);
-                $investor->addTokens($this->data['tokens']);
+                $this->investor->addTokens($this->data['tokens']);
                 break;
             case self::TYPE_SENDETH_WITHDRAW:
-                $investor = Investor::getById($this->data['investorId']);
-                $investor->eth_withdrawn += $this->data['ethToWithdraw'];
+                $this->investor->eth_withdrawn += $this->data['ethToWithdraw'];
                 DB::set("
                     UPDATE `investors`
                     SET
@@ -336,7 +332,7 @@ class EthQueue
                     WHERE
                         `id` = ?
                     LIMIT 1
-                ;", [$investor->eth_withdrawn, $investor->id]);
+                ;", [$this->investor->eth_withdrawn, $this->investor->id]);
                 break;
             case self::TYPE_MINT_DEPOSIT:
                 // nothing ?
@@ -353,15 +349,13 @@ class EthQueue
         $data = $this->data;
         switch ($this->action_type) {
             case self::TYPE_SENDETH_REINVEST:
-                $investor = Investor::getById($data['investorId']);
-                $investor->addEthBounty($data['ethToReinvest']);
+                $this->investor->addEthBounty($data['ethToReinvest']);
                 break;
             case self::TYPE_MINT_REINVEST:
                 // signalize
                 break;
             case self::TYPE_SENDETH_WITHDRAW:
-                $investor = Investor::getById($data['investorId']);
-                $investor->addEthBounty($data['ethToWithdraw']);
+                $this->investor->addEthBounty($data['ethToWithdraw']);
                 break;
             case self::TYPE_MINT_DEPOSIT:
                 // revert
