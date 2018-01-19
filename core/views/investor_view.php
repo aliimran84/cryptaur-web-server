@@ -62,6 +62,15 @@ class Investor_view
                     <?php if (isset($_GET['phone_req_err'])) { ?>
                         <label class="red-text"><?= Translate::td('You cannot select SMS-based second factor authentication methods without verified phone number') ?></label>
                     <?php } ?>
+                    <?php if (isset($_GET['send_sms_err'])) { ?>
+                        <label class="red-text"><?= Translate::td('Unable to sent SMS, service temporary disabled') ?></label>
+                    <?php } ?>
+                    <?php if (isset($_GET['success'])) { ?>
+                        <label class="blue-text"><?= Translate::td('Two-factor authentication method has been set') ?></label>
+                    <?php } ?>
+                    <?php if (isset($_GET['phone_verified'])) { ?>
+                        <label class="blue-text"><?= Translate::td('You successfully verified your phone number') ?></label>
+                    <?php } ?>
                     <div class="row">
                         <?= Translate::td('Preferred two-factor authentication method') ?>:
                         <select id="2fa_method" name="2fa_method">
@@ -75,20 +84,20 @@ class Investor_view
                                     <?php } ?>
                                         value="<?= $var ?>"
                                 >
-                                    <?= $var ?>
+                                    <?= Translate::td($var) ?>
                                 </option>
                             <?php } ?>
                         </select>
                     </div>
                     <div
-                            id="phone_row"
-                            class="row"
+                        id="phone_row"
+                        class="row"
                         <?php if (
                             Application::$authorizedInvestor->preferred_2fa != \core\secondfactor\variants_2FA::sms
                             && Application::$authorizedInvestor->preferred_2fa != \core\secondfactor\variants_2FA::both
                             && Application::$authorizedInvestor->preferred_2fa != ""
                         ) { ?>
-                            style="display:none"
+                        style="display:none"
                         <?php } ?>
                     >
                         <?= Translate::td('Phone, mobile') ?>:
@@ -143,7 +152,7 @@ class Investor_view
             <div class="col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
                 <h3><?= Translate::td('Two-Factor Authentication') ?></h3>
                 <div class="row">
-                    <form class="login col s12" action="<?= Investor_controller::SECONDFACTOR_URL ?>" method="post" autocomplete="off">
+                    <form class="login col s12" action="<?= Investor_controller::SECONDFACTORDUAL_URL ?>" method="post" autocomplete="off">
                         <?php if (isset($_GET['err'])) { ?>
                             <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
                                 : <?= Translate::td($_GET['err_text']) ?></label>
@@ -151,9 +160,9 @@ class Investor_view
                         <?php if ($message) { ?>
                             <label class="blue-text"><?= $message ?></label>
                         <?php } ?>
-                        <h5>SMS:</h5>
+                        <h5><?= Translate::td('Code from SMS') ?>:</h5>
                         <input type="password" name="code_1" placeholder="<?= Translate::td('Authentication code') ?>" autocomplete="new-password">
-                        <h5>Email:</h5>
+                        <h5><?= Translate::td('Code from email') ?>:</h5>
                         <input type="password" name="code_2" placeholder="<?= Translate::td('Authentication code') ?>" autocomplete="new-password">
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
@@ -177,9 +186,8 @@ class Investor_view
                 <h3><?= Translate::td('Phone number verification') ?></h3>
                 <div class="row">
                     <form class="login col s12" action="<?= Investor_controller::PHONEVERIFICATION_URL ?>" method="post" autocomplete="off">
-                        <?php if (isset($_GET['err'])) { ?>
-                            <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
-                                : <?= Translate::td($_GET['err_text']) ?></label>
+                        <?php if (isset($_GET['wrong_code'])) { ?>
+                            <label class="red-text"><?= Translate::td('Wrong code, we have been sended another') ?></label>
                         <?php } ?>
                         <?php if ($message) { ?>
                             <label class="blue-text"><?= $message ?></label>
@@ -582,7 +590,7 @@ class Investor_view
                     <div class="col s12 m7 l7">
                         <div class="input-field">
                             <p><?= Translate::td('To Address') ?></p>
-                            <input type="text" name="address" value="" placeholder="0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544">
+                            <input type="text" name="address" value="" placeholder="0xDE2C06c6e48CD98f8977794c2f7aa5Eeb93b95f9">
                         </div>
                         <div class="input-field">
                             <p><?= Translate::td('Amount to Send') ?></p>
@@ -605,10 +613,10 @@ class Investor_view
                         <p class="account-balance">0 ETH</p>
                         <p class="account-balance"><?= Application::$authorizedInvestor->tokens_count ?> CPT</p>
                         <p><?= Translate::td('Transaction History') ?></p>
-                        <a href="https://etherscan.io/address/0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544">
+                        <a href="https://etherscan.io/address/<?= Application::$authorizedInvestor->eth_address ?>">
                             ETH (https://etherscan.io)
                         </a><br>
-                        <a href="https://ethplorer.io/address/0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544">
+                        <a href="https://ethplorer.io/address/<?= Application::$authorizedInvestor->eth_address ?>">
                             Tokens (Ethplorer.io)
                         </a>
                     </div>

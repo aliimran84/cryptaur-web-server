@@ -39,11 +39,21 @@ Key id,Key id
 Secret key,Secret key
 Set,Set
 Cryptaur login,Cryptaur login
+NONE,Do not use
+SMS,SMS
+EMAIL,Email
+SMS&EMAIL,SMS and email
+Code from SMS,Code from SMS
+Code from email,Code from email
 "Two-Factor Authentication","Two-Factor Authentication"
 "You must choose two-factor authentication option","You must choose two-factor authentication option"
 "Two-factor authentication settings","Two-factor authentication settings"
 "You cannot select SMS-based second factor authentication methods without verified phone number","You cannot select SMS-based second factor authentication methods without verified phone number"
+"Unable to sent SMS, service temporary disabled","Unable to sent SMS, service temporary disabled"
 "Phone number verification","Phone number verification"
+"You successfully verified your phone number","You successfully verified your phone number"
+"Wrong code, we have been sended another","Wrong code, we have been sended another"
+"Two-factor authentication method has been set","Two-factor authentication method has been set"
 "Input code, that you get with SMS","Input code, that you get with SMS"
 Authentication code,Authentication code
 Cancel,Cancel
