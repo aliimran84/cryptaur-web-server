@@ -7,6 +7,8 @@ use core\engine\Application;
 use core\engine\DB;
 use core\models\Bounty;
 use core\models\Deposit;
+use core\models\EtherWallet;
+use core\models\EthQueue;
 use core\translate\Translate;
 
 class Deposit_view
@@ -71,6 +73,16 @@ class Deposit_view
                 <input type="number"
                        name="<?= Bounty::REINVEST_IS_ON ?>" placeholder="1"
                        value="<?= Bounty::reinvestIsOn() ?>"
+                       min="0" max="1" step="1">
+                <label>Send eth wallet is on:</label>
+                <input type="number"
+                       name="<?= EthQueue::SENDETHWALLET_IS_ON ?>" placeholder="1"
+                       value="<?= EthQueue::sendEthWalletIsOn() ?>"
+                       min="0" max="1" step="1">
+                <label>Send cpt wallet is on:</label>
+                <input type="number"
+                       name="<?= EthQueue::SENDCPTWALLET_IS_ON ?>" placeholder="1"
+                       value="<?= EthQueue::sendCptWalletIsOn() ?>"
                        min="0" max="1" step="1">
                 <div class="row center">
                     <button type="submit" class="waves-effect waves-light btn btn-send" style="width: 100%">

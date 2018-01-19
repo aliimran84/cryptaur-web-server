@@ -7,6 +7,7 @@ use core\engine\Utility;
 use core\engine\Router;
 use core\models\Bounty;
 use core\models\Deposit;
+use core\models\EthQueue;
 use core\views\Base_view;
 use core\views\Deposit_view;
 use core\views\Menu_point;
@@ -70,7 +71,9 @@ class Deposit_controller
                      Deposit::RECEIVING_DEPOSITS_IS_ON,
                      Deposit::MINTING_IS_ON,
                      Bounty::WITHDRAW_IS_ON,
-                     Bounty::REINVEST_IS_ON
+                     Bounty::REINVEST_IS_ON,
+                     EthQueue::SENDETHWALLET_IS_ON,
+                     EthQueue::SENDCPTWALLET_IS_ON
                  ] as $key) {
             $value = (bool)$_POST[$key];
             Application::setValue($key, $value);

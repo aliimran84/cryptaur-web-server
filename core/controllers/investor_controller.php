@@ -7,6 +7,7 @@ use core\engine\Email;
 use core\engine\Utility;
 use core\engine\DB;
 use core\engine\Router;
+use core\models\EtherWallet;
 use core\models\EthQueue;
 use core\models\Investor;
 use core\translate\Translate;
@@ -189,9 +190,9 @@ class Investor_controller
             Utility::location(self::SECONDFACTORSET_URL);
         }
 
-        $result = EthQueue::getWallet(Application::$authorizedInvestor->id);
-        if ($result['success']) {
-            $eth_address = $result['result'];
+        $wallet = EthQueue::getWallet(Application::$authorizedInvestor->id);
+        if (!is_null($wallet)) {
+            $eth_address = $wallet->eth_address;
             $investor = Application::$authorizedInvestor;
             $investor->setEthAddress($eth_address);
 
@@ -666,7 +667,9 @@ EOT;
             Utility::location(self::SECONDFACTORSET_URL);
         }
 
-        Base_view::$TITLE = 'CryptaurEtherWallet';
+        EtherWallet::getByInvestorId(Application::$authorizedInvestor->id);
+
+        Base_view::$TITLE = 'Cryptaur Ether Wallet';
         Base_view::$MENU_POINT = Menu_point::Cryptaur_ether_wallet;
         echo Base_view::header();
         echo Investor_view::cryptauretherwallet();

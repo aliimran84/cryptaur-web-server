@@ -53,6 +53,7 @@ class DB
         $this->_connection->select_db(DB_NAME)
         or connectionError(2);
         $this->_connection->set_charset('utf8');
+        $this->_connection->real_query("SET @@session.time_zone='+00:00';");
         $this->query("SET SESSION group_concat_max_len = 1000000;");
     }
 
