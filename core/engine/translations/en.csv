@@ -45,6 +45,7 @@ EMAIL,Email
 SMS&EMAIL,SMS and email
 Code from SMS,Code from SMS
 Code from email,Code from email
+"e.g. 79997774433","e.g. 79997774433"
 "Two-Factor Authentication","Two-Factor Authentication"
 "You must choose two-factor authentication option","You must choose two-factor authentication option"
 "Two-factor authentication settings","Two-factor authentication settings"

@@ -107,6 +107,13 @@ class Configuration
         } else {
             DEFINE('USE_2FA', $config['2fa']['use_2fa']);
         }
+        
+        if (!isset($config['sms_url'])) {
+            $needConfigure = true;
+            $config['!_sms_url'] = "";
+        } else {
+            DEFINE('SMS_URL', $config['sms_url']);
+        }
 
         if (!isset($config['coins'])) {
             $coins = [

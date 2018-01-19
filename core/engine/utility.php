@@ -278,6 +278,11 @@ class Utility
         list($usec, $sec) = explode(" ", microtime());
         return ((float)$usec + (float)$sec);
     }
+    
+    static public function clear_except_numbers($str)
+    {
+        return preg_replace('~[^0-9]+~','', $str);
+    }
 
     static public function uuid()
     {

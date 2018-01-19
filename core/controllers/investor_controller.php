@@ -245,18 +245,19 @@ class Investor_controller
                 if (@$_POST['phone'] == "") {
                     $urlErrors[] = 'phone_req_err=1';
                 } else {
+                    $phone = Utility::clear_except_numbers($_POST['phone']);
                     if (
                         Application::$authorizedInvestor->phone != ""
-                        && Application::$authorizedInvestor->phone == $_POST['phone']
+                        && Application::$authorizedInvestor->phone == $phone
                     ) {
                         Application::$authorizedInvestor->set2faMethod($_POST['2fa_method']);
                         $urlErrors[] = 'success=1';
                     } else {
                         session_start();
-                        $_SESSION[self::PHONE_VERIFY_NUMBER] = $_POST['phone'];
+                        $_SESSION[self::PHONE_VERIFY_NUMBER] = $phone;
                         $_SESSION[self::CHOSEN_2FA_METHOD] = $_POST['2fa_method'];
                         session_write_close();
-                        $sent = \core\secondfactor\API2FA::send_sms($_POST['phone']);
+                        $sent = \core\secondfactor\API2FA::send_sms($phone);
                         if ($sent == FALSE) {
                             Utility::location(self::SECONDFACTORSET_URL . '?send_sms_err=1');
                         }

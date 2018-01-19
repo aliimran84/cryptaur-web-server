@@ -45,6 +45,7 @@ EMAIL,Эл. почта
 SMS&EMAIL,SMS и эл. почта
 Code from SMS,Код из SMS
 Code from email,Код из эл. почты
+"e.g. 79997774433","например, 79997774433"
 "Two-Factor Authentication","Двухфакторная авторизация"
 "You must choose two-factor authentication option","Выберите способ двухфакторной авторизации"
 "Two-factor authentication settings","Настройки двухфакторной авторизации"
