@@ -608,14 +608,14 @@ class Investor_view
                         <div class="input-field">
                             <p><?= Translate::td('Amount to Send') ?></p>
                             <input type="number" name="amount" class="amount" value="" placeholder="<?= Translate::td('Amount') ?>">
-                            <select name="token" class="select-token">
+                            <select name="token">
                                 <option value="ETH" class="default-option" selected>ETH</option>
                             <input
                                     type="number" name="amount" value=""
                                     placeholder="<?= Translate::td('Amount') ?>"
                                     min="0" max="9999999999" step="0.00000001">
-                            <select name="send_type">
-                                <option value="ETH" selected>ETH</option>
+                            <select name="send_type" class="select-token">
+                                <option value="ETH" class="default-option" selected>ETH</option>
                                 <option value="CPT">CPT</option>
                             </select>
                             <!-- <a href="#" onclick="return false;" class="disabled"><?= Translate::td('Send Entire Balance') ?></a> -->
