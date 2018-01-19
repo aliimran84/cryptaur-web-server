@@ -13,9 +13,12 @@ class EthQueue
     const TYPE_MINT_OLD_INVESTOR_INIT = 3;
     const TYPE_SENDETH_REINVEST = 4;
     const TYPE_SENDETH_WITHDRAW = 5;
+    const TYPE_GETWALLET = 6;
 
     const ETH_TO_WEI = '1000000000000000000';
     const TOKENS_TO_WITHOUT_DECIMALS = '100000000';
+
+    const USERID_SHIFT = 1000;
 
     public $id = 0;
     public $uuid = '';
@@ -87,6 +90,8 @@ class EthQueue
             case self::TYPE_SENDETH_REINVEST:
             case self::TYPE_SENDETH_WITHDRAW:
                 return '/send-eth-bounty';
+            case self::TYPE_GETWALLET:
+                return '/get-wallet';
         }
         return '';
     }
@@ -105,6 +110,8 @@ class EthQueue
             case self::TYPE_SENDETH_REINVEST:
             case self::TYPE_SENDETH_WITHDRAW:
                 return '/send-status';
+            case self::TYPE_GETWALLET:
+                return '/get-wallet';
         }
         return '';
     }
@@ -152,6 +159,32 @@ class EthQueue
             WHERE `id` = ?
         ;", [$this->id]);
     }
+
+    /**
+     * @param int $investorId
+     * @return null|array
+     */
+    static public function getWallet($investorId)
+    {
+        $user = $investorId + self::USERID_SHIFT;
+        $return = Utility::httpPostWithHmac(ETH_QUEUE_URL . self::sendMethodByType(self::TYPE_GETWALLET), [
+            'user' => $user
+        ], ETH_QUEUE_KEY);
+        Utility::log('eth_queue_getwallet/' . Utility::microtime_float(), [
+            '_investorId' => $investorId,
+            'user' => $user,
+            'return' => $return
+        ]);
+
+        $data = @json_decode($return, true);
+
+        if (!isset($data['result'])) {
+            return null;
+        }
+
+        return $data['result'];
+    }
+
 
     /**
      * @param int $actionType
