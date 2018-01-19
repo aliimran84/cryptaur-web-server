@@ -22,7 +22,7 @@ class variants_2FA
 class API2FA
 {
     const SECRET_KEY_SMS = 'secret_key_sms';
-    const SECRET_KEY_EMAIL = 'secret_key_sms';
+    const SECRET_KEY_EMAIL = 'secret_key_email';
     const SECRET_KEY = 'secret_key';
     const SMS_SERVICE_URL = 'https://liketelecom.net/sms014/mc-sms-send.php?';
     const SMS_FROM = 'Cryptaur';
@@ -116,7 +116,7 @@ class API2FA
             return FALSE;
         }
         //an now email
-        return \core\engine\Email::send($email, [], 'Cryptaur: second factor authorization', "<p>Secret code:</p><p>$code_2</p>", true);
+        return \core\engine\Email::send($email, [], 'Cryptaur: secret code', "<p>Secret code:</p><p>$code_2</p>", true);
         
     }
     
@@ -129,7 +129,7 @@ class API2FA
         session_start();
         $_SESSION[self::SECRET_KEY] = $captcha;
         session_write_close();
-        return \core\engine\Email::send($email, [], 'Cryptaur: second factor authorization', "<p>Secret code:</p><p>$captcha</p>", true);
+        return \core\engine\Email::send($email, [], 'Cryptaur: secret code', "<p>Secret code:</p><p>$captcha</p>", true);
     }
     
     /*

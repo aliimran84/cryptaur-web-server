@@ -39,11 +39,21 @@ Key id,Key id
 Secret key,Secret key
 Set,Задать
 Cryptaur login,Cryptaur авторизация
+NONE,Не использовать
+SMS,SMS
+EMAIL,Эл. почта
+SMS&EMAIL,SMS и эл. почта
+Code from SMS,Код из SMS
+Code from email,Код из эл. почты
 "Two-Factor Authentication","Двухфакторная авторизация"
 "You must choose two-factor authentication option","Выберите способ двухфакторной авторизации"
 "Two-factor authentication settings","Настройки двухфакторной авторизации"
+"Unable to sent SMS, service temporary disabled","Невозможно отправить SMS, сервис временно недоступен"
 "You cannot select SMS-based second factor authentication methods without verified phone number","Вы не можете выбрать задействующие SMS методы двухфакторной авторизации без подтверждённого номера телефона"
 "Phone number verification","Подтверждение номера телефона"
+"You successfully verified your phone number","Вы успешно подтвердили телефонный номер"
+"Wrong code, we have been sended another","Неверный код, мы отправили другой"
+"Two-factor authentication method has been set","Метод двухфакторной авторизации установлен"
 "Input code, that you get with SMS","Введите код, полученный по SMS"
 Authentication code,Код авторизации
 Cancel,Отмена

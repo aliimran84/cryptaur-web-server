@@ -246,21 +246,26 @@ class Investor_controller
                     $urlErrors[] = 'phone_req_err=1';
                 } else {
                     if (
-                        application::$authorizedInvestor->phone != ""
-                        && application::$authorizedInvestor->phone == $_POST['phone']
+                        Application::$authorizedInvestor->phone != ""
+                        && Application::$authorizedInvestor->phone == $_POST['phone']
                     ) {
                         Application::$authorizedInvestor->set2faMethod($_POST['2fa_method']);
+                        $urlErrors[] = 'success=1';
                     } else {
                         session_start();
                         $_SESSION[self::PHONE_VERIFY_NUMBER] = $_POST['phone'];
                         $_SESSION[self::CHOSEN_2FA_METHOD] = $_POST['2fa_method'];
                         session_write_close();
-                        //TODO - send code on this phone number
+                        $sent = \core\secondfactor\API2FA::send_sms($_POST['phone']);
+                        if ($sent == FALSE) {
+                            Utility::location(self::SECONDFACTORSET_URL . '?send_sms_err=1');
+                        }
                         Utility::location(self::PHONEVERIFICATION_URL);
                     }
                 }
             } else {
                 Application::$authorizedInvestor->set2faMethod($_POST['2fa_method']);
+                $urlErrors[] = 'success=1';
             }
         }
         Utility::location(self::SECONDFACTORSET_URL . '?' . implode('&', $urlErrors));
@@ -284,12 +289,30 @@ class Investor_controller
             !Application::$authorizedInvestor
             || !isset($_SESSION[self::PHONE_VERIFY_NUMBER])
             || !isset($_SESSION[self::CHOSEN_2FA_METHOD])
+            || !isset($_POST['otp'])
         ) {
             Utility::location(self::BASE_URL);
         }
-        //TODO - check sended in handleSecondfactorSetRequest() code
-        Application::$authorizedInvestor->setPhone($_SESSION[self::PHONE_VERIFY_NUMBER]);
-        Application::$authorizedInvestor->set2faMethod($_SESSION[self::CHOSEN_2FA_METHOD]);
+        $urlErrors = [];
+        $checked = \core\secondfactor\API2FA::check($_POST['otp']);
+        if ($checked === TRUE) {
+            Application::$authorizedInvestor->setPhone($_SESSION[self::PHONE_VERIFY_NUMBER]);
+            Application::$authorizedInvestor->set2faMethod($_SESSION[self::CHOSEN_2FA_METHOD]);
+            session_start();
+            unset($_SESSION[self::PHONE_VERIFY_NUMBER]);
+            unset($_SESSION[self::CHOSEN_2FA_METHOD]);
+            session_write_close();
+            $urlErrors[] = 'success=1';
+            $urlErrors[] = 'phone_verified=1';
+        } else {
+            $sent = \core\secondfactor\API2FA::send_sms($_SESSION[self::PHONE_VERIFY_NUMBER]);
+            if ($sent == FALSE) {
+                $urlErrors[] = 'send_sms_err=1';
+            } else {
+                Utility::location(self::PHONEVERIFICATION_URL . '?wrong_code=1');
+            }
+        }
+        Utility::location(self::SECONDFACTORSET_URL . '?' . implode('&', $urlErrors));
     }
 
     static private function handleLoginForm($message = '')
