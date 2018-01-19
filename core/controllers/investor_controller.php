@@ -185,7 +185,7 @@ class Investor_controller
         if (Application::$authorizedInvestor->eth_address) {
             Utility::location(self::BASE_URL);
         }
-        if (Application::$authorizedInvestor->preferred_2fa == "") {
+        if (USE_2FA == TRUE && Application::$authorizedInvestor->preferred_2fa == "") {
             Utility::location(self::SECONDFACTORSET_URL);
         }
 
