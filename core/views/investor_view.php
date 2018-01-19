@@ -591,7 +591,7 @@ class Investor_view
                                 <option value="ETH" selected>ETH</option>
                                 <option value="CPT">CPT</option>
                             </select>
-                            <a href="#" onclick="return false;" class="disabled"><?= Translate::td('Send Entire Balance') ?></a>
+                            <!-- <a href="#" onclick="return false;" class="disabled"><?= Translate::td('Send Entire Balance') ?></a> -->
                         </div>
                         <div class="input-field">
                             <button disabled class="waves-effect waves-light btn btn-generate-transaction"><?= Translate::td('Send') ?></button>
