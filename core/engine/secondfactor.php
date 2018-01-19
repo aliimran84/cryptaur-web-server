@@ -8,7 +8,7 @@ class variants_2FA
     const email = 'EMAIL';
     const sms = 'SMS';
     const both = 'SMS&EMAIL';
-    
+
     /**
      * @return array
      */
@@ -48,15 +48,15 @@ class API2FA
         }
         return self::$_instance;
     }
-    
+
     /**
      * init
      */
     private function init()
     {
-        
+
     }
-    
+
     /*
      * Checks authcode returns true/false depending on correctness
      */
@@ -74,14 +74,14 @@ class API2FA
         }
         return TRUE;
     }
-    
+
     /*
      * Checks authcode returns true/false depending on correctness
      */
     public static function check_both($code_1, $code_2)
     {
         if (
-            !isset($_SESSION[self::SECRET_KEY_SMS]) 
+            !isset($_SESSION[self::SECRET_KEY_SMS])
             || !isset($_SESSION[self::SECRET_KEY_EMAIL])
         ) {
             return FALSE;
@@ -97,7 +97,7 @@ class API2FA
         }
         return FALSE;
     }
-    
+
     /*
      * Sends email with the one time auth_code
      */
@@ -116,9 +116,9 @@ class API2FA
         }
         //an now email
         return \core\engine\Email::send($email, [], 'Cryptaur: secret code', "<p>Secret code:</p><p>$code_2</p>", true);
-        
+
     }
-    
+
     /*
      * Sends email with the one time auth_code
      */
@@ -130,24 +130,26 @@ class API2FA
         session_write_close();
         return \core\engine\Email::send($email, [], 'Cryptaur: secret code', "<p>Secret code:</p><p>$captcha</p>", true);
     }
-    
+
     /*
      * Sends text message to phone number with the one time auth_code
      */
     public static function send_sms($phone)
     {
+        $phone = preg_replace('/[^0-9]/', '', $phone);
         $captcha = self::generate_code();
         session_start();
         $_SESSION[self::SECRET_KEY] = $captcha;
         session_write_close();
         return self::raw_sms_sender($phone, $captcha);
     }
-    
+
     private static function raw_sms_sender($phone, $message)
     {
-        $url = SMS_URL . 
-            '?sender=' . self::SMS_FROM . 
-            '&recipient=' . $phone . 
+        $phone = preg_replace('/[^0-9]/', '', $phone);
+        $url = SMS_URL .
+            '?sender=' . self::SMS_FROM .
+            '&recipient=' . $phone .
             '&message=' . $message;
         $response = file_get_contents($url);
         $json = json_decode($response, TRUE);
@@ -156,7 +158,6 @@ class API2FA
         }
         return TRUE;
     }
-            
 
     private static function generate_code()
     {
