@@ -14,11 +14,16 @@ class EthQueue
     const TYPE_SENDETH_REINVEST = 4;
     const TYPE_SENDETH_WITHDRAW = 5;
     const TYPE_GETWALLET = 6;
+    const TYPE_SENDETH_WALLET = 7;
+    const TYPE_SENDCPT_WALLET = 8;
 
     const ETH_TO_WEI = '1000000000000000000';
     const TOKENS_TO_WITHOUT_DECIMALS = '100000000';
 
     const USERID_SHIFT = 1000;
+
+    const SENDETHWALLET_IS_ON = 'SENDETHWALLET_IS_ON';
+    const SENDCPTWALLET_IS_ON = 'SENDCPTWALLET_IS_ON';
 
     static private $pendingQueueTypesByInvestor = [];
 
@@ -94,6 +99,10 @@ class EthQueue
                 return '/send-eth-bounty';
             case self::TYPE_GETWALLET:
                 return '/get-wallet';
+            case self::TYPE_SENDETH_WALLET:
+                return '/send-eth';
+            case self::TYPE_SENDCPT_WALLET:
+                return '/send-cpt';
         }
         return '';
     }
@@ -111,6 +120,8 @@ class EthQueue
                 return '/mint-status';
             case self::TYPE_SENDETH_REINVEST:
             case self::TYPE_SENDETH_WITHDRAW:
+            case self::TYPE_SENDETH_WALLET:
+            case self::TYPE_SENDCPT_WALLET:
                 return '/send-status';
             case self::TYPE_GETWALLET:
                 return '/get-wallet';
@@ -164,7 +175,7 @@ class EthQueue
 
     /**
      * @param int $investorId
-     * @return null|array
+     * @return null|EtherWallet
      */
     static public function getWallet($investorId)
     {
@@ -188,9 +199,18 @@ class EthQueue
             return null;
         }
 
-        return $data['result'];
-    }
+        $ethAddress = $data['result']['result'];
+        $eth = (double)$data['result']['balance']['ETH'];
+        $cpt = (double)$data['result']['balance']['CPT'];
+        $wallet = EtherWallet::getFromDbByInvestorId($investorId);
+        if (!is_null($wallet)) {
+            $wallet->update($eth, $cpt);
+        } else {
+            $wallet = EtherWallet::create($investorId, $ethAddress, $eth, $cpt);
+        }
 
+        return $wallet;
+    }
 
     /**
      * @param int $actionType
@@ -302,6 +322,98 @@ class EthQueue
         return [0, $eth_queue->uuid];
     }
 
+    /**
+     * @param int $investorId
+     * @param array $data
+     * @param string $ethAddress
+     * @param double $ethValue
+     * @return array [int, string] if int < 0 -> error, else - uuid
+     */
+    static public function sendEthWallet($investorId, $data, $ethAddress, $ethValue)
+    {
+        $eth_queue = self::new_queue(self::TYPE_SENDETH_WALLET, $investorId, $data);
+
+        if (!EthQueue::sendEthWalletIsOn()) {
+            $eth_queue->declareError('8521: !EthQueue::sendEthWalletIsOn()');
+            return [-8521, ''];
+        }
+
+        if (!$ethAddress) {
+            $eth_queue->declareError('8522: !$ethAddress');
+            return [-8522, ''];
+        }
+
+        $weiValue = Utility::int_string(bcmul(Utility::double_string($ethValue), self::ETH_TO_WEI));
+        $user = $investorId + self::USERID_SHIFT;
+        $sender = $eth_queue->investor->eth_address;
+
+        $return = Utility::httpPostWithHmac(ETH_QUEUE_URL . self::sendMethodByType(self::TYPE_SENDETH_WALLET), [
+            'uuid' => $eth_queue->uuid,
+            'user' => $user,
+            'sender' => ETH_BOUNTY_DISPENSER,
+            'receiver' => $ethAddress,
+            'wei' => $weiValue
+        ], ETH_QUEUE_KEY);
+        Utility::log('eth_queue_sendethbounty/' . Utility::microtime_float(), [
+            '_uuid' => $eth_queue->uuid,
+            '_user' => $user,
+            '_sender' => $sender,
+            '_ethAddress' => $ethAddress,
+            '_investorId' => $eth_queue->investor->id,
+            '_ethValue' => $ethValue,
+            'wei' => $weiValue,
+            'return' => $return
+        ]);
+
+        return [0, $eth_queue->uuid];
+    }
+
+    /**
+     * @param int $investorId
+     * @param array $data
+     * @param string $ethAddress
+     * @param double $cptValue
+     * @return array [int, string] if int < 0 -> error, else - uuid
+     */
+    static public function sendCptWallet($investorId, $data, $ethAddress, $cptValue)
+    {
+        $eth_queue = self::new_queue(self::TYPE_SENDCPT_WALLET, $investorId, $data);
+
+        if (!EthQueue::sendCptWalletIsOn()) {
+            $eth_queue->declareError('8621: !EthQueue::sendCptWalletIsOn()');
+            return [-8621, ''];
+        }
+
+        if (!$ethAddress) {
+            $eth_queue->declareError('8622: !$ethAddress');
+            return [-8622, ''];
+        }
+
+        $cptWithoutDecimals = Utility::int_string(bcmul(Utility::double_string($cptValue), self::TOKENS_TO_WITHOUT_DECIMALS));
+        $user = $investorId + self::USERID_SHIFT;
+        $sender = $eth_queue->investor->eth_address;
+
+        $return = Utility::httpPostWithHmac(ETH_QUEUE_URL . self::sendMethodByType(self::TYPE_SENDCPT_WALLET), [
+            'uuid' => $eth_queue->uuid,
+            'user' => $user,
+            'sender' => ETH_BOUNTY_DISPENSER,
+            'receiver' => $ethAddress,
+            'tokens' => $cptWithoutDecimals
+        ], ETH_QUEUE_KEY);
+        Utility::log('eth_queue_sendethbounty/' . Utility::microtime_float(), [
+            '_uuid' => $eth_queue->uuid,
+            '_user' => $user,
+            '_sender' => $sender,
+            '_ethAddress' => $ethAddress,
+            '_investorId' => $eth_queue->investor->id,
+            '_cptValue' => $cptValue,
+            'tokens' => $cptWithoutDecimals,
+            'return' => $return
+        ]);
+
+        return [0, $eth_queue->uuid];
+    }
+
     private function update($is_pending, $is_success, $result)
     {
         $this->is_pending = $is_pending;
@@ -394,6 +506,12 @@ class EthQueue
             case self::TYPE_MINT_OLD_INVESTOR_INIT:
                 // investor see message on dashboard until this moment
                 break;
+            case self::TYPE_SENDETH_WALLET:
+                // nothing
+                break;
+            case self::TYPE_SENDCPT_WALLET:
+                // nothing
+                break;
         }
     }
 
@@ -426,6 +544,14 @@ class EthQueue
                 DB::set("INSERT INTO `investors_waiting_tokens` SET `investor_id` = ?", [$this->investor->id]);
                 $this->investor->setEthAddress('');
                 break;
+            case self::TYPE_SENDETH_WALLET:
+                $wallet = EtherWallet::getFromDbByInvestorId($this->investor->id);
+                $wallet->update($wallet->eth + $data['eth'], $wallet->cpt);
+                break;
+            case self::TYPE_SENDCPT_WALLET:
+                $wallet = EtherWallet::getFromDbByInvestorId($this->investor->id);
+                $wallet->update($wallet->eth, $wallet->cpt + $data['cpt']);
+                break;
         }
     }
 
@@ -446,5 +572,21 @@ class EthQueue
         }
         self::$pendingQueueTypesByInvestor[$investorId] = $types;
         return $types;
+    }
+
+    /**
+     * @return bool
+     */
+    static public function sendEthWalletIsOn()
+    {
+        return Application::getValue(self::SENDETHWALLET_IS_ON);
+    }
+
+    /**
+     * @return bool
+     */
+    static public function sendCptWalletIsOn()
+    {
+        return Application::getValue(self::SENDCPTWALLET_IS_ON);
     }
 }

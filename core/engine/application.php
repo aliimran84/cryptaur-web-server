@@ -12,6 +12,8 @@ use core\controllers\Investor_controller;
 use core\controllers\PaymentServer_controller;
 use core\models\Administrator;
 use core\models\Deposit;
+use core\models\EtherWallet;
+use core\models\EthQueue;
 use core\models\Investor;
 use core\models\PaymentServer;
 use core\models\Wallet;
@@ -61,6 +63,8 @@ class Application
             Deposit::db_init();
             Administrator::db_init();
             PaymentServer::db_init();
+            EthQueue::db_init();
+            EtherWallet::db_init();
         }
 
         Router::registerDefault(function () {

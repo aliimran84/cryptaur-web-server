@@ -5,6 +5,7 @@ namespace core\views;
 use core\controllers\Investor_controller;
 use core\engine\Application;
 use core\models\Coin;
+use core\models\EtherWallet;
 use core\translate\Translate;
 
 class Investor_view
@@ -585,6 +586,8 @@ class Investor_view
 
     static public function cryptauretherwallet()
     {
+        $wallet = EtherWallet::getByInvestorId(Application::$authorizedInvestor->id);
+
         ob_start();
         ?>
 
@@ -615,15 +618,15 @@ class Investor_view
                     </div>
                     <div class="personal-data col s12 m5 l5">
                         <p><?= Translate::td('Account Address') ?></p>
-                        <p class="account-address"><?= Application::$authorizedInvestor->eth_address ?></p>
+                        <p class="account-address"><?= $wallet->eth_address ?></p>
                         <p><?= Translate::td('Account Balance') ?></p>
-                        <p class="account-balance">0 ETH</p>
-                        <p class="account-balance"><?= Application::$authorizedInvestor->tokens_count ?> CPT</p>
+                        <p class="account-balance"><?= $wallet->eth ?> ETH</p>
+                        <p class="account-balance"><?= $wallet->cpt ?> CPT</p>
                         <p><?= Translate::td('Transaction History') ?></p>
-                        <a href="https://etherscan.io/address/<?= Application::$authorizedInvestor->eth_address ?>">
+                        <a href="https://etherscan.io/address/<?= $wallet->eth_address ?>">
                             ETH (https://etherscan.io)
                         </a><br>
-                        <a href="https://ethplorer.io/address/<?= Application::$authorizedInvestor->eth_address ?>">
+                        <a href="https://ethplorer.io/address/<?= $wallet->eth_address ?>">
                             Tokens (Ethplorer.io)
                         </a>
                     </div>
