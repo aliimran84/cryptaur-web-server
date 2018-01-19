@@ -42,12 +42,7 @@ class Deposit_controller
         }, self::PERMISSIONS_SET_URL, Router::POST_METHOD);
 
         Router::register(function () {
-            if (!Application::$authorizedInvestor) {
-                Utility::location();
-            }
-            if (!Application::$authorizedInvestor->eth_address) {
-                Utility::location(Investor_controller::SET_EMPTY_ETH_ADDRESS);
-            }
+            Investor_controller::isPassAllowed();
             Base_view::$TITLE = 'Transaction';
             Base_view::$MENU_POINT = Menu_point::Transactions;
             echo Base_view::header();

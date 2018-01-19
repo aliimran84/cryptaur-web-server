@@ -10,6 +10,8 @@ use core\engine\Router;
 use core\models\EtherWallet;
 use core\models\EthQueue;
 use core\models\Investor;
+use core\secondfactor\API2FA;
+use core\secondfactor\variants_2FA;
 use core\translate\Translate;
 use core\views\Base_view;
 use core\views\Investor_view;
@@ -163,6 +165,19 @@ class Investor_controller
         }, self::INVITE_FRIENDS_URL, Router::POST_METHOD);
     }
 
+    static public function isPassAllowed()
+    {
+        if (!Application::$authorizedInvestor) {
+            Utility::location(self::LOGIN_URL);
+        }
+        if (!Application::$authorizedInvestor->eth_address) {
+            Utility::location(Investor_controller::SET_EMPTY_ETH_ADDRESS);
+        }
+        if (USE_2FA && !Application::$authorizedInvestor->preferred_2fa) {
+            Utility::location(self::SECONDFACTORSET_URL);
+        }
+    }
+
     static private function detectLoggedInInvestor()
     {
         $authorizedInvestor = Investor::getById(@$_SESSION[self::SESSION_KEY]);
@@ -186,7 +201,7 @@ class Investor_controller
         if (Application::$authorizedInvestor->eth_address) {
             Utility::location(self::BASE_URL);
         }
-        if (USE_2FA == TRUE && Application::$authorizedInvestor->preferred_2fa == "") {
+        if (USE_2FA && !Application::$authorizedInvestor->preferred_2fa) {
             Utility::location(self::SECONDFACTORSET_URL);
         }
 
@@ -235,15 +250,15 @@ class Investor_controller
         if (!Application::$authorizedInvestor) {
             Utility::location(self::BASE_URL);
         }
-        if ($_POST['2fa_method'] == \core\secondfactor\variants_2FA::both) {
+        if ($_POST['2fa_method'] == variants_2FA::both) {
             Utility::location(self::SECONDFACTORSET_URL);
         }
         $urlErrors = [];
-        $list2FA = \core\secondfactor\variants_2FA::varList();
+        $list2FA = variants_2FA::varList();
         if (USE_2FA == TRUE && in_array(@$_POST['2fa_method'], $list2FA)) {
             if (
-                $_POST['2fa_method'] == \core\secondfactor\variants_2FA::sms
-                || $_POST['2fa_method'] == \core\secondfactor\variants_2FA::both
+                $_POST['2fa_method'] == variants_2FA::sms
+                || $_POST['2fa_method'] == variants_2FA::both
 
             ) {
                 if (@$_POST['phone'] == "") {
@@ -261,7 +276,7 @@ class Investor_controller
                         $_SESSION[self::PHONE_VERIFY_NUMBER] = $phone;
                         $_SESSION[self::CHOSEN_2FA_METHOD] = $_POST['2fa_method'];
                         session_write_close();
-                        $sent = \core\secondfactor\API2FA::send_sms($phone);
+                        $sent = API2FA::send_sms($phone);
                         if ($sent == FALSE) {
                             Utility::location(self::SECONDFACTORSET_URL . '?send_sms_err=1');
                         }
@@ -299,7 +314,7 @@ class Investor_controller
             Utility::location(self::BASE_URL);
         }
         $urlErrors = [];
-        $checked = \core\secondfactor\API2FA::check($_POST['otp']);
+        $checked = API2FA::check($_POST['otp']);
         if ($checked === TRUE) {
             Application::$authorizedInvestor->setPhone($_SESSION[self::PHONE_VERIFY_NUMBER]);
             Application::$authorizedInvestor->set2faMethod($_SESSION[self::CHOSEN_2FA_METHOD]);
@@ -310,7 +325,7 @@ class Investor_controller
             $urlErrors[] = 'success=1';
             $urlErrors[] = 'phone_verified=1';
         } else {
-            $sent = \core\secondfactor\API2FA::send_sms($_SESSION[self::PHONE_VERIFY_NUMBER]);
+            $sent = API2FA::send_sms($_SESSION[self::PHONE_VERIFY_NUMBER]);
             if ($sent == FALSE) {
                 $urlErrors[] = 'send_sms_err=1';
             } else {
@@ -342,12 +357,12 @@ class Investor_controller
         $sent = false;
         if ($user->preferred_2fa == "") {
             return NULL;
-        } elseif ($user->preferred_2fa == \core\secondfactor\variants_2FA::email) {
-            $sent = \core\secondfactor\API2FA::send_email($user->email);
-        } elseif ($user->preferred_2fa == \core\secondfactor\variants_2FA::sms) {
-            $sent = \core\secondfactor\API2FA::send_sms($user->phone);
-        } elseif ($user->preferred_2fa == \core\secondfactor\variants_2FA::both) {
-            $sent = \core\secondfactor\API2FA::send_both($user->email, $user->phone);
+        } elseif ($user->preferred_2fa == variants_2FA::email) {
+            $sent = API2FA::send_email($user->email);
+        } elseif ($user->preferred_2fa == variants_2FA::sms) {
+            $sent = API2FA::send_sms($user->phone);
+        } elseif ($user->preferred_2fa == variants_2FA::both) {
+            $sent = API2FA::send_both($user->email, $user->phone);
             $form_type = 1;
         }
         if ($sent === TRUE) {
@@ -418,7 +433,7 @@ class Investor_controller
         unset($_SESSION[self::SESSION_KEY_TMP]);
         session_write_close();
 
-        $checked = \core\secondfactor\API2FA::check($_POST['otp']);
+        $checked = API2FA::check($_POST['otp']);
         if ($checked === TRUE) {
             self::loginWithId($investorId);
             Utility::location(self::BASE_URL);
@@ -454,7 +469,7 @@ class Investor_controller
         unset($_SESSION[self::SESSION_KEY_TMP]);
         session_write_close();
 
-        $checked = \core\secondfactor\API2FA::check_both($_POST['code_1'], $_POST['code_2']);
+        $checked = API2FA::check_both($_POST['code_1'], $_POST['code_2']);
         if ($checked === TRUE) {
             self::loginWithId($investorId);
             Utility::location(self::BASE_URL);
@@ -637,15 +652,7 @@ EOT;
 
     static private function handleSettingsForm()
     {
-        if (!Application::$authorizedInvestor) {
-            Utility::location(self::LOGIN_URL);
-        }
-        if (!Application::$authorizedInvestor->eth_address) {
-            Utility::location(Investor_controller::SET_EMPTY_ETH_ADDRESS);
-        }
-        if (USE_2FA == TRUE && Application::$authorizedInvestor->preferred_2fa == "") {
-            Utility::location(self::SECONDFACTORSET_URL);
-        }
+        Investor_controller::isPassAllowed();
 
         Base_view::$TITLE = 'Settings';
         Base_view::$MENU_POINT = Menu_point::Settings;
@@ -660,15 +667,7 @@ EOT;
 
     static private function handleCryptaurEtherWalletForm()
     {
-        if (!Application::$authorizedInvestor) {
-            Utility::location(self::LOGIN_URL);
-        }
-        if (!Application::$authorizedInvestor->eth_address) {
-            Utility::location(Investor_controller::SET_EMPTY_ETH_ADDRESS);
-        }
-        if (USE_2FA == TRUE && Application::$authorizedInvestor->preferred_2fa == "") {
-            Utility::location(self::SECONDFACTORSET_URL);
-        }
+        Investor_controller::isPassAllowed();
 
         EtherWallet::getByInvestorId(Application::$authorizedInvestor->id);
 
@@ -701,15 +700,7 @@ EOT;
 
     static public function handleInviteFriendsForm($message = '')
     {
-        if (!Application::$authorizedInvestor) {
-            Utility::location(self::BASE_URL);
-        }
-        if (!Application::$authorizedInvestor->eth_address) {
-            Utility::location(Investor_controller::SET_EMPTY_ETH_ADDRESS);
-        }
-        if (USE_2FA == TRUE && Application::$authorizedInvestor->preferred_2fa == "") {
-            Utility::location(self::SECONDFACTORSET_URL);
-        }
+        Investor_controller::isPassAllowed();
 
         Base_view::$TITLE = 'Invite friends';
         Base_view::$MENU_POINT = Menu_point::Dashboard;

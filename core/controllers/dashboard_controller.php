@@ -16,12 +16,7 @@ class Dashboard_controller
     static public function init()
     {
         Router::register(function () {
-            if (!Application::$authorizedInvestor) {
-                Utility::location();
-            }
-            if (!Application::$authorizedInvestor->eth_address) {
-                Utility::location(Investor_controller::SET_EMPTY_ETH_ADDRESS);
-            }
+            Investor_controller::isPassAllowed();
             Base_view::$TITLE = 'Dashboard';
             Base_view::$CONTENT_BLOCK_CLASSES[] = 'dashboard';
             Base_view::$MENU_POINT = Menu_point::Dashboard;

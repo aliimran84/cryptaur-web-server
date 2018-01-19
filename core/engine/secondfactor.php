@@ -26,37 +26,6 @@ class API2FA
     const SECRET_KEY = 'secret_key';
     const SMS_FROM = 'Cryptaur';
 
-    private function __construct()
-    {
-    }
-
-    /**
-     * singleton object
-     * @var GAuthify
-     */
-    static private $_instance;
-
-    /**
-     * @return API2FA
-     */
-    static private function inst()
-    {
-        if (is_null(self::$_instance)) {
-            self::initializeErrorFile();
-            self::$_instance = new self();
-            self::$_instance->init();
-        }
-        return self::$_instance;
-    }
-
-    /**
-     * init
-     */
-    private function init()
-    {
-
-    }
-
     /*
      * Checks authcode returns true/false depending on correctness
      */
