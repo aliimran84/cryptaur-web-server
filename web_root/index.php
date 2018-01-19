@@ -18,6 +18,19 @@ Router::register(function () {
     echo "investors realized bounty {$bountyInfo['investors_realized_bounty']}<br>";
     echo "investors with bounty: {$bountyInfo['investors_with_bounty']}<br>";
     echo "remaining bonus {$bountyInfo['remaining_bonus']}<br>";
+
+    $pending = @DB::get("
+        select count(*) as c from eth_queue where is_pending=1
+    ")[0]['c'];
+    $mintPending = @DB::get("
+        select count(*) as c from eth_queue where is_pending=1 and action_type in (" .
+        \core\models\EthQueue::TYPE_MINT_REINVEST . ',' .
+        \core\models\EthQueue::TYPE_MINT_DEPOSIT . ',' .
+        \core\models\EthQueue::TYPE_MINT_OLD_INVESTOR_INIT
+        . ")
+    ")[0]['c'];
+
+    echo "eth_queue pending: $pending, mintPending: $mintPending";
 }, 'bounty_info');
 
 Router::register(function () {
