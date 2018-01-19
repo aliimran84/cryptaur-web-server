@@ -205,6 +205,16 @@ class EthQueue
         $wallet = EtherWallet::getFromDbByInvestorId($investorId);
         if (!is_null($wallet)) {
             $wallet->update($eth, $cpt);
+            if ($wallet->eth_address != $ethAddress) {
+                $wallet->eth_address = $ethAddress;
+                $wallet->investor->setEthAddress($ethAddress);
+                DB::set("
+                    UPDATE `eth_queue_wallets`
+                    SET
+                        `eth_address` = $ethAddress
+                    WHERE `id` = ?
+                ;", [$wallet->id]);
+            }
         } else {
             $wallet = EtherWallet::create($investorId, $ethAddress, $eth, $cpt);
         }
