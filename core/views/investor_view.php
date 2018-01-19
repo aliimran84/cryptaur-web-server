@@ -592,15 +592,16 @@ class Investor_view
                                 <option value="ETH" selected>ETH</option>
                                 <option value="CPT">CPT</option>
                             </select>
-                            <a href="#"><?= Translate::td('Send Entire Balance') ?></a>
+                            <a href="#" onclick="return false;" class="disabled"><?= Translate::td('Send Entire Balance') ?></a>
                         </div>
                         <div class="input-field">
-                            <button class="waves-effect waves-light btn btn-generate-transaction"><?= Translate::td('Send') ?></button>
+                            <button disabled class="waves-effect waves-light btn btn-generate-transaction"><?= Translate::td('Send') ?></button>
+                            <p class="grey-text"><?= Translate::td('Cryptaur Ether Waller send functions temporary is off') ?></p>
                         </div>
                     </div>
                     <div class="personal-data col s12 m5 l5">
                         <p><?= Translate::td('Account Address') ?></p>
-                        <p class="account-address">0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544</p>
+                        <p class="account-address"><?= Application::$authorizedInvestor->eth_address ?></p>
                         <p><?= Translate::td('Account Balance') ?></p>
                         <p class="account-balance">0 ETH</p>
                         <p class="account-balance"><?= Application::$authorizedInvestor->tokens_count ?> CPT</p>
