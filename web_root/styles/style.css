@@ -315,6 +315,7 @@ footer .row {
 .content section.my-contribution p a{
     text-decoration: underline;
 }
+.content section .select-wrapper span.caret,
 .content section.ether-wallet .select-wrapper span.caret,
 .content section.my-contribution .select-wrapper span.caret {
     right: 15px;
@@ -382,6 +383,10 @@ footer .row {
 .content section.ether-wallet .coinbase-block {
     text-align: center;
 }
+.content .select-wrapper input.select-dropdown {
+    margin-bottom: 0;
+}
+.content .select-wrapper .caret,
 .content .settings-block .select-wrapper.select-wallet .caret,
 .content .registration .select-wrapper.select-wallet .caret {
     z-index: 10;
