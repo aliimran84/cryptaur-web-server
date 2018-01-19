@@ -995,3 +995,14 @@ footer .row {
 .dashboard .my-group .main-panel-block.tree.active {
     display: block;
 }
+.dashboard .modal-content .btn {
+    background: #0074ff;
+    border: 1px solid #95989a;
+    border-radius: 10px;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+.dashboard .modal-content .btn:hover {
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
