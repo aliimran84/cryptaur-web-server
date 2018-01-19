@@ -17,6 +17,8 @@ function conversionHeightLineBottom(tree) {
     }
 }
 $(document).ready(function(){
+    var warningCheckBox = $('.warning-checkbox');
+    var checked;
     var optionSelected = $('select.select-wallet :selected'),
         optionSelecteTokenValue = $('select.select-token option.default-option').val();
     $('.modal').modal({
@@ -44,8 +46,10 @@ $(document).ready(function(){
     });
     $('#modal_warning-wallet').modal({
         complete: function() {
-            if (!$('.warning-checkbox').prop('checked')) {
-                console.log('---');
+            warningCheckBox.each(function (i, el) {
+                checked += $(el).prop('checked');
+            });
+            if (checked != warningCheckBox.length) {
                 $('select.select-token').material_select();
                 $('.select-token .select-dropdown').val(optionSelecteTokenValue);
             }
@@ -103,8 +107,6 @@ $(document).ready(function(){
         });
     });
 
-    var warningCheckBox = $('.warning-checkbox');
-    var checked;
     warningCheckBox.change(function () {
         if (checkWarningCheckBox(warningCheckBox))
             $('#modal_external-wallet').modal('close');
