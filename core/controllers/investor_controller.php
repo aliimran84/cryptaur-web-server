@@ -37,7 +37,7 @@ class Investor_controller
 
     const SESSION_KEY = 'authorized_investor_id';
     const SESSION_KEY_TMP = 'authorized_investor_id_tmp';
-    
+
     const PHONE_VERIFY_NUMBER = 'phone_verify_number';
     const CHOSEN_2FA_METHOD = 'chosen_2fa_method';
 
@@ -68,7 +68,7 @@ class Investor_controller
             echo Base_view::footer();
         }, self::SET_EMPTY_ETH_ADDRESS . '/test', Router::GET_METHOD);
         Router::register(function () {
-            self::handleEmptyEthSetPost();
+//            self::handleEmptyEthSetPost();
         }, self::SET_EMPTY_ETH_ADDRESS, Router::POST_METHOD);
 
         Router::register(function () {
@@ -91,14 +91,14 @@ class Investor_controller
         Router::register(function () {
             self::handleSecondfactorDualRequest();
         }, self::SECONDFACTORDUAL_URL, Router::POST_METHOD);
-        
+
         Router::register(function () {
             self::handleSecondfactorSetForm();
         }, self::SECONDFACTORSET_URL, Router::GET_METHOD);
         Router::register(function () {
             self::handleSecondfactorSetRequest();
         }, self::SECONDFACTORSET_URL, Router::POST_METHOD);
-        
+
         Router::register(function () {
             self::handlePhoneVerificationForm();
         }, self::PHONEVERIFICATION_URL, Router::GET_METHOD);
@@ -192,6 +192,28 @@ class Investor_controller
             Utility::location(self::SECONDFACTORSET_URL);
         }
 
+        $result = EthQueue::getWallet(Application::$authorizedInvestor->id);
+        if ($result['success']) {
+            $eth_address = $result['result'];
+            $investor = Application::$authorizedInvestor;
+            $investor->setEthAddress($eth_address);
+
+            if (count(DB::get("
+                SELECT `id`
+                FROM `investors_waiting_tokens`
+                WHERE `investor_id` = ?
+                LIMIT 1;
+            ", [$investor->id])) > 0) {
+                DB::set("DELETE FROM `investors_waiting_tokens` WHERE `investor_id` = ?", [$investor->id]);
+                if ($investor->tokens_count > 0) {
+                    $data = [
+                        'tokens' => $investor->tokens_count
+                    ];
+                    EthQueue::mintTokens(EthQueue::TYPE_MINT_OLD_INVESTOR_INIT, $investor->id, $data, $investor->eth_address, $investor->tokens_count);
+                }
+            }
+        }
+
         Base_view::$TITLE = 'Set eth address';
         echo Base_view::header();
         echo Investor_view::ethSetupForm();
@@ -264,7 +286,7 @@ class Investor_controller
 
         Utility::location(self::BASE_URL);
     }
-    
+
     static private function handleSecondfactorSetForm($message = '')
     {
         if (!Application::$authorizedInvestor) {
@@ -276,7 +298,7 @@ class Investor_controller
         echo Investor_view::secondfactorSetForm($message);
         echo Base_view::footer();
     }
-    
+
     static private function handleSecondfactorSetRequest()
     {
         if (!Application::$authorizedInvestor) {
@@ -286,14 +308,14 @@ class Investor_controller
         $list2FA = \core\secondfactor\variants_2FA::varList();
         if (USE_2FA == TRUE && in_array(@$_POST['2fa_method'], $list2FA)) {
             if (
-                $_POST['2fa_method'] == \core\secondfactor\variants_2FA::sms 
+                $_POST['2fa_method'] == \core\secondfactor\variants_2FA::sms
                 || $_POST['2fa_method'] == \core\secondfactor\variants_2FA::both
-                
+
             ) {
                 if (@$_POST['phone'] == "") {
                     $urlErrors[] = 'phone_req_err=1';
                 } else {
-                    if(
+                    if (
                         application::$authorizedInvestor->phone != ""
                         && application::$authorizedInvestor->phone == $_POST['phone']
                     ) {
@@ -313,7 +335,7 @@ class Investor_controller
         }
         Utility::location(self::SECONDFACTORSET_URL . '?' . implode('&', $urlErrors));
     }
-    
+
     static private function handlePhoneVerificationForm($message = '')
     {
         if (!Application::$authorizedInvestor) {
@@ -325,7 +347,7 @@ class Investor_controller
         echo Investor_view::phoneVerificationForm($message);
         echo Base_view::footer();
     }
-    
+
     static private function handlePhoneVerificationRequest()
     {
         if (
@@ -351,7 +373,7 @@ class Investor_controller
         echo Investor_view::loginForm($message);
         echo Base_view::footer();
     }
-    
+
     static private function sent2FARequest($investorId)
     {
         if (USE_2FA == FALSE) {
@@ -717,11 +739,11 @@ EOT;
         } else if (@strlen($_POST['password']) > 0) {
             $urlErrors[] = 'password_err=1';
         }
-        if (Utility::validateEthAddress(@$_POST['eth_address'])) {
-            Application::$authorizedInvestor->setEthAddress(@$_POST['eth_address']);
-        } else if (@strlen($_POST['eth_address']) > 0) {
-            $urlErrors[] = 'eth_address_err=1';
-        }
+//        if (Utility::validateEthAddress(@$_POST['eth_address'])) {
+//            Application::$authorizedInvestor->setEthAddress(@$_POST['eth_address']);
+//        } else if (@strlen($_POST['eth_address']) > 0) {
+//            $urlErrors[] = 'eth_address_err=1';
+//        }
         Utility::location(self::SETTINGS_URL . '?' . implode('&', $urlErrors));
     }
 

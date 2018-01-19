@@ -133,7 +133,7 @@ class EthQueue
                 `uuid` = ?,
                 `datetime` = NOW(),
                 `datetime_end` = NOW(),
-                `investor_id` = ?
+                `investor_id` = ?,
                 `action_type` = ?,
                 `is_pending` = 1,
                 `is_success` = 0,
@@ -168,6 +168,10 @@ class EthQueue
      */
     static public function getWallet($investorId)
     {
+        if (!ETH_QUEUE_URL || !ETH_QUEUE_KEY) {
+            return null;
+        }
+
         $user = $investorId + self::USERID_SHIFT;
         $return = Utility::httpPostWithHmac(ETH_QUEUE_URL . self::getMethodByType(self::TYPE_GETWALLET), [
             'user' => $user
@@ -201,13 +205,18 @@ class EthQueue
         $eth_queue = self::new_queue($actionType, $investorId, $data);
 
         if (!Bounty::reinvestIsOn() && !Bounty::withdrawIsOn()) {
-            $eth_queue->handleError();
+            $eth_queue->declareError('8421: !Bounty::reinvestIsOn() && !Bounty::withdrawIsOn()');
             return [-8421, ''];
         }
 
         if (!ETH_BOUNTY_DISPENSER) {
-            $eth_queue->handleError();
+            $eth_queue->declareError('8422: !ETH_BOUNTY_DISPENSER');
             return [-8422, ''];
+        }
+
+        if (!ETH_QUEUE_URL || !ETH_QUEUE_KEY) {
+            $eth_queue->declareError('8423: !ETH_QUEUE_URL || !ETH_QUEUE_KEY');
+            return [-8423, ''];
         }
 
         $weiValue = Utility::int_string(bcmul(Utility::double_string($ethValue), self::ETH_TO_WEI));
@@ -246,12 +255,12 @@ class EthQueue
         $eth_queue = self::new_queue($actionType, $investorId, $data);
 
         if (!Deposit::mintingIsOn()) {
-            $eth_queue->handleError();
+            $eth_queue->declareError('8321: !Deposit::mintingIsOn()');
             return [-8321, ''];
         }
 
         if (!ETH_QUEUE_URL || !ETH_QUEUE_KEY) {
-            $eth_queue->handleError();
+            $eth_queue->declareError('8322: !ETH_QUEUE_URL || !ETH_QUEUE_KEY');
             return [-8322, ''];
         }
 
@@ -353,7 +362,7 @@ class EthQueue
                 $data = [
                     'tokens' => $this->data['tokens']
                 ];
-                EthQueue::mintTokens(EthQueue::TYPE_MINT_REINVEST, $this->investor->id, $data, $investor->eth_address, $this->data['tokens'], 'eth', $txid);
+                EthQueue::mintTokens(EthQueue::TYPE_MINT_REINVEST, $this->investor->id, $data, $this->investor->eth_address, $this->data['tokens'], 'eth', $txid);
                 break;
             case self::TYPE_MINT_REINVEST:
                 $this->investor->addTokens($this->data['tokens']);
@@ -373,9 +382,15 @@ class EthQueue
                 // nothing ?
                 break;
             case self::TYPE_MINT_OLD_INVESTOR_INIT:
-                // signalize;
+                // investor see message on dashboard until this moment
                 break;
         }
+    }
+
+    private function declareError($result)
+    {
+        $this->update(false, false, $result);
+        $this->handleError();
     }
 
     private function handleError()
@@ -398,9 +413,8 @@ class EthQueue
                 // $investor->addTokens($realTokensMinting);
                 break;
             case self::TYPE_MINT_OLD_INVESTOR_INIT:
-                // revert
-                // insert DB::set("DELETE FROM `investors_waiting_tokens` WHERE `investor_id` = ?", [$investor->id]);
-                // and $investor->setEthAddress('');
+                DB::set("INSERT INTO `investors_waiting_tokens` SET `investor_id` = ?", [$this->investor->id]);
+                $this->investor->setEthAddress('');
                 break;
         }
     }

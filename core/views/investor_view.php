@@ -48,7 +48,7 @@ class Investor_view
         <?php
         return ob_get_clean();
     }
-    
+
     static public function secondfactorSetForm($message = '')
     {
         $list2FA = \core\secondfactor\variants_2FA::varList();
@@ -66,24 +66,24 @@ class Investor_view
                         <?= Translate::td('Preferred two-factor authentication method') ?>:
                         <select id="2fa_method" name="2fa_method">
                             <?php foreach ($list2FA AS $var) { ?>
-                            <option
-                                <?php if (
-                                    Application::$authorizedInvestor->preferred_2fa == $var
-                                    || (Application::$authorizedInvestor->preferred_2fa == "" && $var == \core\secondfactor\variants_2FA::sms)
-                                ) { ?>
-                                    selected=""
-                                <?php } ?>
-                                    value="<?= $var ?>"
-                            >
-                                <?= $var ?>
-                            </option>
+                                <option
+                                    <?php if (
+                                        Application::$authorizedInvestor->preferred_2fa == $var
+                                        || (Application::$authorizedInvestor->preferred_2fa == "" && $var == \core\secondfactor\variants_2FA::sms)
+                                    ) { ?>
+                                        selected=""
+                                    <?php } ?>
+                                        value="<?= $var ?>"
+                                >
+                                    <?= $var ?>
+                                </option>
                             <?php } ?>
                         </select>
                     </div>
-                    <div 
-                        id="phone_row" 
-                        class="row"
-                        <?php if(
+                    <div
+                            id="phone_row"
+                            class="row"
+                        <?php if (
                             Application::$authorizedInvestor->preferred_2fa != \core\secondfactor\variants_2FA::sms
                             && Application::$authorizedInvestor->preferred_2fa != \core\secondfactor\variants_2FA::both
                             && Application::$authorizedInvestor->preferred_2fa != ""
@@ -167,7 +167,7 @@ class Investor_view
         <?php
         return ob_get_clean();
     }
-    
+
     static public function phoneVerificationForm($message = '')
     {
         ob_start();
@@ -358,23 +358,17 @@ class Investor_view
         ob_start();
         ?>
         <div class="row">
-            <div class="col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
-                <h3><?= Translate::td('Investor eth setup') ?></h3>
-                <div class="row">
-                    <form class="registration col s12" action="<?= Investor_controller::SET_EMPTY_ETH_ADDRESS ?>" method="post" autocomplete="off">
-                        <?php if (isset($_GET['err'])) { ?>
-                            <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
-                                : <?= Translate::td($_GET['err_text']) ?></label>
-                        <?php } ?>
-                        <input type="text" name="eth_address" placeholder="<?= Translate::td('ETH-ADDRESS') ?>" autocomplete="nope">
-                        <div class="row center">
-                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= Translate::td('Set') ?>
-                            </button>
-                        </div>
-                    </form>
-                </div>
+            <div class="col s12 m8 offset-m2 l6 offset-l3 center">
+                <h5>
+                    <?= Translate::td('Please wait for completion of registration your own Cryptaur Ether Wallet') ?>.
+                </h5>
+                <p><?= Translate::td('The page will automatically reboot after 30 seconds') ?></p>
             </div>
+            <script>
+                setTimeout(function () {
+                    document.location.reload();
+                }, 30000);
+            </script>
         </div>
         <?php
         return ob_get_clean();
@@ -435,7 +429,7 @@ class Investor_view
         <?php
         return ob_get_clean();
     }
-    
+
     static public function settings()
     {
         ob_start();
