@@ -607,9 +607,6 @@ class Investor_view
                         </div>
                         <div class="input-field">
                             <p><?= Translate::td('Amount to Send') ?></p>
-                            <input type="number" name="amount" class="amount" value="" placeholder="<?= Translate::td('Amount') ?>">
-                            <select name="token">
-                                <option value="ETH" class="default-option" selected>ETH</option>
                             <input
                                     type="number" name="amount" value=""
                                     placeholder="<?= Translate::td('Amount') ?>"
