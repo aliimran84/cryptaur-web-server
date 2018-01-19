@@ -350,7 +350,7 @@ class EthQueue
         $return = Utility::httpPostWithHmac(ETH_QUEUE_URL . self::sendMethodByType(self::TYPE_SENDETH_WALLET), [
             'uuid' => $eth_queue->uuid,
             'user' => $user,
-            'sender' => ETH_BOUNTY_DISPENSER,
+            'sender' => $sender,
             'receiver' => $ethAddress,
             'wei' => $weiValue
         ], ETH_QUEUE_KEY);
@@ -396,7 +396,7 @@ class EthQueue
         $return = Utility::httpPostWithHmac(ETH_QUEUE_URL . self::sendMethodByType(self::TYPE_SENDCPT_WALLET), [
             'uuid' => $eth_queue->uuid,
             'user' => $user,
-            'sender' => ETH_BOUNTY_DISPENSER,
+            'sender' => $sender,
             'receiver' => $ethAddress,
             'tokens' => $cptWithoutDecimals
         ], ETH_QUEUE_KEY);

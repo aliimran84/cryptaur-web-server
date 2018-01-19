@@ -3,9 +3,11 @@
 namespace core\views;
 
 use core\controllers\Investor_controller;
+use core\controllers\EtherWallet_controller;
 use core\engine\Application;
 use core\models\Coin;
 use core\models\EtherWallet;
+use core\models\EthQueue;
 use core\translate\Translate;
 
 class Investor_view
@@ -91,23 +93,23 @@ class Investor_view
                         </select>
                     </div>
                     <div
-                        id="phone_row"
-                        class="row"
+                            id="phone_row"
+                            class="row"
                         <?php if (
                             Application::$authorizedInvestor->preferred_2fa != \core\secondfactor\variants_2FA::sms
                             && Application::$authorizedInvestor->preferred_2fa != \core\secondfactor\variants_2FA::both
                             && Application::$authorizedInvestor->preferred_2fa != ""
                         ) { ?>
-                        style="display:none"
+                            style="display:none"
                         <?php } ?>
                     >
                         <?= Translate::td('Phone, mobile') ?>:
-                        <input 
-                            type="text" 
-                            name="phone" 
-                            placeholder="phone, mobile" 
-                            value="<?= \core\engine\Utility::clear_except_numbers(Application::$authorizedInvestor->phone) ?>" 
-                            autocomplete="nope"
+                        <input
+                                type="text"
+                                name="phone"
+                                placeholder="phone, mobile"
+                                value="<?= \core\engine\Utility::clear_except_numbers(Application::$authorizedInvestor->phone) ?>"
+                                autocomplete="nope"
                         >
                         <span><?= Translate::td('e.g. 79997774433') ?></span>
                     </div>
@@ -587,6 +589,7 @@ class Investor_view
     static public function cryptauretherwallet()
     {
         $wallet = EtherWallet::getByInvestorId(Application::$authorizedInvestor->id);
+        $sendIsEnabled = EthQueue::sendCptWalletIsOn() && EthQueue::sendEthWalletIsOn();
 
         ob_start();
         ?>
@@ -596,7 +599,7 @@ class Investor_view
                 <h3><?= Translate::td('Cryptaur Ether Wallet') ?></h3>
             </div>
             <div class="row">
-                <form action="#" method="post">
+                <form action="<?= EtherWallet_controller::SEND_WALLET ?>" method="post">
                     <div class="col s12 m7 l7">
                         <div class="input-field">
                             <p><?= Translate::td('To Address') ?></p>
@@ -604,24 +607,31 @@ class Investor_view
                         </div>
                         <div class="input-field">
                             <p><?= Translate::td('Amount to Send') ?></p>
-                            <input type="number" name="amount" value="" placeholder="<?= Translate::td('Amount') ?>">
-                            <select>
+                            <input
+                                    type="number" name="amount" value=""
+                                    placeholder="<?= Translate::td('Amount') ?>"
+                                    min="0" max="9999999999" step="0.00000001">
+                            >
+                            <select name="send_type">
                                 <option value="ETH" selected>ETH</option>
                                 <option value="CPT">CPT</option>
                             </select>
                             <!-- <a href="#" onclick="return false;" class="disabled"><?= Translate::td('Send Entire Balance') ?></a> -->
                         </div>
                         <div class="input-field">
-                            <button disabled class="waves-effect waves-light btn btn-generate-transaction"><?= Translate::td('Send') ?></button>
-                            <p class="grey-text"><?= Translate::td('Cryptaur Ether Waller send functions temporary is off') ?></p>
+
+                            <button <?= $sendIsEnabled ? '' : 'disabled' ?> class="waves-effect waves-light btn btn-generate-transaction"><?= Translate::td('Send') ?></button>
+                            <?php if (!$sendIsEnabled) { ?>
+                                <p class="grey-text"><?= Translate::td('Cryptaur Ether Waller send functions temporary is off') ?></p>
+                            <?php } ?>
                         </div>
                     </div>
                     <div class="personal-data col s12 m5 l5">
                         <p><?= Translate::td('Account Address') ?></p>
                         <p class="account-address"><?= $wallet->eth_address ?></p>
                         <p><?= Translate::td('Account Balance') ?></p>
-                        <p class="account-balance"><?= $wallet->eth ?> ETH</p>
-                        <p class="account-balance"><?= $wallet->cpt ?> CPT</p>
+                        <p class="account-balance"><?= number_format($wallet->eth, 8, '.' ,'') ?> ETH</p>
+                        <p class="account-balance"><?= number_format($wallet->cpt, 8, '.' ,'') ?> CPT</p>
                         <p><?= Translate::td('Transaction History') ?></p>
                         <a href="https://etherscan.io/address/<?= $wallet->eth_address ?>">
                             ETH (https://etherscan.io)

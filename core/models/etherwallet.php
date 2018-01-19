@@ -20,7 +20,7 @@ class EtherWallet
     public $eth = 0;
     public $cpt = 0;
 
-    const SECS_TO_UPDATE_WALLET = 60 * .5;
+    const SECS_TO_UPDATE_WALLET = 60 * 5;
 
     static public function db_init()
     {
@@ -144,6 +144,10 @@ class EtherWallet
             return false;
         }
 
+        if (!Utility::validateEthAddress($ethAddress)) {
+            return false;
+        }
+
         $this->update($this->eth - $ethValue, $this->cpt);
         $data = [
             'eth' => $ethValue
@@ -164,6 +168,10 @@ class EtherWallet
         }
 
         if ($this->cpt < $cptValue) {
+            return false;
+        }
+
+        if (!Utility::validateEthAddress($ethAddress)) {
             return false;
         }
 

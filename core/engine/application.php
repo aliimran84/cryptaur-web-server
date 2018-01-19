@@ -10,6 +10,7 @@ use core\controllers\Deposit_controller;
 use core\controllers\Administrator_controller;
 use core\controllers\Investor_controller;
 use core\controllers\PaymentServer_controller;
+use core\controllers\EtherWallet_controller;
 use core\models\Administrator;
 use core\models\Deposit;
 use core\models\EtherWallet;
@@ -86,6 +87,7 @@ class Application
         Coin_controller::init();
         Deposit_controller::init();
         Bounty_controller::init();
+        EtherWallet_controller::init();
     }
 
     static private function initTmpDir()
