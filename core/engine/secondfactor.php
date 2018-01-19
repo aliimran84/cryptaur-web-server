@@ -2,6 +2,9 @@
 
 namespace core\secondfactor;
 
+use core\engine\Email;
+use core\engine\Utility;
+
 class variants_2FA
 {
     const none = 'NONE';
@@ -84,7 +87,7 @@ class API2FA
             return FALSE;
         }
         //an now email
-        return \core\engine\Email::send($email, [], 'Cryptaur: secret code', "<p>Secret code:</p><p>$code_2</p>", true);
+        return Email::send($email, [], 'Cryptaur: secret code', "<p>Secret code:</p><p>$code_2</p>", true);
 
     }
 
@@ -97,7 +100,7 @@ class API2FA
         session_start();
         $_SESSION[self::SECRET_KEY] = $captcha;
         session_write_close();
-        return \core\engine\Email::send($email, [], 'Cryptaur: secret code', "<p>Secret code:</p><p>$captcha</p>", true);
+        return Email::send($email, [], 'Cryptaur: secret code', "<p>Secret code:</p><p>$captcha</p>", true);
     }
 
     /*
@@ -105,6 +108,9 @@ class API2FA
      */
     public static function send_sms($phone)
     {
+        Utility::log('send_sms/' . Utility::microtime_float(), [
+            'phone' => $phone
+        ]);
         $phone = preg_replace('/[^0-9]/', '', $phone);
         $captcha = self::generate_code();
         session_start();
