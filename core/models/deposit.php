@@ -237,7 +237,6 @@ class Deposit
                 }
                 $investor = Investor::getById($investorId);
                 $data = [
-                    'investorId' => $investorId,
                     'tokens' => $realTokensMinting
                 ];
                 list($mintCode, $mintStr) = EthQueue::mintTokens(EthQueue::TYPE_MINT_DEPOSIT, $investor->id, $data, $investor->eth_address, $realTokensMinting, $deposit->coin, $deposit->txid);

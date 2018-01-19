@@ -668,7 +668,6 @@ class Investor
         $tokens = (double)($usdToReinvest / Coin::getRate(Coin::reinvestToken()));
 
         $data = [
-            'investorId' => $this->id,
             'ethToReinvest' => $ethToReinvest,
             'tokens' => $tokens
         ];
@@ -688,7 +687,6 @@ class Investor
         }
 
         $data = [
-            'investorId' => $this->id,
             'ethToWithdraw' => $eth
         ];
         EthQueue::sendEthBounty(EthQueue::TYPE_SENDETH_WITHDRAW, $this->id, $data, ETH_BOUNTY_COLD_WALLET, $eth);

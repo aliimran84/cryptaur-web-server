@@ -230,7 +230,6 @@ class Investor_controller
                 $isOk = true;
             } else {
                 $data = [
-                    'investorId' => $investor->id,
                     'tokens' => $investor->tokens_count
                 ];
                 list($mintCode, $mintStr) = EthQueue::mintTokens(EthQueue::TYPE_MINT_OLD_INVESTOR_INIT, $investor->id, $data, $investor->eth_address, $investor->tokens_count);
