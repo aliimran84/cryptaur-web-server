@@ -134,4 +134,14 @@
         font-size: .9rem;
     }
 }
+@media screen and (max-height: 850px){
+    .dashboard .my-group .main-panel-block.tree {
+        max-height: 350px;
+    }
+}
+@media screen and (max-height: 600px){
+    .dashboard .my-group .main-panel-block.tree {
+        max-height: 400px;
+    }
+}
 

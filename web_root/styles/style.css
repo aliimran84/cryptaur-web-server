@@ -748,6 +748,7 @@ footer .row {
     overflow-x: auto;
     padding-bottom: 40px;
     min-height: 350px;
+    max-height: 500px;
 }
 .dashboard .my-group .main-panel-block.tree ul li {
     width: 310px;
