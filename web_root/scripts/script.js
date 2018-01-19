@@ -1,5 +1,4 @@
 function conversionHeightLineBottom(tree) {
-
     var ul = tree.find('ul.second-level');
     var li = ul.children('li.'+ul.attr('class'));
     var positionTopFirstLi = $(li[0]).offset().top;
@@ -10,7 +9,11 @@ function conversionHeightLineBottom(tree) {
         li = $(ulParticipants[i]).children('li.'+$(ulParticipants[i]).attr('class').split(' ')[0]);
         positionTopFirstLi = $(li[0]).offset().top;
         positionTopLastLi = $(li[li.length-1]).offset().top;
-        $(ulParticipants[i]).parent().prev().find('.line-bottom').css('height',positionTopLastLi - positionTopFirstLi + 179);
+        var ua = navigator.userAgent;
+        if (ua.search(/Firefox/) > 0)
+            $(ulParticipants[i]).parent().prev().find('.line-bottom').css('height',positionTopLastLi - positionTopFirstLi + 180);
+        else
+            $(ulParticipants[i]).parent().prev().find('.line-bottom').css('height',positionTopLastLi - positionTopFirstLi + 179);
     }
 }
 $(document).ready(function(){
