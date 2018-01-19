@@ -235,6 +235,9 @@ class Investor_controller
         if (!Application::$authorizedInvestor) {
             Utility::location(self::BASE_URL);
         }
+        if ($_POST['2fa_method'] == \core\secondfactor\variants_2FA::both) {
+            Utility::location(self::SECONDFACTORSET_URL);
+        }
         $urlErrors = [];
         $list2FA = \core\secondfactor\variants_2FA::varList();
         if (USE_2FA == TRUE && in_array(@$_POST['2fa_method'], $list2FA)) {

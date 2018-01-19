@@ -160,7 +160,7 @@ class API2FA
 
     private static function generate_code()
     {
-        $letters = 'ABCDEFGKIJKLMNOPQRSTUVWXYZ0123456789';
+        $letters = '0123456789';
         $caplen = 6;
         $captcha = '';
         for ($i = 0; $i < $caplen; $i++) {

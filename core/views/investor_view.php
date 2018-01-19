@@ -77,7 +77,8 @@ class Investor_view
                     <div class="row">
                         <?= Translate::td('Preferred two-factor authentication method') ?>:
                         <select id="2fa_method" name="2fa_method">
-                            <?php foreach ($list2FA AS $var) { ?>
+                            <?php foreach ($list2FA AS $var) {
+                                if ($var == \core\secondfactor\variants_2FA::both) continue; ?>
                                 <option
                                     <?php if (
                                         Application::$authorizedInvestor->preferred_2fa == $var
@@ -490,6 +491,8 @@ class Investor_view
                         <?= Translate::td('Set') ?>
                     </button>
                 </form>
+                <br>
+                <a href="<?= Investor_controller::SECONDFACTORSET_URL ?>"><?= Translate::td('Two-factor authentication settings') ?></a>
             </div>
         </div>
         <?php
@@ -629,8 +632,8 @@ class Investor_view
                         <p><?= Translate::td('Account Address') ?></p>
                         <p class="account-address"><?= $wallet->eth_address ?></p>
                         <p><?= Translate::td('Account Balance') ?></p>
-                        <p class="account-balance"><?= number_format($wallet->eth, 8, '.' ,'') ?> ETH</p>
-                        <p class="account-balance"><?= number_format($wallet->cpt, 8, '.' ,'') ?> CPT</p>
+                        <p class="account-balance"><?= number_format($wallet->eth, 8, '.', '') ?> ETH</p>
+                        <p class="account-balance"><?= number_format($wallet->cpt, 8, '.', '') ?> CPT</p>
                         <p><?= Translate::td('Transaction History') ?></p>
                         <a href="https://etherscan.io/address/<?= $wallet->eth_address ?>">
                             ETH (https://etherscan.io)
