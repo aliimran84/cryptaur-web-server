@@ -20,6 +20,8 @@ class EthQueue
 
     const USERID_SHIFT = 1000;
 
+    static private $pendingQueueTypesByInvestor = [];
+
     public $id = 0;
     public $uuid = '';
     public $datetime = 0;
@@ -167,7 +169,7 @@ class EthQueue
     static public function getWallet($investorId)
     {
         $user = $investorId + self::USERID_SHIFT;
-        $return = Utility::httpPostWithHmac(ETH_QUEUE_URL . self::sendMethodByType(self::TYPE_GETWALLET), [
+        $return = Utility::httpPostWithHmac(ETH_QUEUE_URL . self::getMethodByType(self::TYPE_GETWALLET), [
             'user' => $user
         ], ETH_QUEUE_KEY);
         Utility::log('eth_queue_getwallet/' . Utility::microtime_float(), [
@@ -401,5 +403,24 @@ class EthQueue
                 // and $investor->setEthAddress('');
                 break;
         }
+    }
+
+    static public function pendingQueueTypesByInvestor($investorId)
+    {
+        if (isset(self::$pendingQueueTypesByInvestor[$investorId])) {
+            return self::$pendingQueueTypesByInvestor[$investorId];
+        }
+        if (!Application::$authorizedInvestor) {
+            return [];
+        }
+        $types = [];
+        foreach (DB::get("
+            SELECT DISTINCT(`action_type`) as `action_type` FROM `eth_queue`
+            WHERE `investor_id` = ? AND `is_pending` = '1'
+        ;", [Application::$authorizedInvestor->id]) as $type_data) {
+            $types[$type_data['action_type']] = true;
+        }
+        self::$pendingQueueTypesByInvestor[$investorId] = $types;
+        return $types;
     }
 }

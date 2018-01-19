@@ -7,6 +7,7 @@ use core\controllers\Investor_controller;
 use core\engine\Application;
 use core\models\Bounty;
 use core\models\Coin;
+use core\models\EthQueue;
 use core\models\Investor;
 use core\models\Wallet;
 use core\translate\Translate;
@@ -116,6 +117,30 @@ class Dashboard_view
                             <div class="amount-wallet">
                                 <?= number_format(Application::$authorizedInvestor->eth_bounty, 8, '.', '') ?> <?= Coin::COMMON_COIN ?>
                             </div>
+                            <?php
+                            $pendingQueueTypes = EthQueue::pendingQueueTypesByInvestor(Application::$authorizedInvestor->id);
+                            if ($pendingQueueTypes[EthQueue::TYPE_MINT_REINVEST]) {
+                                ?>
+                                <div class="amount">
+                                    <p class="blue-text"><?= Translate::td('Tokens minting is in queue') ?></p>
+                                </div>
+                                <?php
+                            }
+                            if ($pendingQueueTypes[EthQueue::TYPE_SENDETH_WITHDRAW]) {
+                                ?>
+                                <div class="amount">
+                                    <p class="blue-text"><?= Translate::td('Ether withdraw is in queue') ?></p>
+                                </div>
+                                <?php
+                            }
+                            if ($pendingQueueTypes[EthQueue::TYPE_SENDETH_REINVEST]) {
+                                ?>
+                                <div class="amount">
+                                    <p class="blue-text"><?= Translate::td('Ether reinvesting is in queue') ?></p>
+                                </div>
+                                <?php
+                            }
+                            ?>
                             <form class="reinvest-form" action="<?= Bounty_controller::INVESTOR_REALIZE_URL ?>" method="post">
                                 <div class="amount input-field">
                                     <?php
@@ -221,6 +246,16 @@ class Dashboard_view
         <div class="amount-wallet">
             <?= Application::$authorizedInvestor->tokens_count ?> <?= Coin::token() ?>
         </div>
+        <?php
+        $pendingQueueTypes = EthQueue::pendingQueueTypesByInvestor(Application::$authorizedInvestor->id);
+        if ($pendingQueueTypes[EthQueue::TYPE_MINT_OLD_INVESTOR_INIT] || $pendingQueueTypes[EthQueue::TYPE_MINT_DEPOSIT]) {
+            ?>
+            <div class="amount">
+                <p><?= Translate::td('Tokens minting is in queue') ?></p>
+            </div>
+            <?php
+        }
+        ?>
         <div class="amount input-field">
             <h5><?= Translate::td('Contributed') ?></h5>
             <ul>
@@ -406,7 +441,9 @@ class Dashboard_view
                     <?= Translate::td('PLEASE BE EXTREMELY CAREFUL AND ALWAYS REMEMBER ABOUT CYBER-SECURITY!') ?>
                 </p>
                 <br>
-                <button onclick="$('#modal_cryptauretherwallet-info').modal('close');" class="waves-effect waves-light btn"><?= Translate::td('YES, I UNDERSTAND AND AGREE') ?>.</button>
+                <button onclick="$('#modal_cryptauretherwallet-info').modal('close');" class="waves-effect waves-light btn">
+                    <?= Translate::td('YES, I UNDERSTAND AND AGREE') ?>.
+                </button>
             </div>
         </div>
 
