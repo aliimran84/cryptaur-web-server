@@ -681,7 +681,7 @@ class Investor
         $data = [
             'ethToWithdraw' => $eth
         ];
-        EthQueue::sendEthBounty(EthQueue::TYPE_SENDETH_WITHDRAW, $this->id, $data, ETH_BOUNTY_COLD_WALLET, $eth);
+        EthQueue::sendEthBounty(EthQueue::TYPE_SENDETH_WITHDRAW, $this->id, $data, $this->eth_address, $eth);
 
         return true;
     }
