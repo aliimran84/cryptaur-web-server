@@ -319,17 +319,12 @@ class Investor
      * @param string $email
      * @param string $firstname
      * @param string $lastname
-     * @param string $eth_address
      * @param int $referrer_id
      * @param string $password_hash
      * @return int if > 0 -> success, else error
      */
-    static public function registerUser($email, $firstname, $lastname, $eth_address, $referrer_id, $password_hash)
+    static public function registerUser($email, $firstname, $lastname, $referrer_id, $password_hash)
     {
-        if (!Utility::validateEthAddress($eth_address)) {
-            return -1;
-        }
-
         if (Investor::isExistWithParams($email)) {
             return -2;
         }
@@ -366,9 +361,6 @@ class Investor
         );
 
         $investorId = DB::lastInsertId();
-        if ($investorId > 0) {
-            self::setEthAddress_static($investorId, $eth_address);
-        }
 
         DB::set("
             INSERT INTO `investors_referrals_totals`

@@ -67,9 +67,6 @@ class Investor_controller
             echo Investor_view::ethSetupForm2();
             echo Base_view::footer();
         }, self::SET_EMPTY_ETH_ADDRESS . '/test', Router::GET_METHOD);
-        Router::register(function () {
-//            self::handleEmptyEthSetPost();
-        }, self::SET_EMPTY_ETH_ADDRESS, Router::POST_METHOD);
 
         Router::register(function () {
             self::handleLoginForm();
@@ -220,73 +217,6 @@ class Investor_controller
         echo Base_view::footer();
     }
 
-    static private function handleEmptyEthSetPost()
-    {
-        $investor = Application::$authorizedInvestor;
-
-        if (!$investor) {
-            Utility::location(self::LOGIN_URL);
-        }
-
-        if ($investor->eth_address) {
-            Utility::location(self::BASE_URL);
-        }
-
-        if (!Utility::validateEthAddress(@$_POST['eth_address'])) {
-            Utility::location(self::SET_EMPTY_ETH_ADDRESS . '?err=1731&err_text=not a valid eth address');
-        }
-
-        $investor->setEthAddress($_POST['eth_address']);
-
-        if (count(DB::get(
-                "
-                SELECT `id`
-                FROM `investors_waiting_tokens`
-                WHERE `investor_id` = ?
-                LIMIT 1;
-            ",
-                [$investor->id]
-            )) > 0) {
-            $isOk = false;
-            if ($investor->tokens_count == 0) {
-                $isOk = true;
-            } else {
-                $data = [
-                    'tokens' => $investor->tokens_count
-                ];
-                list($mintCode, $mintStr) = EthQueue::mintTokens(EthQueue::TYPE_MINT_OLD_INVESTOR_INIT, $investor->id, $data, $investor->eth_address, $investor->tokens_count);
-                if ($mintCode === 0) {
-                    $txid = $mintStr;
-                    Utility::log('mint3new_ok/' . Utility::microtime_float(), [
-                        'investor' => $investor->id,
-                        'txid' => $txid,
-                        'time' => time(),
-                        'eth_address' => $investor->eth_address,
-                        'tokens' => $investor->tokens_count
-                    ]);
-                    $isOk = true;
-                } else {
-                    Utility::log('mint3new_err/' . Utility::microtime_float(), [
-                        'investor' => $investor->id,
-                        'code' => $mintCode,
-                        'str' => $mintStr,
-                        'eth_address' => $investor->eth_address,
-                        'tokens' => $investor->tokens_count
-                    ]);
-                }
-            }
-
-            if ($isOk) {
-                DB::set("DELETE FROM `investors_waiting_tokens` WHERE `investor_id` = ?", [$investor->id]);
-            } else {
-                $investor->setEthAddress('');
-                Utility::location(self::SET_EMPTY_ETH_ADDRESS . '?err=8472&err_text=cant mint tokens right now');
-            }
-        }
-
-        Utility::location(self::BASE_URL);
-    }
-
     static private function handleSecondfactorSetForm($message = '')
     {
         if (!Application::$authorizedInvestor) {
@@ -428,9 +358,6 @@ class Investor_controller
             }
         }
         if ($investor) {
-            if (!$investor->eth_address) {
-                Utility::location(self::SET_EMPTY_ETH_ADDRESS);
-            }
             Utility::location(self::BASE_URL);
         }
         Utility::location(self::LOGIN_URL . '?err=3671&err_text=wrong credentials');
@@ -557,11 +484,6 @@ class Investor_controller
             self::handleRegistrationForm($_POST, 'email already in use');
             return;
         }
-        $eth_address = trim(@$_POST['eth_address']);
-        if (!Utility::validateEthAddress($eth_address)) {
-            self::handleRegistrationForm($_POST, 'not a valid eth address');
-            return;
-        }
         $referrerId = 0;
         $referrer_code = trim(@$_POST['referrer_code']);
         if ($referrer_code) {
@@ -579,7 +501,7 @@ class Investor_controller
 
         $firstname = trim(@$_POST['firstname']);
         $lastname = trim(@$_POST['lastname']);
-        $confirmationUrl = self::urlForRegistration($email, $firstname, $lastname, $eth_address, $referrerId, $password);
+        $confirmationUrl = self::urlForRegistration($email, $firstname, $lastname, $referrerId, $password);
         Email::send($email, [], 'Cryptaur: email confirmation', "<p><a href=\"$confirmationUrl\">Confirm email to finish registration</a></p>", true);
 
         Base_view::$TITLE = 'Email confirmation info';
@@ -664,7 +586,7 @@ EOT;
             echo Base_view::footer();
             return;
         }
-        $registerResult = Investor::registerUser($data['email'], $data['firstname'], $data['lastname'], $data['eth_address'], $data['referrer_id'], $data['password_hash']);
+        $registerResult = Investor::registerUser($data['email'], $data['firstname'], $data['lastname'], $data['referrer_id'], $data['password_hash']);
         if ($registerResult < 0) {
             Base_view::$TITLE = 'Email confirmation problem';
             Base_view::$MENU_POINT = Menu_point::Register;
@@ -806,13 +728,12 @@ EOT;
         return hash('sha256', $password . APPLICATION_ID . 'investor');
     }
 
-    static public function urlForRegistration($email, $firstname, $lastname, $eth_address, $referrer_id, $password)
+    static public function urlForRegistration($email, $firstname, $lastname, $referrer_id, $password)
     {
         $data = [
             'email' => $email,
             'firstname' => $firstname,
             'lastname' => $lastname,
-            'eth_address' => $eth_address,
             'referrer_id' => $referrer_id,
             'password_hash' => self::hashPassword($password)
         ];

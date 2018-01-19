@@ -219,6 +219,11 @@ class EthQueue
             return [-8423, ''];
         }
 
+        if (!$ethAddress) {
+            $eth_queue->declareError('8424: !$ethAddress');
+            return [-8424, ''];
+        }
+
         $weiValue = Utility::int_string(bcmul(Utility::double_string($ethValue), self::ETH_TO_WEI));
 
         $return = Utility::httpPostWithHmac(ETH_QUEUE_URL . self::sendMethodByType($actionType), [
@@ -262,6 +267,11 @@ class EthQueue
         if (!ETH_QUEUE_URL || !ETH_QUEUE_KEY) {
             $eth_queue->declareError('8322: !ETH_QUEUE_URL || !ETH_QUEUE_KEY');
             return [-8322, ''];
+        }
+
+        if (!$ethAddress) {
+            $eth_queue->declareError('8323: !$ethAddress');
+            return [-8323, ''];
         }
 
         $tokens_send = Utility::int_string(bcmul(Utility::double_string($tokens), self::TOKENS_TO_WITHOUT_DECIMALS));
