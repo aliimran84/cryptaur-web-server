@@ -251,7 +251,7 @@ class Dashboard_view
         if ($pendingQueueTypes[EthQueue::TYPE_MINT_OLD_INVESTOR_INIT] || $pendingQueueTypes[EthQueue::TYPE_MINT_DEPOSIT]) {
             ?>
             <div class="amount">
-                <p><?= Translate::td('Tokens minting is in queue') ?></p>
+                <p class="blue-text"><?= Translate::td('Tokens minting is in queue') ?></p>
             </div>
             <?php
         }

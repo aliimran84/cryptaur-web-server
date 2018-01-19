@@ -590,7 +590,7 @@ class Investor_view
                     <div class="col s12 m7 l7">
                         <div class="input-field">
                             <p><?= Translate::td('To Address') ?></p>
-                            <input type="text" name="address" value="" placeholder="0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544">
+                            <input type="text" name="address" value="" placeholder="0xDE2C06c6e48CD98f8977794c2f7aa5Eeb93b95f9">
                         </div>
                         <div class="input-field">
                             <p><?= Translate::td('Amount to Send') ?></p>
@@ -613,10 +613,10 @@ class Investor_view
                         <p class="account-balance">0 ETH</p>
                         <p class="account-balance"><?= Application::$authorizedInvestor->tokens_count ?> CPT</p>
                         <p><?= Translate::td('Transaction History') ?></p>
-                        <a href="https://etherscan.io/address/0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544">
+                        <a href="https://etherscan.io/address/<?= Application::$authorizedInvestor->eth_address ?>">
                             ETH (https://etherscan.io)
                         </a><br>
-                        <a href="https://ethplorer.io/address/0x2fd14b9a081b3d7b55348b32fb3b4f02431ad544">
+                        <a href="https://ethplorer.io/address/<?= Application::$authorizedInvestor->eth_address ?>">
                             Tokens (Ethplorer.io)
                         </a>
                     </div>
