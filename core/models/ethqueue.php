@@ -211,9 +211,9 @@ class EthQueue
                 DB::set("
                     UPDATE `eth_queue_wallets`
                     SET
-                        `eth_address` = $ethAddress
+                        `eth_address` = ?
                     WHERE `id` = ?
-                ;", [$wallet->id]);
+                ;", [$ethAddress, $wallet->id]);
             }
         } else {
             $wallet = EtherWallet::create($investorId, $ethAddress, $eth, $cpt);
