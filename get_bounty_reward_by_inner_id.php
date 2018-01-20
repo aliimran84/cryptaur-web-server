@@ -25,7 +25,7 @@ if ($id < 0) {
 
 $i = Investor::getById($id);
 if (is_null($i)) {
-    echo "Investor not exist\r\n";
+    echo "User not exist\r\n";
     return;
 }
 

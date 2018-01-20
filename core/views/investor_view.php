@@ -398,7 +398,7 @@ class Investor_view
         ?>
         <div class="row">
             <div class="col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
-                <h3><?= Translate::td('Investor eth setup') ?></h3>
+                <h3><?= Translate::td('User eth setup') ?></h3>
                 <div class="row">
                     <form class="registration col s12" action="<?= Investor_controller::SET_EMPTY_ETH_ADDRESS ?>" method="post" autocomplete="off">
                         <?php if (isset($_GET['err'])) { ?>
@@ -455,7 +455,7 @@ class Investor_view
         <div class="row">
             <div class="settings-block col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
                 <form action="<?= Investor_controller::SETTINGS_URL ?>" method="post" autocomplete="off">
-                    <h3><?= Translate::td('Investor settings') ?></h3>
+                    <h3><?= Translate::td('User settings') ?></h3>
                     <?php if (isset($_GET['password_err'])) { ?>
                         <label class="red-text"><?= Translate::td('Password must be more than 6 symbols') ?></label>
                     <?php } ?>
@@ -507,7 +507,7 @@ class Investor_view
         <div class="row">
             <div class="settings-block col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
                 <form action="<?= Investor_controller::SETTINGS_URL ?>" method="post" autocomplete="off">
-                    <h3><?= Translate::td('Investor settings') ?></h3>
+                    <h3><?= Translate::td('User settings') ?></h3>
                     <?php if (isset($_GET['password_err'])) { ?>
                         <label class="red-text"><?= Translate::td('Password must be more than 6 symbols') ?></label>
                     <?php } ?>

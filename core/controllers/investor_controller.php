@@ -634,7 +634,7 @@ EOT;
             Base_view::$TITLE = 'Email confirmation problem';
             Base_view::$MENU_POINT = Menu_point::Register;
             echo Base_view::header();
-            echo Base_view::text("Something went wrong with investor registration ($registerResult)");
+            echo Base_view::text("Something went wrong with user registration ($registerResult)");
             echo Base_view::footer();
             return;
         }

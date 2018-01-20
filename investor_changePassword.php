@@ -9,7 +9,7 @@ Application::init();
 
 $investor = Investor::getByEmail(@$argv[1]);
 if (!$investor) {
-    echo 'Investor not found';
+    echo 'User not found';
 } else {
     $investor->changePassword(@$argv[2]);
     echo 'Password change. New password length: ' . strlen(@$argv[2]);
