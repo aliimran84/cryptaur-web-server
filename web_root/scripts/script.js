@@ -149,7 +149,7 @@ $(document).ready(function(){
         var select = $(this),
             value = select.val(),
             modal = $('#modal_warning-wallet');
-        if (value == 'CPT') {
+        if (false && value == 'CPT') { // todo: do it right
             warningCheckBox.prop('checked', false);
             modal.modal('open');
             warningCheckBox.change(function () {
