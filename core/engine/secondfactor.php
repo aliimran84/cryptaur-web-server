@@ -127,6 +127,10 @@ class API2FA
             '&recipient=' . $phone .
             '&message=' . $message;
         $response = file_get_contents($url);
+        Utility::log('raw_send_sms/' . Utility::microtime_float(), [
+            'phone' => $phone,
+            'response' => $response
+        ]);
         $json = json_decode($response, TRUE);
         if (!$json || !isset($json['message']) || $json['message'] != 'OK') {
             return FALSE;
