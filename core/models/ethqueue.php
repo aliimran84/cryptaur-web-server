@@ -540,7 +540,11 @@ class EthQueue
                 $this->investor->addEthBounty($data['ethToReinvest']);
                 break;
             case self::TYPE_MINT_REINVEST:
-                // signalize
+                Utility::log('eth_queue_mint_error/' . Utility::microtime_float(), [
+                    'uuid' => $this->uuid,
+                    'data' => $this->data,
+                    'investorId' => $this->investor->id
+                ]);
                 break;
             case self::TYPE_SENDETH_WITHDRAW:
                 $this->investor->addEthBounty($data['ethToWithdraw']);
