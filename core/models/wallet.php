@@ -104,7 +104,7 @@ class Wallet
             LIMIT 1
         ;", [$investorId, $coin])[0];
 
-        if (!$wallet && !$withoutRegistration) {
+        if ((!$wallet || !$wallet['address']) && !$withoutRegistration) {
             $regResult = self::requestWalletRegistration($investorId, $coin);
             if (is_bool($regResult)) {
                 return null;
