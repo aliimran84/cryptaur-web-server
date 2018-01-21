@@ -253,6 +253,9 @@ class Investor_controller
         if ($_POST['2fa_method'] == variants_2FA::both) {
             Utility::location(self::SECONDFACTORSET_URL);
         }
+        if ($_POST['2fa_method'] == variants_2FA::sms) {
+            Utility::location(self::SECONDFACTORSET_URL);
+        }
         $urlErrors = [];
         $list2FA = variants_2FA::varList();
         if (USE_2FA == TRUE && in_array(@$_POST['2fa_method'], $list2FA)) {

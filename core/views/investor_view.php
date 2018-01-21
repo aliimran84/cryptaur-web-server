@@ -8,6 +8,7 @@ use core\engine\Application;
 use core\models\Coin;
 use core\models\EtherWallet;
 use core\models\EthQueue;
+use core\secondfactor\variants_2FA;
 use core\translate\Translate;
 
 class Investor_view
@@ -54,7 +55,7 @@ class Investor_view
 
     static public function secondfactorSetForm($message = '')
     {
-        $list2FA = \core\secondfactor\variants_2FA::varList();
+        $list2FA = variants_2FA::varList();
         ob_start();
         ?>
         <div class="row">
@@ -78,11 +79,13 @@ class Investor_view
                         <?= Translate::td('Preferred two-factor authentication method') ?>:
                         <select id="2fa_method" name="2fa_method">
                             <?php foreach ($list2FA AS $var) {
-                                if ($var == \core\secondfactor\variants_2FA::both) continue; ?>
+                                if ($var == variants_2FA::both) continue;
+                                if ($var == variants_2FA::sms) continue;
+                                ?>
                                 <option
                                     <?php if (
                                         Application::$authorizedInvestor->preferred_2fa == $var
-                                        || (Application::$authorizedInvestor->preferred_2fa == "" && $var == \core\secondfactor\variants_2FA::sms)
+                                        || (Application::$authorizedInvestor->preferred_2fa == "" && $var == variants_2FA::sms)
                                     ) { ?>
                                         selected=""
                                     <?php } ?>
@@ -97,8 +100,8 @@ class Investor_view
                             id="phone_row"
                             class="row"
                         <?php if (
-                            Application::$authorizedInvestor->preferred_2fa != \core\secondfactor\variants_2FA::sms
-                            && Application::$authorizedInvestor->preferred_2fa != \core\secondfactor\variants_2FA::both
+                            Application::$authorizedInvestor->preferred_2fa != variants_2FA::sms
+                            && Application::$authorizedInvestor->preferred_2fa != variants_2FA::both
                             && Application::$authorizedInvestor->preferred_2fa != ""
                         ) { ?>
                             style="display:none"
@@ -501,7 +504,7 @@ class Investor_view
 
     static public function settings2()
     {
-        $list2FA = \core\secondfactor\variants_2FA::varList();
+        $list2FA = variants_2FA::varList();
         ob_start();
         ?>
         <div class="row">
