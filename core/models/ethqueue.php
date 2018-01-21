@@ -511,7 +511,7 @@ class EthQueue
                 ;", [$this->investor->eth_withdrawn, $this->investor->id]);
                 break;
             case self::TYPE_MINT_DEPOSIT:
-                // nothing ?
+                $this->investor->addTokens($this->data['tokens']);
                 break;
             case self::TYPE_MINT_OLD_INVESTOR_INIT:
                 // investor see message on dashboard until this moment
@@ -550,9 +550,10 @@ class EthQueue
                 $this->investor->addEthBounty($data['ethToWithdraw']);
                 break;
             case self::TYPE_MINT_DEPOSIT:
-                // revert
-                // $deposit->setUsedInMinting(true);
-                // $investor->addTokens($realTokensMinting);
+                foreach ($this->data['depositsId'] as $depositId) {
+                    $deposit = Deposit::getById($depositId);
+                    $deposit->setUsedInMinting(false);
+                }
                 break;
             case self::TYPE_MINT_OLD_INVESTOR_INIT:
                 DB::set("INSERT INTO `investors_waiting_tokens` SET `investor_id` = ?", [$this->investor->id]);

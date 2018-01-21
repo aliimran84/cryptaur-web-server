@@ -137,6 +137,21 @@ class Deposit
     }
 
     /**
+     * @param int $id
+     * @return Deposit
+     */
+    static public function getById($id)
+    {
+        $db_deposit = DB::get("
+            SELECT *
+            FROM `deposits`
+            WHERE
+                `id` = ?
+        ;", [$id])[0];
+        return self::constructFromDbData($db_deposit);
+    }
+
+    /**
      * @param double $usd
      * @param double $rate
      */
@@ -208,7 +223,7 @@ class Deposit
         $receivingDepositsIsOn = self::receivingDepositsIsOn();
         $tokenRate = Coin::getRate(Coin::token());
         $tokensToMinting = 0;
-        $depositsForMintig = [];
+        $depositsForMinting = [];
         foreach ($db_deposits as $db_deposit) {
             $deposit = self::constructFromDbData($db_deposit);
 
@@ -222,44 +237,30 @@ class Deposit
             }
 
             if ($deposit->registered) {
-                $depositsForMintig[] = $deposit;
+                $depositsForMinting[] = $deposit;
                 $tokensToMinting += $deposit->usd / $tokenRate;
             }
         }
 
         // если суммарно по депозитам инвестора превысили минимальный порог, то генерируем токены
         if ($tokensToMinting >= self::minimalTokensForMinting()) {
-            foreach ($depositsForMintig as $i => $deposit) {
-                $realTokensMinting = 0;
-                // если процесс чеканке был инициирован не одним платежом, а несколькими, то выполняем реальную чеканку только одной операцией
-                if ($i === count($depositsForMintig) - 1) {
-                    $realTokensMinting = $tokensToMinting;
-                }
-                $investor = Investor::getById($investorId);
-                $data = [
-                    'tokens' => $realTokensMinting
-                ];
-                list($mintCode, $mintStr) = EthQueue::mintTokens(EthQueue::TYPE_MINT_DEPOSIT, $investor->id, $data, $investor->eth_address, $realTokensMinting, $deposit->coin, $deposit->txid);
-                if ($mintCode === 0) {
-                    $txid = $mintStr;
-                    Utility::log('mint1new_ok/' . Utility::microtime_float(), [
-                        'investor' => $investorId,
-                        'txid' => $txid,
-                        'time' => time(),
-                        'eth_address' => $investor->eth_address,
-                        'tokens' => $realTokensMinting
-                    ]);
+            $investor = Investor::getById($investorId);
+            if (strlen($investor->eth_address) > 33) {
+                $minting_coin = '';
+                $minting_txid = '';
+                $depositsId = [];
+                foreach ($depositsForMinting as $i => $deposit) {
+                    $minting_coin = $deposit->coin;
+                    $minting_txid = $deposit->txid;
+                    $depositsId[] = $deposit->id;
                     $deposit->setUsedInMinting(true);
-                    $investor->addTokens($realTokensMinting);
-                } else {
-                    Utility::log('mint1new_err/' . Utility::microtime_float(), [
-                        'investor' => $investor->id,
-                        'code' => $mintCode,
-                        'str' => $mintStr,
-                        'eth_address' => $investor->eth_address,
-                        'tokens' => $investor->tokens_count
-                    ]);
                 }
+                // если процесс чеканке был инициирован не одним платежом, а несколькими, то выполняем реальную чеканку только одной операцией
+                $data = [
+                    'tokens' => $tokensToMinting,
+                    'depositsId' => $depositsId
+                ];
+                EthQueue::mintTokens(EthQueue::TYPE_MINT_DEPOSIT, $investor->id, $data, $investor->eth_address, $tokensToMinting, $minting_coin, $minting_txid);
             }
         }
     }
