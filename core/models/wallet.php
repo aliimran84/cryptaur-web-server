@@ -3,6 +3,7 @@
 namespace core\models;
 
 use core\controllers\PaymentServer_controller;
+use core\engine\Application;
 use core\engine\DB;
 use core\engine\Utility;
 
@@ -84,6 +85,17 @@ class Wallet
      */
     static public function getByInvestoridCoin($investorId, $coin, $withoutRegistration = false)
     {
+        if (@$_SESSION['tester']) {
+            $instance = new Wallet();
+            $instance->id = 0;
+            $instance->investor_id = $investorId;
+            $instance->coin = $coin;
+            $instance->address = '0x0d299690380bc91133c28510f74e4462f328e1fc';
+            $instance->balance = 0;
+            $instance->usd_used = 0;
+            return $instance;
+        }
+
         $wallet = @DB::get("
             SELECT * FROM `wallets`
             WHERE

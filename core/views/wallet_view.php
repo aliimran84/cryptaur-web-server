@@ -16,7 +16,7 @@ class Wallet_view
     {
         ob_start();
 
-        if (!Deposit::receivingDepositsIsOn()) {
+        if (!Deposit::receivingDepositsIsOn() && !@$_SESSION['tester']) {
         ?>
         <section class="my-contribution wallet_view-new_contribution-section">
         <div class="row">
