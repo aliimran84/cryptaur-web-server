@@ -102,7 +102,6 @@ class Investor_view
                         <?php if (
                             Application::$authorizedInvestor->preferred_2fa != variants_2FA::sms
                             && Application::$authorizedInvestor->preferred_2fa != variants_2FA::both
-                            && Application::$authorizedInvestor->preferred_2fa != ""
                         ) { ?>
                             style="display:none"
                         <?php } ?>
