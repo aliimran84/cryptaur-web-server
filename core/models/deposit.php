@@ -102,6 +102,24 @@ class Deposit
 
         $receivingDepositsIsOn = self::receivingDepositsIsOn();
 
+        if (DB::get("
+            SELECT COUNT(*) AS `c` FROM `deposits`
+            WHERE
+                `coin` = ? AND
+                `txid` = ? AND
+                `vout` = ?
+            LIMIT 1
+        ", [$coin, $txid, $vout])[0]['c'] > 0) {
+            Utility::log('double_deposit/' . Utility::microtime_float(), [
+                'investorId' => $investorId,
+                'amount' => $amount,
+                'coin' => $coin,
+                'txid' => $txid,
+                'vout' => $vout
+            ]);
+            return false;
+        }
+
         DB::set("
             INSERT INTO `deposits`
             SET
