@@ -201,7 +201,9 @@ class EthQueue
 
         $result = @json_decode(Utility::httpPostWithHmac(ETH_QUEUE_URL . self::getMethodByType(self::TYPE_GETFEE), [],
             ETH_QUEUE_KEY), true);
-        $fee = (double)$result['result'];
+        if (isset($result['result'])) {
+            $fee = (double)$result['result'];
+        }
         Application::setValue(self::FEE_STORAGE_KEY, [
             'fee' => $fee,
             'datetime' => time()
