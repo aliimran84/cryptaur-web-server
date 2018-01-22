@@ -58,7 +58,7 @@ class Wallet_view
                                 var coin = $(input).parent().data('coin');
                                 var section = $(input).parents('.wallet_view-new_contribution-section');
                                 var text = $(input).val();
-                                if (text.length === 0) {
+                                if (text && text.length === 0) {
                                     return false;
                                 }
                                 var val = parseFloat(text);
@@ -79,7 +79,9 @@ class Wallet_view
                                 section.find('.wallet_view-new_contribution-calculated_as_donation').toggle(tokens < minimalTokensForNotToBeDonation);
                             };
                             $(document).on('keyup change', '.wallet_view-new_contribution-input_amount', function (event) {
-                                onAmountChange(event.target);
+                                setTimeout(function() {
+                                  onAmountChange(event.target);
+                                }, 1000);
                             });
                             $(document).on('click', ['.wallet_view-new_contribution-div_amount .btn-up', '.wallet_view-new_contribution-div_amount .btn-down'], function (event) {
                                 onAmountChange($(event.target).closest('.wallet_view-new_contribution-div_amount').find('input')[0]);
