@@ -150,7 +150,7 @@ class Application
     {
         DB::set("
             REPLACE `key_value_storage` SET `key`=?, `value`=?",
-            [$key, $value]
+            [$key, json_encode($value, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)]
         );
     }
 
