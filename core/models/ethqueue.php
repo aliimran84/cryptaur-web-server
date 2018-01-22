@@ -302,22 +302,22 @@ class EthQueue
         $eth_queue = self::new_queue($actionType, $investorId, $data);
 
         if (!Bounty::reinvestIsOn() && !Bounty::withdrawIsOn()) {
-            $eth_queue->declareError('8421: !Bounty::reinvestIsOn() && !Bounty::withdrawIsOn()');
+            $eth_queue->handleError('8421: !Bounty::reinvestIsOn() && !Bounty::withdrawIsOn()');
             return [-8421, ''];
         }
 
         if (!ETH_BOUNTY_DISPENSER) {
-            $eth_queue->declareError('8422: !ETH_BOUNTY_DISPENSER');
+            $eth_queue->handleError('8422: !ETH_BOUNTY_DISPENSER');
             return [-8422, ''];
         }
 
         if (!ETH_QUEUE_URL || !ETH_QUEUE_KEY) {
-            $eth_queue->declareError('8423: !ETH_QUEUE_URL || !ETH_QUEUE_KEY');
+            $eth_queue->handleError('8423: !ETH_QUEUE_URL || !ETH_QUEUE_KEY');
             return [-8423, ''];
         }
 
         if (!$ethAddress) {
-            $eth_queue->declareError('8424: !$ethAddress');
+            $eth_queue->handleError('8424: !$ethAddress');
             return [-8424, ''];
         }
 
@@ -357,17 +357,17 @@ class EthQueue
         $eth_queue = self::new_queue($actionType, $investorId, $data);
 
         if (!Deposit::mintingIsOn()) {
-            $eth_queue->declareError('8321: !Deposit::mintingIsOn()');
+            $eth_queue->handleError('8321: !Deposit::mintingIsOn()');
             return [-8321, ''];
         }
 
         if (!ETH_QUEUE_URL || !ETH_QUEUE_KEY) {
-            $eth_queue->declareError('8322: !ETH_QUEUE_URL || !ETH_QUEUE_KEY');
+            $eth_queue->handleError('8322: !ETH_QUEUE_URL || !ETH_QUEUE_KEY');
             return [-8322, ''];
         }
 
         if (!$ethAddress) {
-            $eth_queue->declareError('8323: !$ethAddress');
+            $eth_queue->handleError('8323: !$ethAddress');
             return [-8323, ''];
         }
 
@@ -412,12 +412,12 @@ class EthQueue
         $eth_queue = self::new_queue(self::TYPE_SENDETH_WALLET, $investorId, $data);
 
         if (!EthQueue::sendEthWalletIsOn()) {
-            $eth_queue->declareError('8521: !EthQueue::sendEthWalletIsOn()');
+            $eth_queue->handleError('8521: !EthQueue::sendEthWalletIsOn()');
             return [-8521, ''];
         }
 
         if (!$ethAddress) {
-            $eth_queue->declareError('8522: !$ethAddress');
+            $eth_queue->handleError('8522: !$ethAddress');
             return [-8522, ''];
         }
 
@@ -458,12 +458,12 @@ class EthQueue
         $eth_queue = self::new_queue(self::TYPE_SENDCPT_WALLET, $investorId, $data);
 
         if (!EthQueue::sendCptWalletIsOn()) {
-            $eth_queue->declareError('8621: !EthQueue::sendCptWalletIsOn()');
+            $eth_queue->handleError('8621: !EthQueue::sendCptWalletIsOn()');
             return [-8621, ''];
         }
 
         if (!$ethAddress) {
-            $eth_queue->declareError('8622: !$ethAddress');
+            $eth_queue->handleError('8622: !$ethAddress');
             return [-8622, ''];
         }
 
@@ -533,18 +533,15 @@ class EthQueue
             ), true);
             if (is_array($return) && array_key_exists('result', $return)) {
                 if (is_null($return['result'])) {
-                    $element->update(false, false, 'not found');
-                    $element->handleError();
+                    $element->handleError('not found');
                 } else {
                     if ($return['result']['pending']) {
                         continue;
                     }
                     if ($return['result']['success']) {
-                        $element->update(false, true, $return['result']['result']);
-                        $element->handleSuccess();
+                        $element->handleSuccess($return['result']['result']);
                     } else {
-                        $element->update(false, false, $return['result']['errorcode'] . ':' . $return['result']['result']);
-                        $element->handleError();
+                        $element->handleError($return['result']['errorcode'] . ':' . $return['result']['result']);
                     }
                 }
             }
@@ -553,8 +550,9 @@ class EthQueue
         Application::setValue($checkingKey, false);
     }
 
-    private function handleSuccess()
+    private function handleSuccess($result)
     {
+        $this->update(false, true, $result);
         $this->updateEndDatetime();
         switch ($this->action_type) {
             case self::TYPE_SENDETH_REINVEST:
@@ -594,14 +592,9 @@ class EthQueue
         }
     }
 
-    private function declareError($result)
+    private function handleError($result)
     {
         $this->update(false, false, $result);
-        $this->handleError();
-    }
-
-    private function handleError()
-    {
         $this->updateEndDatetime();
         $data = $this->data;
         switch ($this->action_type) {
