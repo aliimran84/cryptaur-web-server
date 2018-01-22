@@ -30,7 +30,14 @@ Router::register(function () {
         . ")
     ")[0]['c'];
 
-    echo "eth_queue pending: $pending, mintPending: $mintPending";
+    echo "eth_queue pending: $pending, mintPending: $mintPending<br>";
+
+    $btc = DB::get("SELECT sum( amount ) as `a` FROM `deposits` WHERE coin = 'btc' AND datetime >= '2018-01-22';")[0]['a'];
+    $eth = DB::get("SELECT sum( amount ) as `a` FROM `deposits` WHERE coin = 'eth' AND datetime >= '2018-01-22';")[0]['a'];
+    $usd = DB::get("SELECT sum( usd ) as `a` FROM `deposits` WHERE datetime >= '2018-01-22';")[0]['a'];
+
+    echo "btc: $btc, eth: $eth, usd: $usd<br>";
+
 }, 'bounty_info');
 
 Router::register(function () {
