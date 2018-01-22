@@ -171,11 +171,7 @@ $(document).ready(function(){
         var select = $(this),
             value = select.val(),
             modal = $('#modal_warning-wallet');
-        if (value === 'ETH') {
-            $('#cryptaur_ether_wallet_transaction_fee').css('opacity', 1);
-        } else {
-            $('#cryptaur_ether_wallet_transaction_fee').css('opacity', 0);
-        }
+        cryptaur_ether_wallet_checkEthAmount();
         if (false && value == 'CPT') { // todo: do it right
             warningCheckBox.prop('checked', false);
             modal.modal('open');
