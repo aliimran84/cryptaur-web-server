@@ -121,7 +121,7 @@ class Deposit
             return true;
         }
 
-        if ($receivingDepositsIsOn) {
+        if (!$receivingDepositsIsOn) {
             return true;
         }
 
