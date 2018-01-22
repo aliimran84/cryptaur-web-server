@@ -22,84 +22,21 @@ class Dashboard_view
         ?>
 
         <div class="row">
-            <div class="col s12 m3 left-panel">
-                <h3><?= Translate::td('Token sale') ?></h3>
-                <div class="row">
-                    <div class="stage">
-                        <h2><?= Translate::td('Stage') ?> 1</h2>
-                        <p><?= Translate::td('Nov') ?> 27, 2017</p>
-                        <p><?= Translate::td('Dec') ?> 07, 2017</p>
-                        <!--                        <div class="col s12 offset-m1 m10 offset-l2 l8 offset-xl3 xl6">-->
-                        <!--                            <button class="waves-effect waves-light btn btn-learn-more">Learn more</button>-->
-                        <!--                        </div>-->
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="stage active">
-                        <h2><?= Translate::td('Stage') ?> 2</h2>
-                        <p><?= Translate::td('Jan') ?> 22, 2018</p>
-                        <p><?= Translate::td('Jan') ?> 31, 2018</p>
-                        <!--                        <div class="col s12 offset-m1 m10 offset-l2 l8 offset-xl3 xl6">-->
-                        <!--                            <button class="waves-effect waves-light btn btn-learn-more">Learn more</button>-->
-                        <!--                        </div>-->
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="stage ">
-                        <h2><?= Translate::td('Stage') ?> 3</h2>
-                        <p><?= Translate::td('Feb') ?> 12, 2018</p>
-                        <p><?= Translate::td('Feb') ?> 20, 2018</p>
-                        <!--                        <div class="col s12 offset-m1 m10 offset-l2 l8 offset-xl3 xl6">-->
-                        <!--                            <button class="waves-effect waves-light btn btn-learn-more">Learn more</button>-->
-                        <!--                        </div>-->
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="stage ">
-                        <h2><?= Translate::td('Stage') ?> 4</h2>
-                        <p><?= Translate::td('Mar') ?> 05, 2018</p>
-                        <p><?= Translate::td('Mar') ?> 12, 2018</p>
-                        <!--                        <div class="col s12 offset-m1 m10 offset-l2 l8 offset-xl3 xl6">-->
-                        <!--                            <button class="waves-effect waves-light btn btn-learn-more">Learn more</button>-->
-                        <!--                        </div>-->
-                    </div>
-                </div>
-                <div class="row">
-                    <div style="text-align: center;">
-                        <img src="/images/cpt-coin-260.gif" style="width: 90%; max-width: 235px;" alt="cpt-coin">
-                    </div>
-                </div>
-            </div>
-            <div class="col s12 m9 main-panel">
-                <div class="row tokens-info">
-                    <h3><?= Translate::td('TO SEE YOUR TOKENS IN YOUR OWN WALLET ENTER THE FOLLOWING VALUES') ?></h3>
-                    <div class="col s12 m12 l6 xl4">
-                        <h4><?= Translate::td('Token Contract Address') ?></h4>
-                        <h5><?= ETH_TOKENS_CONTRACT ?></h5>
-                    </div>
-                    <div class="col s12 m6 l3 xl4">
-                        <h4><?= Translate::td('Token Symbol') ?></h4>
-                        <h5><?= Coin::token() ?></h5>
-                    </div>
-                    <div class="col s12 m6 l3 xl4">
-                        <h4><?= Translate::td('Decimal') ?></h4>
-                        <h5>8</h5>
-                    </div>
-                </div>
+            <div class="col s12 main-panel">
                 <div class="row indicators">
-                    <div class="col s12 m3">
+                    <div class="col s12 m6 l3">
                         <h4><?= Translate::td('Total tokens minted') ?></h4>
                         <h3><?= Coin::token() ?> <?= number_format(Investor::totalTokens(), 0, '.', '&nbsp;') ?></h3>
                     </div>
-                    <div class="col s12 m3">
+                    <div class="col s12 m6 l3">
                         <h4><?= Translate::td('Total participants') ?></h4>
                         <h3><?= number_format(Investor::totalInvestors(), 0, '.', '&nbsp;') ?></h3>
                     </div>
-                    <div class="col s12 m3">
+                    <div class="col s12 m6 l3">
                         <h4><?= Translate::td('Total coin contributed', ['coin' => 'BTC']) ?></h4>
                         <h3>BTC <?= number_format(Wallet::totalCoinsUsed('btc'), 0, '.', '&nbsp;') ?></h3>
                     </div>
-                    <div class="col s12 m3">
+                    <div class="col s12 m6 l3">
                         <h4><?= Translate::td('Total coin contributed', ['coin' => 'ETH']) ?></h4>
                         <h3>ETH <?= number_format(Wallet::totalCoinsUsed('eth'), 0, '.', '&nbsp;') ?></h3>
                     </div>
@@ -180,57 +117,11 @@ class Dashboard_view
             </div>
         </div>
         <div class="row">
-            <div class="col s12 m3 left-panel">
-                <?php /*
-                <h3>Current stage</h3>
-                <div class="current-stage">
-                    <h2>Stage 1</h2>
-                    <p>Nov 27, 2017</p>
-                    <p>Dec 07, 2017</p>
-                    <div class="shares">
-                        <p>1st day</p>
-                        <h2>40% Discount</h2>
-                        <p>Invite your friends and earn bounties during the Cryptaur token sale</p>
-                    </div>
-                    <div class="shares">
-                        <p>All other days</p>
-                        <h2>20% Discount</h2>
-                        <p>Invite your friends and earn bounties during the Cryptaur token sale</p>
-                    </div>
-                </div>
-                */ ?>
-            </div>
-            <div class="col s12 m9 main-panel">
+            <div class="col s12 main-panel">
                 <?= Wallet_view::newContribution() ?>
             </div>
         </div>
         <div class="row">
-            <div class="col s12 m3 left-panel">
-                <h3><?= Translate::td('Referral Program') ?></h3>
-                <div class="referral-progam">
-                    <div class="line-left"></div>
-                    <div class="line-bottom"></div>
-                    <?php foreach (Bounty::CURRENT_BOUNTY_PROGRAM as $value) { ?>
-                        <div class="circle"></div>
-                    <?php } ?>
-                    <ul>
-                        <?php
-                        $rewardByLevel = [];
-                        Bounty::rewardForInvestor(Application::$authorizedInvestor, $rewardByLevel);
-                        ?>
-                        <?php foreach (Bounty::CURRENT_BOUNTY_PROGRAM as $i => $value) { ?>
-                            <li>
-                                <h2>
-                                    <?= $i + 1 ?> <?= Translate::td('Level') ?>: <?= $value ?>%<br>
-                                    <?php /*
-                                    <?= Coin::COMMON_COIN ?> <?= number_format(@$rewardByLevel[$i + 1], 2, '.', '') ?>
-                                    */ ?>
-                                </h2>
-                            </li>
-                        <?php } ?>
-                    </ul>
-                </div>
-            </div>
             <?= self::myGroup() ?>
         </div>
 
@@ -323,7 +214,7 @@ class Dashboard_view
         ob_start();
         ?>
 
-        <div class="col s12 m9 main-panel">
+        <div class="col s12 main-panel">
             <section class="my-group">
                 <div class="row">
                     <h3><?= Translate::td('My group') ?></h3>

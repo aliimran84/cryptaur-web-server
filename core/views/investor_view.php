@@ -600,6 +600,21 @@ class Investor_view
         ?>
 
         <section class="ether-wallet">
+            <div class="row tokens-info">
+                <h3><?= Translate::td('TO SEE YOUR TOKENS IN YOUR OWN WALLET ENTER THE FOLLOWING VALUES') ?></h3>
+                <div class="col s12 m12 l6 xl4">
+                    <h4><?= Translate::td('Token Contract Address') ?></h4>
+                    <h5><?= ETH_TOKENS_CONTRACT ?></h5>
+                </div>
+                <div class="col s12 m6 l3 xl4">
+                    <h4><?= Translate::td('Token Symbol') ?></h4>
+                    <h5><?= Coin::token() ?></h5>
+                </div>
+                <div class="col s12 m6 l3 xl4">
+                    <h4><?= Translate::td('Decimal') ?></h4>
+                    <h5>8</h5>
+                </div>
+            </div>
             <div class="row">
                 <h3><?= Translate::td('Cryptaur Ether Wallet') ?></h3>
             </div>

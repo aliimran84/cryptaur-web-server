@@ -589,31 +589,32 @@ footer .row {
 .dashboard .indicators {
     background: #001dff;
     margin: 0;
-    padding: 35px 0;
+    padding: 30px 0;
 }
-.dashboard .tokens-info {
+.ether-wallet .tokens-info {
     background: #3303b5;
     margin: 0;
     padding: 20px 0;
     color: #ffffff;
 }
-.dashboard .tokens-info h3,
-.dashboard .tokens-info h4,
-.dashboard .tokens-info h5 {
+.ether-wallet .tokens-info h3,
+.ether-wallet .tokens-info h4,
+.ether-wallet .tokens-info h5 {
     color: #ffffff;
     text-align: center;
 }
-.dashboard .tokens-info h3 {
-    font-size: 1.2rem;
+.content section.ether-wallet .tokens-info h3 {
+    font-size: 1.3rem;
     margin: 0 0 15px 0;
-    font-weight: 100;
+    line-height: 2.5rem;
+    background: none;
 }
-.dashboard .tokens-info h4 {
+.ether-wallet .tokens-info h4 {
     font-size: 1.1rem;
     font-weight: 400;
     margin: 5px 0;
 }
-.dashboard .tokens-info h5 {
+.ether-wallet .tokens-info h5 {
     font-size: 1.1rem;
     font-weight: 100;
     margin: 5px 0;
@@ -627,15 +628,13 @@ footer .row {
     margin: 0;
 }
 .dashboard .indicators h4 {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     text-align: center;
     font-weight: 300;
     margin-bottom: 10px;
-    text-transform: uppercase;
 }
 .dashboard .indicators h3 {
-    font-size: 2rem;
-    font-weight: 500;
+    font-size: 1.8rem;
 }
 .dashboard.content {
     background: #ffffff;

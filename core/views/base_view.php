@@ -169,10 +169,12 @@ class Base_view
                 var currentUserId = "<?= Application::$authorizedInvestor->id ?>";
                 var currentUserName = "<?= Application::$authorizedInvestor->firstname ?> <?= Application::$authorizedInvestor->lastname ?>";
                 var currentUserEmail = "<?= Application::$authorizedInvestor->email ?>";
+                var currentUserEthAddress = "<?= Application::$authorizedInvestor->eth_address ?>";
                 intercomSettings = {
                     app_id: appId,
                     user_id: currentUserId,
                     name: currentUserName,
+                    eth_address: currentUserEthAddress,
                     user_hash: "<?= hash_hmac(
                         'sha256',
                         Application::$authorizedInvestor->id,
