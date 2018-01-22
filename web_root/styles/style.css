@@ -627,15 +627,13 @@ footer .row {
     margin: 0;
 }
 .dashboard .indicators h4 {
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     text-align: center;
     font-weight: 300;
     margin-bottom: 10px;
-    text-transform: uppercase;
 }
 .dashboard .indicators h3 {
-    font-size: 2rem;
-    font-weight: 500;
+    font-size: 1.8rem;
 }
 .dashboard.content {
     background: #ffffff;

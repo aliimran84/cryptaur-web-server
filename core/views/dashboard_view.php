@@ -39,19 +39,19 @@ class Dashboard_view
                     </div>
                 </div>
                 <div class="row indicators">
-                    <div class="col s12 m3">
+                    <div class="col s12 m6 l3">
                         <h4><?= Translate::td('Total tokens minted') ?></h4>
                         <h3><?= Coin::token() ?> <?= number_format(Investor::totalTokens(), 0, '.', '&nbsp;') ?></h3>
                     </div>
-                    <div class="col s12 m3">
+                    <div class="col s12 m6 l3">
                         <h4><?= Translate::td('Total participants') ?></h4>
                         <h3><?= number_format(Investor::totalInvestors(), 0, '.', '&nbsp;') ?></h3>
                     </div>
-                    <div class="col s12 m3">
+                    <div class="col s12 m6 l3">
                         <h4><?= Translate::td('Total coin contributed', ['coin' => 'BTC']) ?></h4>
                         <h3>BTC <?= number_format(Wallet::totalCoinsUsed('btc'), 0, '.', '&nbsp;') ?></h3>
                     </div>
-                    <div class="col s12 m3">
+                    <div class="col s12 m6 l3">
                         <h4><?= Translate::td('Total coin contributed', ['coin' => 'ETH']) ?></h4>
                         <h3>ETH <?= number_format(Wallet::totalCoinsUsed('eth'), 0, '.', '&nbsp;') ?></h3>
                     </div>
