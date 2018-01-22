@@ -16,6 +16,10 @@ class EthQueue
     const TYPE_GETWALLET = 6;
     const TYPE_SENDETH_WALLET = 7;
     const TYPE_SENDCPT_WALLET = 8;
+    const TYPE_GETFEE = 9;
+
+    const FEE_STORAGE_KEY = 'ETHQUEUE_FEE';
+    const FEE_SECS_TO_UPDATE = 300;
 
     const ETH_TO_WEI = '1000000000000000000';
     const TOKENS_TO_WITHOUT_DECIMALS = '100000000';
@@ -103,6 +107,8 @@ class EthQueue
                 return '/send-eth';
             case self::TYPE_SENDCPT_WALLET:
                 return '/send-cpt';
+            case self::TYPE_GETFEE:
+                return '/fee';
         }
         return '';
     }
@@ -125,6 +131,8 @@ class EthQueue
                 return '/send-status';
             case self::TYPE_GETWALLET:
                 return '/get-wallet';
+            case self::TYPE_GETFEE:
+                return '/fee';
         }
         return '';
     }
@@ -171,6 +179,37 @@ class EthQueue
                 `datetime_end` = NOW()
             WHERE `id` = ?
         ;", [$this->id]);
+    }
+
+    /**
+     * @return double
+     */
+    static public function getFee()
+    {
+        $fee = 0;
+        $fee_data = Application::getValue(self::FEE_STORAGE_KEY);
+        if ($fee_data) {
+            $fee = $fee_data['fee'];
+            if (time() - $fee_data['datetime'] < self::FEE_SECS_TO_UPDATE) {
+                return $fee;
+            }
+        }
+
+        if (!ETH_QUEUE_URL || !ETH_QUEUE_KEY) {
+            return $fee;
+        }
+
+        $result = @json_decode(Utility::httpPostWithHmac(ETH_QUEUE_URL . self::getMethodByType(self::TYPE_GETFEE), [],
+            ETH_QUEUE_KEY), true);
+        if (!isset($result['result'])) {
+            return $fee;
+        }
+        $fee = (double)$result['result'];
+        Application::setValue(self::FEE_STORAGE_KEY, [
+            'fee' => $fee,
+            'datetime' => time()
+        ]);
+        return $fee;
     }
 
     /**
