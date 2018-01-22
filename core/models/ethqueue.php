@@ -238,11 +238,40 @@ class EthQueue
         }
 
         $ethAddress = $data['result']['result'];
-        $eth = (double)$data['result']['balance']['ETH'];
-        $cpt = (double)$data['result']['balance']['CPT'];
+        $eth = Utility::floor_prec($data['result']['balance']['ETH'], 8);
+        $cpt = Utility::floor_prec($data['result']['balance']['CPT'], 8);
         $wallet = EtherWallet::getFromDbByInvestorId($investorId);
         if (!is_null($wallet)) {
-            $wallet->update($eth, $cpt);
+            $minus_eth = 0;
+            $minus_cpt = 0;
+            $pendingEthQueue = DB::get("
+                SELECT *
+                FROM `eth_queue`
+                WHERE
+                    `investor_id` = ? AND
+                    `is_pending` = 1
+            ;", [$wallet->investor->id]);
+            foreach ($pendingEthQueue as $element_data) {
+                $element = self::constructFromDbData($element_data);
+                switch ($element->action_type) {
+                    case self::TYPE_SENDETH_WALLET:
+                        $minus_eth += $element->data['eth'];
+                        break;
+                    case self::TYPE_SENDCPT_WALLET:
+                        $minus_cpt += $element->data['cpt'];
+                        break;
+                }
+            }
+
+            $resultEth = $eth - $minus_eth;
+            if ($resultEth < 0) {
+                $resultEth = 0;
+            }
+            $resultCpt = $cpt - $minus_cpt;
+            if ($resultCpt < 0) {
+                $resultCpt = 0;
+            }
+            $wallet->update($resultEth, $resultCpt);
             if ($wallet->eth_address != $ethAddress) {
                 $wallet->eth_address = $ethAddress;
                 $wallet->investor->setEthAddress($ethAddress);
