@@ -620,6 +620,32 @@ class Investor_view
                 <h3><?= Translate::td('Cryptaur Ether Wallet') ?></h3>
             </div>
             <div class="row">
+                <?php
+                foreach (EthQueue::getInvestorPendingDeposits(Application::$authorizedInvestor->id, [
+                    EthQueue::TYPE_SENDETH_WALLET,
+                    EthQueue::TYPE_SENDCPT_WALLET
+                ]) as $element) {
+                    ?>
+                    <h5>
+                        <?= Translate::td('Pending transaction') ?>
+                        <?php
+                        switch ($element->action_type) {
+                            case EthQueue::TYPE_SENDETH_WALLET:
+                                echo $element->data['eth'] . '&nbsp;ETH';
+                                break;
+                            case EthQueue::TYPE_SENDCPT_WALLET:
+                                echo $element->data['cpt'] . '&nbsp;CPT';
+                                break;
+                        }
+                        ?>
+                        <?= date('Y-m-d H:i:s', $element->datetime) ?>&nbsp;UTC
+                        <span style="font-size: 0.5em;">id: <?= $element->uuid ?></span>
+                    </h5><br>
+                    <?php
+                }
+                ?>
+            </div>
+            <div class="row">
                 <form action="<?= EtherWallet_controller::SEND_WALLET ?>" method="post">
                     <div class="col s12 m7 l7">
                         <div class="input-field">

@@ -88,6 +88,27 @@ class EthQueue
     }
 
     /**
+     * @param int $investorId
+     * @param string[] $types
+     * @return EthQueue[]
+     */
+    static public function getInvestorPendingDeposits($investorId, $types = [])
+    {
+        $ethQueue_elements_data = DB::get("
+            SELECT * FROM `eth_queue`
+            WHERE
+                `investor_id` = ? AND
+                `is_pending` = 1 AND
+                `action_type` IN (?)
+        ;", [Application::$authorizedInvestor->id, implode(',', $types)]);
+        $ethQueue_elements = [];
+        foreach ($ethQueue_elements_data as $element_data) {
+            $ethQueue_elements[] = self::constructFromDbData($element_data);
+        }
+        return $ethQueue_elements;
+    }
+
+    /**
      * @param int $type
      * @return string
      */
