@@ -46,6 +46,7 @@ $(document).ready(function(){
     });
     $('#modal_warning-wallet').modal({
         complete: function() {
+            checked = false;
             warningCheckBox.each(function (i, el) {
                 checked += $(el).prop('checked');
             });
@@ -172,7 +173,7 @@ $(document).ready(function(){
             value = select.val(),
             modal = $('#modal_warning-wallet');
         cryptaur_ether_wallet_checkEthAmount();
-        if (false && value == 'CPT') { // todo: do it right
+        if (value == 'CPT') {
             warningCheckBox.prop('checked', false);
             modal.modal('open');
             warningCheckBox.change(function () {
