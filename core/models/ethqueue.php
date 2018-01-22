@@ -522,6 +522,7 @@ class EthQueue
             FROM `eth_queue`
             WHERE
                 `is_pending` = 1
+            LIMIT 300
         ;");
         foreach ($queue as $element_data) {
             $element = self::constructFromDbData($element_data);
