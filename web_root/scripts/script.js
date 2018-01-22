@@ -136,7 +136,7 @@ $(document).ready(function(){
             outDuration: 200
         }
     ).modal('open');
-    
+
     $("#2fa_method").change(function(){
         var value = $(this).val();
         if(value == 'SMS' || value == 'SMS&EMAIL')
@@ -145,10 +145,37 @@ $(document).ready(function(){
             $("#phone_row").hide();
     });
 
+    function cryptaur_ether_wallet_checkEthAmount() {
+        var send = $('#cryptaur_ether_wallet_send');
+        if ($("select.select-token").val() === 'ETH') {
+            $('#cryptaur_ether_wallet_transaction_fee').css('opacity', 1);
+            var amount = parseFloat($('#cryptaur_ether_wallet_amount_to_send').val() || 0);
+            if (amount > $('#cryptaur_ether_wallet_maximum_amount').val()) {
+                $('#cryptaur_ether_wallet_transaction_fee').css('color', 'red');
+                send.attr('disabled', true);
+            } else {
+                $('#cryptaur_ether_wallet_transaction_fee').css('color', '');
+                send.attr('disabled', false);
+            }
+        } else {
+            send.attr('disabled', false);
+            $('#cryptaur_ether_wallet_transaction_fee').css('opacity', 0);
+        }
+    }
+
+    $("#cryptaur_ether_wallet_amount_to_send").keyup(function () {
+        cryptaur_ether_wallet_checkEthAmount();
+    });
+
     $("select.select-token").change(function () {
         var select = $(this),
             value = select.val(),
             modal = $('#modal_warning-wallet');
+        if (value === 'ETH') {
+            $('#cryptaur_ether_wallet_transaction_fee').css('opacity', 1);
+        } else {
+            $('#cryptaur_ether_wallet_transaction_fee').css('opacity', 0);
+        }
         if (false && value == 'CPT') { // todo: do it right
             warningCheckBox.prop('checked', false);
             modal.modal('open');

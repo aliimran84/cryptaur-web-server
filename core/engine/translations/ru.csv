@@ -203,3 +203,5 @@ The page will automatically reboot after 30 seconds,Страница автом�
 Cryptaur Ether Waller send functions temporary is off,Функции отправки с Cryptaur Ether Waller временно отключены
 "I confirm that the specified destination address matches the wallet that supports the ERC20 standard","Я подтверждаю, что указанный адрес назначения соответствует кошельку, поддерживающему стандарт ERC20"
 "I confirm that the indicated address is not the depository address of the exchange","Я подтверждаю, что указанный адрес не является депозитным адресом биржи"
+Transaction fee,Комиссия за транзакцию
+maximum amount,максимальная сумма

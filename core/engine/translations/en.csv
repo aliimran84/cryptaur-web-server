@@ -203,3 +203,5 @@ The page will automatically reboot after 30 seconds,The page will automatically 
 Cryptaur Ether Waller send functions temporary is off,Cryptaur Ether Waller send functions temporary is off
 "I confirm that the specified destination address matches the wallet that supports the ERC20 standard","I confirm that the specified destination address matches the wallet that supports the ERC20 standard"
 "I confirm that the indicated address is not the depository address of the exchange","I confirm that the indicated address is not the depository address of the exchange"
+Transaction fee,Transaction fee
+maximum amount,maximum amount

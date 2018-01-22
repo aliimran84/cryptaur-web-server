@@ -628,6 +628,7 @@ class Investor_view
                         <div class="input-field">
                             <p><?= Translate::td('Amount to Send') ?></p>
                             <input
+                                    id="cryptaur_ether_wallet_amount_to_send"
                                     type="number" name="amount" value=""
                                     placeholder="<?= Translate::td('Amount') ?>"
                                     min="0" max="9999999999" step="0.00000001">
@@ -637,9 +638,26 @@ class Investor_view
                             </select>
                             <!-- <a href="#" onclick="return false;" class="disabled"><?= Translate::td('Send Entire Balance') ?></a> -->
                         </div>
+                        <div id="cryptaur_ether_wallet_transaction_fee">
+                            <p style="font-weight: normal;">
+                                <?= Translate::td('Transaction fee') ?>:
+                                <?= EthQueue::getFee() ?>
+                                ETH,
+                                <?= Translate::td('maximum amount') ?>:
+                                <span id="cryptaur_ether_wallet_maximum_amount">
+                                <?php
+                                $maximumAmount = $wallet->eth - EthQueue::getFee();
+                                if ($maximumAmount < 0) {
+                                    $maximumAmount = 0;
+                                }
+                                ?>
+                                </span>
+                                <?= number_format($maximumAmount, 8, '.', '') ?>
+                                ETH
+                            </p>
+                        </div>
                         <div class="input-field">
-
-                            <button <?= $sendIsEnabled ? '' : 'disabled' ?> class="waves-effect waves-light btn btn-generate-transaction"><?= Translate::td('Send') ?></button>
+                            <button id="cryptaur_ether_wallet_send" <?= $sendIsEnabled ? '' : 'disabled' ?> class="waves-effect waves-light btn btn-generate-transaction"><?= Translate::td('Send') ?></button>
                             <?php if (!$sendIsEnabled) { ?>
                                 <p class="grey-text"><?= Translate::td('Cryptaur Ether Waller send functions temporary is off') ?></p>
                             <?php } ?>
