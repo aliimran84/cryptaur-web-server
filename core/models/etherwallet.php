@@ -129,6 +129,16 @@ class EtherWallet
         ;", [$this->eth, $this->cpt, $this->id]);
     }
 
+    public function resetUpdateEndDateTime()
+    {
+        $this->datetime_end = time();
+        DB::set("
+            UPDATE `eth_queue` SET
+                `datetime_end` = 0
+            WHERE `id` = ?
+        ;", [$this->id]);
+    }
+
     /**
      * @param double $ethValue
      * @param string $ethAddress

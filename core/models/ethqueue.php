@@ -600,11 +600,11 @@ class EthQueue
                 break;
             case self::TYPE_SENDETH_WALLET:
                 $wallet = EtherWallet::getFromDbByInvestorId($this->investor->id);
-                $wallet->update($wallet->eth + $data['eth'], $wallet->cpt);
+                $wallet->resetUpdateEndDateTime();
                 break;
             case self::TYPE_SENDCPT_WALLET:
                 $wallet = EtherWallet::getFromDbByInvestorId($this->investor->id);
-                $wallet->update($wallet->eth, $wallet->cpt + $data['cpt']);
+                $wallet->resetUpdateEndDateTime();
                 break;
         }
     }
