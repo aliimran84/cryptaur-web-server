@@ -323,6 +323,7 @@ class EthQueue
             '_coin' => $coin,
             '_txid' => $txid,
             '_data' => $data,
+            '_actionType' => $actionType,
             'tokens' => $tokens_send,
             'txid' => $txid_send,
             'contract' => ETH_TOKENS_CONTRACT,
