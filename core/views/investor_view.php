@@ -5,6 +5,7 @@ namespace core\views;
 use core\controllers\Investor_controller;
 use core\controllers\EtherWallet_controller;
 use core\engine\Application;
+use core\engine\Utility;
 use core\models\Coin;
 use core\models\EtherWallet;
 use core\models\EthQueue;
@@ -645,7 +646,7 @@ class Investor_view
                                 ETH,
                                 <?= Translate::td('maximum amount') ?>:
                                 <?php
-                                $maximumAmount = $wallet->eth - EthQueue::getFee();
+                                $maximumAmount = Utility::floor_prec($wallet->eth - EthQueue::getFee(), 5);
                                 if ($maximumAmount < 0) {
                                     $maximumAmount = 0;
                                 }

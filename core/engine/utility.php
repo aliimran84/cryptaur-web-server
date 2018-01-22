@@ -244,7 +244,7 @@ class Utility
     /**
      * @param string|number $dec1
      * @param string|number $dec2
-     * @return double
+     * @return string
      */
     static public function mul($dec1, $dec2)
     {
@@ -253,6 +253,25 @@ class Utility
             self::double_string($dec2),
             18
         );
+    }
+
+    /**
+     * @param string|number $dec
+     * @param int $precision
+     * @return string
+     */
+    static public function round($dec, $precision = 0)
+    {
+        if (strpos($dec, '.') !== false) {
+            if ($dec[0] != '-') return bcadd($dec, '0.' . str_repeat('0', $precision) . '5', $precision);
+            return bcsub($dec, '0.' . str_repeat('0', $precision) . '5', $precision);
+        }
+        return $dec;
+    }
+
+    static public function floor_prec($x, $prec)
+    {
+        return floor($x * pow(10, $prec)) / pow(10, $prec);
     }
 
     /**
@@ -270,7 +289,7 @@ class Utility
      */
     static public function double_string($dec)
     {
-        return number_format($dec, 20, '.', '');
+        return Utility::round($dec, 20);
     }
 
     static public function microtime_float()
@@ -278,10 +297,10 @@ class Utility
         list($usec, $sec) = explode(" ", microtime());
         return ((float)$usec + (float)$sec);
     }
-    
+
     static public function clear_except_numbers($str)
     {
-        return preg_replace('~[^0-9]+~','', $str);
+        return preg_replace('~[^0-9]+~', '', $str);
     }
 
     static public function uuid()
