@@ -64,6 +64,10 @@ $(document).ready(function(){
         $('.block_inner-wallet').css('display', 'none');
     }
 
+    $('.contribution-limits').click(function (e) {
+        e.preventDefault();
+        $('#modal_contribution-limits').modal('open');
+    });
     $(".dropdown-button").dropdown();
     $('select').material_select();
     $('.collapsible').collapsible();
