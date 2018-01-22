@@ -110,7 +110,7 @@ class Wallet_view
                     <h3><?= Translate::td('My contribution') ?></h3>
                 </div>
                 <div class="row">
-                    <p><?= Translate::td('To learn about the minimum contribution limits') ?> <a class="contribution-limits" href="#modal_contribution-limits"><?= Translate::td('click here') ?></a></p>
+                    <p><?= Translate::td('To learn about the minimum contribution limits') ?> <a target="_blank" href="https://cryptaur.com/stage-2"><?= Translate::td('click here') ?></a></p>
                 </div>
                 <div class="row">
                     <div class="col s12 offset-m3 m6">
@@ -158,15 +158,6 @@ class Wallet_view
                     $('.wallet_view-new_contribution-select_coins').change();
                 });
             </script>
-            <!-- Modal Structure -->
-            <div id="modal_contribution-limits" class="modal">
-                <div class="modal-content">
-                    <h4><?= Translate::td('The minimum contribution limits') ?></h4>
-                    <p>
-                        <?= Translate::td('At Stage Two Cryptaur tokens (CPTs) will be sold from January 22 through January 31, 2018 with 20% discount on the first day and no discount thereafter. The minimum contribution will be $50 (in CPT equivalent). Participants will also benefit from our referral program bounties same as at Stage One.') ?>
-                    </p>
-                </div>
-            </div>
 
             <?php
         }
