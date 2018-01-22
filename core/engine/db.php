@@ -160,6 +160,18 @@ class DB
         return self::prepareStatementExecute($query, $values);
     }
 
+    static public function fetch_all($query)
+    {
+        $db = self::inst();
+        $m_result = $db->_connection->query($query);
+        $result = [];
+        while ($row = $m_result->fetch_assoc()) {
+            $result[] = $row;
+        }
+        $m_result->free();
+        return $result;
+    }
+
     /**
      * @return int
      */

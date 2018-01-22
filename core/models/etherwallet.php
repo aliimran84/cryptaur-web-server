@@ -131,7 +131,7 @@ class EtherWallet
 
     public function resetUpdateEndDateTime()
     {
-        $this->datetime_end = time();
+        $this->datetime_update = time();
         DB::set("
             UPDATE `eth_queue` SET
                 `datetime_end` = 0
