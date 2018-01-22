@@ -149,8 +149,8 @@ $(document).ready(function(){
         var send = $('#cryptaur_ether_wallet_send');
         if ($("select.select-token").val() === 'ETH') {
             $('#cryptaur_ether_wallet_transaction_fee').css('opacity', 1);
-            var amount = parseFloat($('#cryptaur_ether_wallet_amount_to_send').val() || 0);
-            if (amount > $('#cryptaur_ether_wallet_maximum_amount').val()) {
+            var amount = parseFloat($('#cryptaur_ether_wallet_amount_to_send').val()) || 0;
+            if (amount > parseFloat($('#cryptaur_ether_wallet_maximum_amount').html())) {
                 $('#cryptaur_ether_wallet_transaction_fee').css('color', 'red');
                 send.attr('disabled', true);
             } else {

@@ -644,15 +644,15 @@ class Investor_view
                                 <?= EthQueue::getFee() ?>
                                 ETH,
                                 <?= Translate::td('maximum amount') ?>:
-                                <span id="cryptaur_ether_wallet_maximum_amount">
                                 <?php
                                 $maximumAmount = $wallet->eth - EthQueue::getFee();
                                 if ($maximumAmount < 0) {
                                     $maximumAmount = 0;
                                 }
                                 ?>
-                                </span>
+                                <span id="cryptaur_ether_wallet_maximum_amount">
                                 <?= number_format($maximumAmount, 8, '.', '') ?>
+                                </span>
                                 ETH
                             </p>
                         </div>
