@@ -54,22 +54,28 @@ class Wallet_view
                             ?>
                             var coinsRate = <?= json_encode($coinsRates, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
                             var minimalTokensForNotToBeDonation = <?= json_encode(Deposit::minimalTokensForNotToBeDonation()) ?>;
+                            var textInputOld = $('.wallet_view-new_contribution-input_amount').val();
                             var onAmountChange = function (input) {
                                 var coin = $(input).parent().data('coin');
                                 var section = $(input).parents('.wallet_view-new_contribution-section');
                                 var text = $(input).val();
-                                if (text && text.length === 0) {
+                                var val;
+                                if (text.length === 0) {
+                                    val = parseFloat(textInputOld);
+                                    $(input).val(val);
                                     return false;
                                 }
-                                var val = parseFloat(text);
+                                val = parseFloat(text);
                                 if ('' + val !== text) {
                                     $(input).val(val);
+                                    textInputOld = val;
                                     return;
                                 } else if (val < 0) {
                                     $(input).val(-val);
                                     return;
                                 }
                                 val = val.toFixed(8);
+                                textInputOld = text;
                                 section.find('.wallet_view-new_contribution-selected_amount').text(val);
 
                                 var usd = coinsRate[coin] * val;
@@ -78,10 +84,13 @@ class Wallet_view
                                 section.find('.wallet_view-new_contribution-calculated_selected_to_tokens').text(tokens);
                                 section.find('.wallet_view-new_contribution-calculated_as_donation').toggle(tokens < minimalTokensForNotToBeDonation);
                             };
+                            var timeoutChange;
                             $(document).on('keyup change', '.wallet_view-new_contribution-input_amount', function (event) {
-                                setTimeout(function() {
-                                  onAmountChange(event.target);
+                                clearTimeout(timeoutChange);
+                                timeoutChange = setTimeout(function(){
+                                    onAmountChange(event.target)
                                 }, 1000);
+
                             });
                             $(document).on('click', ['.wallet_view-new_contribution-div_amount .btn-up', '.wallet_view-new_contribution-div_amount .btn-down'], function (event) {
                                 onAmountChange($(event.target).closest('.wallet_view-new_contribution-div_amount').find('input')[0]);
