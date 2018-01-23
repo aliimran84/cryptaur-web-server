@@ -258,6 +258,10 @@ class EthQueue
             return null;
         }
 
+        if (@$data['result']['pending'] || (strlen(@$data['result']['pending']) < 33)) {
+            return null;
+        }
+
         $ethAddress = $data['result']['result'];
         $eth = Utility::floor_prec($data['result']['balance']['ETH'], 8);
         $cpt = Utility::floor_prec($data['result']['balance']['CPT'], 8);
