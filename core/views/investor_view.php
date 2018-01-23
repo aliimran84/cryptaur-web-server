@@ -697,10 +697,10 @@ class Investor_view
                         <p class="account-balance"><?= number_format($wallet->eth, 8, '.', '') ?> ETH</p>
                         <p class="account-balance"><?= number_format($wallet->cpt, 8, '.', '') ?> CPT</p>
                         <p><?= Translate::td('Transaction History') ?></p>
-                        <a href="https://etherscan.io/address/<?= $wallet->eth_address ?>">
+                        <a target="_blank" href="https://etherscan.io/address/<?= $wallet->eth_address ?>">
                             ETH (https://etherscan.io)
                         </a><br>
-                        <a href="https://ethplorer.io/address/<?= $wallet->eth_address ?>">
+                        <a target="_blank" href="https://ethplorer.io/address/<?= $wallet->eth_address ?>">
                             Tokens (Ethplorer.io)
                         </a>
                     </div>
