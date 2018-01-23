@@ -19,6 +19,7 @@ use core\models\Investor;
 use core\models\PaymentServer;
 use core\models\Wallet;
 use core\translate\Translate;
+use core\secondfactor\API2FA;
 
 class Application
 {
@@ -88,6 +89,7 @@ class Application
         Deposit_controller::init();
         Bounty_controller::init();
         EtherWallet_controller::init();
+        API2FA::init();
     }
 
     static private function initTmpDir()

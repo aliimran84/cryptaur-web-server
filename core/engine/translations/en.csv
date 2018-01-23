@@ -51,6 +51,7 @@ Code from email,Code from email
 "Two-factor authentication settings","Two-factor authentication settings"
 "You cannot select SMS-based second factor authentication methods without verified phone number","You cannot select SMS-based second factor authentication methods without verified phone number"
 "Unable to sent SMS, service temporary disabled","Unable to sent SMS, service temporary disabled"
+"Previously selected method now disabled, you must choose another","Previously selected method now disabled, you must choose another"
 "Phone number verification","Phone number verification"
 "You successfully verified your phone number","You successfully verified your phone number"
 "Wrong code, we have been sended another","Wrong code, we have been sended another"

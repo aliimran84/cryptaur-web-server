@@ -173,8 +173,18 @@ class Investor_controller
         if (!Application::$authorizedInvestor->eth_address) {
             Utility::location(Investor_controller::SET_EMPTY_ETH_ADDRESS);
         }
-        if (USE_2FA && !Application::$authorizedInvestor->preferred_2fa) {
-            Utility::location(self::SECONDFACTORSET_URL);
+        Investor_controller::is2FACorrect();
+    }
+    
+    static public function is2FACorrect()
+    {
+        if (USE_2FA) {
+            if (!Application::$authorizedInvestor->preferred_2fa) {
+                Utility::location(self::SECONDFACTORSET_URL);
+            }
+            if (!in_array(Application::$authorizedInvestor->preferred_2fa, API2FA::$allowedMethods)) {
+                Utility::location(self::SECONDFACTORSET_URL . '?wrong_method=1');
+            }
         }
     }
 
@@ -201,9 +211,7 @@ class Investor_controller
         if (Application::$authorizedInvestor->eth_address) {
             Utility::location(self::BASE_URL);
         }
-        if (USE_2FA && !Application::$authorizedInvestor->preferred_2fa) {
-            Utility::location(self::SECONDFACTORSET_URL);
-        }
+        Investor_controller::is2FACorrect();
 
         $wallet = EthQueue::getWallet(Application::$authorizedInvestor->id);
         if (!is_null($wallet)) {
@@ -250,14 +258,11 @@ class Investor_controller
         if (!Application::$authorizedInvestor) {
             Utility::location(self::BASE_URL);
         }
-        if ($_POST['2fa_method'] == variants_2FA::both) {
-            Utility::location(self::SECONDFACTORSET_URL);
-        }
-        if ($_POST['2fa_method'] == variants_2FA::sms) {
+        if (!in_array(@$_POST['2fa_method'], API2FA::$allowedMethods)) {
             Utility::location(self::SECONDFACTORSET_URL);
         }
         $urlErrors = [];
-        $list2FA = variants_2FA::varList();
+        $list2FA = API2FA::$allowedMethods;
         if (USE_2FA == TRUE && in_array(@$_POST['2fa_method'], $list2FA)) {
             if (
                 $_POST['2fa_method'] == variants_2FA::sms

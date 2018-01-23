@@ -99,13 +99,28 @@ class Configuration
             DEFINE('EMAIL_FROM_EMAIL', $config['email_smtp']['from_email']);
         }
 
-        if (!isset($config['2fa'])) {
+        if (
+            !isset($config['2fa'])
+            || !isset($config['2fa']['use_2fa'])
+            || !isset($config['2fa']['NONE'])
+            || !isset($config['2fa']['EMAIL'])
+            || !isset($config['2fa']['SMS'])
+            || !isset($config['2fa']['SMS&EMAIL'])
+        ) {
             $needConfigure = true;
-            $config['!_2fa'] = [
-                'use_2fa' => false
+            $config['2fa'] = [
+                '!_use_2fa' => false,
+                'NONE' => true,
+                'EMAIL' => true,
+                'SMS' => false,
+                'SMS&EMAIL' => false
             ];
         } else {
             DEFINE('USE_2FA', $config['2fa']['use_2fa']);
+            DEFINE('NONE_2FA', $config['2fa']['NONE']);
+            DEFINE('EMAIL_2FA', $config['2fa']['EMAIL']);
+            DEFINE('SMS_2FA', $config['2fa']['SMS']);
+            DEFINE('SMS&EMAIL_2FA', $config['2fa']['SMS&EMAIL']);
         }
         
         if (!isset($config['sms_url'])) {
