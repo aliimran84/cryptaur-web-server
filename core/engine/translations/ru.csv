@@ -50,6 +50,7 @@ Code from email,Код из эл. почты
 "You must choose two-factor authentication option","Выберите способ двухфакторной авторизации"
 "Two-factor authentication settings","Настройки двухфакторной авторизации"
 "Unable to sent SMS, service temporary disabled","Невозможно отправить SMS, сервис временно недоступен"
+"Previously selected method now disabled, you must choose another","Выбранный ранее метод сейчас отключен, вы должны выбрать другой"
 "You cannot select SMS-based second factor authentication methods without verified phone number","Вы не можете выбрать задействующие SMS методы двухфакторной авторизации без подтверждённого номера телефона"
 "Phone number verification","Подтверждение номера телефона"
 "You successfully verified your phone number","Вы успешно подтвердили телефонный номер"

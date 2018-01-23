@@ -24,10 +24,38 @@ class variants_2FA
 
 class API2FA
 {
+    static public $initialized = false;
+    
     const SECRET_KEY_SMS = 'secret_key_sms';
     const SECRET_KEY_EMAIL = 'secret_key_email';
     const SECRET_KEY = 'secret_key';
     const SMS_FROM = 'Cryptaur';
+    
+    static public $allowedMethods = [];
+
+    static public function init()
+    {
+        if (self::$initialized) {
+            return;
+        }
+        self::$initialized = true;
+        
+        if (USE_2FA === TRUE) {
+            $list2FA = variants_2FA::varList();
+            $usedCnt = 0;
+            foreach ($list2FA AS $var) {
+                if (constant($var . '_2FA') === TRUE) {
+                    $usedCnt++;
+                    self::$allowedMethods[] = $var;
+                }
+            }
+            if ($usedCnt == 0) {
+                echo "---Stop on init API2FA---<br><br>\n\n";
+                echo "No 2FA methods selected while 2FA being turned on!";
+                exit;
+            }
+        }
+    }
 
     /*
      * Checks authcode returns true/false depending on correctness

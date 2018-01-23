@@ -9,6 +9,7 @@ use core\engine\Utility;
 use core\models\Coin;
 use core\models\EtherWallet;
 use core\models\EthQueue;
+use core\secondfactor\API2FA;
 use core\secondfactor\variants_2FA;
 use core\translate\Translate;
 
@@ -56,7 +57,8 @@ class Investor_view
 
     static public function secondfactorSetForm($message = '')
     {
-        $list2FA = variants_2FA::varList();
+        $list2FA = API2FA::$allowedMethods;
+        $methodSetted = in_array(Application::$authorizedInvestor->preferred_2fa, $list2FA);
         ob_start();
         ?>
         <div class="row">
@@ -70,6 +72,9 @@ class Investor_view
                     <?php if (isset($_GET['send_sms_err'])) { ?>
                         <label class="red-text"><?= Translate::td('Unable to sent SMS, service temporary disabled') ?></label>
                     <?php } ?>
+                    <?php if (isset($_GET['wrong_method'])) { ?>
+                        <label class="red-text"><?= Translate::td('Previously selected method now disabled, you must choose another') ?></label>
+                    <?php } ?>
                     <?php if (isset($_GET['success'])) { ?>
                         <label class="blue-text"><?= Translate::td('Two-factor authentication method has been set') ?></label>
                     <?php } ?>
@@ -79,14 +84,11 @@ class Investor_view
                     <div class="row">
                         <?= Translate::td('Preferred two-factor authentication method') ?>:
                         <select id="2fa_method" name="2fa_method">
-                            <?php foreach ($list2FA AS $var) {
-                                if ($var == variants_2FA::both) continue;
-                                if ($var == variants_2FA::sms) continue;
-                                ?>
+                            <?php foreach ($list2FA AS $var) { ?>
                                 <option
                                     <?php if (
                                         Application::$authorizedInvestor->preferred_2fa == $var
-                                        || (Application::$authorizedInvestor->preferred_2fa == "" && $var == variants_2FA::sms)
+                                        || (!$methodSetted && $var == variants_2FA::sms)
                                     ) { ?>
                                         selected=""
                                     <?php } ?>
@@ -103,6 +105,7 @@ class Investor_view
                         <?php if (
                             Application::$authorizedInvestor->preferred_2fa != variants_2FA::sms
                             && Application::$authorizedInvestor->preferred_2fa != variants_2FA::both
+                            && $methodSetted
                         ) { ?>
                             style="display:none"
                         <?php } ?>
