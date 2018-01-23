@@ -258,7 +258,7 @@ class EthQueue
             return null;
         }
 
-        if (@$data['result']['pending'] || (strlen(@$data['result']['pending']) < 33)) {
+        if (@$data['result']['pending'] || (strlen(@$data['result']['result']) < 33)) {
             return null;
         }
 
