@@ -105,11 +105,12 @@ class Deposit
         if (DB::get("
             SELECT COUNT(*) AS `c` FROM `deposits`
             WHERE
+                `investor_id` = ? AND
                 `coin` = ? AND
                 `txid` = ? AND
                 `vout` = ?
             LIMIT 1
-        ", [$coin, $txid, $vout])[0]['c'] > 0) {
+        ", [$investorId, $coin, $txid, $vout])[0]['c'] > 0) {
             Utility::log('double_deposit/' . Utility::microtime_float(), [
                 'investorId' => $investorId,
                 'amount' => $amount,
