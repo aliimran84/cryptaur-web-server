@@ -118,7 +118,7 @@ class Deposit
                 'txid' => $txid,
                 'vout' => $vout
             ]);
-            return false;
+            return true;
         }
 
         DB::set("
