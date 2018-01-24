@@ -115,7 +115,7 @@ class API2FA
             return FALSE;
         }
         //an now email
-        return Email::send($email, [], 'Cryptaur: secret code', "<p>Secret code:</p><p>$code_2</p>", true);
+        return Email::send($email, [], 'Cryptaur: secret code', "<p>Secret code:</p><p>$code_2</p>", true, false);
 
     }
 
@@ -128,7 +128,7 @@ class API2FA
         session_start();
         $_SESSION[self::SECRET_KEY] = $captcha;
         session_write_close();
-        return Email::send($email, [], 'Cryptaur: secret code', "<p>Secret code:</p><p>$captcha</p>", true);
+        return Email::send($email, [], 'Cryptaur: secret code', "<p>Secret code:</p><p>$captcha</p>", true, false);
     }
 
     /*
