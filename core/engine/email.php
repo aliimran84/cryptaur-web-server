@@ -32,10 +32,11 @@ class Email
      * @param string $subject - тема письма
      * @param string $message - тело письма
      * @param bool $withTemplate - обернуть ли письмо в шаблон
+     * @param bool $footer - показывать ли footer шаблона
      * @param array $files
      * @return bool - true, если успешно отправлено
      */
-    static public function send($to, $copyTo, $subject, $message, $withTemplate = false, $files = array())
+    static public function send($to, $copyTo, $subject, $message, $withTemplate = false, $footer = true, $files = array())
     {
         self::inst();
 
@@ -118,7 +119,7 @@ class Email
         //convert HTML into a basic plain-text alternative body
         //$mail->msgHTML(file_get_contents('contents.html'), dirname(__FILE__));
         if ($withTemplate) {
-            $message = self::wrapMessageInTemplate($message);
+            $message = self::wrapMessageInTemplate($message, $footer);
         }
         $mail->msgHTML($message);
 
@@ -139,7 +140,7 @@ class Email
         return true;
     }
 
-    static private function wrapMessageInTemplate($message)
+    static private function wrapMessageInTemplate($message, $footer)
     {
         $domain = APPLICATION_URL;
         $html = <<<EOT
@@ -159,11 +160,16 @@ class Email
                 <div class="logo-block-footer" style="text-align:center;">
                     <a href="$domain" style="margin:25px auto;display:inline-block;" class="logo"><img style="width: 95px;" src="$domain/images/CRYPTAUR_AVECTYPOCENTRE.png" alt="cryptaur"></a>
                 </div>
+EOT;
+        if ($footer)
+            $html .= <<<EOT
                 <div class="footer" style="width: 100%;margin: 0;text-align: center;">
                     <p style="font-size: 14px;font-style: italic;font-weight: 400;line-height: 1.8;width: 50%;margin:0 auto;text-align: center;color: rgba(146, 146, 146, 1);">If you would like to stop receiving invites from other people, follow the <a style="text-decoration: underline;" href="$domain">link</a></p>
                 </div>
             </div>
 EOT;
+        else
+            $html .= '</div>';
         return $html;
     }
 }

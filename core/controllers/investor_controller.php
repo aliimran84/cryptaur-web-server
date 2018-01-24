@@ -553,7 +553,7 @@ class Investor_controller
         $firstname = trim(@$_POST['firstname']);
         $lastname = trim(@$_POST['lastname']);
         $confirmationUrl = self::urlForRegistration($email, $firstname, $lastname, $referrerId, $password);
-        Email::send($email, [], 'Cryptaur: email confirmation', "<p><a href=\"$confirmationUrl\">Confirm email to finish registration</a></p>", true);
+        Email::send($email, [], 'Cryptaur: email confirmation', "<p><a href=\"$confirmationUrl\">Confirm email to finish registration</a></p>", true, false);
 
         Base_view::$TITLE = 'Email confirmation info';
         Base_view::$MENU_POINT = Menu_point::Register;
