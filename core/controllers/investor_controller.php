@@ -362,7 +362,7 @@ class Investor_controller
         $user = Investor::getById($investorId);
         $form_type = 0; //0 - single-code from, 1 - dual-code form
         $sent = false;
-        if (!in_array(@$_POST['2fa_method'], API2FA::$allowedMethods)) {
+        if (!in_array($user->preferred_2fa, API2FA::$allowedMethods)) {
             return NULL;
         } elseif ($user->preferred_2fa == variants_2FA::email) {
             $sent = API2FA::send_email($user->email);
