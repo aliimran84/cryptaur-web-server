@@ -175,7 +175,7 @@ class Investor_controller
         }
         Investor_controller::is2FACorrect();
     }
-    
+
     static public function is2FACorrect()
     {
         if (USE_2FA) {
@@ -506,7 +506,7 @@ class Investor_controller
         Base_view::$TITLE = 'Registration';
         Base_view::$MENU_POINT = Menu_point::Register;
         echo Base_view::header();
-        if ($_GET['test']) {
+        if (@$_GET['test']) {
             echo Investor_view::registerForm2($data, $error);
         } else {
             echo Investor_view::registerForm($data, $error);
