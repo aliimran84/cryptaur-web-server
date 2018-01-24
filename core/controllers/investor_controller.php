@@ -262,8 +262,7 @@ class Investor_controller
             Utility::location(self::SECONDFACTORSET_URL);
         }
         $urlErrors = [];
-        $list2FA = API2FA::$allowedMethods;
-        if (USE_2FA == TRUE && in_array(@$_POST['2fa_method'], $list2FA)) {
+        if (USE_2FA) {
             if (
                 $_POST['2fa_method'] == variants_2FA::sms
                 || $_POST['2fa_method'] == variants_2FA::both
@@ -363,7 +362,7 @@ class Investor_controller
         $user = Investor::getById($investorId);
         $form_type = 0; //0 - single-code from, 1 - dual-code form
         $sent = false;
-        if ($user->preferred_2fa == "") {
+        if (!in_array(@$_POST['2fa_method'], API2FA::$allowedMethods)) {
             return NULL;
         } elseif ($user->preferred_2fa == variants_2FA::email) {
             $sent = API2FA::send_email($user->email);
