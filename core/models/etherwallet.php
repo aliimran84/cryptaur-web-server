@@ -154,6 +154,10 @@ class EtherWallet
             return false;
         }
 
+        if ($ethValue <= 0) {
+            return false;
+        }
+
         if (!Utility::validateEthAddress($ethAddress)) {
             return false;
         }
@@ -178,6 +182,10 @@ class EtherWallet
         }
 
         if ($this->cpt < $cptValue) {
+            return false;
+        }
+
+        if ($cptValue <= 0) {
             return false;
         }
 
