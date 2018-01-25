@@ -6,6 +6,7 @@ use core\engine\Application;
 use core\models\EtherWallet;
 use core\engine\Utility;
 use core\controllers\Investor_controller;
+use core\controllers\EtherWallet_controller;
 
 class ACTION2FA
 {
@@ -60,7 +61,7 @@ class ACTION2FA
                 self::access2FAAllow(Investor_controller::SETTINGS_URL);
                 Utility::location(Investor_controller::SETTINGS_URL);
                 break;
-            case EtherWallet::SEND_WALLET :
+            case EtherWallet_controller::SEND_WALLET :
                 if (
                     !isset($_SESSION[self::TEMP_DATA_ARR]['send_type'])
                     || !isset($_SESSION[self::TEMP_DATA_ARR]['amount'])
@@ -70,8 +71,8 @@ class ACTION2FA
                 }
                 
                 $send_type = $_SESSION[self::TEMP_DATA_ARR]['send_type'];
-                $send_type = $_SESSION[self::TEMP_DATA_ARR]['amount'];
-                $send_type = $_SESSION[self::TEMP_DATA_ARR]['address'];
+                $amount = $_SESSION[self::TEMP_DATA_ARR]['amount'];
+                $address = $_SESSION[self::TEMP_DATA_ARR]['address'];
                 
                 session_start();
                 unset($_SESSION[self::TEMP_DATA_ARR]);
@@ -80,10 +81,10 @@ class ACTION2FA
                 $wallet = EtherWallet::getByInvestorId(Application::$authorizedInvestor->id);
                 switch ($send_type) {
                     case 'ETH':
-                        $wallet->sendEth($amount, @$_POST['address']);
+                        $wallet->sendEth($amount, $address);
                         break;
                     case 'CPT':
-                        $wallet->sendCpt($amount, @$_POST['address']);
+                        $wallet->sendCpt($amount, $address);
                         break;
                 }
                 Utility::location(Investor_controller::CRYPTAURETHERWALLET_URL);
