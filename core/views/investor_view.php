@@ -139,6 +139,10 @@ class Investor_view
                 <h3><?= Translate::td('Two-Factor Authentication') ?></h3>
                 <div class="row">
                     <form class="login col s12" action="<?= Investor_controller::SECONDFACTOR_URL ?>" method="post" autocomplete="off">
+                        <h5>
+                            <?= Translate::td('You have two-factor authentication enabled so you must verify login') ?>.<br/>
+                            <?= Translate::td("Click 'Sent' button to sent the code") ?>
+                        </h5>
                         <?php if (isset($_GET['err'])) { ?>
                             <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
                                 : <?= Translate::td($_GET['err_text']) ?></label>
@@ -146,11 +150,15 @@ class Investor_view
                         <?php if ($message) { ?>
                             <label class="blue-text"><?= $message ?></label>
                         <?php } ?>
-                        <h5><?= Translate::td('Authentication code has been sent using preferred method') ?></h5>
                         <input type="password" name="otp" placeholder="<?= Translate::td('Authentication code') ?>" autocomplete="new-password">
                         <div class="row center">
+                            <a href="<?= Investor_controller::SECONDFACTOR_URL ?>?sent=1" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
+                            </a>
+                        </div>
+                        <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= Translate::td('Login') ?>
+                                <?= Translate::td('Verify') ?>
                             </button>
                         </div>
                     </form>
@@ -170,6 +178,10 @@ class Investor_view
                 <h3><?= Translate::td('Two-Factor Authentication') ?></h3>
                 <div class="row">
                     <form class="login col s12" action="<?= Investor_controller::SECONDFACTORDUAL_URL ?>" method="post" autocomplete="off">
+                        <h5>
+                            <?= Translate::td('You have two-factor authentication enabled so you must verify login') ?>.<br/>
+                            <?= Translate::td("Click 'Sent' button to sent the codes") ?>
+                        </h5>
                         <?php if (isset($_GET['err'])) { ?>
                             <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
                                 : <?= Translate::td($_GET['err_text']) ?></label>
@@ -182,8 +194,13 @@ class Investor_view
                         <h5><?= Translate::td('Code from email') ?>:</h5>
                         <input type="password" name="code_2" placeholder="<?= Translate::td('Authentication code') ?>" autocomplete="new-password">
                         <div class="row center">
+                            <a href="<?= Investor_controller::SECONDFACTORDUAL_URL ?>?sent=1" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
+                            </a>
+                        </div>
+                        <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= Translate::td('Login') ?>
+                                <?= Translate::td('Verify') ?>
                             </button>
                         </div>
                     </form>
