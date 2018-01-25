@@ -323,7 +323,7 @@ class Investor
      * @param string $password_hash
      * @return int if > 0 -> success, else error
      */
-    static public function registerUser($email, $firstname, $lastname, $referrer_id, $password_hash)
+    static public function registerUser($email, $firstname, $lastname, $referrer_id, $password_hash, $phone)
     {
         if (Investor::isExistWithParams($email)) {
             return -2;
@@ -348,13 +348,13 @@ class Investor
             SET
                 `referrer_id` = ?, `referrer_code` = ?,
                 `joined_datetime` = ?,
-                `email` = ?, `firstname` = ?, `lastname` = ?,
+                `email` = ?, `firstname` = ?, `lastname` = ?, `phone` = ?,
                 `password_hash` = ?, `eth_address` = ?, `eth_withdrawn` = ?,
                 `tokens_count` = ?
             ;", [
                 $referrer_id, $referrer_code,
                 DB::timetostr(time()),
-                $email, $firstname, $lastname,
+                $email, $firstname, $lastname, $phone,
                 $password_hash, '', 0,
                 0
             ]

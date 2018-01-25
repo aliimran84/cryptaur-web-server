@@ -211,6 +211,45 @@ class Investor_view
         return ob_get_clean();
     }
 
+    static public function registerPhoneVerificationForm($message = '')
+    {
+        ob_start();
+        ?>
+        <div class="row">
+            <div class="col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
+                <h3><?= Translate::td('Phone number verification') ?></h3>
+                <div class="row">
+                    <form class="login col s12" action="<?= Investor_controller::REGISTER_PHONEVERIFICATION_URL ?>" method="post" autocomplete="off">
+                        <h5>
+                            <?= Translate::td('You must verify phone number') ?>.<br/>
+                            <?= Translate::td("Click 'Sent' button to sent the code") ?>
+                        </h5>
+                        <?php if (isset($_GET['err'])) { ?>
+                            <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
+                                : <?= Translate::td($_GET['err_text']) ?></label>
+                        <?php } ?>
+                        <?php if ($message) { ?>
+                            <label class="blue-text"><?= $message ?></label>
+                        <?php } ?>
+                        <input type="password" name="otp" placeholder="<?= Translate::td('Authentication code') ?>" autocomplete="new-password">
+                        <div class="row center">
+                            <a href="<?= Investor_controller::REGISTER_PHONEVERIFICATION_URL ?>?sent=1" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
+                            </a>
+                        </div>
+                        <div class="row center">
+                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                <?= Translate::td('Verify') ?>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+    
     static public function phoneVerificationForm($message = '')
     {
         ob_start();
@@ -276,6 +315,7 @@ class Investor_view
                         <input type="text" name="firstname" placeholder="<?= Translate::td('First name') ?>" value="<?= @$data['firstname'] ?>">
                         <input type="text" name="lastname" placeholder="<?= Translate::td('Last name') ?>" value="<?= @$data['lastname'] ?>">
                         <input type="email" name="email" placeholder="Email" value="<?= @$data['email'] ?>" autocomplete="nope">
+                        <input type="text" name="phone" placeholder="<?= Translate::td('Phone, mobile') ?>:" value="<?= @$data['phone'] ?>" autocomplete="nope">
                         <input type="text" name="referrer_code" value="<?= $referrer_code ?>" placeholder="<?= Translate::td('REFERRER CODE') ?>" autocomplete="nope">
                         <input type="password" name="password" pattern=".{6,120}" placeholder="<?= Translate::td('Password') ?>" autocomplete="new-password">
                         <span><?= Translate::td('Password must be more than 6 symbols') ?></span>
@@ -322,6 +362,7 @@ class Investor_view
                         <input type="text" name="firstname" placeholder="<?= Translate::td('First name') ?>" value="<?= @$data['firstname'] ?>">
                         <input type="text" name="lastname" placeholder="<?= Translate::td('Last name') ?>" value="<?= @$data['lastname'] ?>">
                         <input type="email" name="email" placeholder="Email" value="<?= @$data['email'] ?>" autocomplete="nope">
+                        <input type="text" name="phone" placeholder="<?= Translate::td('Phone, mobile') ?>:" value="<?= @$data['phone'] ?>" autocomplete="nope">
                         <select class="select-wallet">
                             <option value="choose" disabled selected><?= Translate::td('Choose type wallet') ?></option>
                             <option value="inner-wallet"><?= Translate::td('Inner wallet') ?></option>

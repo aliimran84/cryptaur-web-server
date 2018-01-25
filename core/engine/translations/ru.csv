@@ -60,12 +60,15 @@ Re-sent,Отправить ещё раз
 "Phone number verification","Подтверждение номера телефона"
 "You successfully verified your phone number","Вы успешно подтвердили телефонный номер"
 "Wrong code, we have been sended another","Неверный код, мы отправили другой"
+"Wrong code","Неверный код"
 "Two-factor authentication method has been set","Метод двухфакторной авторизации установлен"
 "Input code, that you get with SMS","Введите код, полученный по SMS"
+"Service error, cannot sent code","Ошибка сервиса, невозможно отправить код"
 Authentication code,Код авторизации
 Cancel,Отмена
 Accept,Применить
 Verify,Подтвердить
+You must verify phone number,Вы должны подтвердить номер
 "Authentication code has been sended using preferred method","Код авторизации был отправлен выбранным методом"
 "Authentication codes have been sended","Коды авторизации были отправлены"
 "You cannot sent another code until 3 minutes will expire","Вы не можете отправить новый код, пока не истекут 3 минуты"
