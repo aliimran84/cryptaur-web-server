@@ -12,6 +12,7 @@ use core\models\EthQueue;
 use core\models\Investor;
 use core\secondfactor\API2FA;
 use core\secondfactor\variants_2FA;
+use core\sfchecker\ACTION2FA;
 use core\translate\Translate;
 use core\views\Base_view;
 use core\views\Investor_view;
@@ -45,7 +46,6 @@ class Investor_controller
     const PHONE_VERIFY_NUMBER = 'phone_verify_number';
     const CHOSEN_2FA_METHOD = 'chosen_2fa_method';
     const LAST_2FA_TRY = 'last_2fa_time';
-    const TEMP_DATA_ARR = 'temp_data_arr';
 
     static public function init()
     {
@@ -386,7 +386,7 @@ class Investor_controller
         return FALSE;
     }
     
-    static private function investor2FAFormType()
+    static public function investor2FAFormType()
     {
         if (USE_2FA == FALSE) {
             return NULL;
@@ -399,58 +399,6 @@ class Investor_controller
             return 1;
         }
         return 0;
-    }
-    
-    static private function action2FAVerify($url)
-    {
-        $sfa_form = self::investor2FAFormType();
-        if (USE_2FA == FALSE || is_null($sfa_form)) {
-            return NULL;
-        } else {
-            session_start();
-            $_SESSION[self::SESSION_KEY_TMP] = $url;
-            session_write_close();
-            if ($sfa_form == 0) {
-                Utility::location(self::SECONDFACTOR_URL);
-            } else {
-                Utility::location(self::SECONDFACTORDUAL_URL);
-            }
-        }
-    }
-    
-    static private function access2FAChecker($url)
-    {
-        if (isset($_SESSION[$url]) || USE_2FA == FALSE) {
-            return TRUE;
-        } else {
-            return FALSE;
-        }
-    }
-    
-    static private function access2FAClear($url)
-    {
-        session_start();
-        if (isset($_SESSION[$url])) {
-            unset($_SESSION[$url]);
-        }
-        session_write_close();
-    }
-    
-    static private function access2FAAllow($url)
-    {
-        session_start();
-        $_SESSION[$url] = 1;
-        session_write_close();
-    }
-    
-    static private function smart2FARedirect($url)
-    {
-        switch ($url) {
-            case self::SETTINGS_URL :
-                self::access2FAAllow(self::SETTINGS_URL);
-                Utility::location(self::SETTINGS_URL);
-                break;
-        }
     }
 
     static private function handleLoginRequest()
@@ -503,7 +451,7 @@ class Investor_controller
                     unset($_SESSION[self::SESSION_KEY_TMP]);
                     unset($_SESSION[self::LAST_2FA_TRY]);
                     session_write_close();
-                    self::smart2FARedirect($url);
+                    ACTION2FA::smart2FARedirect($url);
                 }
             }
         }
@@ -532,7 +480,7 @@ class Investor_controller
 
         $checked = API2FA::check($_POST['otp']);
         if ($checked === TRUE) {
-            self::smart2FARedirect($url);
+            ACTION2FA::smart2FARedirect($url);
         }
         Utility::location(self::BASE_URL . '?err=6538&err_text=wrong authentication code');
     }
@@ -564,7 +512,7 @@ class Investor_controller
                     unset($_SESSION[self::SESSION_KEY_TMP]);
                     unset($_SESSION[self::LAST_2FA_TRY]);
                     session_write_close();
-                    self::smart2FARedirect($url);
+                    ACTION2FA::smart2FARedirect($url);
                 }
             }
         }
@@ -594,7 +542,7 @@ class Investor_controller
 
         $checked = API2FA::check_both($_POST['code_1'], $_POST['code_2']);
         if ($checked === TRUE) {
-            self::smart2FARedirect($url);
+            ACTION2FA::smart2FARedirect($url);
         }
         Utility::location(self::BASE_URL . '?err=6538&err_text=wrong authentication code');
     }
@@ -673,13 +621,13 @@ class Investor_controller
         
         if (USE_2FA) {
             session_start();
-            $_SESSION[self::TEMP_DATA_ARR] = [];
-            $_SESSION[self::TEMP_DATA_ARR]['email'] = $email;
-            $_SESSION[self::TEMP_DATA_ARR]['firstname'] = $firstname;
-            $_SESSION[self::TEMP_DATA_ARR]['lastname'] = $lastname;
-            $_SESSION[self::TEMP_DATA_ARR]['referrerId'] = $referrerId;
-            $_SESSION[self::TEMP_DATA_ARR]['password'] = $password;
-            $_SESSION[self::TEMP_DATA_ARR]['phone'] = $phone;
+            $_SESSION[ACTION2FA::TEMP_DATA_ARR] = [];
+            $_SESSION[ACTION2FA::TEMP_DATA_ARR]['email'] = $email;
+            $_SESSION[ACTION2FA::TEMP_DATA_ARR]['firstname'] = $firstname;
+            $_SESSION[ACTION2FA::TEMP_DATA_ARR]['lastname'] = $lastname;
+            $_SESSION[ACTION2FA::TEMP_DATA_ARR]['referrerId'] = $referrerId;
+            $_SESSION[ACTION2FA::TEMP_DATA_ARR]['password'] = $password;
+            $_SESSION[ACTION2FA::TEMP_DATA_ARR]['phone'] = $phone;
             session_write_close();
             Utility::location(self::REGISTER_PHONEVERIFICATION_URL);
         }
@@ -698,14 +646,14 @@ class Investor_controller
     {
         if (
             Application::$authorizedInvestor
-            || !isset($_SESSION[self::TEMP_DATA_ARR])
-            || !isset($_SESSION[self::TEMP_DATA_ARR]['email'])
-            || !isset($_SESSION[self::TEMP_DATA_ARR]['firstname'])
-            || !isset($_SESSION[self::TEMP_DATA_ARR]['lastname'])
-            || !isset($_SESSION[self::TEMP_DATA_ARR]['referrerId'])
-            || !isset($_SESSION[self::TEMP_DATA_ARR]['referrerId'])
-            || !isset($_SESSION[self::TEMP_DATA_ARR]['password'])
-            || !isset($_SESSION[self::TEMP_DATA_ARR]['phone'])
+            || !isset($_SESSION[ACTION2FA::TEMP_DATA_ARR])
+            || !isset($_SESSION[ACTION2FA::TEMP_DATA_ARR]['email'])
+            || !isset($_SESSION[ACTION2FA::TEMP_DATA_ARR]['firstname'])
+            || !isset($_SESSION[ACTION2FA::TEMP_DATA_ARR]['lastname'])
+            || !isset($_SESSION[ACTION2FA::TEMP_DATA_ARR]['referrerId'])
+            || !isset($_SESSION[ACTION2FA::TEMP_DATA_ARR]['referrerId'])
+            || !isset($_SESSION[ACTION2FA::TEMP_DATA_ARR]['password'])
+            || !isset($_SESSION[ACTION2FA::TEMP_DATA_ARR]['phone'])
         ) {
             Utility::location(self::BASE_URL);
         }
@@ -718,7 +666,7 @@ class Investor_controller
             ) {
                 $message = Translate::td('You cannot sent another code until 3 minutes will expire');
             } else {
-                $phone = $_SESSION[self::TEMP_DATA_ARR]['phone'];
+                $phone = $_SESSION[ACTION2FA::TEMP_DATA_ARR]['phone'];
                 session_start();
                 $_SESSION[self::LAST_2FA_TRY] = $time;
                 session_write_close();
@@ -741,14 +689,14 @@ class Investor_controller
     {
         if (
             Application::$authorizedInvestor
-            || !isset($_SESSION[self::TEMP_DATA_ARR])
-            || !isset($_SESSION[self::TEMP_DATA_ARR]['email'])
-            || !isset($_SESSION[self::TEMP_DATA_ARR]['firstname'])
-            || !isset($_SESSION[self::TEMP_DATA_ARR]['lastname'])
-            || !isset($_SESSION[self::TEMP_DATA_ARR]['referrerId'])
-            || !isset($_SESSION[self::TEMP_DATA_ARR]['referrerId'])
-            || !isset($_SESSION[self::TEMP_DATA_ARR]['password'])
-            || !isset($_SESSION[self::TEMP_DATA_ARR]['phone'])
+            || !isset($_SESSION[ACTION2FA::TEMP_DATA_ARR])
+            || !isset($_SESSION[ACTION2FA::TEMP_DATA_ARR]['email'])
+            || !isset($_SESSION[ACTION2FA::TEMP_DATA_ARR]['firstname'])
+            || !isset($_SESSION[ACTION2FA::TEMP_DATA_ARR]['lastname'])
+            || !isset($_SESSION[ACTION2FA::TEMP_DATA_ARR]['referrerId'])
+            || !isset($_SESSION[ACTION2FA::TEMP_DATA_ARR]['referrerId'])
+            || !isset($_SESSION[ACTION2FA::TEMP_DATA_ARR]['password'])
+            || !isset($_SESSION[ACTION2FA::TEMP_DATA_ARR]['phone'])
             || !isset($_POST['otp'])
         ) {
             Utility::location(self::BASE_URL);
@@ -763,13 +711,13 @@ class Investor_controller
         }
         
         session_start();
-        $email = $_SESSION[self::TEMP_DATA_ARR]['email'];
-        $firstname = $_SESSION[self::TEMP_DATA_ARR]['firstname'];
-        $lastname = $_SESSION[self::TEMP_DATA_ARR]['lastname'];
-        $referrerId = $_SESSION[self::TEMP_DATA_ARR]['referrerId'];
-        $password = $_SESSION[self::TEMP_DATA_ARR]['password'];
-        $phone = $_SESSION[self::TEMP_DATA_ARR]['phone'];
-        unset($_SESSION[self::TEMP_DATA_ARR]);
+        $email = $_SESSION[ACTION2FA::TEMP_DATA_ARR]['email'];
+        $firstname = $_SESSION[ACTION2FA::TEMP_DATA_ARR]['firstname'];
+        $lastname = $_SESSION[ACTION2FA::TEMP_DATA_ARR]['lastname'];
+        $referrerId = $_SESSION[ACTION2FA::TEMP_DATA_ARR]['referrerId'];
+        $password = $_SESSION[ACTION2FA::TEMP_DATA_ARR]['password'];
+        $phone = $_SESSION[ACTION2FA::TEMP_DATA_ARR]['phone'];
+        unset($_SESSION[ACTION2FA::TEMP_DATA_ARR]);
         session_write_close();
         
         $confirmationUrl = self::urlForRegistration($email, $firstname, $lastname, $referrerId, $password, $phone);
@@ -881,8 +829,8 @@ EOT;
     static private function handleSettingsForm()
     {
         Investor_controller::isPassAllowed();
-        if (!self::access2FAChecker(self::SETTINGS_URL)) {
-            self::action2FAVerify(self::SETTINGS_URL);
+        if (!ACTION2FA::access2FAChecker(self::SETTINGS_URL)) {
+            ACTION2FA::action2FAVerify(self::SETTINGS_URL);
         }
         
         Base_view::$TITLE = 'Settings';
@@ -911,7 +859,7 @@ EOT;
 
     static private function handleSettingsRequest()
     {
-        if (!Application::$authorizedInvestor || !self::access2FAChecker(self::SETTINGS_URL)) {
+        if (!Application::$authorizedInvestor || !ACTION2FA::access2FAChecker(self::SETTINGS_URL)) {
             Utility::location(self::BASE_URL);
         }
         Application::$authorizedInvestor->setFirstnameLastName(@$_POST['firstname'], @$_POST['lastname']);

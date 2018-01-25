@@ -10,6 +10,9 @@ use core\engine\Router;
 use core\models\EtherWallet;
 use core\models\EthQueue;
 use core\models\Investor;
+use core\secondfactor\API2FA;
+use core\secondfactor\variants_2FA;
+use core\sfchecker\ACTION2FA;
 use core\translate\Translate;
 use core\views\Base_view;
 use core\views\Investor_view;
@@ -38,9 +41,22 @@ class EtherWallet_controller
         if (!Application::$authorizedInvestor) {
             Utility::location();
         }
-        $wallet = EtherWallet::getByInvestorId(Application::$authorizedInvestor->id);
+        $send_type = @$_POST['send_type'];
         $amount = @$_POST['amount'];
-        switch (@$_POST['send_type']) {
+        $address = @$_POST['address'];
+        
+        if (!ACTION2FA::access2FAChecker(self::SEND_WALLET)) {
+            session_start();
+            $_SESSION[ACTION2FA::TEMP_DATA_ARR] = [];
+            $_SESSION[ACTION2FA::TEMP_DATA_ARR]['send_type'] = $send_type;
+            $_SESSION[ACTION2FA::TEMP_DATA_ARR]['amount'] = $amount;
+            $_SESSION[ACTION2FA::TEMP_DATA_ARR]['address'] = $address;
+            session_write_close();
+            ACTION2FA::action2FAVerify(self::SEND_WALLET);
+        }
+        
+        $wallet = EtherWallet::getByInvestorId(Application::$authorizedInvestor->id);
+        switch ($send_type) {
             case 'ETH':
                 $wallet->sendEth($amount, @$_POST['address']);
                 break;
