@@ -58,10 +58,10 @@ class EtherWallet_controller
         $wallet = EtherWallet::getByInvestorId(Application::$authorizedInvestor->id);
         switch ($send_type) {
             case 'ETH':
-                $wallet->sendEth($amount, @$_POST['address']);
+                $wallet->sendEth($amount, $address);
                 break;
             case 'CPT':
-                $wallet->sendCpt($amount, @$_POST['address']);
+                $wallet->sendCpt($amount, $address);
                 break;
 
         }
