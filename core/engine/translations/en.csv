@@ -60,12 +60,15 @@ Re-sent,Re-sent
 "Phone number verification","Phone number verification"
 "You successfully verified your phone number","You successfully verified your phone number"
 "Wrong code, we have been sended another","Wrong code, we have been sended another"
+"Wrong code","Wrong code"
 "Two-factor authentication method has been set","Two-factor authentication method has been set"
 "Input code, that you get with SMS","Input code, that you get with SMS"
+"Service error, cannot sent code","Service error, cannot sent code"
 Authentication code,Authentication code
 Cancel,Cancel
 Accept,Accept
 Verify,Verify
+You must verify phone number,You must verify phone number
 "Authentication code has been sended using preferred method","Authentication code has been sended using preferred method"
 "Authentication codes have been sended","Authentication codes have been sended"
 "You cannot sent another code until 3 minutes will expire","You cannot sent another code until 3 minutes will expire"

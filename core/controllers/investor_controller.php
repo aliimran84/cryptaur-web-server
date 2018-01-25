@@ -33,6 +33,7 @@ class Investor_controller
     const CRYPTAURETHERWALLET_URL = 'investor/cryptauretherwallet';
     const CHANGE_PASSWORD_URL = 'investor/changepassword';
     const REGISTER_URL = 'investor/register';
+    const REGISTER_PHONEVERIFICATION_URL = 'investor/register_verify_phone';
     const PREVIOUS_SYSTEM_REGISTER_URL = 'syndicates/join';
     const REGISTER_CONFIRMATION_URL = 'investor/register_confirm';
     const SETTINGS_URL = 'investor/settings';
@@ -44,6 +45,7 @@ class Investor_controller
     const PHONE_VERIFY_NUMBER = 'phone_verify_number';
     const CHOSEN_2FA_METHOD = 'chosen_2fa_method';
     const LAST_2FA_TRY = 'last_2fa_time';
+    const TEMP_DATA_ARR = 'temp_data_arr';
 
     static public function init()
     {
@@ -119,6 +121,10 @@ class Investor_controller
         }, self::REGISTER_URL, Router::GET_METHOD);
 
         Router::register(function () {
+            self::handleRegistrationPhoneVerificationForm();
+        }, self::REGISTER_PHONEVERIFICATION_URL, Router::GET_METHOD);
+
+        Router::register(function () {
             Utility::location(self::REGISTER_URL . '?referrer_code=' . Router::$queryVar);
         }, self::PREVIOUS_SYSTEM_REGISTER_URL, Router::ANY_METHOD);
 
@@ -128,6 +134,13 @@ class Investor_controller
             }
             self::handleRegistrationRequest();
         }, self::REGISTER_URL, Router::POST_METHOD);
+
+        Router::register(function () {
+            if (Application::$authorizedInvestor) {
+                Utility::location(self::BASE_URL);
+            }
+            self::handleRegistrationPhoneVerificationRequest();
+        }, self::REGISTER_PHONEVERIFICATION_URL, Router::POST_METHOD);
 
         Router::register(function () {
             self::handleRecoverForm();
@@ -656,7 +669,110 @@ class Investor_controller
 
         $firstname = trim(@$_POST['firstname']);
         $lastname = trim(@$_POST['lastname']);
-        $confirmationUrl = self::urlForRegistration($email, $firstname, $lastname, $referrerId, $password);
+        $phone = Utility::clear_except_numbers(@$_POST['phone']);
+        
+        if (USE_2FA) {
+            session_start();
+            $_SESSION[self::TEMP_DATA_ARR] = [];
+            $_SESSION[self::TEMP_DATA_ARR]['email'] = $email;
+            $_SESSION[self::TEMP_DATA_ARR]['firstname'] = $firstname;
+            $_SESSION[self::TEMP_DATA_ARR]['lastname'] = $lastname;
+            $_SESSION[self::TEMP_DATA_ARR]['referrerId'] = $referrerId;
+            $_SESSION[self::TEMP_DATA_ARR]['password'] = $password;
+            $_SESSION[self::TEMP_DATA_ARR]['phone'] = $phone;
+            session_write_close();
+            Utility::location(self::REGISTER_PHONEVERIFICATION_URL);
+        }
+        
+        $confirmationUrl = self::urlForRegistration($email, $firstname, $lastname, $referrerId, $password, $phone);
+        Email::send($email, [], 'Cryptaur: email confirmation', "<p><a href=\"$confirmationUrl\">Confirm email to finish registration</a></p>", true);
+
+        Base_view::$TITLE = 'Email confirmation info';
+        Base_view::$MENU_POINT = Menu_point::Register;
+        echo Base_view::header();
+        echo Base_view::text(Translate::td("Please check your email and follow the sent link"));
+        echo Base_view::footer();
+    }
+    
+    static private function handleRegistrationPhoneVerificationForm()
+    {
+        if (
+            Application::$authorizedInvestor
+            || !isset($_SESSION[self::TEMP_DATA_ARR])
+            || !isset($_SESSION[self::TEMP_DATA_ARR]['email'])
+            || !isset($_SESSION[self::TEMP_DATA_ARR]['firstname'])
+            || !isset($_SESSION[self::TEMP_DATA_ARR]['lastname'])
+            || !isset($_SESSION[self::TEMP_DATA_ARR]['referrerId'])
+            || !isset($_SESSION[self::TEMP_DATA_ARR]['referrerId'])
+            || !isset($_SESSION[self::TEMP_DATA_ARR]['password'])
+            || !isset($_SESSION[self::TEMP_DATA_ARR]['phone'])
+        ) {
+            Utility::location(self::BASE_URL);
+        }
+        $message = "";
+        if (isset($_GET['sent'])) {
+            $time = time();
+            if (
+                isset($_SESSION[self::LAST_2FA_TRY])
+                && $time - $_SESSION[self::LAST_2FA_TRY] < 180
+            ) {
+                $message = Translate::td('You cannot sent another code until 3 minutes will expire');
+            } else {
+                $phone = $_SESSION[self::TEMP_DATA_ARR]['phone'];
+                session_start();
+                $_SESSION[self::LAST_2FA_TRY] = $time;
+                session_write_close();
+                if (API2FA::send_sms($phone)) {
+                    $message = Translate::td('Input code, that you get with SMS');
+                } else { //potential case when some methods have been disabled or broken
+                    $message = Translate::td('Service error, cannot sent code');
+                }
+            }
+        }
+        
+        Base_view::$TITLE = 'Registration';
+        Base_view::$MENU_POINT = Menu_point::Register;
+        echo Base_view::header();
+        echo Investor_view::registerPhoneVerificationForm($message);
+        echo Base_view::footer();
+    }
+    
+    static private function handleRegistrationPhoneVerificationRequest()
+    {
+        if (
+            Application::$authorizedInvestor
+            || !isset($_SESSION[self::TEMP_DATA_ARR])
+            || !isset($_SESSION[self::TEMP_DATA_ARR]['email'])
+            || !isset($_SESSION[self::TEMP_DATA_ARR]['firstname'])
+            || !isset($_SESSION[self::TEMP_DATA_ARR]['lastname'])
+            || !isset($_SESSION[self::TEMP_DATA_ARR]['referrerId'])
+            || !isset($_SESSION[self::TEMP_DATA_ARR]['referrerId'])
+            || !isset($_SESSION[self::TEMP_DATA_ARR]['password'])
+            || !isset($_SESSION[self::TEMP_DATA_ARR]['phone'])
+            || !isset($_POST['otp'])
+        ) {
+            Utility::location(self::BASE_URL);
+        }
+        
+        $checked = API2FA::check($_POST['otp']);
+        if ($checked === FALSE) {
+            echo Base_view::header();
+            echo Investor_view::registerPhoneVerificationForm(Translate::td('Wrong code'));
+            echo Base_view::footer();
+            exit;
+        }
+        
+        session_start();
+        $email = $_SESSION[self::TEMP_DATA_ARR]['email'];
+        $firstname = $_SESSION[self::TEMP_DATA_ARR]['firstname'];
+        $lastname = $_SESSION[self::TEMP_DATA_ARR]['lastname'];
+        $referrerId = $_SESSION[self::TEMP_DATA_ARR]['referrerId'];
+        $password = $_SESSION[self::TEMP_DATA_ARR]['password'];
+        $phone = $_SESSION[self::TEMP_DATA_ARR]['phone'];
+        unset($_SESSION[self::TEMP_DATA_ARR]);
+        session_write_close();
+        
+        $confirmationUrl = self::urlForRegistration($email, $firstname, $lastname, $referrerId, $password, $phone);
         Email::send($email, [], 'Cryptaur: email confirmation', "<p><a href=\"$confirmationUrl\">Confirm email to finish registration</a></p>", true);
 
         Base_view::$TITLE = 'Email confirmation info';
@@ -741,7 +857,7 @@ EOT;
             echo Base_view::footer();
             return;
         }
-        $registerResult = Investor::registerUser($data['email'], $data['firstname'], $data['lastname'], $data['referrer_id'], $data['password_hash']);
+        $registerResult = Investor::registerUser($data['email'], $data['firstname'], $data['lastname'], $data['referrer_id'], $data['password_hash'], $data['phone']);
         if ($registerResult < 0) {
             Base_view::$TITLE = 'Email confirmation problem';
             Base_view::$MENU_POINT = Menu_point::Register;
@@ -864,14 +980,15 @@ EOT;
         return hash('sha256', $password . APPLICATION_ID . 'investor');
     }
 
-    static public function urlForRegistration($email, $firstname, $lastname, $referrer_id, $password)
+    static public function urlForRegistration($email, $firstname, $lastname, $referrer_id, $password, $phone)
     {
         $data = [
             'email' => $email,
             'firstname' => $firstname,
             'lastname' => $lastname,
             'referrer_id' => $referrer_id,
-            'password_hash' => self::hashPassword($password)
+            'password_hash' => self::hashPassword($password),
+            'phone' => $phone
         ];
         return APPLICATION_URL . '/' . self::REGISTER_CONFIRMATION_URL . '?d=' . Utility::encodeData($data);
     }
