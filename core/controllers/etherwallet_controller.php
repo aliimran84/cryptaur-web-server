@@ -10,8 +10,6 @@ use core\engine\Router;
 use core\models\EtherWallet;
 use core\models\EthQueue;
 use core\models\Investor;
-use core\secondfactor\API2FA;
-use core\secondfactor\variants_2FA;
 use core\sfchecker\ACTION2FA;
 use core\translate\Translate;
 use core\views\Base_view;
