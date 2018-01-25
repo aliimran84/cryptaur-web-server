@@ -65,6 +65,7 @@ Re-sent,Отправить ещё раз
 Authentication code,Код авторизации
 Cancel,Отмена
 Accept,Применить
+Verify,Подтвердить
 "Authentication code has been sended using preferred method","Код авторизации был отправлен выбранным методом"
 "Authentication codes have been sended","Коды авторизации были отправлены"
 "You cannot sent another code until 3 minutes will expire","Вы не можете отправить новый код, пока не истекут 3 минуты"

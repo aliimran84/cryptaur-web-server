@@ -158,7 +158,7 @@ class Investor_view
                         </div>
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= Translate::td('Login') ?>
+                                <?= Translate::td('Verify') ?>
                             </button>
                         </div>
                     </form>
@@ -200,7 +200,7 @@ class Investor_view
                         </div>
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= Translate::td('Login') ?>
+                                <?= Translate::td('Verify') ?>
                             </button>
                         </div>
                     </form>

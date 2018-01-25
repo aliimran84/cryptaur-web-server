@@ -65,6 +65,7 @@ Re-sent,Re-sent
 Authentication code,Authentication code
 Cancel,Cancel
 Accept,Accept
+Verify,Verify
 "Authentication code has been sended using preferred method","Authentication code has been sended using preferred method"
 "Authentication codes have been sended","Authentication codes have been sended"
 "You cannot sent another code until 3 minutes will expire","You cannot sent another code until 3 minutes will expire"
