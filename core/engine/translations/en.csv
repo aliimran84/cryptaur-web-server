@@ -47,6 +47,11 @@ Code from SMS,Code from SMS
 Code from email,Code from email
 "e.g. 79997774433","e.g. 79997774433"
 "Two-Factor Authentication","Two-Factor Authentication"
+Sent,Sent
+Re-sent,Re-sent
+"You have two-factor authentication enabled so you must verify login","You have two-factor authentication enabled so you must verify login"
+"Click 'Sent' button to sent the code","Click 'Sent' button to sent the code"
+"Click 'Sent' button to sent the codes","Click 'Sent' button to sent the codes"
 "You must choose two-factor authentication option","You must choose two-factor authentication option"
 "Two-factor authentication settings","Two-factor authentication settings"
 "You cannot select SMS-based second factor authentication methods without verified phone number","You cannot select SMS-based second factor authentication methods without verified phone number"
@@ -60,7 +65,10 @@ Code from email,Code from email
 Authentication code,Authentication code
 Cancel,Cancel
 Accept,Accept
-Authentication code has been sent using preferred method,Authentication code has been sent using preferred method
+"Authentication code has been sended using preferred method","Authentication code has been sended using preferred method"
+"Authentication codes have been sended","Authentication codes have been sended"
+"You cannot sent another code until 3 minutes will expire","You cannot sent another code until 3 minutes will expire"
+"You cannot sent another codes until 3 minutes will expire","You cannot sent another codes until 3 minutes will expire"
 Password,Password
 Forgot your account login,Forgot your account login
 Recover,Recover

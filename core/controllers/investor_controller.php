@@ -43,6 +43,7 @@ class Investor_controller
 
     const PHONE_VERIFY_NUMBER = 'phone_verify_number';
     const CHOSEN_2FA_METHOD = 'chosen_2fa_method';
+    const LAST_2FA_TRY = 'last_2fa_time';
 
     static public function init()
     {
@@ -357,25 +358,34 @@ class Investor_controller
     static private function sent2FARequest($investorId)
     {
         if (USE_2FA == FALSE) {
+            return FALSE;
+        }
+        $user = Investor::getById($investorId);
+        if (!in_array($user->preferred_2fa, API2FA::$allowedMethods)) {
+            return FALSE;
+        } elseif ($user->preferred_2fa == variants_2FA::email) {
+            return API2FA::send_email($user->email);
+        } elseif ($user->preferred_2fa == variants_2FA::sms) {
+            return API2FA::send_sms($user->phone);
+        } elseif ($user->preferred_2fa == variants_2FA::both) {
+            return API2FA::send_both($user->email, $user->phone);
+        }
+        return FALSE;
+    }
+    
+    static private function investor2FAFormType($investorId)
+    {
+        if (USE_2FA == FALSE) {
             return NULL;
         }
         $user = Investor::getById($investorId);
-        $form_type = 0; //0 - single-code from, 1 - dual-code form
-        $sent = false;
-        if (!in_array($user->preferred_2fa, API2FA::$allowedMethods)) {
+        //0 - single-code form, 1 - dual-code form
+        if ($user->preferred_2fa == variants_2FA::none) {
             return NULL;
-        } elseif ($user->preferred_2fa == variants_2FA::email) {
-            $sent = API2FA::send_email($user->email);
-        } elseif ($user->preferred_2fa == variants_2FA::sms) {
-            $sent = API2FA::send_sms($user->phone);
         } elseif ($user->preferred_2fa == variants_2FA::both) {
-            $sent = API2FA::send_both($user->email, $user->phone);
-            $form_type = 1;
+            return 1;
         }
-        if ($sent === TRUE) {
-            return $form_type;
-        }
-        return NULL;
+        return 0;
     }
 
     static private function handleLoginRequest()
@@ -385,7 +395,7 @@ class Investor_controller
         $investorId = @Investor::getInvestorIdByEmailPassword($email, $password);
         $investor = null;
         if ($investorId) {
-            $sfa_used = self::sent2FARequest($investorId); //TRUE if user USE the 2FA
+            $sfa_used = self::investor2FAFormType($investorId); //TRUE if user USE the 2FA
             if (USE_2FA == FALSE || is_null($sfa_used)) {
                 self::loginWithId($investorId);
                 $investor = Investor::getById($investorId);
@@ -415,8 +425,34 @@ class Investor_controller
 
     static private function handleSecondfactorForm($message = '')
     {
-        if (Application::$authorizedInvestor) {
+        if (
+            Application::$authorizedInvestor
+            || !isset($_SESSION[self::SESSION_KEY_TMP])
+        ) {
             Utility::location(self::BASE_URL);
+        }
+        if (isset($_GET['sent'])) {
+            $time = time();
+            if (
+                isset($_SESSION[self::LAST_2FA_TRY])
+                && $time - $_SESSION[self::LAST_2FA_TRY] < 180
+            ) {
+                $message = Translate::td('You cannot sent another code until 3 minutes will expire');
+            } else {
+                session_start();
+                $_SESSION[self::LAST_2FA_TRY] = $time;
+                session_write_close();
+                if (self::sent2FARequest($_SESSION[self::SESSION_KEY_TMP])) {
+                    $message = Translate::td('Authentication code has been sended using preferred method');
+                } else { //potential case when some methods have been disabled or broken
+                    session_start();
+                    unset($_SESSION[self::SESSION_KEY_TMP]);
+                    unset($_SESSION[self::LAST_2FA_TRY]);
+                    session_write_close();
+                    self::loginWithId($_SESSION[self::SESSION_KEY_TMP]);
+                    Utility::location(self::BASE_URL);
+                }
+            }
         }
         Base_view::$TITLE = 'Two-Factor Authentication';
         Base_view::$MENU_POINT = Menu_point::Login;
@@ -438,6 +474,7 @@ class Investor_controller
 
         session_start();
         unset($_SESSION[self::SESSION_KEY_TMP]);
+        unset($_SESSION[self::LAST_2FA_TRY]);
         session_write_close();
 
         $checked = API2FA::check($_POST['otp']);
@@ -450,8 +487,34 @@ class Investor_controller
 
     static private function handleSecondfactorDualForm($message = '')
     {
-        if (Application::$authorizedInvestor) {
+        if (
+            Application::$authorizedInvestor
+            || !isset($_SESSION[self::SESSION_KEY_TMP])
+        ) {
             Utility::location(self::BASE_URL);
+        }
+        if (isset($_GET['sent'])) {
+            $time = time();
+            if (
+                isset($_SESSION[self::LAST_2FA_TRY])
+                && $time - $_SESSION[self::LAST_2FA_TRY] < 180
+            ) {
+                $message = Translate::td('You cannot sent another codes until 3 minutes will expire');
+            } else {
+                session_start();
+                $_SESSION[self::LAST_2FA_TRY] = $time;
+                session_write_close();
+                if (self::sent2FARequest($_SESSION[self::SESSION_KEY_TMP])) {
+                    $message = Translate::td('Authentication codes have been sended');
+                } else { //potential case when some methods have been disabled or broken
+                    session_start();
+                    unset($_SESSION[self::SESSION_KEY_TMP]);
+                    unset($_SESSION[self::LAST_2FA_TRY]);
+                    session_write_close();
+                    self::loginWithId($_SESSION[self::SESSION_KEY_TMP]);
+                    Utility::location(self::BASE_URL);
+                }
+            }
         }
         Base_view::$TITLE = 'Two-Factor Authentication';
         Base_view::$MENU_POINT = Menu_point::Login;
@@ -474,6 +537,7 @@ class Investor_controller
 
         session_start();
         unset($_SESSION[self::SESSION_KEY_TMP]);
+        unset($_SESSION[self::LAST_2FA_TRY]);
         session_write_close();
 
         $checked = API2FA::check_both($_POST['code_1'], $_POST['code_2']);
