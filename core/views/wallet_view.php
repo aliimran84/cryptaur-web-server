@@ -34,17 +34,22 @@ class Wallet_view
                 <script>
                     (function ($) {
                         <?php
-                        $wallets = [];
+                        $addresses = [];
+                        $mores = [];
                         foreach (Coin::coins() as $coin) {
                             $wallet = Wallet::getByInvestoridCoin(Application::$authorizedInvestor->id, $coin);
                             $address = null;
+                            $more = null;
                             if ($wallet) {
                                 $address = @$wallet->address;
+                                $more = @$wallet->more;
                             }
-                            $wallets[$coin] = $address;
+                            $addresses[$coin] = $address;
+                            $mores[$coin] = $more;
                         }
                         ?>
-                        var investorWalletAddresses = <?= json_encode($wallets, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
+                        var investorWalletsAddress = <?= json_encode($addresses, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
+                        var investorWalletsMore = <?= json_encode($mores, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?>;
                         $(document).ready(function () {
                             <?php
                             $coinsRates = [];
@@ -103,11 +108,24 @@ class Wallet_view
                                 var input = section.find('.wallet_view-new_contribution-div_amount[data-coin=' + coin + '] > input');
                                 onAmountChange(input);
                                 var walletAddrText = 'Wallet registration in progress';
-                                if (investorWalletAddresses[coin]) {
-                                    walletAddrText = investorWalletAddresses[coin];
+                                var walletMoreText = '';
+                                if (investorWalletsAddress[coin]) {
+                                    walletAddrText = investorWalletsAddress[coin];
+                                }
+                                if (investorWalletsMore[coin]) {
+                                    walletMoreText = investorWalletsMore[coin];
+                                    switch (coin.toLowerCase()) {
+                                        case 'xem':
+                                            walletMoreText = 'message: ' + walletMoreText;
+                                            break;
+                                        case 'xrp':
+                                            walletMoreText = 'DestinationTag: ' + walletMoreText;
+                                            break;
+                                    }
                                 }
                                 section.find('.wallet_view-new_contribution-selected_currency').text(coin);
                                 section.find('.wallet_view-new_contribution-selected_wallet_addr').text(walletAddrText);
+                                section.find('.wallet_view-new_contribution-selected_wallet_more').text(walletMoreText);
                             });
                         });
                     })(jQuery);
@@ -156,6 +174,7 @@ class Wallet_view
                         <span class="wallet_view-new_contribution-selected_currency"></span>
                     </p>
                     <h5 class="wallet_view-new_contribution-selected_wallet_addr"></h5>
+                    <h5 class="wallet_view-new_contribution-selected_wallet_more"></h5>
                     <p>
                         <?= Translate::td('You will get') ?>:
                         <span class="wallet_view-new_contribution-calculated_selected_to_tokens"></span>
