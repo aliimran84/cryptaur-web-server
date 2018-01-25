@@ -129,12 +129,12 @@ class EtherWallet
         ;", [$this->eth, $this->cpt, $this->id]);
     }
 
-    public function resetUpdateEndDateTime()
+    public function resetUpdateDateTime()
     {
-        $this->datetime_update = time();
+        $this->datetime_update = 0;
         DB::set("
-            UPDATE `eth_queue` SET
-                `datetime_end` = 0
+            UPDATE `eth_queue_wallets` SET
+                `datetime_update` = 0
             WHERE `id` = ?
         ;", [$this->id]);
     }
