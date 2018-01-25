@@ -457,7 +457,7 @@ class EthQueue
             'receiver' => $ethAddress,
             'wei' => $weiValue
         ], ETH_QUEUE_KEY);
-        Utility::log('eth_queue_sendethbounty/' . Utility::microtime_float(), [
+        Utility::log('eth_queue_sendethwallet/' . Utility::microtime_float(), [
             '_uuid' => $eth_queue->uuid,
             '_user' => $user,
             '_sender' => $sender,
@@ -503,7 +503,7 @@ class EthQueue
             'receiver' => $ethAddress,
             'tokens' => $cptWithoutDecimals
         ], ETH_QUEUE_KEY);
-        Utility::log('eth_queue_sendethbounty/' . Utility::microtime_float(), [
+        Utility::log('eth_queue_sendcpptwallet/' . Utility::microtime_float(), [
             '_uuid' => $eth_queue->uuid,
             '_user' => $user,
             '_sender' => $sender,
