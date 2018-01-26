@@ -14,6 +14,7 @@ use core\views\Dashboard_view;
 class ACTION2FA
 {
     const TEMP_DATA_ARR = 'temp_data_arr';
+    const LAST_SECURED_TIME= 'last_secured_time';
     
     static public function action2FAVerify($url)
     {
@@ -34,34 +35,24 @@ class ACTION2FA
     
     static public function access2FAChecker($url)
     {
-        if (isset($_SESSION[$url]) || USE_2FA == FALSE) {
+        if (
+            (isset($_SESSION[self::LAST_SECURED_TIME]) && time() - $_SESSION[self::LAST_SECURED_TIME] < SECURED_SESSION_TIME)
+            || USE_2FA == FALSE
+        ) {
             return TRUE;
         } else {
             return FALSE;
         }
     }
     
-    static public function access2FAClear($url)
-    {
-        session_start();
-        if (isset($_SESSION[$url])) {
-            unset($_SESSION[$url]);
-        }
-        session_write_close();
-    }
-    
-    static public function access2FAAllow($url)
-    {
-        session_start();
-        $_SESSION[$url] = 1;
-        session_write_close();
-    }
-    
     static public function smart2FARedirect($url)
     {
+        session_start();
+        $_SESSION[self::LAST_SECURED_TIME] = time();
+        session_write_close();
+        
         switch ($url) {
             case Investor_controller::SETTINGS_URL :
-                self::access2FAAllow(Investor_controller::SETTINGS_URL);
                 Utility::location(Investor_controller::SETTINGS_URL);
                 break;
             
@@ -94,44 +85,44 @@ class ACTION2FA
                 Utility::location(Investor_controller::CRYPTAURETHERWALLET_URL);
                 break;
             
-                case Bounty_controller::INVESTOR_REALIZE_URL :
-                    if (
-                        !isset($_SESSION[self::TEMP_DATA_ARR]['percentsForReinvesting'])
-                    ) {
-                        break;
-                    }
-                    
-                    $percentsForReinvesting = $_SESSION[self::TEMP_DATA_ARR]['percentsForReinvesting'];
-                    
-                    session_start();
-                    unset($_SESSION[self::TEMP_DATA_ARR]);
-                    session_write_close();
-                    
-                    if ($percentsForReinvesting < 0 && $percentsForReinvesting > 100) {
-                        Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7252');
-                    }
-                    if (Application::$authorizedInvestor->eth_bounty == 0) {
-                        Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7253');
-                    }
-                    if (!Bounty::withdrawIsOn() || !Bounty::reinvestIsOn()) {
-                        Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7254');
-                    }
-                    $ethToReinvest = Utility::minPrecisionNumber(Application::$authorizedInvestor->eth_bounty * ($percentsForReinvesting / 100));
-                    $ethToWithdraw = Application::$authorizedInvestor->eth_bounty - $ethToReinvest;
-
-                    if ($ethToWithdraw > 0) {
-                        if (!Application::$authorizedInvestor->withdraw($ethToWithdraw)) {
-                            Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7256');
-                        }
-                    }
-                    if ($ethToReinvest > 0) {
-                        if (!Application::$authorizedInvestor->reinvestEth($ethToReinvest)) {
-                            Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7257');
-                        }
-                    }
-
-                    Utility::location(Dashboard_controller::BASE_URL);
+            case Bounty_controller::INVESTOR_REALIZE_URL :
+                if (
+                    !isset($_SESSION[self::TEMP_DATA_ARR]['percentsForReinvesting'])
+                ) {
                     break;
+                }
+
+                $percentsForReinvesting = $_SESSION[self::TEMP_DATA_ARR]['percentsForReinvesting'];
+
+                session_start();
+                unset($_SESSION[self::TEMP_DATA_ARR]);
+                session_write_close();
+
+                if ($percentsForReinvesting < 0 && $percentsForReinvesting > 100) {
+                    Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7252');
+                }
+                if (Application::$authorizedInvestor->eth_bounty == 0) {
+                    Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7253');
+                }
+                if (!Bounty::withdrawIsOn() || !Bounty::reinvestIsOn()) {
+                    Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7254');
+                }
+                $ethToReinvest = Utility::minPrecisionNumber(Application::$authorizedInvestor->eth_bounty * ($percentsForReinvesting / 100));
+                $ethToWithdraw = Application::$authorizedInvestor->eth_bounty - $ethToReinvest;
+
+                if ($ethToWithdraw > 0) {
+                    if (!Application::$authorizedInvestor->withdraw($ethToWithdraw)) {
+                        Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7256');
+                    }
+                }
+                if ($ethToReinvest > 0) {
+                    if (!Application::$authorizedInvestor->reinvestEth($ethToReinvest)) {
+                        Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7257');
+                    }
+                }
+
+                Utility::location(Dashboard_controller::BASE_URL);
+                break;
 
         }
     }

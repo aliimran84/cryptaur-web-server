@@ -102,6 +102,7 @@ class Configuration
         if (
             !isset($config['2fa'])
             || !isset($config['2fa']['use_2fa'])
+            || !isset($config['2fa']['secured_session_time'])
             || !isset($config['2fa']['NONE'])
             || !isset($config['2fa']['EMAIL'])
             || !isset($config['2fa']['SMS'])
@@ -110,6 +111,7 @@ class Configuration
             $needConfigure = true;
             $config['2fa'] = [
                 '!_use_2fa' => false,
+                'secured_session_time' => 180,
                 'NONE' => true,
                 'EMAIL' => true,
                 'SMS' => false,
@@ -117,6 +119,7 @@ class Configuration
             ];
         } else {
             DEFINE('USE_2FA', $config['2fa']['use_2fa']);
+            DEFINE('SECURED_SESSION_TIME', $config['2fa']['secured_session_time']);
             DEFINE('NONE_2FA', $config['2fa']['NONE']);
             DEFINE('EMAIL_2FA', $config['2fa']['EMAIL']);
             DEFINE('SMS_2FA', $config['2fa']['SMS']);

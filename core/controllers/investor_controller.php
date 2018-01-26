@@ -829,7 +829,7 @@ EOT;
     static private function handleSettingsForm()
     {
         Investor_controller::isPassAllowed();
-        if (!ACTION2FA::access2FAChecker(self::SETTINGS_URL)) {
+        if (!ACTION2FA::access2FAChecker()) {
             ACTION2FA::action2FAVerify(self::SETTINGS_URL);
         }
         
@@ -859,7 +859,7 @@ EOT;
 
     static private function handleSettingsRequest()
     {
-        if (!Application::$authorizedInvestor || !ACTION2FA::access2FAChecker(self::SETTINGS_URL)) {
+        if (!Application::$authorizedInvestor || !ACTION2FA::access2FAChecker()) {
             Utility::location(self::BASE_URL);
         }
         Application::$authorizedInvestor->setFirstnameLastName(@$_POST['firstname'], @$_POST['lastname']);

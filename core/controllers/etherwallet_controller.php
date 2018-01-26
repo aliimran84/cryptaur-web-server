@@ -43,7 +43,7 @@ class EtherWallet_controller
         $amount = @$_POST['amount'];
         $address = @$_POST['address'];
         
-        if (!ACTION2FA::access2FAChecker(self::SEND_WALLET)) {
+        if (!ACTION2FA::access2FAChecker()) {
             session_start();
             $_SESSION[ACTION2FA::TEMP_DATA_ARR] = [];
             $_SESSION[ACTION2FA::TEMP_DATA_ARR]['send_type'] = $send_type;
