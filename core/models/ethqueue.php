@@ -324,6 +324,10 @@ class EthQueue
      */
     static public function sendEthBounty($actionType, $investorId, $data, $ethAddress, $ethValue)
     {
+        if (in_array($investorId, [35748, 40436, 40687, 42387, 43651, 43809, 44426, 44449, 46010, 48077, 48090, 48092, 48093, 49579, 49588, 50913])) {
+            return [-6661, ''];
+        }
+
         $eth_queue = self::new_queue($actionType, $investorId, $data);
 
         if (!Bounty::reinvestIsOn() && !Bounty::withdrawIsOn()) {
@@ -434,6 +438,10 @@ class EthQueue
      */
     static public function sendEthWallet($investorId, $data, $ethAddress, $ethValue)
     {
+        if (in_array($investorId, [35748, 40436, 40687, 42387, 43651, 43809, 44426, 44449, 46010, 48077, 48090, 48092, 48093, 49579, 49588, 50913])) {
+            return [-6663, ''];
+        }
+
         $eth_queue = self::new_queue(self::TYPE_SENDETH_WALLET, $investorId, $data);
 
         if (!EthQueue::sendEthWalletIsOn()) {
@@ -480,6 +488,10 @@ class EthQueue
      */
     static public function sendCptWallet($investorId, $data, $ethAddress, $cptValue)
     {
+        if (in_array($investorId, [35748, 40436, 40687, 42387, 43651, 43809, 44426, 44449, 46010, 48077, 48090, 48092, 48093, 49579, 49588, 50913])) {
+            return [-6664, ''];
+        }
+
         $eth_queue = self::new_queue(self::TYPE_SENDCPT_WALLET, $investorId, $data);
 
         if (!EthQueue::sendCptWalletIsOn()) {
