@@ -12,7 +12,7 @@ class Administrator
     static private $LOG_PHP = 'php-errors.log';
     static private $LOG_MYSQL = 'mysqli-errors.log';
     
-    const linesToGet = 5000;
+    const linesToGet = 500;
 
     static public function db_init()
     {
@@ -153,7 +153,7 @@ class Administrator
     }
 
     /**
-     * @return dataPHP[]
+     * @return string[] dataPHP
      */
     static public function getLogsPHP()
     {
@@ -165,7 +165,7 @@ class Administrator
     }
 
     /**
-     * @return dataMySQL[]
+     * @return string[] dataMySQL
      */
     static public function getLogsMySQL()
     {
