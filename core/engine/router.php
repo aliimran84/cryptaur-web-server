@@ -70,7 +70,7 @@ class Router
      * @param string $method
      * @return callable
      */
-    static private function getByPathAndMethod($path, $method = Router::ANY_METHOD)
+    static public function getByPathAndMethod($path, $method = Router::ANY_METHOD)
     {
         $path = trim($path, '/');
         $router = self::inst();

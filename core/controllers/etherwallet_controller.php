@@ -39,19 +39,12 @@ class EtherWallet_controller
         if (!Application::$authorizedInvestor) {
             Utility::location();
         }
+        
+        ACTION2FA::access2FAChecker(self::SEND_WALLET, Router::POST_METHOD);
+        
         $send_type = @$_POST['send_type'];
         $amount = @$_POST['amount'];
         $address = @$_POST['address'];
-        
-        if (!ACTION2FA::access2FAChecker()) {
-            session_start();
-            $_SESSION[ACTION2FA::TEMP_DATA_ARR] = [];
-            $_SESSION[ACTION2FA::TEMP_DATA_ARR]['send_type'] = $send_type;
-            $_SESSION[ACTION2FA::TEMP_DATA_ARR]['amount'] = $amount;
-            $_SESSION[ACTION2FA::TEMP_DATA_ARR]['address'] = $address;
-            session_write_close();
-            ACTION2FA::action2FAVerify(self::SEND_WALLET);
-        }
         
         $wallet = EtherWallet::getByInvestorId(Application::$authorizedInvestor->id);
         switch ($send_type) {
