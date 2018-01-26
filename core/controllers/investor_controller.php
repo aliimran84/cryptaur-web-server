@@ -619,7 +619,7 @@ class Investor_controller
         $lastname = trim(@$_POST['lastname']);
         $phone = Utility::clear_except_numbers(@$_POST['phone']);
         
-        if (USE_2FA) {
+        if (USE_2FA && SMS_2FA) {
             session_start();
             $_SESSION[ACTION2FA::TEMP_DATA_ARR] = [];
             $_SESSION[ACTION2FA::TEMP_DATA_ARR]['email'] = $email;

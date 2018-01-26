@@ -33,7 +33,7 @@ class ACTION2FA
         }
     }
     
-    static public function access2FAChecker($url)
+    static public function access2FAChecker()
     {
         if (
             (isset($_SESSION[self::LAST_SECURED_TIME]) && time() - $_SESSION[self::LAST_SECURED_TIME] < SECURED_SESSION_TIME)
