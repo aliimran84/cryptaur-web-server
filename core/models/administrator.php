@@ -11,7 +11,7 @@ class Administrator
     public $email = '';
     static private $LOG_PHP = 'php-errors.log';
     static private $LOG_MYSQL = 'mysqli-errors.log';
-    
+
     const linesToGet = 500;
 
     static public function db_init()
@@ -35,7 +35,6 @@ class Administrator
             DEFAULT CHARSET utf8
             DEFAULT COLLATE utf8_general_ci
         ;");
-
     }
 
     /**
