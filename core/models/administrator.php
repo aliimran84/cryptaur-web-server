@@ -11,6 +11,8 @@ class Administrator
     public $email = '';
     static private $LOG_PHP = 'php-errors.log';
     static private $LOG_MYSQL = 'mysqli-errors.log';
+    
+    const linesToGet = 5000;
 
     static public function db_init()
     {
@@ -155,8 +157,10 @@ class Administrator
      */
     static public function getLogsPHP()
     {
-        $dataPHP = file_get_contents(PATH_TO_TMP_DIR . '/' . self::$LOG_PHP);
-        $dataPHP = explode("\n", $dataPHP);
+        $dataPHP = [];
+        $path = PATH_TO_TMP_DIR . '/' . self::$LOG_PHP;
+        $lines = self::linesToGet;
+        exec("tail -n $lines $path", $dataPHP);
         return $dataPHP;
     }
 
@@ -165,8 +169,10 @@ class Administrator
      */
     static public function getLogsMySQL()
     {
-        $dataMySQL = file_get_contents(PATH_TO_TMP_DIR . '/' . self::$LOG_MYSQL);
-        $dataMySQL = explode("\n", $dataMySQL);
+        $dataMySQL = [];
+        $path = PATH_TO_TMP_DIR . '/' . self::$LOG_MYSQL;
+        $lines = self::linesToGet;
+        exec("tail -n $lines $path", $dataMySQL);
         return $dataMySQL;
     }
 }
