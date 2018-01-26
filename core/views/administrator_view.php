@@ -115,29 +115,20 @@ class Administrator_view
         ?>
         <div class="row">
             <ul class="tabs">
-                <li class="tab col s4"><a class="active" href="#logPHP">PHP</a></li>
-                <li class="tab col s4"><a href="#logMySQL">MySQL</a></li>
-                <li class="tab col s4"><a href="#alarmMessages"><?= Translate::td('Alarm messages') ?></a></li>
+                <li class="tab col s4">
+                    <a class="active" href="#alarmMessages"><?= Translate::td('Alarm messages') ?></a></li>
+                <li class="tab col s4">
+                    <a href="#logPHP">PHP</a>
+                </li>
+                <li class="tab col s4">
+                    <a href="#logMySQL">MySQL</a>
+                </li>
             </ul>
-            <div id="logPHP" class="col s12">
-                <ul>
-                    <?php for ($i = count($dataLogPHP) - 1; $i >= count($dataLogPHP) - 1000; $i--) : ?>
-                        <li><?= $dataLogPHP[$i]; ?></li>
-                    <?php endfor; ?>
-                </ul>
-            </div>
-            <div id="logMySQL" class="col s12">
-                <ul>
-                    <?php for ($i = count($dataLogMySQL) - 3000 >= 0? count($dataLogMySQL) - 3000 : 0; $i < count($dataLogMySQL); $i++) : ?>
-                        <li><?= $dataLogMySQL[$i]; ?></li>
-                    <?php endfor; ?>
-                </ul>
-            </div>
             <div id="alarmMessages" class="col s12">
                 <ul>
                     <?php foreach ($alarmMessages as $alarmMessage) : ?>
-                        <form method="post" action="<?= Administrator_controller::LOGS ?>#alarmMessages" autocomplete="off">
-                            <li>
+                        <li>
+                            <form method="post" action="<?= Administrator_controller::LOGS ?>#alarmMessages" autocomplete="off">
                                 <input name="id" type="number" class="message-id" value="<?= $alarmMessage['id'] ?>">
                                 <div class="col s12 m10">
                                     <p><?= $alarmMessage['message'] ?></p>
@@ -145,9 +136,27 @@ class Administrator_view
                                 <div class="col s12 m2">
                                     <button type="submit" class="waves-effect waves-light btn btn-send"><?= Translate::td('Delete') ?></button>
                                 </div>
-                            </li>
-                        </form>
+                            </form>
+                        </li>
                     <?php endforeach; ?>
+                </ul>
+            </div>
+            <div id="logPHP" class="col s12" style="display: none;">
+                <ul>
+                    <?php for ($i = count($dataLogPHP) - 1; $i >= count($dataLogPHP) - 1000; $i--) : ?>
+                        <li>
+                            <?= $dataLogPHP[$i]; ?>
+                        </li>
+                    <?php endfor; ?>
+                </ul>
+            </div>
+            <div id="logMySQL" class="col s12" style="display: none;">
+                <ul>
+                    <?php for ($i = count($dataLogMySQL) - 3000 >= 0 ? count($dataLogMySQL) - 3000 : 0; $i < count($dataLogMySQL); $i++) : ?>
+                        <li>
+                            <?= $dataLogMySQL[$i]; ?>
+                        </li>
+                    <?php endfor; ?>
                 </ul>
             </div>
         </div>
