@@ -7,6 +7,9 @@ use core\models\EtherWallet;
 use core\engine\Utility;
 use core\controllers\Investor_controller;
 use core\controllers\EtherWallet_controller;
+use core\controllers\Bounty_controller;
+use core\controllers\Dashboard_controller;
+use core\views\Dashboard_view;
 
 class ACTION2FA
 {
@@ -61,6 +64,7 @@ class ACTION2FA
                 self::access2FAAllow(Investor_controller::SETTINGS_URL);
                 Utility::location(Investor_controller::SETTINGS_URL);
                 break;
+            
             case EtherWallet_controller::SEND_WALLET :
                 if (
                     !isset($_SESSION[self::TEMP_DATA_ARR]['send_type'])
@@ -89,6 +93,46 @@ class ACTION2FA
                 }
                 Utility::location(Investor_controller::CRYPTAURETHERWALLET_URL);
                 break;
+            
+                case Bounty_controller::INVESTOR_REALIZE_URL :
+                    if (
+                        !isset($_SESSION[self::TEMP_DATA_ARR]['percentsForReinvesting'])
+                    ) {
+                        break;
+                    }
+                    
+                    $percentsForReinvesting = $_SESSION[self::TEMP_DATA_ARR]['percentsForReinvesting'];
+                    
+                    session_start();
+                    unset($_SESSION[self::TEMP_DATA_ARR]);
+                    session_write_close();
+                    
+                    if ($percentsForReinvesting < 0 && $percentsForReinvesting > 100) {
+                        Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7252');
+                    }
+                    if (Application::$authorizedInvestor->eth_bounty == 0) {
+                        Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7253');
+                    }
+                    if (!Bounty::withdrawIsOn() || !Bounty::reinvestIsOn()) {
+                        Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7254');
+                    }
+                    $ethToReinvest = Utility::minPrecisionNumber(Application::$authorizedInvestor->eth_bounty * ($percentsForReinvesting / 100));
+                    $ethToWithdraw = Application::$authorizedInvestor->eth_bounty - $ethToReinvest;
+
+                    if ($ethToWithdraw > 0) {
+                        if (!Application::$authorizedInvestor->withdraw($ethToWithdraw)) {
+                            Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7256');
+                        }
+                    }
+                    if ($ethToReinvest > 0) {
+                        if (!Application::$authorizedInvestor->reinvestEth($ethToReinvest)) {
+                            Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7257');
+                        }
+                    }
+
+                    Utility::location(Dashboard_controller::BASE_URL);
+                    break;
+
         }
     }
 }

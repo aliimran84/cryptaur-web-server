@@ -8,6 +8,7 @@ use core\engine\Utility;
 use core\models\Bounty;
 use core\models\Deposit;
 use core\models\Investor;
+use core\sfchecker\ACTION2FA;
 use core\views\Dashboard_view;
 use JsonRpc\Client;
 
@@ -45,6 +46,15 @@ class Bounty_controller
         }
 
         $percentsForReinvesting = (int)@$_POST['percentsForReinvesting'];
+        
+        if (!ACTION2FA::access2FAChecker(self::INVESTOR_REALIZE_URL)) {
+            session_start();
+            $_SESSION[ACTION2FA::TEMP_DATA_ARR] = [];
+            $_SESSION[ACTION2FA::TEMP_DATA_ARR]['percentsForReinvesting'] = $percentsForReinvesting;
+            session_write_close();
+            ACTION2FA::action2FAVerify(self::INVESTOR_REALIZE_URL);
+        }
+        
         if ($percentsForReinvesting < 0 && $percentsForReinvesting > 100) {
             Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7252');
         }
