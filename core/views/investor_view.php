@@ -156,11 +156,13 @@ class Investor_view
                                 <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
                             </a>
                         </div>
+                        <?php if (isset($_GET['sent'])) { ?>
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Verify') ?>
                             </button>
                         </div>
+                        <?php } ?>
                     </form>
                 </div>
             </div>
@@ -198,11 +200,13 @@ class Investor_view
                                 <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
                             </a>
                         </div>
+                        <?php if (isset($_GET['sent'])) { ?>
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Verify') ?>
                             </button>
                         </div>
+                        <?php } ?>
                     </form>
                 </div>
             </div>
@@ -237,11 +241,13 @@ class Investor_view
                                 <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
                             </a>
                         </div>
+                        <?php if (isset($_GET['sent'])) { ?>
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Verify') ?>
                             </button>
                         </div>
+                        <?php } ?>
                     </form>
                 </div>
             </div>
