@@ -150,7 +150,7 @@ class Investor_view
                         <?php if ($message) { ?>
                             <label class="blue-text"><?= $message ?></label>
                         <?php } ?>
-                        <input type="password" name="otp" placeholder="<?= Translate::td('Authentication code') ?>" autocomplete="new-password">
+                        <input type="text" name="otp" placeholder="<?= Translate::td('Authentication code') ?>">
                         <div class="row center">
                             <a href="<?= Investor_controller::SECONDFACTOR_URL ?>?sent=1" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
@@ -190,9 +190,9 @@ class Investor_view
                             <label class="blue-text"><?= $message ?></label>
                         <?php } ?>
                         <h5><?= Translate::td('Code from SMS') ?>:</h5>
-                        <input type="password" name="code_1" placeholder="<?= Translate::td('Authentication code') ?>" autocomplete="new-password">
+                        <input type="text" name="code_1" placeholder="<?= Translate::td('Authentication code') ?>">
                         <h5><?= Translate::td('Code from email') ?>:</h5>
-                        <input type="password" name="code_2" placeholder="<?= Translate::td('Authentication code') ?>" autocomplete="new-password">
+                        <input type="text" name="code_2" placeholder="<?= Translate::td('Authentication code') ?>">
                         <div class="row center">
                             <a href="<?= Investor_controller::SECONDFACTORDUAL_URL ?>?sent=1" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
@@ -231,7 +231,7 @@ class Investor_view
                         <?php if ($message) { ?>
                             <label class="blue-text"><?= $message ?></label>
                         <?php } ?>
-                        <input type="password" name="otp" placeholder="<?= Translate::td('Authentication code') ?>" autocomplete="new-password">
+                        <input type="text" name="otp" placeholder="<?= Translate::td('Authentication code') ?>">
                         <div class="row center">
                             <a href="<?= Investor_controller::REGISTER_PHONEVERIFICATION_URL ?>?sent=1" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
@@ -249,7 +249,7 @@ class Investor_view
         <?php
         return ob_get_clean();
     }
-    
+
     static public function phoneVerificationForm($message = '')
     {
         ob_start();
@@ -266,7 +266,7 @@ class Investor_view
                             <label class="blue-text"><?= $message ?></label>
                         <?php } ?>
                         <h5><?= Translate::td('Input code, that you get with SMS') ?></h5>
-                        <input type="password" name="otp" placeholder="<?= Translate::td('Authentication code') ?>" autocomplete="new-password">
+                        <input type="text" name="otp" placeholder="<?= Translate::td('Authentication code') ?>">
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Accept') ?>
