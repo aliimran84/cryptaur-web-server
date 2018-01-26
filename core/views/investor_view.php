@@ -150,19 +150,19 @@ class Investor_view
                         <?php if ($message) { ?>
                             <label class="blue-text"><?= $message ?></label>
                         <?php } ?>
-                        <input type="text" name="otp" placeholder="<?= Translate::td('Authentication code') ?>">
+                        <?php if (isset($_GET['sent'])) { ?>
+                            <input type="text" name="otp" placeholder="<?= Translate::td('Authentication code') ?>">
+                            <div class="row center">
+                                <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                    <?= Translate::td('Verify') ?>
+                                </button>
+                            </div>
+                        <?php } ?>
                         <div class="row center">
                             <a href="<?= Investor_controller::SECONDFACTOR_URL ?>?sent=1" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
                             </a>
                         </div>
-                        <?php if (isset($_GET['sent'])) { ?>
-                        <div class="row center">
-                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= Translate::td('Verify') ?>
-                            </button>
-                        </div>
-                        <?php } ?>
                     </form>
                 </div>
             </div>
@@ -194,19 +194,19 @@ class Investor_view
                         <h5><?= Translate::td('Code from SMS') ?>:</h5>
                         <input type="text" name="code_1" placeholder="<?= Translate::td('Authentication code') ?>">
                         <h5><?= Translate::td('Code from email') ?>:</h5>
-                        <input type="text" name="code_2" placeholder="<?= Translate::td('Authentication code') ?>">
+                        <?php if (isset($_GET['sent'])) { ?>
+                            <input type="text" name="code_2" placeholder="<?= Translate::td('Authentication code') ?>">
+                            <div class="row center">
+                                <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                    <?= Translate::td('Verify') ?>
+                                </button>
+                            </div>
+                        <?php } ?>
                         <div class="row center">
                             <a href="<?= Investor_controller::SECONDFACTORDUAL_URL ?>?sent=1" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
                             </a>
                         </div>
-                        <?php if (isset($_GET['sent'])) { ?>
-                        <div class="row center">
-                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= Translate::td('Verify') ?>
-                            </button>
-                        </div>
-                        <?php } ?>
                     </form>
                 </div>
             </div>
@@ -235,19 +235,19 @@ class Investor_view
                         <?php if ($message) { ?>
                             <label class="blue-text"><?= $message ?></label>
                         <?php } ?>
-                        <input type="text" name="otp" placeholder="<?= Translate::td('Authentication code') ?>">
+                        <?php if (isset($_GET['sent'])) { ?>
+                            <input type="text" name="otp" placeholder="<?= Translate::td('Authentication code') ?>">
+                            <div class="row center">
+                                <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                    <?= Translate::td('Verify') ?>
+                                </button>
+                            </div>
+                        <?php } ?>
                         <div class="row center">
                             <a href="<?= Investor_controller::REGISTER_PHONEVERIFICATION_URL ?>?sent=1" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
                             </a>
                         </div>
-                        <?php if (isset($_GET['sent'])) { ?>
-                        <div class="row center">
-                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= Translate::td('Verify') ?>
-                            </button>
-                        </div>
-                        <?php } ?>
                     </form>
                 </div>
             </div>
