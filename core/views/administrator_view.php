@@ -111,7 +111,7 @@ class Administrator_view
         ob_start();
         $dataLogPHP = Administrator::getLogsPHP();
         $dataLogMySQL = Administrator::getLogsMySQL();
-        $alarmMessages = Administrator::getAlarmMessage();
+        $alarmMessages = Administrator::getAlarmMessage(200);
         ?>
         <div class="row">
             <ul class="tabs">

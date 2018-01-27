@@ -83,12 +83,17 @@ class Administrator
         return $alarm_messages;
     }
 
-    static public function getAlarmMessage()
+    /**
+     * @param int $limit
+     * @return array
+     */
+    static public function getAlarmMessage($limit)
     {
         $alarm_messages = DB::get("
             SELECT *
             FROM `alarm_messages`
-        ");
+            LIMIT ?
+        ", [$limit]);
 
         return $alarm_messages;
     }
