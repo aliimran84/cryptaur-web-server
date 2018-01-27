@@ -46,9 +46,9 @@ class Bounty_controller
         }
 
         $percentsForReinvesting = (int)@$_POST['percentsForReinvesting'];
-        
+
         ACTION2FA::access2FAChecker(self::INVESTOR_REALIZE_URL, Router::POST_METHOD);
-        
+
         if ($percentsForReinvesting < 0 && $percentsForReinvesting > 100) {
             Utility::location(Dashboard_controller::BASE_URL . '?' . Dashboard_view::BOUNTY_ERR . '=7252');
         }

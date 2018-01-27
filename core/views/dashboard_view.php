@@ -2,6 +2,7 @@
 
 namespace core\views;
 
+use core\controllers\Base_controller;
 use core\controllers\Bounty_controller;
 use core\controllers\Investor_controller;
 use core\engine\Application;
@@ -18,6 +19,7 @@ class Dashboard_view
 
     static public function view()
     {
+        $icoInfo = Base_controller::icoInfo(false);
         ob_start();
         ?>
 
@@ -26,19 +28,19 @@ class Dashboard_view
                 <div class="row indicators">
                     <div class="col s12 m6 l3">
                         <h4><?= Translate::td('Total tokens minted') ?></h4>
-                        <h3><?= Coin::token() ?> <?= number_format(Investor::totalTokens(), 0, '.', '&nbsp;') ?></h3>
+                        <h3><?= Coin::token() ?> <?= number_format($icoInfo['total_tokens'], 0, '.', '&nbsp;') ?></h3>
                     </div>
                     <div class="col s12 m6 l3">
                         <h4><?= Translate::td('Total participants') ?></h4>
-                        <h3><?= number_format(Investor::totalInvestors(), 0, '.', '&nbsp;') ?></h3>
+                        <h3><?= number_format($icoInfo['total_users'], 0, '.', '&nbsp;') ?></h3>
                     </div>
                     <div class="col s12 m6 l3">
                         <h4><?= Translate::td('Total coin contributed', ['coin' => 'BTC']) ?></h4>
-                        <h3>BTC <?= number_format(Wallet::totalCoinsUsed('btc'), 0, '.', '&nbsp;') ?></h3>
+                        <h3>BTC <?= number_format($icoInfo['total_btc'], 0, '.', '&nbsp;') ?></h3>
                     </div>
                     <div class="col s12 m6 l3">
                         <h4><?= Translate::td('Total coin contributed', ['coin' => 'ETH']) ?></h4>
-                        <h3>ETH <?= number_format(Wallet::totalCoinsUsed('eth'), 0, '.', '&nbsp;') ?></h3>
+                        <h3>ETH <?= number_format($icoInfo['total_eth'], 0, '.', '&nbsp;') ?></h3>
                     </div>
                 </div>
                 <section class="my-tokens">
