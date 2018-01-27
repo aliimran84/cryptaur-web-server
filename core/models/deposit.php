@@ -44,7 +44,8 @@ class Deposit
                 `is_donation` tinyint(1) UNSIGNED DEFAULT '0',
                 `registered` tinyint(1) UNSIGNED DEFAULT '0',
                 `used_in_minting` tinyint(1) UNSIGNED DEFAULT '0',
-                PRIMARY KEY (`id`)
+                PRIMARY KEY (`id`),
+                INDEX `investor_id_index`(`investor_id`)
             )
             DEFAULT CHARSET utf8
             DEFAULT COLLATE utf8_general_ci
