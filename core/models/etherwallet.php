@@ -33,7 +33,8 @@ class EtherWallet
                 `datetime_update` datetime(0) NOT NULL,
                 `eth` double(20, 8) UNSIGNED DEFAULT '0',
                 `cpt` double(20, 8) UNSIGNED DEFAULT '0',
-                PRIMARY KEY (`id`)
+                PRIMARY KEY (`id`),
+                INDEX `investor_id_index`(`investor_id`)
             )
             DEFAULT CHARSET utf8
             DEFAULT COLLATE utf8_general_ci

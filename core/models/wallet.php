@@ -28,7 +28,8 @@ class Wallet
                 `more` varchar(1024) DEFAULT '',
                 `balance` double(20, 8) UNSIGNED DEFAULT '0',
                 `usd_used` double(20, 8) UNSIGNED DEFAULT '0',
-                PRIMARY KEY (`id`)
+                PRIMARY KEY (`id`),
+                INDEX `investor_id_index`(`investor_id`)
             )
             DEFAULT CHARSET utf8
             DEFAULT COLLATE utf8_general_ci

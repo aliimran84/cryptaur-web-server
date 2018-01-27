@@ -60,7 +60,8 @@ class EthQueue
                 `is_success` tinyint(1) UNSIGNED DEFAULT '0',
                 `result` varchar(1024) DEFAULT '',
                 `data` varchar(4096) DEFAULT '',
-                PRIMARY KEY (`id`)
+                PRIMARY KEY (`id`),
+                INDEX `investor_id_index`(`investor_id`)
             )
             DEFAULT CHARSET utf8
             DEFAULT COLLATE utf8_general_ci
