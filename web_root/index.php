@@ -34,9 +34,11 @@ Router::register(function () {
 
     $btc = DB::get("SELECT sum( amount ) as `a` FROM `deposits` WHERE coin = 'btc' AND datetime >= '2018-01-22';")[0]['a'];
     $eth = DB::get("SELECT sum( amount ) as `a` FROM `deposits` WHERE coin = 'eth' AND datetime >= '2018-01-22';")[0]['a'];
+    $xem = DB::get("SELECT sum( amount ) as `a` FROM `deposits` WHERE coin = 'xem' AND datetime >= '2018-01-22';")[0]['a'];
+    $xrp = DB::get("SELECT sum( amount ) as `a` FROM `deposits` WHERE coin = 'xrp' AND datetime >= '2018-01-22';")[0]['a'];
     $usd = DB::get("SELECT sum( usd ) as `a` FROM `deposits` WHERE datetime >= '2018-01-22';")[0]['a'];
 
-    echo "btc: $btc, eth: $eth, usd: $usd<br>";
+    echo "btc: $btc, eth: $eth, xrp: $xrp, xem: $xem, usd: $usd<br>";
 
 }, 'bounty_info');
 
