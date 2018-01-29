@@ -26,21 +26,29 @@ class Dashboard_view
         <div class="row">
             <div class="col s12 main-panel">
                 <div class="row indicators">
-                    <div class="col s12 m6 l3">
+                    <div class="col s12 m6 l2">
                         <h4><?= Translate::td('Total tokens minted') ?></h4>
                         <h3><?= Coin::token() ?> <?= number_format($icoInfo['total_tokens'], 0, '.', '&nbsp;') ?></h3>
                     </div>
-                    <div class="col s12 m6 l3">
+                    <div class="col s12 m6 l2">
                         <h4><?= Translate::td('Total participants') ?></h4>
                         <h3><?= number_format($icoInfo['total_users'], 0, '.', '&nbsp;') ?></h3>
                     </div>
-                    <div class="col s12 m6 l3">
+                    <div class="col s12 m6 l2">
                         <h4><?= Translate::td('Total coin contributed', ['coin' => 'BTC']) ?></h4>
                         <h3>BTC <?= number_format($icoInfo['total_btc'], 0, '.', '&nbsp;') ?></h3>
                     </div>
-                    <div class="col s12 m6 l3">
+                    <div class="col s12 m6 l2">
                         <h4><?= Translate::td('Total coin contributed', ['coin' => 'ETH']) ?></h4>
                         <h3>ETH <?= number_format($icoInfo['total_eth'], 0, '.', '&nbsp;') ?></h3>
+                    </div>
+                    <div class="col s12 m6 l2">
+                        <h4><?= Translate::td('Total coin contributed', ['coin' => 'XEM']) ?></h4>
+                        <h3>XEM <?= number_format($icoInfo['total_xem'], 0, '.', '&nbsp;') ?></h3>
+                    </div>
+                    <div class="col s12 m6 l2">
+                        <h4><?= Translate::td('Total coin contributed', ['coin' => 'XRP']) ?></h4>
+                        <h3>XRP <?= number_format($icoInfo['total_xrp'], 0, '.', '&nbsp;') ?></h3>
                     </div>
                 </div>
                 <section class="my-tokens">

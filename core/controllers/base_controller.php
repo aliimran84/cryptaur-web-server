@@ -47,6 +47,8 @@ class Base_controller
         $tokens = 0;
         $eth = 0;
         $btc = 0;
+        $xem = 0;
+        $xrp = 0;
         $users_count = 0;
 
         $needUpdate = true;
@@ -58,6 +60,8 @@ class Base_controller
                     $tokens = $data['total_tokens'];
                     $eth = $data['total_eth'];
                     $btc = $data['total_btc'];
+                    $xem = $data['total_xem'];
+                    $xrp = $data['total_xrp'];
                     $users_count = $data['total_users'];
                 }
             }
@@ -67,12 +71,16 @@ class Base_controller
             $tokens = (int)@DB::get("SELECT SUM(`tokens_count`) as `total_tokens` FROM `investors`;")[0]['total_tokens'];
             $eth = Utility::int_string(DB::get("SELECT SUM(`balance`) AS `sum` FROM `wallets` WHERE `coin`='eth';")[0]['sum']);
             $btc = Utility::int_string(DB::get("SELECT SUM(`balance`) AS `sum` FROM `wallets` WHERE `coin`='btc';")[0]['sum']);
+            $xem = Utility::int_string(DB::get("SELECT SUM(`balance`) AS `sum` FROM `wallets` WHERE `coin`='xem';")[0]['sum']);
+            $xrp = Utility::int_string(DB::get("SELECT SUM(`balance`) AS `sum` FROM `wallets` WHERE `coin`='xrp';")[0]['sum']);
             $users_count = Utility::int_string(DB::get("SELECT COUNT(*) AS `count` FROM `investors`;")[0]['count']);
 
             file_put_contents(self::ICOINFO_FILE, json_encode([
                 'total_tokens' => $tokens,
                 'total_eth' => $eth,
                 'total_btc' => $btc,
+                'total_xem' => $xem,
+                'total_xrp' => $xrp,
                 'total_users' => $users_count,
                 'datetime' => time()
             ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
@@ -82,6 +90,8 @@ class Base_controller
             'total_tokens' => $tokens,
             'total_eth' => $eth,
             'total_btc' => $btc,
+            'total_xem' => $xem,
+            'total_xrp' => $xrp,
             'total_users' => $users_count
         ];
     }
