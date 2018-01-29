@@ -321,7 +321,15 @@ class Investor_view
                         <input type="text" name="firstname" placeholder="<?= Translate::td('First name') ?>" value="<?= @$data['firstname'] ?>">
                         <input type="text" name="lastname" placeholder="<?= Translate::td('Last name') ?>" value="<?= @$data['lastname'] ?>">
                         <input type="email" name="email" placeholder="Email" value="<?= @$data['email'] ?>" autocomplete="nope">
-                        <input type="text" name="phone" placeholder="<?= Translate::td('Phone, mobile') ?>:" value="<?= @$data['phone'] ?>" autocomplete="nope">
+                        <input 
+                            type="text" 
+                            name="phone" 
+                            placeholder="<?= Translate::td('Phone, mobile') ?>:" 
+                            value="<?= @$data['phone'] ?>" 
+                            autocomplete="nope" 
+                            pattern="[0-9]{6,}"
+                        >
+                        <span><?= Translate::td('Use only numbers') ?></span>
                         <input type="text" name="referrer_code" value="<?= $referrer_code ?>" placeholder="<?= Translate::td('REFERRER CODE') ?>" autocomplete="nope">
                         <input type="password" name="password" pattern=".{6,120}" placeholder="<?= Translate::td('Password') ?>" autocomplete="new-password">
                         <span><?= Translate::td('Password must be more than 6 symbols') ?></span>
@@ -368,7 +376,15 @@ class Investor_view
                         <input type="text" name="firstname" placeholder="<?= Translate::td('First name') ?>" value="<?= @$data['firstname'] ?>">
                         <input type="text" name="lastname" placeholder="<?= Translate::td('Last name') ?>" value="<?= @$data['lastname'] ?>">
                         <input type="email" name="email" placeholder="Email" value="<?= @$data['email'] ?>" autocomplete="nope">
-                        <input type="text" name="phone" placeholder="<?= Translate::td('Phone, mobile') ?>:" value="<?= @$data['phone'] ?>" autocomplete="nope">
+                        <input 
+                            type="text" 
+                            name="phone" 
+                            placeholder="<?= Translate::td('Phone, mobile') ?>:" 
+                            value="<?= @$data['phone'] ?>" 
+                            autocomplete="nope" 
+                            pattern="[0-9]{6,}"
+                        >
+                        <span><?= Translate::td('Use only numbers') ?></span>
                         <select class="select-wallet">
                             <option value="choose" disabled selected><?= Translate::td('Choose type wallet') ?></option>
                             <option value="inner-wallet"><?= Translate::td('Inner wallet') ?></option>

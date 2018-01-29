@@ -49,6 +49,7 @@ Code from email,Код из эл. почты
 "Two-Factor Authentication","Двухфакторная авторизация"
 Sent,Отправить
 Re-sent,Отправить ещё раз
+Use only numbers,Используйте только цифры
 "You have two-factor authentication enabled so you must verify login","У вас подключена двухфакторная авторизация и вы должны подтвердить вход"
 "Click 'Sent' button to sent the code","Нажмите кнопку 'Отправить' для отправки кода"
 "Click 'Sent' button to sent the codes","Нажмите кнопку 'Отправить' для отправки кодов"
@@ -71,8 +72,8 @@ Verify,Подтвердить
 You must verify phone number,Вы должны подтвердить номер
 "Authentication code has been sended using preferred method","Код авторизации был отправлен выбранным методом"
 "Authentication codes have been sended","Коды авторизации были отправлены"
-"You cannot sent another code until 3 minutes will expire","Вы не можете отправить новый код, пока не истекут 3 минуты"
-"You cannot sent another codes until 3 minutes will expire","Вы не можете отправить новые коды, пока не истекут 3 минуты"
+"You cannot sent another code until seconds will expire","Вы не можете отправить новый код, пока не истечёт %%num%% секунд"
+"You cannot sent another codes until seconds will expire","Вы не можете отправить новые коды, пока не истечёт %%num%% секунд"
 Password,Пароль
 Forgot your account login,Забыли имя пользователя кабинета
 Recover,Восстановить

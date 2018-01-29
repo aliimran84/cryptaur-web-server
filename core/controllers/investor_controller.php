@@ -440,9 +440,9 @@ class Investor_controller
             $time = time();
             if (
                 isset($_SESSION[self::LAST_2FA_TRY])
-                && $time - $_SESSION[self::LAST_2FA_TRY] < 180
+                && $time - $_SESSION[self::LAST_2FA_TRY] < SECURED_SESSION_TIME
             ) {
-                $message = Translate::td('You cannot sent another code until 3 minutes will expire');
+                $message = Translate::td('You cannot sent another code until seconds will expire', ['num'=>SECURED_SESSION_TIME]);
             } else {
                 session_start();
                 $_SESSION[self::LAST_2FA_TRY] = $time;
@@ -490,9 +490,9 @@ class Investor_controller
             $time = time();
             if (
                 isset($_SESSION[self::LAST_2FA_TRY])
-                && $time - $_SESSION[self::LAST_2FA_TRY] < 180
+                && $time - $_SESSION[self::LAST_2FA_TRY] < SECURED_SESSION_TIME
             ) {
-                $message = Translate::td('You cannot sent another codes until 3 minutes will expire');
+                $message = Translate::td('You cannot sent another codes until seconds will expire', ['num'=>SECURED_SESSION_TIME]);
             } else {
                 session_start();
                 $_SESSION[self::LAST_2FA_TRY] = $time;
@@ -575,6 +575,18 @@ class Investor_controller
     {
         return !!preg_match('/^[0-9A-Za-z!"#$%&\'()*+,-.\/:;<=>?@\[\]^_`{|}~]{6,50}$/', $password);
     }
+    
+    /**
+     * @param string $phone
+     * @return bool
+     */
+    static private function verifyPhone($phone)
+    {
+        if (mb_strlen($phone) < 7) {
+            return FALSE;
+        }
+        return TRUE;
+    }
 
     static private function handleRegistrationRequest()
     {
@@ -605,6 +617,10 @@ class Investor_controller
         $firstname = trim(@$_POST['firstname']);
         $lastname = trim(@$_POST['lastname']);
         $phone = Utility::clear_except_numbers(@$_POST['phone']);
+        if (!self::verifyPhone($phone)) {
+            self::handleRegistrationForm($_POST, 'not a valid phone number, use more than 6 characters');
+            return;
+        }
         
         if (USE_2FA && SMS_2FA) {
             session_start();
@@ -649,9 +665,9 @@ class Investor_controller
             $time = time();
             if (
                 isset($_SESSION[self::LAST_2FA_TRY])
-                && $time - $_SESSION[self::LAST_2FA_TRY] < 180
+                && $time - $_SESSION[self::LAST_2FA_TRY] < SECURED_SESSION_TIME
             ) {
-                $message = Translate::td('You cannot sent another code until 3 minutes will expire');
+                $message = Translate::td('You cannot sent another code until seconds will expire', ['num'=>SECURED_SESSION_TIME]);
             } else {
                 $phone = $_SESSION[ACTION2FA::TEMP_DATA_ARR]['phone'];
                 session_start();
