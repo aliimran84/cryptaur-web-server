@@ -71,6 +71,7 @@ Accept,Применить
 Verify,Подтвердить
 You must verify phone number,Вы должны подтвердить номер
 "Authentication code has been sended using preferred method","Код авторизации был отправлен выбранным методом"
+"Authentication code has not been sended","Код авторизации не был отправлен"
 "Authentication codes have been sended","Коды авторизации были отправлены"
 "You cannot sent another code(s) until seconds will expire","Вы не можете отправить новые код(ы), пока не истечёт %%num%% секунд"
 Password,Пароль
