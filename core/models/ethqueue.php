@@ -268,9 +268,9 @@ class EthQueue
         }
 
         $ethAddress = $data['result']['result'];
-        $eth = Utility::floor_prec($data['result']['balance']['ETH'], 8);
-        $cpt = Utility::floor_prec($data['result']['balance']['CPT'], 8);
-        $proof = Utility::floor_prec($data['result']['balance']['PROOF'], 8);
+        $eth = Utility::floor_prec(@$data['result']['balance']['ETH'], 8);
+        $cpt = Utility::floor_prec(@$data['result']['balance']['CPT'], 8);
+        $proof = Utility::floor_prec(@$data['result']['balance']['PROOF'], 8);
         $wallet = EtherWallet::getFromDbByInvestorId($investorId);
         if (!is_null($wallet)) {
             $minus_eth = 0;
