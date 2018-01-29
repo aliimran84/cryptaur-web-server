@@ -184,32 +184,41 @@ class ACTION2FA
         session_start();
         $_SESSION[self::LAST_SECURED_TIME] = time();
         session_write_close();
-        
         if (
             isset($_SESSION[self::TEMP_DATA_URL])
             && isset($_SESSION[self::TEMP_DATA_METHOD])
         ) {
             $url = $_SESSION[self::TEMP_DATA_URL];
             $method = $_SESSION[self::TEMP_DATA_METHOD];
-            session_start();
-            unset($_SESSION[self::TEMP_DATA_URL]);
-            unset($_SESSION[self::TEMP_DATA_METHOD]);
-            unset($_SESSION[self::TEMP_FORM_TYPE]);
-            unset($_SESSION[self::LAST_2FA_TRY]);
-            if (isset($_SESSION[self::TEMP_DATA_VARIANT])) {
-                unset($_SESSION[self::TEMP_DATA_VARIANT]);
-            }
-            if (isset($_SESSION[self::TEMP_DATA_TARGET_1])) {
-                unset($_SESSION[self::TEMP_DATA_TARGET_1]);
-            }
-            if (isset($_SESSION[self::TEMP_DATA_TARGET_2])) {
-                unset($_SESSION[self::TEMP_DATA_TARGET_2]);
-            }
-            session_write_close();
             self::writeToPost();
+            self::clearSessionData(TRUE);
             call_user_func(Router::getByPathAndMethod($url, $method));
             exit;
         }
+    }
+    
+    static private function clearSessionData($try_clear = FALSE)
+    {
+        session_start();
+        unset($_SESSION[self::TEMP_DATA_URL]);
+        unset($_SESSION[self::TEMP_DATA_METHOD]);
+        unset($_SESSION[self::TEMP_FORM_TYPE]);
+        if ($try_clear) {
+            unset($_SESSION[self::LAST_2FA_TRY]);
+        }
+        if (isset($_SESSION[self::TEMP_DATA_VARIANT])) {
+            unset($_SESSION[self::TEMP_DATA_VARIANT]);
+        }
+        if (isset($_SESSION[self::TEMP_DATA_TARGET_1])) {
+            unset($_SESSION[self::TEMP_DATA_TARGET_1]);
+        }
+        if (isset($_SESSION[self::TEMP_DATA_TARGET_2])) {
+            unset($_SESSION[self::TEMP_DATA_TARGET_2]);
+        }
+        if (isset($_SESSION[self::TEMP_DATA_ARR])) {
+            unset($_SESSION[self::TEMP_DATA_ARR]);
+        }
+        session_write_close();
     }
 
     static private function sent2FARequest($variant, $target_1, $target_2 = NULL)

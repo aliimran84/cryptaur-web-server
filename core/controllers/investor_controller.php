@@ -403,9 +403,6 @@ class Investor_controller
         if (isset($_SESSION[self::SESSION_KEY])) {
             unset($_SESSION[self::SESSION_KEY]);
         }
-        if (isset($_SESSION[self::SETTINGS_URL])) {
-            unset($_SESSION[self::SETTINGS_URL]);
-        }
         session_write_close();
         Utility::location();
     }
