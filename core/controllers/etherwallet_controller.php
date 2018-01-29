@@ -54,6 +54,9 @@ class EtherWallet_controller
             case 'CPT':
                 $wallet->sendCpt($amount, $address);
                 break;
+            case 'PROOF':
+                $wallet->sendProof($amount, $address);
+                break;
 
         }
         Utility::location(Investor_controller::CRYPTAURETHERWALLET_URL);

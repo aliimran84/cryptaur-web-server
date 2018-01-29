@@ -173,7 +173,7 @@ $(document).ready(function(){
             value = select.val(),
             modal = $('#modal_warning-wallet');
         cryptaur_ether_wallet_checkEthAmount();
-        if (value == 'CPT') {
+        if (value !== 'ETH') {
             warningCheckBox.prop('checked', false);
             modal.modal('open');
             warningCheckBox.change(function () {

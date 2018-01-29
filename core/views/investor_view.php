@@ -729,6 +729,7 @@ class Investor_view
                             <select name="send_type" class="select-token">
                                 <option value="ETH" class="default-option" selected>ETH</option>
                                 <option value="CPT">CPT</option>
+                                <option value="PROOF">PROOF</option>
                             </select>
                             <!-- <a href="#" onclick="return false;" class="disabled"><?= Translate::td('Send Entire Balance') ?></a> -->
                         </div>
