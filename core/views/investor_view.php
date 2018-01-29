@@ -130,91 +130,6 @@ class Investor_view
         return ob_get_clean();
     }
 
-    static public function secondfactorForm($message = '')
-    {
-        ob_start();
-        ?>
-        <div class="row">
-            <div class="col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
-                <h3><?= Translate::td('Two-Factor Authentication') ?></h3>
-                <div class="row">
-                    <form class="login col s12" action="<?= Investor_controller::SECONDFACTOR_URL ?>" method="post" autocomplete="off">
-                        <h5>
-                            <?= Translate::td('You have two-factor authentication enabled so you must verify login') ?>.<br/>
-                            <?= Translate::td("Click 'Sent' button to sent the code") ?>
-                        </h5>
-                        <?php if (isset($_GET['err'])) { ?>
-                            <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
-                                : <?= Translate::td($_GET['err_text']) ?></label>
-                        <?php } ?>
-                        <?php if ($message) { ?>
-                            <label class="blue-text"><?= $message ?></label>
-                        <?php } ?>
-                        <?php if (isset($_GET['sent'])) { ?>
-                            <input type="text" name="otp" placeholder="<?= Translate::td('Authentication code') ?>">
-                            <div class="row center">
-                                <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                    <?= Translate::td('Verify') ?>
-                                </button>
-                            </div>
-                        <?php } ?>
-                        <div class="row center">
-                            <a href="<?= Investor_controller::SECONDFACTOR_URL ?>?sent=1" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
-                            </a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <?php
-        return ob_get_clean();
-    }
-
-    static public function secondfactorDualForm($message = '')
-    {
-        ob_start();
-        ?>
-        <div class="row">
-            <div class="col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
-                <h3><?= Translate::td('Two-Factor Authentication') ?></h3>
-                <div class="row">
-                    <form class="login col s12" action="<?= Investor_controller::SECONDFACTORDUAL_URL ?>" method="post" autocomplete="off">
-                        <h5>
-                            <?= Translate::td('You have two-factor authentication enabled so you must verify login') ?>.<br/>
-                            <?= Translate::td("Click 'Sent' button to sent the codes") ?>
-                        </h5>
-                        <?php if (isset($_GET['err'])) { ?>
-                            <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
-                                : <?= Translate::td($_GET['err_text']) ?></label>
-                        <?php } ?>
-                        <?php if ($message) { ?>
-                            <label class="blue-text"><?= $message ?></label>
-                        <?php } ?>
-                        <h5><?= Translate::td('Code from SMS') ?>:</h5>
-                        <input type="text" name="code_1" placeholder="<?= Translate::td('Authentication code') ?>">
-                        <h5><?= Translate::td('Code from email') ?>:</h5>
-                        <?php if (isset($_GET['sent'])) { ?>
-                            <input type="text" name="code_2" placeholder="<?= Translate::td('Authentication code') ?>">
-                            <div class="row center">
-                                <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                    <?= Translate::td('Verify') ?>
-                                </button>
-                            </div>
-                        <?php } ?>
-                        <div class="row center">
-                            <a href="<?= Investor_controller::SECONDFACTORDUAL_URL ?>?sent=1" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
-                            </a>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <?php
-        return ob_get_clean();
-    }
-
     static public function registerPhoneVerificationForm($message = '')
     {
         ob_start();
@@ -321,7 +236,15 @@ class Investor_view
                         <input type="text" name="firstname" placeholder="<?= Translate::td('First name') ?>" value="<?= @$data['firstname'] ?>">
                         <input type="text" name="lastname" placeholder="<?= Translate::td('Last name') ?>" value="<?= @$data['lastname'] ?>">
                         <input type="email" name="email" placeholder="Email" value="<?= @$data['email'] ?>" autocomplete="nope">
-                        <input type="text" name="phone" placeholder="<?= Translate::td('Phone, mobile') ?>:" value="<?= @$data['phone'] ?>" autocomplete="nope">
+                        <input 
+                            type="text" 
+                            name="phone" 
+                            placeholder="<?= Translate::td('Phone, mobile') ?>:" 
+                            value="<?= @$data['phone'] ?>" 
+                            autocomplete="nope" 
+                            pattern="[0-9]{6,}"
+                        >
+                        <span><?= Translate::td('Use only numbers') ?></span>
                         <input type="text" name="referrer_code" value="<?= $referrer_code ?>" placeholder="<?= Translate::td('REFERRER CODE') ?>" autocomplete="nope">
                         <input type="password" name="password" pattern=".{6,120}" placeholder="<?= Translate::td('Password') ?>" autocomplete="new-password">
                         <span><?= Translate::td('Password must be more than 6 symbols') ?></span>
@@ -368,7 +291,15 @@ class Investor_view
                         <input type="text" name="firstname" placeholder="<?= Translate::td('First name') ?>" value="<?= @$data['firstname'] ?>">
                         <input type="text" name="lastname" placeholder="<?= Translate::td('Last name') ?>" value="<?= @$data['lastname'] ?>">
                         <input type="email" name="email" placeholder="Email" value="<?= @$data['email'] ?>" autocomplete="nope">
-                        <input type="text" name="phone" placeholder="<?= Translate::td('Phone, mobile') ?>:" value="<?= @$data['phone'] ?>" autocomplete="nope">
+                        <input 
+                            type="text" 
+                            name="phone" 
+                            placeholder="<?= Translate::td('Phone, mobile') ?>:" 
+                            value="<?= @$data['phone'] ?>" 
+                            autocomplete="nope" 
+                            pattern="[0-9]{6,}"
+                        >
+                        <span><?= Translate::td('Use only numbers') ?></span>
                         <select class="select-wallet">
                             <option value="choose" disabled selected><?= Translate::td('Choose type wallet') ?></option>
                             <option value="inner-wallet"><?= Translate::td('Inner wallet') ?></option>
@@ -754,7 +685,18 @@ class Investor_view
                                 ETH
                             </p>
                         </div>
+                        <div id="warning-wallet">
+                            <p>
+                                <input type="checkbox" id="warning_1" class="warning-checkbox"/><label for="warning_1"><?= Translate::td('I confirm that the specified destination address matches the wallet that supports the ERC20 standard') ?></label>
+                            </p>
+                            <p>
+                                <input type="checkbox" id="warning_2" class="warning-checkbox"/><label for="warning_2"><?= Translate::td('I confirm that the indicated address is not the depository address of the exchange') ?></label>
+                            </p>
+                        </div>
                         <div class="input-field">
+                            <div id="warning-minimum-amount">
+                                <p><?= Translate::td('The minimal contibution in CPT tokens to the PROVER project is 5000 CPT') ?></p>
+                            </div>
                             <button id="cryptaur_ether_wallet_send" <?= $sendIsEnabled ? '' : 'disabled' ?> class="waves-effect waves-light btn btn-generate-transaction"><?= Translate::td('Send') ?></button>
                             <?php if (!$sendIsEnabled) { ?>
                                 <p class="grey-text"><?= Translate::td('Cryptaur Ether Waller send functions temporary is off') ?></p>
@@ -775,18 +717,6 @@ class Investor_view
                         <a target="_blank" href="https://ethplorer.io/address/<?= $wallet->eth_address ?>">
                             Tokens (Ethplorer.io)
                         </a>
-                    </div>
-                    <!-- Modal Structure -->
-                    <div id="modal_warning-wallet" class="modal">
-                        <div class="modal-content">
-                            <h4><?= Translate::td('Warning') ?></h4>
-                            <p>
-                                <input type="checkbox" id="warning_1" class="warning-checkbox"/><label for="warning_1"><?= Translate::td('I confirm that the specified destination address matches the wallet that supports the ERC20 standard') ?></label>
-                            </p>
-                            <p>
-                                <input type="checkbox" id="warning_2" class="warning-checkbox"/><label for="warning_2"><?= Translate::td('I confirm that the indicated address is not the depository address of the exchange') ?></label>
-                            </p>
-                        </div>
                     </div>
                 </form>
             </div>

@@ -19,8 +19,8 @@ function conversionHeightLineBottom(tree) {
 $(document).ready(function(){
     var warningCheckBox = $('.warning-checkbox');
     var checked;
-    var optionSelected = $('select.select-wallet :selected'),
-        optionSelecteTokenValue = $('select.select-token option.default-option').val();
+    var contract = '0x6f3a995e904c9be5279e375e79f3c30105efa618'.toUpperCase();
+    var optionSelected = $('select.select-wallet :selected');
     $('.modal').modal({
         complete: function() {
             if ($('#warning_1').prop('checked') && $('#warning_2').prop('checked') && $('#warning_3').prop('checked')) {
@@ -41,18 +41,6 @@ $(document).ready(function(){
                     $('select.select-wallet').material_select();
                     $('.select-wallet .select-dropdown').val(optionDisabled.text());
                 }
-            }
-        }
-    });
-    $('#modal_warning-wallet').modal({
-        complete: function() {
-            checked = false;
-            warningCheckBox.each(function (i, el) {
-                checked += $(el).prop('checked');
-            });
-            if (checked != warningCheckBox.length) {
-                $('select.select-token').material_select();
-                $('.select-token .select-dropdown').val(optionSelecteTokenValue);
             }
         }
     });
@@ -146,42 +134,59 @@ $(document).ready(function(){
             $("#phone_row").hide();
     });
 
-    function cryptaur_ether_wallet_checkEthAmount() {
-        var send = $('#cryptaur_ether_wallet_send');
-        if ($("select.select-token").val() === 'ETH') {
-            $('#cryptaur_ether_wallet_transaction_fee').css('opacity', 1);
+    function cryptaur_ether_wallet_checkAmount() {
+        var sendBtn = $('#cryptaur_ether_wallet_send'),
+            select = $("select.select-token"),
+            value = select.val(),
+            minimalAmountCPT = $('#warning-minimum-amount'),
+            transactionFree = $('#cryptaur_ether_wallet_transaction_fee');
+        if (value === 'ETH') {
+            transactionFree.css('opacity', 1);
             var amount = parseFloat($('#cryptaur_ether_wallet_amount_to_send').val()) || 0;
             if (amount > parseFloat($('#cryptaur_ether_wallet_maximum_amount').html())) {
-                $('#cryptaur_ether_wallet_transaction_fee').css('color', 'red');
-                send.attr('disabled', true);
+                transactionFree.css('color', 'red');
+                sendBtn.attr('disabled', true);
             } else {
-                $('#cryptaur_ether_wallet_transaction_fee').css('color', '');
-                send.attr('disabled', false);
+                transactionFree.css('color', '');
+                sendBtn.attr('disabled', false);
+            }
+            $('#warning-wallet').css('display', 'none');
+            minimalAmountCPT.css('display', 'none');
+        } else if (value === 'CPT') {
+            $('#warning-wallet').css('display', 'block');
+            sendBtn.attr('disabled', true);
+            transactionFree.css('opacity', 0);
+            warningCheckBox.prop('checked', false);
+            warningCheckBox.change(function () {
+                if (checkWarningCheckBox(warningCheckBox)) {
+                    if ($('input.address').val().toUpperCase() === contract && parseFloat($('#cryptaur_ether_wallet_amount_to_send').val()) < 5000) {
+                        minimalAmountCPT.css('display', 'block');
+                    } else {
+                        minimalAmountCPT.css('display', 'none');
+                        sendBtn.attr('disabled', false);
+                    }
+                }
+            });
+            if ($('input.address').val().toUpperCase() === contract && parseFloat($('#cryptaur_ether_wallet_amount_to_send').val()) < 5000) {
+                sendBtn.attr('disabled', true);
+                minimalAmountCPT.css('display', 'block');
+            } else {
+                minimalAmountCPT.css('display', 'none');
             }
         } else {
-            send.attr('disabled', false);
-            $('#cryptaur_ether_wallet_transaction_fee').css('opacity', 0);
+            minimalAmountCPT.css('display', 'none');
+            $('#warning-wallet').css('display', 'none');
+            sendBtn.attr('disabled', false);
+            transactionFree.css('opacity', 0);
         }
     }
 
     $("#cryptaur_ether_wallet_amount_to_send").keyup(function () {
-        cryptaur_ether_wallet_checkEthAmount();
+        cryptaur_ether_wallet_checkAmount();
     });
 
     $("select.select-token").change(function () {
-        var select = $(this),
-            value = select.val(),
-            modal = $('#modal_warning-wallet');
-        cryptaur_ether_wallet_checkEthAmount();
-        if (value !== 'ETH') {
-            warningCheckBox.prop('checked', false);
-            modal.modal('open');
-            warningCheckBox.change(function () {
-                if (checkWarningCheckBox(warningCheckBox)) {
-                    modal.modal('close');
-                }
-            });
-        }
+        cryptaur_ether_wallet_checkAmount();
     });
 });
 

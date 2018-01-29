@@ -49,6 +49,7 @@ Code from email,Code from email
 "Two-Factor Authentication","Two-Factor Authentication"
 Sent,Sent
 Re-sent,Re-sent
+Use only numbers,Use only numbers
 "You have two-factor authentication enabled so you must verify login","You have two-factor authentication enabled so you must verify login"
 "Click 'Sent' button to sent the code","Click 'Sent' button to sent the code"
 "Click 'Sent' button to sent the codes","Click 'Sent' button to sent the codes"
@@ -70,9 +71,9 @@ Accept,Accept
 Verify,Verify
 You must verify phone number,You must verify phone number
 "Authentication code has been sended using preferred method","Authentication code has been sended using preferred method"
+"Authentication code has not been sended","Authentication code has not been sended"
 "Authentication codes have been sended","Authentication codes have been sended"
-"You cannot sent another code until 3 minutes will expire","You cannot sent another code until 3 minutes will expire"
-"You cannot sent another codes until 3 minutes will expire","You cannot sent another codes until 3 minutes will expire"
+"You cannot sent another code(s) until seconds will expire","You cannot sent another code(s) until %%num%% seconds will expire"
 Password,Password
 Forgot your account login,Forgot your account login
 Recover,Recover
@@ -219,3 +220,4 @@ Cryptaur Ether Waller send functions temporary is off,Cryptaur Ether Waller send
 Transaction fee,Transaction fee
 maximum amount,maximum amount
 Pending transaction,Pending transaction
+The minimal contibution in CPT tokens to the PROVER project is 5000 CPT,The minimal contibution in CPT tokens to the PROVER project is 5000 CPT
