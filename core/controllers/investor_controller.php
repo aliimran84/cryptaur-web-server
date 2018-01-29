@@ -24,8 +24,6 @@ class Investor_controller
 
     const BASE_URL = 'investor';
     const LOGIN_URL = 'investor/login';
-    const SECONDFACTOR_URL = 'investor/two-factor';
-    const SECONDFACTORDUAL_URL = 'investor/two-factor-dual';
     const SECONDFACTORSET_URL = 'investor/two-factor-set';
     const PHONEVERIFICATION_URL = 'investor/verify_phone';
     const SET_EMPTY_ETH_ADDRESS = 'investor/set_eth_address';
@@ -79,21 +77,7 @@ class Investor_controller
         Router::register(function () {
             self::handleLoginRequest();
         }, self::LOGIN_URL, Router::POST_METHOD);
-
-        Router::register(function () {
-            self::handleSecondfactorForm();
-        }, self::SECONDFACTOR_URL, Router::GET_METHOD);
-        Router::register(function () {
-            self::handleSecondfactorRequest();
-        }, self::SECONDFACTOR_URL, Router::POST_METHOD);
-
-        Router::register(function () {
-            self::handleSecondfactorDualForm();
-        }, self::SECONDFACTORDUAL_URL, Router::GET_METHOD);
-        Router::register(function () {
-            self::handleSecondfactorDualRequest();
-        }, self::SECONDFACTORDUAL_URL, Router::POST_METHOD);
-
+        
         Router::register(function () {
             self::handleSecondfactorSetForm();
         }, self::SECONDFACTORSET_URL, Router::GET_METHOD);
@@ -374,28 +358,10 @@ class Investor_controller
         echo Investor_view::loginForm($message);
         echo Base_view::footer();
     }
-
-    static private function sent2FARequest()
-    {
-        if (USE_2FA == FALSE) {
-            return FALSE;
-        }
-        $preferred_2fa = Application::$authorizedInvestor->preferred_2fa;
-        if (!in_array($preferred_2fa, API2FA::$allowedMethods)) {
-            return FALSE;
-        } elseif ($preferred_2fa == variants_2FA::email) {
-            return API2FA::send_email(Application::$authorizedInvestor->email);
-        } elseif ($preferred_2fa == variants_2FA::sms) {
-            return API2FA::send_sms(Application::$authorizedInvestor->phone);
-        } elseif ($preferred_2fa == variants_2FA::both) {
-            return API2FA::send_both(Application::$authorizedInvestor->email, Application::$authorizedInvestor->phone);
-        }
-        return FALSE;
-    }
     
     static public function investor2FAFormType()
     {
-        if (USE_2FA == FALSE) {
+        if (USE_2FA == FALSE || !Application::$authorizedInvestor) {
             return NULL;
         }
         $preferred_2fa = Application::$authorizedInvestor->preferred_2fa;
@@ -429,109 +395,6 @@ class Investor_controller
             Utility::location(self::BASE_URL);
         }
         Utility::location(self::LOGIN_URL . '?err=3671&err_text=wrong credentials');
-    }
-
-    static private function handleSecondfactorForm($message = '')
-    {
-        if (!Application::$authorizedInvestor) {
-            Utility::location(self::BASE_URL);
-        }
-        if (isset($_GET['sent'])) {
-            $time = time();
-            if (
-                isset($_SESSION[self::LAST_2FA_TRY])
-                && $time - $_SESSION[self::LAST_2FA_TRY] < SECURED_SESSION_TIME
-            ) {
-                $message = Translate::td('You cannot sent another code until seconds will expire', ['num'=>SECURED_SESSION_TIME]);
-            } else {
-                session_start();
-                $_SESSION[self::LAST_2FA_TRY] = $time;
-                session_write_close();
-                if (self::sent2FARequest()) {
-                    $message = Translate::td('Authentication code has been sended using preferred method');
-                } else { //potential case when some methods have been disabled or broken
-                    session_start();
-                    unset($_SESSION[self::LAST_2FA_TRY]);
-                    session_write_close();
-                    ACTION2FA::smart2FARedirect();
-                }
-            }
-        }
-        Base_view::$TITLE = 'Two-Factor Authentication';
-        Base_view::$MENU_POINT = Menu_point::Login;
-        echo Base_view::header();
-        echo Investor_view::secondfactorForm($message);
-        echo Base_view::footer();
-    }
-
-    static private function handleSecondfactorRequest()
-    {
-        if (!isset($_POST['otp'])) {
-            Utility::location(self::BASE_URL);
-        }
-        
-        session_start();
-        unset($_SESSION[self::LAST_2FA_TRY]);
-        session_write_close();
-
-        $checked = API2FA::check($_POST['otp']);
-        if ($checked === TRUE) {
-            ACTION2FA::smart2FARedirect();
-        }
-        Utility::location(self::BASE_URL . '?err=6538&err_text=wrong authentication code');
-    }
-
-    static private function handleSecondfactorDualForm($message = '')
-    {
-        if (!Application::$authorizedInvestor) {
-            Utility::location(self::BASE_URL);
-        }
-        if (isset($_GET['sent'])) {
-            $time = time();
-            if (
-                isset($_SESSION[self::LAST_2FA_TRY])
-                && $time - $_SESSION[self::LAST_2FA_TRY] < SECURED_SESSION_TIME
-            ) {
-                $message = Translate::td('You cannot sent another codes until seconds will expire', ['num'=>SECURED_SESSION_TIME]);
-            } else {
-                session_start();
-                $_SESSION[self::LAST_2FA_TRY] = $time;
-                session_write_close();
-                if (self::sent2FARequest()) {
-                    $message = Translate::td('Authentication codes have been sended');
-                } else { //potential case when some methods have been disabled or broken
-                    session_start();
-                    unset($_SESSION[self::LAST_2FA_TRY]);
-                    session_write_close();
-                    ACTION2FA::smart2FARedirect();
-                }
-            }
-        }
-        Base_view::$TITLE = 'Two-Factor Authentication';
-        Base_view::$MENU_POINT = Menu_point::Login;
-        echo Base_view::header();
-        echo Investor_view::secondfactorDualForm($message);
-        echo Base_view::footer();
-    }
-
-    static private function handleSecondfactorDualRequest()
-    {
-        if (
-            !isset($_POST['code_1']) ||
-            !isset($_POST['code_2'])
-        ) {
-            Utility::location(self::BASE_URL);
-        }
-
-        session_start();
-        unset($_SESSION[self::LAST_2FA_TRY]);
-        session_write_close();
-
-        $checked = API2FA::check_both($_POST['code_1'], $_POST['code_2']);
-        if ($checked === TRUE) {
-            ACTION2FA::smart2FARedirect();
-        }
-        Utility::location(self::BASE_URL . '?err=6538&err_text=wrong authentication code');
     }
 
     static private function handleLogoutRequest()
@@ -667,7 +530,7 @@ class Investor_controller
                 isset($_SESSION[self::LAST_2FA_TRY])
                 && $time - $_SESSION[self::LAST_2FA_TRY] < SECURED_SESSION_TIME
             ) {
-                $message = Translate::td('You cannot sent another code until seconds will expire', ['num'=>SECURED_SESSION_TIME]);
+                $message = Translate::td('You cannot sent another code(s) until seconds will expire', ['num'=>SECURED_SESSION_TIME]);
             } else {
                 $phone = $_SESSION[ACTION2FA::TEMP_DATA_ARR]['phone'];
                 session_start();
