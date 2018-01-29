@@ -720,7 +720,7 @@ class Investor_view
                     <div class="col s12 m7 l7">
                         <div class="input-field">
                             <p><?= Translate::td('To Address') ?></p>
-                            <input type="text" name="address" class="address" value="" placeholder="0xDE2C06c6e48CD98f8977794c2f7aa5Eeb93b95f9">
+                            <input type="text" name="address" class="address" value="" placeholder="0x3972ac286bd9db1456a5be259184dcfa6d9c2689">
                         </div>
                         <div class="input-field">
                             <p><?= Translate::td('Amount to Send') ?></p>
