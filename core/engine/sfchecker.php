@@ -33,9 +33,6 @@ class ACTION2FA
             foreach ($_SESSION[self::TEMP_DATA_ARR] AS $key => $value) {
                 $_POST[$key] = $value;
             }
-            session_start();
-            unset($_SESSION[self::TEMP_DATA_ARR]);
-            session_write_close();
         }
     }
     
