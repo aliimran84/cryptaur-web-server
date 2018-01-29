@@ -694,6 +694,9 @@ class Investor_view
                             </p>
                         </div>
                         <div class="input-field">
+                            <div id="warning-minimum-amount">
+                                <p><?= Translate::td('The minimal contibution in CPT tokens to the PROVER project is 5000 CPT') ?></p>
+                            </div>
                             <button id="cryptaur_ether_wallet_send" <?= $sendIsEnabled ? '' : 'disabled' ?> class="waves-effect waves-light btn btn-generate-transaction"><?= Translate::td('Send') ?></button>
                             <?php if (!$sendIsEnabled) { ?>
                                 <p class="grey-text"><?= Translate::td('Cryptaur Ether Waller send functions temporary is off') ?></p>
