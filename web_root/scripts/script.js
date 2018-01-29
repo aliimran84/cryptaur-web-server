@@ -44,18 +44,18 @@ $(document).ready(function(){
             }
         }
     });
-    $('#modal_warning-wallet').modal({
-        complete: function() {
-            checked = false;
-            warningCheckBox.each(function (i, el) {
-                checked += $(el).prop('checked');
-            });
-            if (checked != warningCheckBox.length) {
-                $('select.select-token').material_select();
-                $('.select-token .select-dropdown').val(optionSelecteTokenValue);
-            }
-        }
-    });
+    // $('#modal_warning-wallet').modal({
+    //     complete: function() {
+    //         checked = false;
+    //         warningCheckBox.each(function (i, el) {
+    //             checked += $(el).prop('checked');
+    //         });
+    //         if (checked != warningCheckBox.length) {
+    //             $('select.select-token').material_select();
+    //             $('.select-token .select-dropdown').val(optionSelecteTokenValue);
+    //         }
+    //     }
+    // });
     $('ul.tabs').tabs();
 
     if ($('select.select-wallet').val() == 'inner-wallet') {
@@ -170,18 +170,21 @@ $(document).ready(function(){
 
     $("select.select-token").change(function () {
         var select = $(this),
-            value = select.val(),
-            modal = $('#modal_warning-wallet');
-        cryptaur_ether_wallet_checkEthAmount();
-        if (value !== 'ETH') {
+            value = select.val();
+        if (value === 'CPT') {
+            $('#warning-wallet').css('display', 'block');
+            $('#cryptaur_ether_wallet_send').attr('disabled', true);
             warningCheckBox.prop('checked', false);
-            modal.modal('open');
             warningCheckBox.change(function () {
                 if (checkWarningCheckBox(warningCheckBox)) {
-                    modal.modal('close');
+                    $('#cryptaur_ether_wallet_send').attr('disabled', false);
                 }
             });
+        } else {
+            $('#warning-wallet').css('display', 'none');
+            $('#cryptaur_ether_wallet_send').attr('disabled', false);
         }
+        cryptaur_ether_wallet_checkEthAmount();
     });
 });
 

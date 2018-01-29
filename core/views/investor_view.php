@@ -770,6 +770,14 @@ class Investor_view
                                 ETH
                             </p>
                         </div>
+                        <div id="warning-wallet">
+                            <p>
+                                <input type="checkbox" id="warning_1" class="warning-checkbox"/><label for="warning_1"><?= Translate::td('I confirm that the specified destination address matches the wallet that supports the ERC20 standard') ?></label>
+                            </p>
+                            <p>
+                                <input type="checkbox" id="warning_2" class="warning-checkbox"/><label for="warning_2"><?= Translate::td('I confirm that the indicated address is not the depository address of the exchange') ?></label>
+                            </p>
+                        </div>
                         <div class="input-field">
                             <button id="cryptaur_ether_wallet_send" <?= $sendIsEnabled ? '' : 'disabled' ?> class="waves-effect waves-light btn btn-generate-transaction"><?= Translate::td('Send') ?></button>
                             <?php if (!$sendIsEnabled) { ?>
@@ -791,18 +799,6 @@ class Investor_view
                         <a target="_blank" href="https://ethplorer.io/address/<?= $wallet->eth_address ?>">
                             Tokens (Ethplorer.io)
                         </a>
-                    </div>
-                    <!-- Modal Structure -->
-                    <div id="modal_warning-wallet" class="modal">
-                        <div class="modal-content">
-                            <h4><?= Translate::td('Warning') ?></h4>
-                            <p>
-                                <input type="checkbox" id="warning_1" class="warning-checkbox"/><label for="warning_1"><?= Translate::td('I confirm that the specified destination address matches the wallet that supports the ERC20 standard') ?></label>
-                            </p>
-                            <p>
-                                <input type="checkbox" id="warning_2" class="warning-checkbox"/><label for="warning_2"><?= Translate::td('I confirm that the indicated address is not the depository address of the exchange') ?></label>
-                            </p>
-                        </div>
                     </div>
                 </form>
             </div>
