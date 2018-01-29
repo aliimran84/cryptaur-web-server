@@ -71,6 +71,7 @@ Accept,Accept
 Verify,Verify
 You must verify phone number,You must verify phone number
 "Authentication code has been sended using preferred method","Authentication code has been sended using preferred method"
+"Authentication code has not been sended","Authentication code has not been sended"
 "Authentication codes have been sended","Authentication codes have been sended"
 "You cannot sent another code(s) until seconds will expire","You cannot sent another code(s) until %%num%% seconds will expire"
 Password,Password

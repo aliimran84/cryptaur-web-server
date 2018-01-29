@@ -2,6 +2,8 @@
 
 namespace core\views;
 
+use core\translate\Translate;
+
 class SFchecker_view
 {
     static public function secondfactorForm($url, $message = '')

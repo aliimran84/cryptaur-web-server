@@ -6,6 +6,7 @@ use core\engine\Utility;
 use core\engine\Router;
 use core\engine\Application;
 use core\translate\Translate;
+use core\secondfactor\API2FA;
 use core\secondfactor\variants_2FA;
 use core\controllers\Investor_controller;
 use core\views\SFchecker_view;
@@ -17,6 +18,7 @@ class ACTION2FA
     const TEMP_DATA_URL = 'temp_data_url';
     const TEMP_DATA_METHOD = 'temp_data_method';
     const TEMP_DATA_VARIANT = 'temp_data_variant';
+    const TEMP_FORM_TYPE = 'temp_data_form_type';
     const TEMP_DATA_TARGET_1 = 'temp_data_target_1';
     const TEMP_DATA_TARGET_2 = 'temp_data_target_2';
     const LAST_SECURED_TIME = 'last_secured_time';
@@ -60,6 +62,9 @@ class ACTION2FA
                 )
             )
         ) {
+            session_start();
+            $_SESSION[self::TEMP_FORM_TYPE] = 0;
+            session_write_close();
             self::formDraw(0);
         } elseif (
             $sfa_form === 1 || (
@@ -67,6 +72,9 @@ class ACTION2FA
                 && $_SESSION[self::TEMP_DATA_VARIANT] == variants_2FA::both
             )
         ) {
+            session_start();
+            $_SESSION[self::TEMP_FORM_TYPE] = 1;
+            session_write_close();
             self::formDraw(1);
         }
     }
@@ -92,10 +100,7 @@ class ACTION2FA
             return NULL;
         } else {
             //if 2FA must be used
-            if (
-                !isset($_SESSION[self::TEMP_DATA_URL])
-                || !isset($_SESSION[self::TEMP_DATA_METHOD])
-            ) {
+            if (!isset($_SESSION[self::TEMP_DATA_URL]) || !isset($_SESSION[self::TEMP_DATA_METHOD])) {
                 //first-time 2FA init
                 session_start();
                 $_SESSION[self::TEMP_DATA_URL] = $url;
@@ -110,25 +115,19 @@ class ACTION2FA
                 session_write_close();
                 self::readFromPost();
                 self::action2FAVerify();
-            } elseif (
-                isset($_SESSION[self::TEMP_DATA_URL])
-                && isset($_SESSION[self::TEMP_DATA_METHOD])
-            ) {
+            } elseif (isset($_SESSION[self::TEMP_DATA_URL]) && isset($_SESSION[self::TEMP_DATA_METHOD])) {
                 if (isset($_GET['sent'])) {
                     //if user trying sent/resent the code(s)
                     $message = "";
                     $time = time();
-                    if (
-                        isset($_SESSION[self::LAST_2FA_TRY])
-                        && $time - $_SESSION[self::LAST_2FA_TRY] < SECURED_SESSION_TIME
-                    ) {
+                    if (isset($_SESSION[self::LAST_2FA_TRY]) && $time - $_SESSION[self::LAST_2FA_TRY] < SECURED_SESSION_TIME) {
                         $message = Translate::td('You cannot sent another code(s) until seconds will expire', ['num' => SECURED_SESSION_TIME]);
+                        self::formDraw($_SESSION[self::TEMP_FORM_TYPE], $message);
                     } else {
                         session_start();
                         $_SESSION[self::LAST_2FA_TRY] = $time;
                         session_write_close();
                         $sended;
-                        $form_type;
                         if (
                             isset($_SESSION[self::TEMP_DATA_VARIANT])
                             || isset($_SESSION[self::TEMP_DATA_TARGET_1])
@@ -139,7 +138,6 @@ class ACTION2FA
                                 $_SESSION[self::TEMP_DATA_TARGET_1], 
                                 $_SESSION[self::TEMP_DATA_TARGET_2]
                             );
-                            $form_type = 1;
                         } elseif (
                             isset($_SESSION[self::TEMP_DATA_VARIANT])
                             || isset($_SESSION[self::TEMP_DATA_TARGET_1])
@@ -148,22 +146,18 @@ class ACTION2FA
                                 $_SESSION[self::TEMP_DATA_VARIANT], 
                                 $_SESSION[self::TEMP_DATA_TARGET_1]
                             );
-                            $form_type = 0;
                         } else {
                             $sended = self::sent2FARequestByInvestor();
                         }
-                        if ($sended) {
+                        if ($sended === TRUE) {
                             $message = Translate::td('Authentication code has been sended using preferred method');
-                        } else { //potential case when some methods have been disabled or broken
-                            self::smart2FARedirect();
+                        } elseif ($sended === FALSE) { //potential case when some methods have been disabled or broken
+                            //self::smart2FARedirect();
+                            $message = Translate::td('Authentication code has not been sended');
                         }
-                        self::formDraw($form_type, $message);
+                        self::formDraw($_SESSION[self::TEMP_FORM_TYPE], $message);
                     }
-                } elseif (
-                    isset($_POST['otp']) || (
-                        isset($_POST['code_1']) && isset($_POST['code_2'])
-                    )
-                ) {
+                } elseif (isset($_POST['otp']) || (isset($_POST['code_1']) && isset($_POST['code_2']))) {
                     $checked;
                     if (isset($_POST['otp'])) {
                         //case for single code
@@ -176,10 +170,10 @@ class ACTION2FA
                         ACTION2FA::smart2FARedirect();
                     } else {
                         $message = Translate::td('wrong authentication code');
-                        self::formDraw($form_type, $message);
+                        self::formDraw($_SESSION[self::TEMP_FORM_TYPE], $message);
                     }
                 } else {
-                    //self::formDraw($form_type); TODO
+                    self::formDraw($_SESSION[self::TEMP_FORM_TYPE]);
                 }
             }
         }
@@ -200,6 +194,8 @@ class ACTION2FA
             session_start();
             unset($_SESSION[self::TEMP_DATA_URL]);
             unset($_SESSION[self::TEMP_DATA_METHOD]);
+            unset($_SESSION[self::TEMP_FORM_TYPE]);
+            unset($_SESSION[self::LAST_2FA_TRY]);
             if (isset($_SESSION[self::TEMP_DATA_VARIANT])) {
                 unset($_SESSION[self::TEMP_DATA_VARIANT]);
             }
@@ -208,9 +204,6 @@ class ACTION2FA
             }
             if (isset($_SESSION[self::TEMP_DATA_TARGET_2])) {
                 unset($_SESSION[self::TEMP_DATA_TARGET_2]);
-            }
-            if (isset($_SESSION[self::LAST_2FA_TRY])) {
-                unset($_SESSION[self::LAST_2FA_TRY]);
             }
             session_write_close();
             self::writeToPost();
