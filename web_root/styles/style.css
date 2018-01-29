@@ -1002,6 +1002,13 @@ footer .row {
     border: 1px solid #95989a;
     border-radius: 10px;
 }
+#warning-minimum-amount, 
 #warning-wallet {
     display: none;
+}
+#warning-minimum-amount {
+    color: #ff0000;
+}
+#warning-minimum-amount p {
+    text-align: center;
 }
