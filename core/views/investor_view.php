@@ -703,6 +703,9 @@ class Investor_view
                             case EthQueue::TYPE_SENDCPT_WALLET:
                                 echo $element->data['cpt'] . '&nbsp;CPT';
                                 break;
+                            case EthQueue::TYPE_SENDPROOF_WALLET:
+                                echo $element->data['proof'] . '&nbsp;PROOF';
+                                break;
                         }
                         ?>
                         <?= date('Y-m-d H:i:s', $element->datetime) ?>&nbsp;UTC
