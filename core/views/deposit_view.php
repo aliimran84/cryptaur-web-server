@@ -84,6 +84,11 @@ class Deposit_view
                        name="<?= EthQueue::SENDCPTWALLET_IS_ON ?>" placeholder="1"
                        value="<?= EthQueue::sendCptWalletIsOn() ?>"
                        min="0" max="1" step="1">
+                <label>Send proof wallet is on:</label>
+                <input type="number"
+                       name="<?= EthQueue::SENDPROOFWALLET_IS_ON ?>" placeholder="1"
+                       value="<?= EthQueue::sendProofWalletIsOn() ?>"
+                       min="0" max="1" step="1">
                 <div class="row center">
                     <button type="submit" class="waves-effect waves-light btn btn-send" style="width: 100%">
                         <?= Translate::td('Set') ?>

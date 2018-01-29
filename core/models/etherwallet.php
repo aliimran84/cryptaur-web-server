@@ -208,4 +208,35 @@ class EtherWallet
         list($code) = EthQueue::sendCptWallet($this->investor->id, $data, $ethAddress, $cptValue);
         return $code >= 0;
     }
+
+    /**
+     * @param double $proofValue
+     * @param string $ethAddress
+     * @return bool
+     */
+    public function sendProof($proofValue, $ethAddress)
+    {
+        if (!EthQueue::SENDPROOFWALLET_IS_ON) {
+            return false;
+        }
+
+        if ($this->proof < $proofValue) {
+            return false;
+        }
+
+        if ($proofValue <= 0) {
+            return false;
+        }
+
+        if (!Utility::validateEthAddress($ethAddress)) {
+            return false;
+        }
+
+        $this->update($this->eth, $this->proof - $proofValue, $this->proof);
+        $data = [
+            'proof' => $proofValue
+        ];
+        list($code) = EthQueue::sendProofWallet($this->investor->id, $data, $ethAddress, $proofValue);
+        return $code >= 0;
+    }
 }

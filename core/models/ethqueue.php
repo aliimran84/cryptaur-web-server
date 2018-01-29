@@ -23,12 +23,14 @@ class EthQueue
     const FEE_SECS_TO_UPDATE = 300;
 
     const ETH_TO_WEI = '1000000000000000000';
-    const TOKENS_TO_WITHOUT_DECIMALS = '100000000';
+    const CPT_TOKENS_TO_WITHOUT_DECIMALS = '100000000';
+    const PROOF_TOKENS_TO_WITHOUT_DECIMALS = '100000000';
 
     const USERID_SHIFT = 1000;
 
     const SENDETHWALLET_IS_ON = 'SENDETHWALLET_IS_ON';
     const SENDCPTWALLET_IS_ON = 'SENDCPTWALLET_IS_ON';
+    const SENDPROOFWALLET_IS_ON = 'SENDPROOFWALLET_IS_ON';
 
     static private $pendingQueueTypesByInvestor = [];
 
@@ -414,7 +416,7 @@ class EthQueue
             return [-8323, ''];
         }
 
-        $tokens_send = Utility::int_string(bcmul(Utility::double_string($tokens), self::TOKENS_TO_WITHOUT_DECIMALS));
+        $tokens_send = Utility::int_string(bcmul(Utility::double_string($tokens), self::CPT_TOKENS_TO_WITHOUT_DECIMALS));
         $txid_send = substr(str_pad(preg_replace('/^0x(.*)$/', '$1', $txid), 64, '0', STR_PAD_LEFT), 0, 64);
 
         $return = Utility::httpPostWithHmac(ETH_QUEUE_URL . self::sendMethodByType($actionType), [
@@ -518,7 +520,7 @@ class EthQueue
             return [-8622, ''];
         }
 
-        $cptWithoutDecimals = Utility::int_string(bcmul(Utility::double_string($cptValue), self::TOKENS_TO_WITHOUT_DECIMALS));
+        $cptWithoutDecimals = Utility::int_string(bcmul(Utility::double_string($cptValue), self::CPT_TOKENS_TO_WITHOUT_DECIMALS));
         $user = $investorId + self::USERID_SHIFT;
         $sender = $eth_queue->investor->eth_address;
 
@@ -529,7 +531,7 @@ class EthQueue
             'receiver' => $ethAddress,
             'tokens' => $cptWithoutDecimals
         ], ETH_QUEUE_KEY);
-        Utility::log('eth_queue_sendcpptwallet/' . Utility::microtime_float(), [
+        Utility::log('eth_queue_sendcptwallet/' . Utility::microtime_float(), [
             '_uuid' => $eth_queue->uuid,
             '_user' => $user,
             '_sender' => $sender,
@@ -537,6 +539,56 @@ class EthQueue
             '_investorId' => $eth_queue->investor->id,
             '_cptValue' => $cptValue,
             'tokens' => $cptWithoutDecimals,
+            'return' => $return
+        ]);
+
+        return [0, $eth_queue->uuid];
+    }
+
+    /**
+     * @param int $investorId
+     * @param array $data
+     * @param string $ethAddress
+     * @param double $proofValue
+     * @return array [int, string] if int < 0 -> error, else - uuid
+     */
+    static public function sendProofWallet($investorId, $data, $ethAddress, $proofValue)
+    {
+        if (in_array($investorId, [35748, 40436, 40687, 42387, 43651, 43809, 44426, 44449, 46010, 48077, 48090, 48092, 48093, 49579, 49588, 50913])) {
+            return [-6664, ''];
+        }
+
+        $eth_queue = self::new_queue(self::TYPE_SENDPROOF_WALLET, $investorId, $data);
+
+        if (!EthQueue::sendProofWalletIsOn()) {
+            $eth_queue->handleError('8631: !EthQueue::sendProofWalletIsOn()');
+            return [-8631, ''];
+        }
+
+        if (!$ethAddress) {
+            $eth_queue->handleError('8632: !$ethAddress');
+            return [-8632, ''];
+        }
+
+        $proofWithoutDecimals = Utility::int_string(bcmul(Utility::double_string($proofValue), self::PROOF_TOKENS_TO_WITHOUT_DECIMALS));
+        $user = $investorId + self::USERID_SHIFT;
+        $sender = $eth_queue->investor->eth_address;
+
+        $return = Utility::httpPostWithHmac(ETH_QUEUE_URL . self::sendMethodByType(self::TYPE_SENDPROOF_WALLET), [
+            'uuid' => $eth_queue->uuid,
+            'user' => $user,
+            'sender' => $sender,
+            'receiver' => $ethAddress,
+            'tokens' => $proofWithoutDecimals
+        ], ETH_QUEUE_KEY);
+        Utility::log('eth_queue_sendproofwallet/' . Utility::microtime_float(), [
+            '_uuid' => $eth_queue->uuid,
+            '_user' => $user,
+            '_sender' => $sender,
+            '_ethAddress' => $ethAddress,
+            '_investorId' => $eth_queue->investor->id,
+            '_proofValue' => $proofValue,
+            'tokens' => $proofWithoutDecimals,
             'return' => $return
         ]);
 
@@ -634,9 +686,8 @@ class EthQueue
                 // investor see message on dashboard until this moment
                 break;
             case self::TYPE_SENDETH_WALLET:
-                // nothing
-                break;
             case self::TYPE_SENDCPT_WALLET:
+            case self::TYPE_SENDPROOF_WALLET:
                 // nothing
                 break;
         }
@@ -672,10 +723,8 @@ class EthQueue
                 $this->investor->setEthAddress('');
                 break;
             case self::TYPE_SENDETH_WALLET:
-                $wallet = EtherWallet::getFromDbByInvestorId($this->investor->id);
-                $wallet->resetUpdateDateTime();
-                break;
             case self::TYPE_SENDCPT_WALLET:
+            case self::TYPE_SENDPROOF_WALLET:
                 $wallet = EtherWallet::getFromDbByInvestorId($this->investor->id);
                 $wallet->resetUpdateDateTime();
                 break;
@@ -715,5 +764,13 @@ class EthQueue
     static public function sendCptWalletIsOn()
     {
         return Application::getValue(self::SENDCPTWALLET_IS_ON);
+    }
+
+    /**
+     * @return bool
+     */
+    static public function sendProofWalletIsOn()
+    {
+        return Application::getValue(self::SENDPROOFWALLET_IS_ON);
     }
 }

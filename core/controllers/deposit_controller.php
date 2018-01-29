@@ -68,7 +68,8 @@ class Deposit_controller
                      Bounty::WITHDRAW_IS_ON,
                      Bounty::REINVEST_IS_ON,
                      EthQueue::SENDETHWALLET_IS_ON,
-                     EthQueue::SENDCPTWALLET_IS_ON
+                     EthQueue::SENDCPTWALLET_IS_ON,
+                     EthQueue::SENDPROOFWALLET_IS_ON
                  ] as $key) {
             $value = (bool)$_POST[$key];
             Application::setValue($key, $value);
