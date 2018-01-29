@@ -763,6 +763,7 @@ class Investor_view
                         <p><?= Translate::td('Account Balance') ?></p>
                         <p class="account-balance"><?= number_format($wallet->eth, 8, '.', '') ?> ETH</p>
                         <p class="account-balance"><?= number_format($wallet->cpt, 8, '.', '') ?> CPT</p>
+                        <p class="account-balance"><?= number_format($wallet->proof, 8, '.', '') ?> PROOF</p>
                         <p><?= Translate::td('Transaction History') ?></p>
                         <a target="_blank" href="https://etherscan.io/address/<?= $wallet->eth_address ?>">
                             ETH (https://etherscan.io)

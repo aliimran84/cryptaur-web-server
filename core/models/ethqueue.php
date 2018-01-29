@@ -17,6 +17,7 @@ class EthQueue
     const TYPE_SENDETH_WALLET = 7;
     const TYPE_SENDCPT_WALLET = 8;
     const TYPE_GETFEE = 9;
+    const TYPE_SENDPROOF_WALLET = 10;
 
     const FEE_STORAGE_KEY = 'ETHQUEUE_FEE';
     const FEE_SECS_TO_UPDATE = 300;
@@ -129,6 +130,8 @@ class EthQueue
                 return '/send-eth';
             case self::TYPE_SENDCPT_WALLET:
                 return '/send-cpt';
+            case self::TYPE_SENDPROOF_WALLET:
+                return '/send-proof';
             case self::TYPE_GETFEE:
                 return '/fee';
         }
@@ -150,6 +153,7 @@ class EthQueue
             case self::TYPE_SENDETH_WITHDRAW:
             case self::TYPE_SENDETH_WALLET:
             case self::TYPE_SENDCPT_WALLET:
+            case self::TYPE_SENDPROOF_WALLET:
                 return '/send-status';
             case self::TYPE_GETWALLET:
                 return '/get-wallet';
@@ -266,10 +270,12 @@ class EthQueue
         $ethAddress = $data['result']['result'];
         $eth = Utility::floor_prec($data['result']['balance']['ETH'], 8);
         $cpt = Utility::floor_prec($data['result']['balance']['CPT'], 8);
+        $proof = Utility::floor_prec($data['result']['balance']['PROOF'], 8);
         $wallet = EtherWallet::getFromDbByInvestorId($investorId);
         if (!is_null($wallet)) {
             $minus_eth = 0;
             $minus_cpt = 0;
+            $minus_proof = 0;
             $pendingEthQueue = DB::get("
                 SELECT *
                 FROM `eth_queue`
@@ -286,6 +292,9 @@ class EthQueue
                     case self::TYPE_SENDCPT_WALLET:
                         $minus_cpt += $element->data['cpt'];
                         break;
+                    case self::TYPE_SENDPROOF_WALLET:
+                        $minus_proof += $element->data['proof'];
+                        break;
                 }
             }
 
@@ -297,7 +306,11 @@ class EthQueue
             if ($resultCpt < 0) {
                 $resultCpt = 0;
             }
-            $wallet->update($resultEth, $resultCpt);
+            $resultProof = $proof - $minus_proof;
+            if ($resultProof < 0) {
+                $resultProof = 0;
+            }
+            $wallet->update($resultEth, $resultCpt, $resultProof);
             if ($wallet->eth_address != $ethAddress) {
                 $wallet->eth_address = $ethAddress;
                 $wallet->investor->setEthAddress($ethAddress);
@@ -309,7 +322,7 @@ class EthQueue
                 ;", [$ethAddress, $wallet->id]);
             }
         } else {
-            $wallet = EtherWallet::create($investorId, $ethAddress, $eth, $cpt);
+            $wallet = EtherWallet::create($investorId, $ethAddress, $eth, $cpt, $proof);
         }
 
         return $wallet;

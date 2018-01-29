@@ -19,6 +19,7 @@ class EtherWallet
     public $datetime_update = 0;
     public $eth = 0;
     public $cpt = 0;
+    public $proof = 0;
 
     const SECS_TO_UPDATE_WALLET = 60 * 5;
 
@@ -33,6 +34,7 @@ class EtherWallet
                 `datetime_update` datetime(0) NOT NULL,
                 `eth` double(20, 8) UNSIGNED DEFAULT '0',
                 `cpt` double(20, 8) UNSIGNED DEFAULT '0',
+                `proof` double(20, 8) UNSIGNED DEFAULT '0',
                 PRIMARY KEY (`id`),
                 INDEX `investor_id_index`(`investor_id`)
             )
@@ -55,10 +57,11 @@ class EtherWallet
         $instance->datetime_update = strtotime($data['datetime_update']);
         $instance->eth = $data['eth'];
         $instance->cpt = $data['cpt'];
+        $instance->proof = $data['proof'];
         return $instance;
     }
 
-    static public function create($investorId, $ethAddress, $ethBalance, $cptBalance)
+    static public function create($investorId, $ethAddress, $ethBalance, $cptBalance, $proofBalance)
     {
         DB::set("
             INSERT INTO `eth_queue_wallets`
@@ -68,8 +71,9 @@ class EtherWallet
                 `datetime_create` = NOW(),
                 `datetime_update` = NOW(),
                 `eth` = ?,
-                `cpt` = ?
-            ;", [$investorId, $ethAddress, $ethBalance, $cptBalance]
+                `cpt` = ?,
+                `proof` = ?
+            ;", [$investorId, $ethAddress, $ethBalance, $cptBalance, $proofBalance]
         );
         return self::getFromDbByInvestorId($investorId);
     }
@@ -115,19 +119,22 @@ class EtherWallet
     /**
      * @param double $eth
      * @param double $cpt
+     * @param double $proof
      */
-    public function update($eth, $cpt)
+    public function update($eth, $cpt, $proof)
     {
         $this->eth = (double)$eth;
         $this->cpt = (double)$cpt;
+        $this->proof = (double)$proof;
         DB::set("
             UPDATE `eth_queue_wallets`
             SET
                 `datetime_update` = NOW(),
                 `eth` = ?,
-                `cpt` = ?
+                `cpt` = ?,
+                `proof` = ?
             WHERE `id` = ?
-        ;", [$this->eth, $this->cpt, $this->id]);
+        ;", [$this->eth, $this->cpt, $this->proof, $this->id]);
     }
 
     public function resetUpdateDateTime()
@@ -163,7 +170,7 @@ class EtherWallet
             return false;
         }
 
-        $this->update($this->eth - $ethValue, $this->cpt);
+        $this->update($this->eth - $ethValue, $this->cpt, $this->proof);
         $data = [
             'eth' => $ethValue
         ];
@@ -194,7 +201,7 @@ class EtherWallet
             return false;
         }
 
-        $this->update($this->eth, $this->cpt - $cptValue);
+        $this->update($this->eth, $this->cpt - $cptValue, $this->proof);
         $data = [
             'cpt' => $cptValue
         ];
