@@ -407,7 +407,18 @@ class Investor
             ]
         );
         DB::set("
-            UPDATE `investors_referrals` SET `referrals` = IF(`referrals` = '', ?, concat(`referrals`, ',', ?))
+            INSERT INTO `investors_referrals`
+            SET `investor_id` = ?,
+                `referrals` = ''
+            ;", [
+                $investorId
+            ]
+        );
+        DB::set("
+            UPDATE `investors_referrals`
+            SET `referrals` = IF(
+                `referrals` = '' || `referrals` is null, ?, concat(`referrals`, ',', ?)
+            )
             WHERE FIND_IN_SET(`investor_id`, (
                 SELECT `referrers`
                 FROM `investors_referrers`
@@ -505,7 +516,7 @@ class Investor
             ON DUPLICATE KEY UPDATE `choice` = ?
         ", [$this->id, $method, $method]);
     }
-    
+
     /**
      * @param string $phone
      */
