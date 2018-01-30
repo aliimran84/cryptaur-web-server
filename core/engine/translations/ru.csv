@@ -174,6 +174,7 @@ Alarm messages,Тревожные сообщения
 Delete,Удалить
 Friend email,Почта друга
 wrong credentials,неверные учетные данные
+wrong captcha,неверный код с картинки
 wrong authentication code,неверный код авторизации
 not a valid eth address,недействительный eth адрес
 not a valid email,недействительная почта

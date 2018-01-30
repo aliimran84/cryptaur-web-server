@@ -13,6 +13,7 @@ use core\models\Investor;
 use core\secondfactor\API2FA;
 use core\secondfactor\variants_2FA;
 use core\sfchecker\ACTION2FA;
+use core\captcha\Captcha;
 use core\translate\Translate;
 use core\views\Base_view;
 use core\views\Investor_view;
@@ -354,8 +355,9 @@ class Investor_controller
         }
         Base_view::$TITLE = 'Login';
         Base_view::$MENU_POINT = Menu_point::Login;
+        $image = Captcha::generateCaptcha();
         echo Base_view::header();
-        echo Investor_view::loginForm($message);
+        echo Investor_view::loginForm($image, $message);
         echo Base_view::footer();
     }
     
@@ -376,6 +378,9 @@ class Investor_controller
 
     static private function handleLoginRequest()
     {
+        if (!Captcha::checkCaptcha(@$_POST['captcha'])) {
+            Utility::location(self::LOGIN_URL . '?err=3671&err_text=wrong captcha');
+        }
         $email = trim(@$_POST['email']);
         $password = trim(@$_POST['password']);
         $investorId = @Investor::getInvestorIdByEmailPassword($email, $password);

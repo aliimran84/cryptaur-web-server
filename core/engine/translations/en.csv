@@ -174,6 +174,7 @@ Alarm messages,Alarm messages
 Delete,Delete
 Friend email,Friend email
 wrong credentials,wrong credentials
+wrong captcha,wrong code from picture
 wrong authentication code,wrong authentication code
 not a valid eth address,not a valid eth address
 not a valid email,not a valid email
