@@ -525,9 +525,10 @@ class Investor_controller
             $time = time();
             if (
                 isset($_SESSION[self::LAST_2FA_TRY])
-                && $time - $_SESSION[self::LAST_2FA_TRY] < SECURED_SESSION_TIME
+                && $time - $_SESSION[self::LAST_2FA_TRY] < CODE_SENT_TIME
             ) {
-                $message = Translate::td('You cannot sent another code(s) until seconds will expire', ['num'=>SECURED_SESSION_TIME]);
+                $diff = CODE_SENT_TIME - ($time - $_SESSION[self::LAST_2FA_TRY]);
+                $message = Translate::td('You cannot sent another code(s) until seconds will expire', ['num' => $diff]);
             } else {
                 $phone = $_SESSION[ACTION2FA::TEMP_DATA_ARR]['phone'];
                 session_start();

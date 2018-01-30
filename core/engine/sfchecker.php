@@ -117,8 +117,10 @@ class ACTION2FA
                     //if user trying sent/resent the code(s)
                     $message = "";
                     $time = time();
-                    if (isset($_SESSION[self::LAST_2FA_TRY]) && $time - $_SESSION[self::LAST_2FA_TRY] < SECURED_SESSION_TIME) {
-                        $message = Translate::td('You cannot sent another code(s) until seconds will expire', ['num' => SECURED_SESSION_TIME]);
+                    if (isset($_SESSION[self::LAST_2FA_TRY]) && $time - $_SESSION[self::LAST_2FA_TRY] < CODE_SENT_TIME) {
+                        $diff = CODE_SENT_TIME - ($time - $_SESSION[self::LAST_2FA_TRY]);
+                        unset($_GET['sent']);
+                        $message = Translate::td('You cannot sent another code(s) until seconds will expire', ['num' => $diff]);
                         self::formDraw($_SESSION[self::TEMP_FORM_TYPE], $message);
                     } else {
                         session_start();
