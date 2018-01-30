@@ -8,13 +8,17 @@ class Captcha
     
     static public function checkCaptcha($code)
     {
-        if (!isset($_SESSION[self::TEMP_CAPTCHA]) || $_SESSION[self::TEMP_CAPTCHA] != $code) {
+        if (!isset($_SESSION[self::TEMP_CAPTCHA])) {
             return FALSE;
+        }
+        $check = TRUE;
+        if ($_SESSION[self::TEMP_CAPTCHA] != $code) {
+            $check = FALSE;
         }
         session_start();
         unset($_SESSION[self::TEMP_CAPTCHA]);
         session_write_close();
-        return TRUE;
+        return $check;
     }
     
     static public function generateCaptcha()

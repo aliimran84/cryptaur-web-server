@@ -353,9 +353,9 @@ class Investor_controller
         if (Application::$authorizedInvestor) {
             Utility::location(self::BASE_URL);
         }
+        $image = Captcha::generateCaptcha();
         Base_view::$TITLE = 'Login';
         Base_view::$MENU_POINT = Menu_point::Login;
-        $image = Captcha::generateCaptcha();
         echo Base_view::header();
         echo Investor_view::loginForm($image, $message);
         echo Base_view::footer();
@@ -421,13 +421,14 @@ class Investor_controller
         if (Application::$authorizedInvestor) {
             Utility::location(self::BASE_URL);
         }
+        $image = Captcha::generateCaptcha();
         Base_view::$TITLE = 'Registration';
         Base_view::$MENU_POINT = Menu_point::Register;
         echo Base_view::header();
         if (@$_GET['test']) {
-            echo Investor_view::registerForm2($data, $error);
+            echo Investor_view::registerForm2($image, $data, $error);
         } else {
-            echo Investor_view::registerForm($data, $error);
+            echo Investor_view::registerForm($image, $data, $error);
         }
         echo Base_view::footer();
     }
@@ -455,6 +456,10 @@ class Investor_controller
 
     static private function handleRegistrationRequest()
     {
+        if (!Captcha::checkCaptcha(@$_POST['captcha'])) {
+            self::handleRegistrationForm($_POST, 'wrong captcha');
+            return;
+        }
         $email = trim(@$_POST['email']);
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             self::handleRegistrationForm($_POST, 'not a valid email');

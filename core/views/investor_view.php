@@ -213,7 +213,7 @@ class Investor_view
      * @param string $error
      * @return string HTML
      */
-    static public function registerForm($data = [], $error = '')
+    static public function registerForm($image, $data = [], $error = '')
     {
         $referrer_code = '';
         if (isset($_GET['referrer_code'])) {
@@ -250,6 +250,8 @@ class Investor_view
                         <input type="text" name="referrer_code" value="<?= $referrer_code ?>" placeholder="<?= Translate::td('REFERRER CODE') ?>" autocomplete="nope">
                         <input type="password" name="password" pattern=".{6,120}" placeholder="<?= Translate::td('Password') ?>" autocomplete="new-password">
                         <span><?= Translate::td('Password must be more than 6 symbols') ?></span>
+                        <br/><image src="data:image/png;base64,<?= $image ?>">
+                        <input type="text" name="captcha" placeholder="Captcha">
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Register') ?>
@@ -268,7 +270,7 @@ class Investor_view
      * @param string $error
      * @return string HTML
      */
-    static public function registerForm2($data = [], $error = '')
+    static public function registerForm2($image, $data = [], $error = '')
     {
         $referrer_code = '';
         if (isset($_GET['referrer_code'])) {
@@ -331,6 +333,8 @@ class Investor_view
                         <input type="text" name="referrer_code" value="<?= $referrer_code ?>" placeholder="<?= Translate::td('REFERRER CODE') ?>" autocomplete="nope">
                         <input type="password" name="password" pattern=".{6,120}" placeholder="<?= Translate::td('Password') ?>" autocomplete="new-password">
                         <span><?= Translate::td('Password must be more than 6 symbols') ?></span>
+                        <br/><image src="data:image/png;base64,<?= $image ?>">
+                        <input type="text" name="captcha" placeholder="Captcha">
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Register') ?>
