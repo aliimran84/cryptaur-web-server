@@ -236,8 +236,8 @@ class Investor
 
         $referralsId = explode(',', $investorData['referrals_id']);
 
-        foreach ($referralsId as $referralId_data) {
-            $referralId = $referralId_data['id'];
+        foreach ($referralsId as $referralId_str) {
+            $referralId = (int)$referralId_str;
             $instance->referralsId[] = $referralId;
             if (isset(Investor::$storage[$referralId])) {
                 Investor::$storage[$referralId]->referrals[] = $instance;
