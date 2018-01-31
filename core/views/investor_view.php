@@ -37,11 +37,7 @@ class Investor_view
                             <image src="data:image/png;base64,<?= $image ?>">
                             <div class="captcha-input">
                                 <p><?= Translate::td('Enter security code') ?></p>
-<<<<<<< HEAD
-                                <input type="text" name="captcha" placeholder="Captcha">
-=======
                                 <input type="text" name="captcha" placeholder="Captcha" required>
->>>>>>> dab9f51d0cd8753cfe989bb121f0bed5b63ef910
                             </div>
                         </div>
                         <div class="row center">
