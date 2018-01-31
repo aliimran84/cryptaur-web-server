@@ -232,7 +232,7 @@ class EtherWallet
             return false;
         }
 
-        $this->update($this->eth, $this->proof - $proofValue, $this->proof);
+        $this->update($this->eth, $this->cpt, $this->proof - $proofValue);
         $data = [
             'proof' => $proofValue
         ];
