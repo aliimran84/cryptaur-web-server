@@ -33,8 +33,13 @@ class Investor_view
                         <?php } ?>
                         <input type="email" name="email" placeholder="Email">
                         <input type="password" name="password" placeholder="<?= Translate::td('Password') ?>" autocomplete="new-password">
-                        <image src="data:image/png;base64,<?= $image ?>">
-                        <input type="text" name="captcha" placeholder="Captcha">
+                        <div class="captcha">
+                            <image src="data:image/png;base64,<?= $image ?>">
+                            <div class="captcha-input">
+                                <p><?= Translate::td('Enter code is in the image') ?></p>
+                                <input type="text" name="captcha" placeholder="Captcha">
+                            </div>
+                        </div>
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Login') ?>
@@ -249,9 +254,14 @@ class Investor_view
                         <span><?= Translate::td('Use only numbers') ?></span>
                         <input type="text" name="referrer_code" value="<?= $referrer_code ?>" placeholder="<?= Translate::td('REFERRER CODE') ?>" autocomplete="nope">
                         <input type="password" name="password" pattern=".{6,120}" placeholder="<?= Translate::td('Password') ?>" autocomplete="new-password">
-                        <span><?= Translate::td('Password must be more than 6 symbols') ?></span>
-                        <br/><image src="data:image/png;base64,<?= $image ?>">
-                        <input type="text" name="captcha" placeholder="Captcha">
+                        <span class="password-label"><?= Translate::td('Password must be more than 6 symbols') ?></span>
+                        <div class="captcha">
+                            <image src="data:image/png;base64,<?= $image ?>">
+                                <div class="captcha-input">
+                                    <p><?= Translate::td('Enter code is in the image') ?></p>
+                                    <input type="text" name="captcha" placeholder="Captcha">
+                                </div>
+                        </div>
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Register') ?>

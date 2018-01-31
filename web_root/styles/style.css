@@ -174,7 +174,8 @@ nav a.button-collapse i {
 .content form.login h5 {
     margin-top: 10px;
 }
-.content form.login .btn-login {
+.content form.login .btn-login,
+.content form.registration .btn-login {
     display: block;
     text-decoration: none;
     margin-top: 0;
@@ -1011,4 +1012,27 @@ footer .row {
 }
 #warning-minimum-amount p {
     text-align: center;
+}
+.captcha {
+    display: flex;
+    margin-bottom: 10px;
+}
+.captcha img {
+    width: 35%;
+}
+.captcha .captcha-input {
+    width: 60%;
+    margin: auto 0 auto 5%;
+}
+.captcha .captcha-input p {
+    text-align: center;
+    margin-bottom: 5px;
+    display: block;
+}
+.captcha .captcha-input input[type=text] {
+    margin-bottom: 0;
+}
+.content form.registration .password-label {
+    margin-bottom: 10px;
+    display: inline-block;
 }
