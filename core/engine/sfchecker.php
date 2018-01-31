@@ -99,6 +99,7 @@ class ACTION2FA
             //if 2FA must be used
             if (!isset($_SESSION[self::TEMP_DATA_URL]) || !isset($_SESSION[self::TEMP_DATA_METHOD])) {
                 //first-time 2FA init
+                self::clearSessionData(TRUE); //clean session data to make process clear
                 session_start();
                 $_SESSION[self::TEMP_DATA_URL] = $url;
                 $_SESSION[self::TEMP_DATA_METHOD] = $method;
@@ -113,7 +114,11 @@ class ACTION2FA
                 self::readFromPost();
                 self::action2FAVerify();
             } elseif (isset($_SESSION[self::TEMP_DATA_URL]) && isset($_SESSION[self::TEMP_DATA_METHOD])) {
-                if (isset($_GET['sent'])) {
+                if ($_SESSION[self::TEMP_DATA_URL] != $url) {
+                    //if there was unfinised check
+                    self::clearSessionData(TRUE); //clean session data to make process clear
+                    self::access2FAChecker($url, $method, $variant, $target_1, $target_2);
+                } elseif (isset($_GET['sent'])) {
                     //if user trying sent/resent the code(s)
                     $message = "";
                     $time = time();
@@ -196,13 +201,19 @@ class ACTION2FA
         }
     }
     
-    static private function clearSessionData($try_clear = FALSE)
+    static public function clearSessionData($try_clear = FALSE)
     {
         session_start();
-        unset($_SESSION[self::TEMP_DATA_URL]);
-        unset($_SESSION[self::TEMP_DATA_METHOD]);
-        unset($_SESSION[self::TEMP_FORM_TYPE]);
-        if ($try_clear) {
+        if (isset($_SESSION[self::TEMP_DATA_URL])) {
+            unset($_SESSION[self::TEMP_DATA_URL]);
+        }
+        if (isset($_SESSION[self::TEMP_DATA_METHOD])) {
+            unset($_SESSION[self::TEMP_DATA_METHOD]);
+        }
+        if (isset($_SESSION[self::TEMP_FORM_TYPE])) {
+            unset($_SESSION[self::TEMP_FORM_TYPE]);
+        }
+        if (isset($_SESSION[self::LAST_2FA_TRY])) {
             unset($_SESSION[self::LAST_2FA_TRY]);
         }
         if (isset($_SESSION[self::TEMP_DATA_VARIANT])) {
