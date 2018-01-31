@@ -247,7 +247,7 @@ class Deposit
         foreach ($db_deposits as $db_deposit) {
             $deposit = self::constructFromDbData($db_deposit);
 
-            // если депозит был принят, а сейчас может быть принят, то принимаем
+            // если депозит не был принят, а сейчас может быть принят, то принимаем
             if ($receivingDepositsIsOn && !$deposit->registered) {
                 $deposit->setRegistered(true);
                 $wallet = Wallet::getByInvestoridCoin($investorId, $deposit->coin);
