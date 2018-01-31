@@ -145,7 +145,7 @@ class Administrator_view
                 <ul>
                     <?php for ($i = count($dataLogPHP) - 1; $i >= count($dataLogPHP) - 1000; $i--) : ?>
                         <li>
-                            <?= $dataLogPHP[$i]; ?>
+                            <?= @$dataLogPHP[$i]; ?>
                         </li>
                     <?php endfor; ?>
                 </ul>
@@ -154,7 +154,7 @@ class Administrator_view
                 <ul>
                     <?php for ($i = count($dataLogMySQL) - 3000 >= 0 ? count($dataLogMySQL) - 3000 : 0; $i < count($dataLogMySQL); $i++) : ?>
                         <li>
-                            <?= $dataLogMySQL[$i]; ?>
+                            <?= @$dataLogMySQL[$i]; ?>
                         </li>
                     <?php endfor; ?>
                 </ul>
