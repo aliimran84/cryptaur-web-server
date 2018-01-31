@@ -3,10 +3,11 @@
 namespace core\views;
 
 use core\translate\Translate;
+use core\engine\Router;
 
 class SFchecker_view
 {
-    static public function secondfactorForm($url, $message = '')
+    static public function secondfactorForm($url, $method, $message = '')
     {
         ob_start();
         ?>
@@ -22,7 +23,7 @@ class SFchecker_view
                         <?php if ($message) { ?>
                             <label class="blue-text"><?= $message ?></label>
                         <?php } ?>
-                        <?php if (isset($_GET['sent'])) { ?>
+                        <?php if (isset($_REQUEST['sent'])) { ?>
                             <input type="text" name="otp" placeholder="<?= Translate::td('Authentication code') ?>">
                             <div class="row center">
                                 <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
@@ -31,9 +32,15 @@ class SFchecker_view
                             </div>
                         <?php } ?>
                         <div class="row center">
+                            <?php if ($method == Router::GET_METHOD) { ?>
                             <a href="<?= $url ?>?sent=1" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
                             </a>
+                            <?php } else { ?>
+                            <button type="submit" name="sent" value="1" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                <?= isset($_POST['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
+                            </button>
+                            <?php } ?>
                         </div>
                     </form>
                 </div>
@@ -43,7 +50,7 @@ class SFchecker_view
         return ob_get_clean();
     }
 
-    static public function secondfactorDualForm($url, $message = '')
+    static public function secondfactorDualForm($url, $method, $message = '')
     {
         ob_start();
         ?>
@@ -62,7 +69,7 @@ class SFchecker_view
                         <h5><?= Translate::td('Code from SMS') ?>:</h5>
                         <input type="text" name="code_1" placeholder="<?= Translate::td('Authentication code') ?>">
                         <h5><?= Translate::td('Code from email') ?>:</h5>
-                        <?php if (isset($_GET['sent'])) { ?>
+                        <?php if (isset($_REQUEST['sent'])) { ?>
                             <input type="text" name="code_2" placeholder="<?= Translate::td('Authentication code') ?>">
                             <div class="row center">
                                 <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
@@ -71,9 +78,15 @@ class SFchecker_view
                             </div>
                         <?php } ?>
                         <div class="row center">
+                            <?php if ($method == Router::GET_METHOD) { ?>
                             <a href="<?= $url ?>?sent=1" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
                             </a>
+                            <?php } else { ?>
+                            <button type="submit" name="sent" value="1" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                <?= isset($_POST['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
+                            </button>
+                            <?php } ?>
                         </div>
                     </form>
                 </div>

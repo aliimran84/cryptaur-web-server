@@ -408,6 +408,7 @@ class Investor_controller
             unset($_SESSION[self::SESSION_KEY]);
         }
         session_write_close();
+        ACTION2FA::clearSessionData(TRUE);
         Utility::location();
     }
 

@@ -80,9 +80,9 @@ class ACTION2FA
     {
         echo Base_view::header();
         if ($form_type === 0) {
-            echo SFchecker_view::secondfactorForm($_SESSION[self::TEMP_DATA_URL], $message);
+            echo SFchecker_view::secondfactorForm($_SESSION[self::TEMP_DATA_URL], $_SESSION[self::TEMP_DATA_METHOD], $message);
         } elseif ($form_type === 1) {
-            echo SFchecker_view::secondfactorDualForm($_SESSION[self::TEMP_DATA_URL], $message);
+            echo SFchecker_view::secondfactorDualForm($_SESSION[self::TEMP_DATA_URL], $_SESSION[self::TEMP_DATA_METHOD], $message);
         }
         echo Base_view::footer();
         exit;
@@ -118,13 +118,13 @@ class ACTION2FA
                     //if there was unfinised check
                     self::clearSessionData(TRUE); //clean session data to make process clear
                     self::access2FAChecker($url, $method, $variant, $target_1, $target_2);
-                } elseif (isset($_GET['sent'])) {
+                } elseif (isset($_REQUEST['sent'])) {
                     //if user trying sent/resent the code(s)
                     $message = "";
                     $time = time();
                     if (isset($_SESSION[self::LAST_2FA_TRY]) && $time - $_SESSION[self::LAST_2FA_TRY] < CODE_SENT_TIME) {
                         $diff = CODE_SENT_TIME - ($time - $_SESSION[self::LAST_2FA_TRY]);
-                        unset($_GET['sent']);
+                        unset($_REQUEST['sent']);
                         $message = Translate::td('You cannot sent another code(s) until seconds will expire', ['num' => $diff]);
                         self::formDraw($_SESSION[self::TEMP_FORM_TYPE], $message);
                     } else {
