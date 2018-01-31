@@ -36,7 +36,7 @@ class Investor_view
                         <div class="captcha">
                             <image src="data:image/png;base64,<?= $image ?>">
                             <div class="captcha-input">
-                                <p><?= Translate::td('Enter code is in the image') ?></p>
+                                <p><?= Translate::td('Enter security code') ?></p>
                                 <input type="text" name="captcha" placeholder="Captcha">
                             </div>
                         </div>
@@ -258,7 +258,7 @@ class Investor_view
                         <div class="captcha">
                             <image src="data:image/png;base64,<?= $image ?>">
                                 <div class="captcha-input">
-                                    <p><?= Translate::td('Enter code is in the image') ?></p>
+                                    <p><?= Translate::td('Enter security code') ?></p>
                                     <input type="text" name="captcha" placeholder="Captcha">
                                 </div>
                         </div>
