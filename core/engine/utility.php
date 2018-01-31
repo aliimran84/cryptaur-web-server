@@ -302,6 +302,11 @@ class Utility
     {
         return preg_replace('~[^0-9]+~', '', $str);
     }
+    
+    static public function clear_begin_zeroes($str)
+    {
+        return preg_replace('~^0*~', '', $str);
+    }
 
     static public function uuid()
     {

@@ -1036,3 +1036,7 @@ footer .row {
     margin-bottom: 10px;
     display: inline-block;
 }
+div.phone_code {
+    display: inline-block;
+    width: 49%;
+}

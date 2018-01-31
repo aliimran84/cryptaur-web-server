@@ -36,7 +36,7 @@ class Investor_view
                         <div class="captcha">
                             <image src="data:image/png;base64,<?= $image ?>">
                             <div class="captcha-input">
-                                <p><?= Translate::td('Enter code is in the image') ?></p>
+                                <p><?= Translate::td('Enter security code') ?></p>
                                 <input type="text" name="captcha" placeholder="Captcha">
                             </div>
                         </div>
@@ -66,6 +66,8 @@ class Investor_view
     {
         $list2FA = API2FA::$allowedMethods;
         $methodSetted = in_array(Application::$authorizedInvestor->preferred_2fa, $list2FA);
+        $country_codes = json_decode(file_get_contents(PATH_TO_WEB_ROOT_DIR . '/scripts/phone_codes.json'), TRUE);
+        $cut_phone = '';
         ob_start();
         ?>
         <div class="row">
@@ -75,6 +77,9 @@ class Investor_view
                     <h5 class="blue-text"><?= Translate::td('You must choose two-factor authentication option') ?></h5>
                     <?php if (isset($_GET['phone_req_err'])) { ?>
                         <label class="red-text"><?= Translate::td('You cannot select SMS-based second factor authentication methods without verified phone number') ?></label>
+                    <?php } ?>
+                    <?php if (isset($_GET['wrong_phone_err'])) { ?>
+                        <label class="red-text"><?= Translate::td('Wrong format of the phone number') ?></label>
                     <?php } ?>
                     <?php if (isset($_GET['send_sms_err'])) { ?>
                         <label class="red-text"><?= Translate::td('Unable to sent SMS, service temporary disabled') ?></label>
@@ -117,15 +122,34 @@ class Investor_view
                             style="display:none"
                         <?php } ?>
                     >
-                        <?= Translate::td('Phone, mobile') ?>:
+                        <?= Translate::td('Phone, mobile') ?>:<br/>
+                        <?php if (Application::$authorizedInvestor->phone != "") { ?>
                         <input
                                 type="text"
                                 name="phone"
-                                placeholder="phone, mobile"
-                                value="<?= \core\engine\Utility::clear_except_numbers(Application::$authorizedInvestor->phone) ?>"
-                                autocomplete="nope"
+                                placeholder="<?= Translate::td('Phone, mobile') ?>"
+                                value="<?= Utility::clear_except_numbers(Application::$authorizedInvestor->phone) ?>"
+                                autocomplete="nope" 
+                                pattern="[0-9]{2,15}"
                         >
-                        <span><?= Translate::td('e.g. 79997774433') ?></span>
+                        <?php } else { ?>
+                        <select class="phone_code" name="code" required="">
+                            <option disabled="" selected="">-</option>
+                            <?php foreach ($country_codes as $set) { ?>
+                            <option><?= $set['code'] ?> <?= $set['name'] ?></option>
+                            <?php } ?>
+                        </select>
+                        <input 
+                            type="text" 
+                            name="phone" 
+                            style="width: 50%" 
+                            placeholder="<?= Translate::td('Phone, mobile') ?>" 
+                            autocomplete="nope" 
+                            pattern="[0-9]{2,15}"
+                        >
+                        <?php } ?>
+                        <span><?= Translate::td('e.g. 79997774433') ?></span><br/>
+                        <span><?= Translate::td('Use only numbers') ?></span>
                     </div>
                     <button type="submit" class="waves-effect waves-light btn" style="width: 100%">
                         <?= Translate::td('Set') ?>
@@ -226,6 +250,7 @@ class Investor_view
         } else if (isset($data['referrer_code'])) {
             $referrer_code = $data['referrer_code'];
         }
+        $country_codes = json_decode(file_get_contents(PATH_TO_WEB_ROOT_DIR . '/scripts/phone_codes.json'), TRUE);
         ob_start();
         ?>
         <div class="row">
@@ -243,13 +268,20 @@ class Investor_view
                         <input type="text" name="firstname" placeholder="<?= Translate::td('First name') ?>" value="<?= @$data['firstname'] ?>">
                         <input type="text" name="lastname" placeholder="<?= Translate::td('Last name') ?>" value="<?= @$data['lastname'] ?>">
                         <input type="email" name="email" placeholder="Email" value="<?= @$data['email'] ?>" autocomplete="nope">
+                        <select class="phone_code" name="code" required="">
+                            <option disabled="" selected="">-</option>
+                            <?php foreach ($country_codes as $set) { ?>
+                            <option value="<?= $set['code'] ?>"><?= $set['code'] ?> <?= $set['name'] ?></option>
+                            <?php } ?>
+                        </select>
                         <input 
                             type="text" 
                             name="phone" 
-                            placeholder="<?= Translate::td('Phone, mobile') ?>:" 
+                            style="width: 50%" 
+                            placeholder="<?= Translate::td('Phone, mobile') ?>" 
                             value="<?= @$data['phone'] ?>" 
                             autocomplete="nope" 
-                            pattern="[0-9]{6,}"
+                            pattern="[0-9]{2,15}"
                         >
                         <span><?= Translate::td('Use only numbers') ?></span>
                         <input type="text" name="referrer_code" value="<?= $referrer_code ?>" placeholder="<?= Translate::td('REFERRER CODE') ?>" autocomplete="nope">
@@ -258,7 +290,7 @@ class Investor_view
                         <div class="captcha">
                             <image src="data:image/png;base64,<?= $image ?>">
                                 <div class="captcha-input">
-                                    <p><?= Translate::td('Enter code is in the image') ?></p>
+                                    <p><?= Translate::td('Enter security code') ?></p>
                                     <input type="text" name="captcha" placeholder="Captcha">
                                 </div>
                         </div>
@@ -288,6 +320,7 @@ class Investor_view
         } else if (isset($data['referrer_code'])) {
             $referrer_code = $data['referrer_code'];
         }
+        $country_codes = json_decode(file_get_contents(PATH_TO_WEB_ROOT_DIR . '/scripts/phone_codes.json'), TRUE);
         ob_start();
         ?>
         <div class="row">
@@ -305,13 +338,20 @@ class Investor_view
                         <input type="text" name="firstname" placeholder="<?= Translate::td('First name') ?>" value="<?= @$data['firstname'] ?>">
                         <input type="text" name="lastname" placeholder="<?= Translate::td('Last name') ?>" value="<?= @$data['lastname'] ?>">
                         <input type="email" name="email" placeholder="Email" value="<?= @$data['email'] ?>" autocomplete="nope">
+                        <select class="phone_code" name="code" required="">
+                            <option disabled="" selected="">-</option>
+                            <?php foreach ($country_codes as $set) { ?>
+                            <option value="<?= $set['code'] ?>"><?= $set['code'] ?> <?= $set['name'] ?></option>
+                            <?php } ?>
+                        </select>
                         <input 
                             type="text" 
                             name="phone" 
-                            placeholder="<?= Translate::td('Phone, mobile') ?>:" 
+                            style="width: 50%" 
+                            placeholder="<?= Translate::td('Phone, mobile') ?>" 
                             value="<?= @$data['phone'] ?>" 
                             autocomplete="nope" 
-                            pattern="[0-9]{6,}"
+                            pattern="[0-9]{2,15}"
                         >
                         <span><?= Translate::td('Use only numbers') ?></span>
                         <select class="select-wallet">

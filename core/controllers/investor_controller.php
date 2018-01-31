@@ -244,7 +244,6 @@ class Investor_controller
         if (!Application::$authorizedInvestor) {
             Utility::location(self::BASE_URL);
         }
-        ACTION2FA::access2FAChecker(self::SECONDFACTORSET_URL, Router::GET_METHOD);
         
         Base_view::$TITLE = 'Two-factor authentication settings';
         Base_view::$MENU_POINT = Menu_point::Settings;
@@ -261,7 +260,6 @@ class Investor_controller
         if (!in_array(@$_POST['2fa_method'], API2FA::$allowedMethods)) {
             Utility::location(self::SECONDFACTORSET_URL);
         }
-        ACTION2FA::access2FAChecker(self::SECONDFACTORSET_URL, Router::POST_METHOD);
         
         $urlErrors = [];
         if (USE_2FA) {
@@ -270,10 +268,13 @@ class Investor_controller
                 || $_POST['2fa_method'] == variants_2FA::both
 
             ) {
-                if (@$_POST['phone'] == "") {
+                $phone = self::clayPhone(@$_POST['code'], @$_POST['phone']);
+                $verify = self::verifyPhone($phone);
+                if ($phone == "") {
                     $urlErrors[] = 'phone_req_err=1';
+                } elseif (!$verify) {
+                    $urlErrors[] = 'wrong_phone_err=1';
                 } else {
-                    $phone = Utility::clear_except_numbers($_POST['phone']);
                     if (
                         Application::$authorizedInvestor->phone != ""
                         && Application::$authorizedInvestor->phone == $phone
@@ -305,7 +306,6 @@ class Investor_controller
         if (!Application::$authorizedInvestor) {
             Utility::location(self::BASE_URL);
         }
-        ACTION2FA::access2FAChecker(self::PHONEVERIFICATION_URL, Router::GET_METHOD);
         
         Base_view::$TITLE = 'Phone number verification';
         Base_view::$MENU_POINT = Menu_point::Settings;
@@ -324,7 +324,6 @@ class Investor_controller
         ) {
             Utility::location(self::BASE_URL);
         }
-        ACTION2FA::access2FAChecker(self::PHONEVERIFICATION_URL, Router::POST_METHOD);
         
         $urlErrors = [];
         $checked = API2FA::check($_POST['otp']);
@@ -441,6 +440,20 @@ class Investor_controller
     {
         return !!preg_match('/^[0-9A-Za-z!"#$%&\'()*+,-.\/:;<=>?@\[\]^_`{|}~]{6,50}$/', $password);
     }
+
+    /**
+     * @param string $code
+     * @param string $phone
+     * @return string
+     */
+    static private function clayPhone($code, $phone)
+    {
+        $code_cl = Utility::clear_except_numbers($code);
+        $code_cl = Utility::clear_begin_zeroes($code_cl);
+        $phone_cl = Utility::clear_except_numbers($phone);
+        $phone_cl = Utility::clear_begin_zeroes($phone_cl);
+        return $code_cl . $phone_cl;
+    }
     
     /**
      * @param string $phone
@@ -448,7 +461,8 @@ class Investor_controller
      */
     static private function verifyPhone($phone)
     {
-        if (mb_strlen($phone) < 7) {
+        $len = mb_strlen($phone);
+        if ($len < 7 || $len > 15) {
             return FALSE;
         }
         return TRUE;
@@ -486,9 +500,9 @@ class Investor_controller
 
         $firstname = trim(@$_POST['firstname']);
         $lastname = trim(@$_POST['lastname']);
-        $phone = Utility::clear_except_numbers(@$_POST['phone']);
+        $phone = self::clayPhone(@$_POST['code'], @$_POST['phone']);
         if (!self::verifyPhone($phone)) {
-            self::handleRegistrationForm($_POST, 'not a valid phone number, use more than 6 characters');
+            self::handleRegistrationForm($_POST, 'not a valid phone number, use more than 6 characters or less than 16');
             return;
         }
         
