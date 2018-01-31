@@ -181,6 +181,9 @@ class Wallet_view
                         <?= Coin::token() ?>
                         <span class="wallet_view-new_contribution-calculated_as_donation" style="display: none;">(<?= Translate::td('will be received as donation') ?>)</span>
                     </p>
+                    <p>
+                        <?= Translate::td('This is an estimate based on the current exchange rate. Your final amount of CPTs will be calculated at the time you actually send your contribution.') ?>
+                    </p>
                 </div>
             </section>
             <script>
