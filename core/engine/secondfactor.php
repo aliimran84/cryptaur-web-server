@@ -168,8 +168,8 @@ class API2FA
 
     private static function generate_code()
     {
-        $letters = '0123456789';
-        $caplen = 6;
+        $letters = '123456789';
+        $caplen = 4;
         $captcha = '';
         for ($i = 0; $i < $caplen; $i++) {
             $captcha .= $letters[rand(0, strlen($letters) - 1)]; // дописываем случайный символ из алфавила
