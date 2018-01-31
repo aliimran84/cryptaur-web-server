@@ -33,12 +33,12 @@ class Captcha
     static private function rawCaptcha()
     {
         $letters = '123456789';
-        $background = __DIR__.'/backgrounds/kinda-jean.png';
+        $background = __DIR__.'/security/capthca-backgrounds/kinda-jean.png';
         $caplen = 5;
 
         list($width, $height) = getimagesize($background);
 
-        $font = __DIR__.'/fonts/times_new_yorker.ttf';
+        $font = __DIR__.'/security/capthca-fonts/times_new_yorker.ttf';
         $fontsize = 25;
 
         $im = imagecreatefrompng($background);
