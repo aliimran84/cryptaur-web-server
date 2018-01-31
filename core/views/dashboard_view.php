@@ -66,21 +66,21 @@ class Dashboard_view
                             </div>
                             <?php
                             $pendingQueueTypes = EthQueue::pendingQueueTypesByInvestor(Application::$authorizedInvestor->id);
-                            if ($pendingQueueTypes[EthQueue::TYPE_MINT_REINVEST]) {
+                            if (@$pendingQueueTypes[EthQueue::TYPE_MINT_REINVEST]) {
                                 ?>
                                 <div class="amount">
                                     <p class="blue-text"><?= Translate::td('Tokens minting is in queue') ?></p>
                                 </div>
                                 <?php
                             }
-                            if ($pendingQueueTypes[EthQueue::TYPE_SENDETH_WITHDRAW]) {
+                            if (@$pendingQueueTypes[EthQueue::TYPE_SENDETH_WITHDRAW]) {
                                 ?>
                                 <div class="amount">
                                     <p class="blue-text"><?= Translate::td('Ether withdraw is in queue') ?></p>
                                 </div>
                                 <?php
                             }
-                            if ($pendingQueueTypes[EthQueue::TYPE_SENDETH_REINVEST]) {
+                            if (@$pendingQueueTypes[EthQueue::TYPE_SENDETH_REINVEST]) {
                                 ?>
                                 <div class="amount">
                                     <p class="blue-text"><?= Translate::td('Ether reinvesting is in queue') ?></p>
@@ -149,7 +149,7 @@ class Dashboard_view
         </div>
         <?php
         $pendingQueueTypes = EthQueue::pendingQueueTypesByInvestor(Application::$authorizedInvestor->id);
-        if ($pendingQueueTypes[EthQueue::TYPE_MINT_OLD_INVESTOR_INIT] || $pendingQueueTypes[EthQueue::TYPE_MINT_DEPOSIT]) {
+        if (@$pendingQueueTypes[EthQueue::TYPE_MINT_OLD_INVESTOR_INIT] || @$pendingQueueTypes[EthQueue::TYPE_MINT_DEPOSIT]) {
             ?>
             <div class="amount">
                 <p class="blue-text"><?= Translate::td('Tokens minting is in queue') ?></p>
