@@ -30,6 +30,10 @@ class Investor
      */
     public $referrals = null;
     /**
+     * @var int[]
+     */
+    private $referralsId = [];
+    /**
      * @var null|Investor[]
      */
     public $compressed_referrals = null;
@@ -210,7 +214,12 @@ class Investor
                         ']'
                     ) FROM `investors_referrals_totals` WHERE `investor_id` = `investors`.`id`
                 ) as `referrals_totals`,
-                `investors_2fa_choice`.`choice` as `preferred_2fa`
+                `investors_2fa_choice`.`choice` as `preferred_2fa`,
+                (
+                    SELECT GROUP_CONCAT(`id` SEPARATOR ',')
+                    FROM `investors` as `inner_investors`
+                    WHERE `referrer_id` = `investors`.`id`
+                ) as referrals_id
             FROM `investors`
             LEFT JOIN `investors_2fa_choice` ON `investors`.`id` = `investors_2fa_choice`.`investor_id`
             WHERE
@@ -224,6 +233,21 @@ class Investor
 
         $instance = self::createWithDataFromDB($investorData);
         Investor::$storage[$id] = $instance;
+
+        $referralsId = explode(',', $investorData['referrals_id']);
+
+        foreach ($referralsId as $referralId_data) {
+            $referralId = $referralId_data['id'];
+            $instance->referralsId[] = $referralId;
+            if (isset(Investor::$storage[$referralId])) {
+                Investor::$storage[$referralId]->referrals[] = $instance;
+            }
+        }
+
+        if (isset(Investor::$storage[$instance->referrer_id])) {
+            Investor::$storage[$instance->referrer_id]->referrals[] = $instance;
+        }
+
         return $instance;
     }
 
@@ -713,6 +737,44 @@ class Investor
             $referrals[$data['id']] = Investor::getById($data['id']);
         }
         return $referrals;
+    }
+
+    /**
+     * @return int count
+     */
+    public function all_referrals()
+    {
+        $c = 0;
+        $allInvestorsIdWithReffererId = @DB::get("
+            SELECT `id` FROM `investors`
+            WHERE
+                `referrer_id` = ?
+        ;", [$this->id]);
+        $referrals = [];
+        foreach ($allInvestorsIdWithReffererId as $data) {
+            ++$c;
+            $referral = Investor::getById($data['id']);
+            $referrals[$data['id']] = $referral;
+            $c += $referral->all_referrals();
+        }
+        return $c;
+    }
+
+    /**
+     * @return int count
+     */
+    public function all_referrals2()
+    {
+        $str = @DB::get("
+            SELECT referrals FROM `investors_referrals`
+            WHERE
+                `investor_id` = ?
+        ;", [$this->id])[0]['referrals'];
+        $arr = explode(',', $str);
+        foreach ($arr as $investorId) {
+            Investor::getById($investorId);
+        }
+        return count($arr);
     }
 
     /**
