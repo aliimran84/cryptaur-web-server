@@ -68,6 +68,12 @@ class DB
         return $result;
     }
 
+    static public function escape($str)
+    {
+        $db = self::inst();
+        return $db->_connection->real_escape_string($str);
+    }
+
     /**
      * @param $query
      */
