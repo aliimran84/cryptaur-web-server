@@ -18,7 +18,7 @@ class SFchecker_view
                     <form class="login col s12" action="<?= $url ?>" method="post" autocomplete="off">
                         <h5>
                             <?= Translate::td('You have two-factor authentication enabled so you must verify login') ?>.<br/>
-                            <?= Translate::td("Click 'Sent' button to sent the code") ?>
+                            <?= Translate::td("Click button to send the code") ?>
                         </h5>
                         <?php if ($message) { ?>
                             <label class="blue-text"><?= $message ?></label>
@@ -34,11 +34,11 @@ class SFchecker_view
                         <div class="row center">
                             <?php if ($method == Router::GET_METHOD) { ?>
                             <a href="<?= $url ?>?sent=1" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
+                                <?= isset($_GET['sent']) ? Translate::td('Re-send') : Translate::td('Sen') ?>
                             </a>
                             <?php } else { ?>
                             <button type="submit" name="sent" value="1" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= isset($_POST['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
+                                <?= isset($_POST['sent']) ? Translate::td('Re-send') : Translate::td('Send') ?>
                             </button>
                             <?php } ?>
                         </div>
@@ -61,7 +61,7 @@ class SFchecker_view
                     <form class="login col s12" action="<?= $url ?>" method="post" autocomplete="off">
                         <h5>
                             <?= Translate::td('You have two-factor authentication enabled so you must verify login') ?>.<br/>
-                            <?= Translate::td("Click 'Sent' button to sent the codes") ?>
+                            <?= Translate::td("Click button to send the codes") ?>
                         </h5>
                         <?php if ($message) { ?>
                             <label class="blue-text"><?= $message ?></label>
@@ -80,11 +80,11 @@ class SFchecker_view
                         <div class="row center">
                             <?php if ($method == Router::GET_METHOD) { ?>
                             <a href="<?= $url ?>?sent=1" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
+                                <?= isset($_GET['sent']) ? Translate::td('Re-send') : Translate::td('Send') ?>
                             </a>
                             <?php } else { ?>
                             <button type="submit" name="sent" value="1" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= isset($_POST['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
+                                <?= isset($_POST['sent']) ? Translate::td('Re-send') : Translate::td('Send') ?>
                             </button>
                             <?php } ?>
                         </div>

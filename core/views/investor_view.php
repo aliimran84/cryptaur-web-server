@@ -82,7 +82,7 @@ class Investor_view
                         <label class="red-text"><?= Translate::td('Wrong format of the phone number') ?></label>
                     <?php } ?>
                     <?php if (isset($_GET['send_sms_err'])) { ?>
-                        <label class="red-text"><?= Translate::td('Unable to sent SMS, service temporary disabled') ?></label>
+                        <label class="red-text"><?= Translate::td('Unable to send SMS, service temporary disabled') ?></label>
                     <?php } ?>
                     <?php if (isset($_GET['wrong_method'])) { ?>
                         <label class="red-text"><?= Translate::td('Previously selected method now disabled, you must choose another') ?></label>
@@ -172,7 +172,7 @@ class Investor_view
                     <form class="login col s12" action="<?= Investor_controller::REGISTER_PHONEVERIFICATION_URL ?>" method="post" autocomplete="off">
                         <h5>
                             <?= Translate::td('You must verify phone number') ?>.<br/>
-                            <?= Translate::td("Click 'Sent' button to sent the code") ?>
+                            <?= Translate::td("Click button to send the code") ?>
                         </h5>
                         <?php if (isset($_GET['err'])) { ?>
                             <label class="red-text"><?= Translate::td('Error') ?> <?= $_GET['err'] ?>
@@ -191,7 +191,7 @@ class Investor_view
                         <?php } ?>
                         <div class="row center">
                             <a href="<?= Investor_controller::REGISTER_PHONEVERIFICATION_URL ?>?sent=1" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
+                                <?= isset($_GET['sent']) ? Translate::td('Re-send') : Translate::td('Send') ?>
                             </a>
                         </div>
                     </form>
