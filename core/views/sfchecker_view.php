@@ -4,6 +4,7 @@ namespace core\views;
 
 use core\translate\Translate;
 use core\engine\Router;
+use core\sfchecker\ACTION2FA;
 
 class SFchecker_view
 {
@@ -23,22 +24,22 @@ class SFchecker_view
                         <?php if ($message) { ?>
                             <label class="blue-text"><?= $message ?></label>
                         <?php } ?>
-                        <?php if (isset($_REQUEST['sent'])) { ?>
+                        <?php if (isset($_SESSION[ACTION2FA::TEMP_DATA_SENDED])) { ?>
                             <input type="text" name="otp" placeholder="<?= Translate::td('Authentication code') ?>">
                             <div class="row center">
-                                <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                <button type="submit" name="commit" value="1" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                     <?= Translate::td('Verify') ?>
                                 </button>
                             </div>
                         <?php } ?>
                         <div class="row center">
                             <?php if ($method == Router::GET_METHOD) { ?>
-                            <a href="<?= $url ?>?sent=1" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
+                            <a href="<?= $url ?>" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                <?= isset($_SESSION[ACTION2FA::TEMP_DATA_SENDED]) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
                             </a>
                             <?php } else { ?>
-                            <button type="submit" name="sent" value="1" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= isset($_POST['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
+                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                <?= isset($_SESSION[ACTION2FA::TEMP_DATA_SENDED]) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
                             </button>
                             <?php } ?>
                         </div>
@@ -69,22 +70,22 @@ class SFchecker_view
                         <h5><?= Translate::td('Code from SMS') ?>:</h5>
                         <input type="text" name="code_1" placeholder="<?= Translate::td('Authentication code') ?>">
                         <h5><?= Translate::td('Code from email') ?>:</h5>
-                        <?php if (isset($_REQUEST['sent'])) { ?>
+                        <?php if (isset($_SESSION[ACTION2FA::TEMP_DATA_SENDED])) { ?>
                             <input type="text" name="code_2" placeholder="<?= Translate::td('Authentication code') ?>">
                             <div class="row center">
-                                <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                <button type="submit" name="commit" value="1" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                     <?= Translate::td('Verify') ?>
                                 </button>
                             </div>
                         <?php } ?>
                         <div class="row center">
                             <?php if ($method == Router::GET_METHOD) { ?>
-                            <a href="<?= $url ?>?sent=1" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= isset($_GET['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
+                            <a href="<?= $url ?>" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                <?= isset($_SESSION[ACTION2FA::TEMP_DATA_SENDED]) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
                             </a>
                             <?php } else { ?>
-                            <button type="submit" name="sent" value="1" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= isset($_POST['sent']) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
+                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                <?= isset($_SESSION[ACTION2FA::TEMP_DATA_SENDED]) ? Translate::td('Re-sent') : Translate::td('Sent') ?>
                             </button>
                             <?php } ?>
                         </div>
