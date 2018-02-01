@@ -10,6 +10,9 @@ use core\engine\Utility;
 
 class Investor
 {
+    const ALLREFERRALS_CACHE_PATH_TO_DIR = PATH_TO_TMP_DIR . '/investorsReferrals';
+    const ALLREFERRALS_CACHE_TIMEOUT = 3600; // sec
+
     public $id = 0;
     public $referrer_id = 0;
     public $referrer_code = '';
@@ -26,9 +29,9 @@ class Investor
     public $phone = '';
     public $preferred_2fa = '';
     /**
-     * @var null|Investor[]
+     * @var Investor[]
      */
-    public $referrals = null;
+    public $referrals = [];
     /**
      * @var int[]
      */
@@ -184,8 +187,11 @@ class Investor
             Coin::token() => 0
         ];
         $instance->preferred_2fa = $data['preferred_2fa'];
-        foreach (json_decode($data['referrals_totals'], true) as $referrals_total) {
-            $instance->referrals_totals[$referrals_total['coin']] = $referrals_total['sum'];
+        $referrals_total_all = @json_decode($data['referrals_totals'], true);
+        if (is_array($referrals_total_all)) {
+            foreach ($referrals_total_all as $referrals_total) {
+                $instance->referrals_totals[$referrals_total['coin']] = $referrals_total['sum'];
+            }
         }
         if (@$_SESSION['tester']) {
             $instance->eth_bounty = 3.19;
@@ -201,10 +207,57 @@ class Investor
      */
     static public function getById($id)
     {
-        if (isset(Investor::$storage[$id])) {
-            return Investor::$storage[$id];
+        $id_arr = [$id];
+        self::getByIdArr($id_arr);
+        if (!isset(Investor::$storage[$id])) {
+            return null;
         }
-        $investorData = @DB::get("
+        return Investor::$storage[$id];
+    }
+
+    static private function createInvestorForGetByIdArr(&$investorData)
+    {
+        $id = $investorData['id'];
+
+        if (isset(Investor::$storage[$id])) {
+            return;
+        }
+
+        $instance = self::createWithDataFromDB($investorData);
+        Investor::$storage[$id] = $instance;
+
+        $referralsId = explode(',', $investorData['referrals_id']);
+        foreach ($referralsId as $referralId_str) {
+            $referralId = (int)$referralId_str;
+            $instance->referralsId[] = $referralId;
+            if (isset(Investor::$storage[$referralId])) {
+                $instance->referrals[$referralId] = Investor::$storage[$referralId];
+            }
+        }
+
+        if (isset(Investor::$storage[$instance->referrer_id])) {
+            Investor::$storage[$instance->referrer_id]->referrals[$id] = $instance;
+        }
+    }
+
+    /**
+     * @param int[] $idArr
+     * @return mixed
+     */
+    static public function getByIdArr(&$idArr)
+    {
+        $idArrToInit = [];
+        foreach ($idArr as $id) {
+            if (!isset(Investor::$storage[$id])) {
+                $idArrToInit[] = $id;
+            }
+        }
+
+        $strToInit = implode($idArrToInit, ',');
+        if (!$strToInit) {
+            return [];
+        }
+        $investorsData = @DB::get("
             SELECT
                 `investors`.*,
                 (
@@ -223,32 +276,14 @@ class Investor
             FROM `investors`
             LEFT JOIN `investors_2fa_choice` ON `investors`.`id` = `investors_2fa_choice`.`investor_id`
             WHERE
-                `investors`.`id` = ?
-            LIMIT 1
-        ;", [$id])[0];
+                `investors`.`id` in ($strToInit)
+        ;");
 
-        if (!$investorData) {
-            return null;
+        foreach ($investorsData as &$investorData) {
+            self::createInvestorForGetByIdArr($investorData);
         }
 
-        $instance = self::createWithDataFromDB($investorData);
-        Investor::$storage[$id] = $instance;
-
-        $referralsId = explode(',', $investorData['referrals_id']);
-
-        foreach ($referralsId as $referralId_str) {
-            $referralId = (int)$referralId_str;
-            $instance->referralsId[] = $referralId;
-            if (isset(Investor::$storage[$referralId])) {
-                Investor::$storage[$referralId]->referrals[] = $instance;
-            }
-        }
-
-        if (isset(Investor::$storage[$instance->referrer_id])) {
-            Investor::$storage[$instance->referrer_id]->referrals[] = $instance;
-        }
-
-        return $instance;
+        return $investorsData;
     }
 
     /**
@@ -739,41 +774,39 @@ class Investor
         return $referrals;
     }
 
-    /**
-     * @return int count
-     */
     public function all_referrals()
     {
-        $c = 0;
-        $allInvestorsIdWithReffererId = @DB::get("
-            SELECT `id` FROM `investors`
-            WHERE
-                `referrer_id` = ?
-        ;", [$this->id]);
-        $referrals = [];
-        foreach ($allInvestorsIdWithReffererId as $data) {
-            ++$c;
-            $referral = Investor::getById($data['id']);
-            $referrals[$data['id']] = $referral;
-            $c += $referral->all_referrals();
-        }
-        return $c;
-    }
+        Utility::mkdir_0777(self::ALLREFERRALS_CACHE_PATH_TO_DIR);
+        $cacheFile = self::ALLREFERRALS_CACHE_PATH_TO_DIR . "/{$this->id}.json";
 
-    /**
-     * @return int count
-     */
-    public function all_referrals2()
-    {
+        if (is_file($cacheFile)) {
+            $cacheContent = file_get_contents($cacheFile);
+            $cacheData = @json_decode($cacheContent, true);
+            if (isset($cacheData['time'])) {
+                if (time() - $cacheData['time'] < self::ALLREFERRALS_CACHE_TIMEOUT) {
+                    foreach ($cacheData['investorsData'] as $investorData) {
+                        self::createInvestorForGetByIdArr($investorData);
+                    }
+                    return count($cacheData['investorsData']);
+                }
+            }
+        }
+
         $str = @DB::get("
             SELECT referrals FROM `investors_referrals`
             WHERE
                 `investor_id` = ?
         ;", [$this->id])[0]['referrals'];
         $arr = explode(',', $str);
-        foreach ($arr as $investorId) {
-            Investor::getById($investorId);
-        }
+
+        $investorsData = self::getByIdArr($arr);
+
+        $dataToCache = [
+            'time' => time(),
+            'investorsData' => $investorsData
+        ];
+
+        file_put_contents($cacheFile, json_encode($dataToCache, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE));
         return count($arr);
     }
 

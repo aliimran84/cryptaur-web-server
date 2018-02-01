@@ -219,8 +219,7 @@ class Dashboard_view
     static public function myGroup()
     {
         $referrer = Investor::getById(Application::$authorizedInvestor->referrer_id);
-        Application::$authorizedInvestor->initReferrals(count(Bounty::program()));
-        Application::$authorizedInvestor->initCompressedReferrals(count(Bounty::program()));
+        $participants = Application::$authorizedInvestor->all_referrals() + 1;
         ob_start();
         ?>
 
@@ -246,7 +245,7 @@ class Dashboard_view
                     <div class="col s12 l4 main-panel-block">
                         <h3>
                             <?= Translate::td('Participants') ?>:
-                            <?= Application::$authorizedInvestor->referralsCount() + 1 ?>
+                            <?= $participants ?>
                         </h3>
                     </div>
                     <div class="col s12 l4 main-panel-block">
@@ -256,12 +255,13 @@ class Dashboard_view
                     </div>
                 </div>
                 <div class="row">
-                    <!--                    <p class="after-compression">-->
-                    <!--                        <input type="checkbox" id="after-compression"/>-->
-                    <!--                        <label for="after-compression">-->
-                    <?//= Translate::td('After compression')
-                    ?><!--</label>-->
-                    <!--                    </p>-->
+                    <?php /*
+                    <p class="after-compression">
+                    <input type="checkbox" id="after-compression"/>
+                    <label for="after-compression">
+                    <?= Translate::td('After compression') ?>
+                    </p>
+                    */ ?>
                     <div class="main-panel-block tree before-compression active">
                         <ul class="first-level">
                             <?php if ($referrer) { ?>
@@ -295,6 +295,7 @@ class Dashboard_view
                             </li>
                         </ul>
                     </div>
+                    <?php /*
                     <div class="main-panel-block tree after-compression">
                         <ul class="first-level">
                             <?php if ($referrer) { ?>
@@ -327,6 +328,7 @@ class Dashboard_view
                             </li>
                         </ul>
                     </div>
+                    */ ?>
                 </div>
             </section>
         </div>
@@ -373,7 +375,7 @@ class Dashboard_view
         ?>
 
         <ul class="third-level participants close">
-            <?php foreach ($investor->referrals as $referral) { ?>
+            <?php if (is_array($investor->referrals)) foreach ($investor->referrals as $referral) { ?>
                 <li class="third-level participants">
                     <?= self::investorCard($referral) ?>
                     <?php if ($referral->referrals) { ?>
