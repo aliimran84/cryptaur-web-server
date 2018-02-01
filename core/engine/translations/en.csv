@@ -47,16 +47,16 @@ Code from SMS,Code from SMS
 Code from email,Code from email
 "e.g. 79997774433","e.g. 79997774433"
 "Two-Factor Authentication","Two-Factor Authentication"
-Sent,Sent
-Re-sent,Re-sent
+Send,Send
+Re-send,Re-send
 Use only numbers,Use only numbers
 "You have two-factor authentication enabled so you must verify login","You have two-factor authentication enabled so you must verify login"
-"Click 'Sent' button to sent the code","Click 'Sent' button to sent the code"
-"Click 'Sent' button to sent the codes","Click 'Sent' button to sent the codes"
+"Click button to send the code","Click button to send the code"
+"Click button to send the codes","Click button to send the codes"
 "You must choose two-factor authentication option","You must choose two-factor authentication option"
 "Two-factor authentication settings","Two-factor authentication settings"
 "You cannot select SMS-based second factor authentication methods without verified phone number","You cannot select SMS-based second factor authentication methods without verified phone number"
-"Unable to sent SMS, service temporary disabled","Unable to sent SMS, service temporary disabled"
+"Unable to send SMS, service temporary disabled","Unable to send SMS, service temporary disabled"
 "Previously selected method now disabled, you must choose another","Previously selected method now disabled, you must choose another"
 "Phone number verification","Phone number verification"
 "You successfully verified your phone number","You successfully verified your phone number"
@@ -64,7 +64,7 @@ Use only numbers,Use only numbers
 "Wrong code","Wrong code"
 "Two-factor authentication method has been set","Two-factor authentication method has been set"
 "Input code, that you get with SMS","Input code, that you get with SMS"
-"Service error, cannot sent code","Service error, cannot sent code"
+"Service error, cannot send code","Service error, cannot send code"
 Authentication code,Authentication code
 Cancel,Cancel
 Accept,Accept
@@ -74,7 +74,7 @@ Wrong format of the phone number,Wrong format of the phone number
 "Authentication code has been sended using preferred method","Authentication code has been sended using preferred method"
 "Authentication code has not been sended","Authentication code has not been sended"
 "Authentication codes have been sended","Authentication codes have been sended"
-"You cannot sent another code(s) until seconds will expire","You cannot sent another code(s) until %%num%% seconds will expire"
+"You cannot send another code(s) until seconds will expire","You cannot send another code(s) until %%num%% seconds will expire"
 Password,Password
 Forgot your account login,Forgot your account login
 Recover,Recover
