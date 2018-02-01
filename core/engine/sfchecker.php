@@ -21,6 +21,7 @@ class ACTION2FA
     const TEMP_FORM_TYPE = 'temp_data_form_type';
     const TEMP_DATA_TARGET_1 = 'temp_data_target_1';
     const TEMP_DATA_TARGET_2 = 'temp_data_target_2';
+    const TEMP_DATA_SENDED = 'temp_data_sended';
     const LAST_SECURED_TIME = 'last_secured_time';
     const LAST_2FA_TRY = '2fa_last_try';
     
@@ -118,18 +119,18 @@ class ACTION2FA
                     //if there was unfinised check
                     self::clearSessionData(TRUE); //clean session data to make process clear
                     self::access2FAChecker($url, $method, $variant, $target_1, $target_2);
-                } elseif (isset($_REQUEST['sent'])) {
+                } elseif (!isset($_POST['commit'])) {
                     //if user trying sent/resent the code(s)
                     $message = "";
                     $time = time();
                     if (isset($_SESSION[self::LAST_2FA_TRY]) && $time - $_SESSION[self::LAST_2FA_TRY] < CODE_SENT_TIME) {
                         $diff = CODE_SENT_TIME - ($time - $_SESSION[self::LAST_2FA_TRY]);
-                        unset($_REQUEST['sent']);
                         $message = Translate::td('You cannot sent another code(s) until seconds will expire', ['num' => $diff]);
                         self::formDraw($_SESSION[self::TEMP_FORM_TYPE], $message);
                     } else {
                         session_start();
                         $_SESSION[self::LAST_2FA_TRY] = $time;
+                        $_SESSION[self::TEMP_DATA_SENDED] = 1;
                         session_write_close();
                         $sended;
                         if (
@@ -157,11 +158,17 @@ class ACTION2FA
                             $message = Translate::td('Authentication code has been sended using preferred method');
                         } elseif ($sended === FALSE) { //potential case when some methods have been disabled or broken
                             //self::smart2FARedirect();
+                            session_start();
+                            unset($_SESSION[self::TEMP_DATA_SENDED]);
+                            session_write_close();
                             $message = Translate::td('Authentication code has not been sended');
                         }
                         self::formDraw($_SESSION[self::TEMP_FORM_TYPE], $message);
                     }
-                } elseif (isset($_POST['otp']) || (isset($_POST['code_1']) && isset($_POST['code_2']))) {
+                } elseif (
+                    isset($_POST['commit']) && (
+                        isset($_POST['otp']) || (isset($_POST['code_1']) && isset($_POST['code_2']))
+                )) {
                     $checked;
                     if (isset($_POST['otp'])) {
                         //case for single code
@@ -170,6 +177,9 @@ class ACTION2FA
                         //case for dual code
                         $checked = API2FA::check_both($_POST['code_1'], $_POST['code_2']);
                     }
+                    session_start();
+                    unset($_SESSION[self::TEMP_DATA_SENDED]);
+                    session_write_close();
                     if ($checked === TRUE) {
                         ACTION2FA::smart2FARedirect();
                     } else {
@@ -177,7 +187,7 @@ class ACTION2FA
                         self::formDraw($_SESSION[self::TEMP_FORM_TYPE], $message);
                     }
                 } else {
-                    self::formDraw(@$_SESSION[self::TEMP_FORM_TYPE]);
+                    self::formDraw($_SESSION[self::TEMP_FORM_TYPE]);
                 }
             }
         }
@@ -227,6 +237,9 @@ class ACTION2FA
         }
         if (isset($_SESSION[self::TEMP_DATA_ARR])) {
             unset($_SESSION[self::TEMP_DATA_ARR]);
+        }
+        if (isset($_SESSION[self::TEMP_DATA_SENDED])) {
+            unset($_SESSION[self::TEMP_DATA_SENDED]);
         }
         session_write_close();
     }

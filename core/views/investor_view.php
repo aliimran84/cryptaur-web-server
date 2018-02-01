@@ -269,9 +269,19 @@ class Investor_view
                         <input type="text" name="lastname" placeholder="<?= Translate::td('Last name') ?>" value="<?= @$data['lastname'] ?>">
                         <input type="email" name="email" placeholder="Email" value="<?= @$data['email'] ?>" autocomplete="nope">
                         <select class="phone_code" name="code" required="">
-                            <option disabled="" selected="">-</option>
+                            <option 
+                                disabled="" 
+                                <?php if (!isset($data['code'])) { ?>
+                                selected="" 
+                                <?php } ?>
+                            >-</option>
                             <?php foreach ($country_codes as $set) { ?>
-                            <option value="<?= $set['code'] ?>"><?= $set['code'] ?> <?= $set['name'] ?></option>
+                            <option 
+                                value="<?= $set['code'] ?>" 
+                                <?php if ($set['code'] == @$data['code']) { ?>
+                                selected=""
+                                <?php } ?>
+                            ><?= $set['code'] ?> <?= $set['name'] ?></option>
                             <?php } ?>
                         </select>
                         <input 
