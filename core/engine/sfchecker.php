@@ -177,7 +177,7 @@ class ACTION2FA
                         self::formDraw($_SESSION[self::TEMP_FORM_TYPE], $message);
                     }
                 } else {
-                    self::formDraw($_SESSION[self::TEMP_FORM_TYPE]);
+                    self::formDraw(@$_SESSION[self::TEMP_FORM_TYPE]);
                 }
             }
         }
