@@ -11,9 +11,9 @@ function conversionHeightLineBottom(tree) {
         positionTopLastLi = $(li[li.length-1]).offset().top;
         var ua = navigator.userAgent;
         if (ua.search(/Firefox/) > 0)
-            $(ulParticipants[i]).parent().prev().find('.line-bottom').css('height',positionTopLastLi - positionTopFirstLi + 180);
+            $(ulParticipants[i]).parent().prev().find('.line-bottom').css('height',positionTopLastLi - positionTopFirstLi + $(li[li.length-1]).height() + 86);
         else
-            $(ulParticipants[i]).parent().prev().find('.line-bottom').css('height',positionTopLastLi - positionTopFirstLi + 179);
+            $(ulParticipants[i]).parent().prev().find('.line-bottom').css('height',positionTopLastLi - positionTopFirstLi + $(li[li.length-1]).height() + 85);
     }
 }
 $(document).ready(function(){

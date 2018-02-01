@@ -553,7 +553,7 @@ class Investor_controller
                 && $time - $_SESSION[self::LAST_2FA_TRY] < CODE_SENT_TIME
             ) {
                 $diff = CODE_SENT_TIME - ($time - $_SESSION[self::LAST_2FA_TRY]);
-                $message = Translate::td('You cannot sent another code(s) until seconds will expire', ['num' => $diff]);
+                $message = Translate::td('You cannot send another code(s) until seconds will expire', ['num' => $diff]);
             } else {
                 $phone = $_SESSION[ACTION2FA::TEMP_DATA_ARR]['phone'];
                 session_start();
@@ -562,7 +562,7 @@ class Investor_controller
                 if (API2FA::send_sms($phone)) {
                     $message = Translate::td('Input code, that you get with SMS');
                 } else { //potential case when some methods have been disabled or broken
-                    $message = Translate::td('Service error, cannot sent code');
+                    $message = Translate::td('Service error, cannot send code');
                 }
             }
         }
