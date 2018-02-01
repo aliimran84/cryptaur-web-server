@@ -16,16 +16,14 @@ $usersCount = DB::get("
 echo "start {$usersCount}\r\n";
 
 DB::multi_query("
+    DELETE FROM `investors_referrals`;
+
     INSERT INTO investors_referrals ( investor_id, referrals )
     SELECT id, '' 
-    FROM investors
-    WHERE id not in (select investor_id from investors_referrals);
-
-    UPDATE `investors_referrals`
-    SET `referrals` = '';
+    FROM investors;
 ");
 
-$limitSize = 500;
+$limitSize = 1000;
 for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
     $users = DB::get("
         SELECT

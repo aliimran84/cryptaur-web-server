@@ -18,34 +18,36 @@ echo "start {$usersCount}\r\n";
 
 $token = Coin::token();
 $query = "
-    INSERT INTO `investors_referrals_totals` ( investor_id, coin )
+    DELETE FROM `investors_referrals_totals1`;
+
+    INSERT INTO `investors_referrals_totals1` ( investor_id, coin )
     SELECT investors.id, '$token'
     FROM investors
-    WHERE investors.id not in (select investor_id from investors_referrals_totals);
     ;\r\n";
 foreach (Coin::coins() as $coin) {
     $query .= "
-        INSERT INTO `investors_referrals_totals` ( investor_id, coin )
+        INSERT INTO `investors_referrals_totals1` ( investor_id, coin )
         SELECT investors.id, '$coin'
         FROM investors
-        WHERE investors.id not in (select investor_id from investors_referrals_totals);
         ;\r\n";
 }
-$query .= "UPDATE `investors_referrals_totals` SET `sum` = 0;\r\n";
 DB::multi_query($query);
 
 $limitSize = 500;
 for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
     $users = DB::get("
         SELECT
-            *,
+            `id`, `tokens_count`,
             (
-                    SELECT CONCAT(
-                            '[',
-                            GROUP_CONCAT(JSON_OBJECT('coin', coin, 'balance', balance)),
-                            ']'
-                    ) FROM `wallets` WHERE `investor_id` = `investors`.`id`
-            ) as `wallets`
+                SELECT CONCAT(
+                        '[',
+                        GROUP_CONCAT(JSON_OBJECT('coin', coin, 'balance', balance)),
+                        ']'
+                ) FROM `wallets` WHERE `investor_id` = `investors`.`id`
+            ) as `wallets`,
+            (
+                SELECT `referrers` from `investors_referrers` where `investor_id` = `investors`.`id`
+            ) as `referrers`
         FROM
             `investors`
         ORDER BY `id`
@@ -54,33 +56,29 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
 
     $query = '';
     foreach ($users as $i => $user) {
-        $query .= "
-            UPDATE `investors_referrals_totals`
-            SET `sum` = `sum` + {$user['tokens_count']}
+        $referrals = DB::get("select referrals from investors_referrals where investor_id=?", [$user['id']])[0]['referrals'];
+        $ids = $user['id'];
+        if ($referrals) {
+            $ids .= ',' . $referrals;
+        }
+
+        DB::query("
+            UPDATE `investors_referrals_totals1`
+            SET `sum` = (select sum(tokens_count) from investors where id in($ids))
             WHERE
                 `coin` = '$token' AND
-                FIND_IN_SET (`investor_id`, (
-                    SELECT `referrers`
-                    FROM `investors_referrers`
-                    WHERE `investor_id` = {$user['id']}
-                ))
-        ;\r\n";
-        $wallets = json_decode($user['wallets'], true);
-        foreach ($wallets as $wallet) {
-            $query .= "
-                UPDATE `investors_referrals_totals`
-                SET `sum` = `sum` + {$wallet['balance']}
+                `investor_id` = {$user['id']}
+        ;");
+        foreach (Coin::coins() as $coin) {
+            DB::query("
+                UPDATE `investors_referrals_totals1`
+                SET `sum` = (select sum(balance) from `wallets` where `coin`='$coin' and `investor_id` in($ids))
                 WHERE
-                    `coin` = '{$wallet['coin']}' AND
-                    FIND_IN_SET (`investor_id`, (
-                        SELECT `referrers`
-                        FROM `investors_referrers`
-                        WHERE `investor_id` = {$user['id']}
-                    ))
-            ;";
+                    `coin` = '$coin' AND
+                    `investor_id` = {$user['id']}
+            ;");
         }
     }
-    DB::multi_query($query);
 
     $duration = (time() - $startTime) + 1;
     $currentCount = $offset;
