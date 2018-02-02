@@ -408,7 +408,7 @@ class Investor_view
         return ob_get_clean();
     }
 
-    static public function recoverForm($message = '')
+    static public function recoverForm($image, $message = '')
     {
         ob_start();
         ?>
@@ -425,6 +425,13 @@ class Investor_view
                             <label class="blue-text"><?= $message ?></label>
                         <?php } ?>
                         <input type="email" name="email" placeholder="Email" autocomplete="nope">
+                        <div class="captcha">
+                            <image src="data:image/png;base64,<?= $image ?>">
+                            <div class="captcha-input">
+                                <p><?= Translate::td('Enter security code') ?></p>
+                                <input type="text" name="captcha" placeholder="Captcha" required>
+                            </div>
+                        </div>
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Recover') ?>
