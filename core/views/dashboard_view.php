@@ -233,8 +233,7 @@ class Dashboard_view
                         <h3>
                             CPT:
                             <?= number_format(
-                                Application::$authorizedInvestor->referrals_totals[Coin::token()] +
-                                Application::$authorizedInvestor->tokens_count,
+                                Application::$authorizedInvestor->referrals_totals[Coin::token()],
                                 0, '.', '&nbsp;'
                             ) ?>
                         </h3>
