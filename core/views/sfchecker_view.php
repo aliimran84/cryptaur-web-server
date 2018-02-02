@@ -35,11 +35,11 @@ class SFchecker_view
                         <div class="row center">
                             <?php if ($method == Router::GET_METHOD) { ?>
                             <a href="<?= $url ?>" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= isset($_SESSION[ACTION2FA::TEMP_DATA_SENDED]) ? Translate::td('Re-send') : Translate::td('send') ?>
+                                <?= isset($_SESSION[ACTION2FA::TEMP_DATA_SENDED]) ? Translate::td('Re-send') : Translate::td('Send') ?>
                             </a>
                             <?php } else { ?>
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= isset($_SESSION[ACTION2FA::TEMP_DATA_SENDED]) ? Translate::td('Re-send') : Translate::td('send') ?>
+                                <?= isset($_SESSION[ACTION2FA::TEMP_DATA_SENDED]) ? Translate::td('Re-send') : Translate::td('Send') ?>
                             </button>
                             <?php } ?>
                         </div>
@@ -67,10 +67,10 @@ class SFchecker_view
                         <?php if ($message) { ?>
                             <label class="blue-text"><?= $message ?></label>
                         <?php } ?>
+                        <?php if (isset($_SESSION[ACTION2FA::TEMP_DATA_SENDED])) { ?>
                         <h5><?= Translate::td('Code from SMS') ?>:</h5>
                         <input type="text" name="code_1" placeholder="<?= Translate::td('Authentication code') ?>">
                         <h5><?= Translate::td('Code from email') ?>:</h5>
-                        <?php if (isset($_SESSION[ACTION2FA::TEMP_DATA_SENDED])) { ?>
                             <input type="text" name="code_2" placeholder="<?= Translate::td('Authentication code') ?>">
                             <div class="row center">
                                 <button type="submit" name="commit" value="1" class="waves-effect waves-light btn btn-login" style="width: 100%">
