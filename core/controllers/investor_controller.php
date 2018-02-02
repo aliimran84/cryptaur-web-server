@@ -638,7 +638,7 @@ class Investor_controller
             Utility::location(self::BASE_URL);
         }
         if (!Captcha::checkCaptcha(@$_POST['captcha'])) {
-            Utility::location(self::LOGIN_URL . '?err=3671&err_text=wrong captcha');
+            Utility::location(self::RECOVER_URL . '?err=3671&err_text=wrong captcha');
         }
         if (!filter_var(@$_POST['email'], FILTER_VALIDATE_EMAIL)) {
             Utility::location(self::RECOVER_URL . '?err=1&err_text=not a valid email');
