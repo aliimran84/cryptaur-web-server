@@ -104,7 +104,7 @@ class ACTION2FA
                 || !isset($_SESSION[self::TEMP_FORM_TYPE])
             ) {
                 //first-time 2FA init
-                self::clearSessionData(TRUE); //clean session data to make process clear
+                self::clearSessionData(); //clean session data to make process clear
                 session_start();
                 $_SESSION[self::TEMP_DATA_URL] = $url;
                 $_SESSION[self::TEMP_DATA_METHOD] = $method;
@@ -119,11 +119,7 @@ class ACTION2FA
                 self::readFromPost();
                 self::action2FAVerify();
             } elseif (isset($_SESSION[self::TEMP_DATA_URL]) && isset($_SESSION[self::TEMP_DATA_METHOD])) {
-                if ($_SESSION[self::TEMP_DATA_URL] != $url) {
-                    //if there was unfinised check
-                    self::clearSessionData(TRUE); //clean session data to make process clear
-                    self::access2FAChecker($url, $method, $variant, $target_1, $target_2);
-                } elseif (!isset($_POST['commit'])) {
+                if (!isset($_POST['commit'])) {
                     //if user trying sent/resent the code(s)
                     $message = "";
                     $time = time();
@@ -212,15 +208,18 @@ class ACTION2FA
             $url = $_SESSION[self::TEMP_DATA_URL];
             $method = $_SESSION[self::TEMP_DATA_METHOD];
             self::writeToPost();
-            self::clearSessionData(TRUE);
+            self::clearSessionData();
             call_user_func(Router::getByPathAndMethod($url, $method));
             exit;
         }
     }
     
-    static public function clearSessionData($try_clear = FALSE)
+    static public function clearSessionData($secure_clear = FALSE)
     {
         session_start();
+        if ($secure_clear === TRUE && isset($_SESSION[self::LAST_SECURED_TIME])) {
+            unset($_SESSION[self::TEMP_DATA_URL]);
+        }
         if (isset($_SESSION[self::TEMP_DATA_URL])) {
             unset($_SESSION[self::TEMP_DATA_URL]);
         }
