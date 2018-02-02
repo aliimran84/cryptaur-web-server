@@ -111,28 +111,15 @@ class Investor_view
                             <?php } ?>
                         </select>
                     </div>
+                    <div class="row">
+                        <span><?= Translate::td('Phone, mobile') ?>:</span><br/>
+                        <h5><?= Application::$authorizedInvestor->phone ?></h5>
+                    </div>
                     <div
-                            id="phone_row"
-                            class="row"
-                        <?php if (
-                            Application::$authorizedInvestor->preferred_2fa != variants_2FA::sms
-                            && Application::$authorizedInvestor->preferred_2fa != variants_2FA::both
-                            && $methodSetted
-                        ) { ?>
-                            style="display:none"
-                        <?php } ?>
+                        id="phone_row"
+                        class="row"
+                        style="display:none"
                     >
-                        <?= Translate::td('Phone, mobile') ?>:<br/>
-                        <?php if (Application::$authorizedInvestor->phone != "") { ?>
-                        <input
-                                type="text"
-                                name="phone"
-                                placeholder="<?= Translate::td('Phone, mobile') ?>"
-                                value="<?= Utility::clear_except_numbers(Application::$authorizedInvestor->phone) ?>"
-                                autocomplete="nope" 
-                                pattern="[0-9]{2,15}"
-                        >
-                        <?php } else { ?>
                         <select class="phone_code" name="code" required="">
                             <option disabled="" selected="">-</option>
                             <?php foreach ($country_codes as $set) { ?>
@@ -147,7 +134,6 @@ class Investor_view
                             autocomplete="nope" 
                             pattern="[0-9]{2,15}"
                         >
-                        <?php } ?>
                         <span><?= Translate::td('e.g. 79997774433') ?></span><br/>
                         <span><?= Translate::td('Use only numbers') ?></span>
                     </div>

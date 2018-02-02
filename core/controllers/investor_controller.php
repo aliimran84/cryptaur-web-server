@@ -185,6 +185,20 @@ class Investor_controller
             }
         }
     }
+    
+    static private function is2FAHasBeenSet()
+    {
+        if (!USE_2FA) {
+            return TRUE;
+        }
+        if (
+            Application::$authorizedInvestor->preferred_2fa != "" 
+            && in_array(Application::$authorizedInvestor->preferred_2fa, API2FA::$allowedMethods)
+        ) {
+            return TRUE;
+        }
+        return FALSE;
+    }
 
     static private function detectLoggedInInvestor()
     {
@@ -244,6 +258,9 @@ class Investor_controller
         if (!Application::$authorizedInvestor) {
             Utility::location(self::BASE_URL);
         }
+        if (self::is2FAHasBeenSet()) {
+            ACTION2FA::access2FAChecker(self::SECONDFACTORSET_URL, Router::GET_METHOD);
+        }
         
         Base_view::$TITLE = 'Two-factor authentication settings';
         Base_view::$MENU_POINT = Menu_point::Settings;
@@ -260,6 +277,9 @@ class Investor_controller
         if (!in_array(@$_POST['2fa_method'], API2FA::$allowedMethods)) {
             Utility::location(self::SECONDFACTORSET_URL);
         }
+        if (self::is2FAHasBeenSet()) {
+            ACTION2FA::access2FAChecker(self::SECONDFACTORSET_URL, Router::POST_METHOD);
+        }
         
         $urlErrors = [];
         if (USE_2FA) {
@@ -275,23 +295,15 @@ class Investor_controller
                 } elseif (!$verify) {
                     $urlErrors[] = 'wrong_phone_err=1';
                 } else {
-                    if (
-                        Application::$authorizedInvestor->phone != ""
-                        && Application::$authorizedInvestor->phone == $phone
-                    ) {
-                        Application::$authorizedInvestor->set2faMethod($_POST['2fa_method']);
-                        $urlErrors[] = 'success=1';
-                    } else {
-                        session_start();
-                        $_SESSION[self::PHONE_VERIFY_NUMBER] = $phone;
-                        $_SESSION[self::CHOSEN_2FA_METHOD] = $_POST['2fa_method'];
-                        session_write_close();
-                        $sent = API2FA::send_sms($phone);
-                        if ($sent == FALSE) {
-                            Utility::location(self::SECONDFACTORSET_URL . '?send_sms_err=1');
-                        }
-                        Utility::location(self::PHONEVERIFICATION_URL);
+                    session_start();
+                    $_SESSION[self::PHONE_VERIFY_NUMBER] = $phone;
+                    $_SESSION[self::CHOSEN_2FA_METHOD] = $_POST['2fa_method'];
+                    session_write_close();
+                    $sent = API2FA::send_sms($phone);
+                    if ($sent == FALSE) {
+                        Utility::location(self::SECONDFACTORSET_URL . '?send_sms_err=1');
                     }
+                    Utility::location(self::PHONEVERIFICATION_URL);
                 }
             } else {
                 Application::$authorizedInvestor->set2faMethod($_POST['2fa_method']);
@@ -305,6 +317,9 @@ class Investor_controller
     {
         if (!Application::$authorizedInvestor) {
             Utility::location(self::BASE_URL);
+        }
+        if (self::is2FAHasBeenSet()) {
+            ACTION2FA::access2FAChecker(self::PHONEVERIFICATION_URL, Router::GET_METHOD);
         }
         
         Base_view::$TITLE = 'Phone number verification';
@@ -323,6 +338,9 @@ class Investor_controller
             || !isset($_POST['otp'])
         ) {
             Utility::location(self::BASE_URL);
+        }
+        if (self::is2FAHasBeenSet()) {
+            ACTION2FA::access2FAChecker(self::PHONEVERIFICATION_URL, Router::POST_METHOD);
         }
         
         $urlErrors = [];

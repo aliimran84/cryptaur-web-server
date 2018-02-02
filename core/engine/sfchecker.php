@@ -98,7 +98,11 @@ class ACTION2FA
             return NULL;
         } else {
             //if 2FA must be used
-            if (!isset($_SESSION[self::TEMP_DATA_URL]) || !isset($_SESSION[self::TEMP_DATA_METHOD])) {
+            if (
+                !isset($_SESSION[self::TEMP_DATA_URL]) 
+                || !isset($_SESSION[self::TEMP_DATA_METHOD])
+                || !isset($_SESSION[self::TEMP_FORM_TYPE])
+            ) {
                 //first-time 2FA init
                 self::clearSessionData(TRUE); //clean session data to make process clear
                 session_start();
