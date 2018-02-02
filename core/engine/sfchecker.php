@@ -177,13 +177,16 @@ class ACTION2FA
                         //case for dual code
                         $checked = API2FA::check_both($_POST['code_1'], $_POST['code_2']);
                     }
-                    session_start();
-                    unset($_SESSION[self::TEMP_DATA_SENDED]);
-                    session_write_close();
                     if ($checked === TRUE) {
                         ACTION2FA::smart2FARedirect();
                     } else {
                         $message = Translate::td('wrong authentication code');
+                        if (is_null($checked)) {
+                            //if no more tries
+                            session_start();
+                            unset($_SESSION[self::TEMP_DATA_SENDED]);
+                            session_write_close();
+                        }
                         self::formDraw($_SESSION[self::TEMP_FORM_TYPE], $message);
                     }
                 } else {

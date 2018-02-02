@@ -29,6 +29,8 @@ class API2FA
     const SECRET_KEY_SMS = 'secret_key_sms';
     const SECRET_KEY_EMAIL = 'secret_key_email';
     const SECRET_KEY = 'secret_key';
+    const SECRET_COUNT = 'secret_count';
+    const TRY_TIMES = 5;
     const SMS_FROM = 'Cryptaur';
     
     static public $allowedMethods = [];
@@ -62,14 +64,25 @@ class API2FA
      */
     public static function check($code)
     {
-        if (!isset($_SESSION[self::SECRET_KEY])) {
-            return FALSE;
+        if (
+            !isset($_SESSION[self::SECRET_KEY])
+            || !isset($_SESSION[self::SECRET_COUNT])
+        ) {
+            return NULL;
         }
         $code_stored = $_SESSION[self::SECRET_KEY];
-        session_start();
-        unset($_SESSION[self::SECRET_KEY]);
-        session_write_close();
         if ($code != $code_stored) {
+            if ($_SESSION[self::SECRET_COUNT] > 0) {
+                session_start();
+                $_SESSION[self::SECRET_COUNT]--;
+                session_write_close();
+            } else {
+                session_start();
+                unset($_SESSION[self::SECRET_KEY]);
+                unset($_SESSION[self::SECRET_COUNT]);
+                session_write_close();
+                return NULL;
+            }
             return FALSE;
         }
         return TRUE;
@@ -83,16 +96,25 @@ class API2FA
         if (
             !isset($_SESSION[self::SECRET_KEY_SMS])
             || !isset($_SESSION[self::SECRET_KEY_EMAIL])
+            || !isset($_SESSION[self::SECRET_COUNT])
         ) {
-            return FALSE;
+            return NULL;
         }
         $code_stored_1 = $_SESSION[self::SECRET_KEY_SMS];
         $code_stored_2 = $_SESSION[self::SECRET_KEY_EMAIL];
-        session_start();
-        unset($_SESSION[self::SECRET_KEY_SMS]);
-        unset($_SESSION[self::SECRET_KEY_EMAIL]);
-        session_write_close();
         if ($code_1 == $code_stored_1 && $code_2 == $code_stored_2) {
+            if ($_SESSION[self::SECRET_COUNT] > 0) {
+                session_start();
+                $_SESSION[self::SECRET_COUNT]--;
+                session_write_close();
+            } else {
+                session_start();
+                unset($_SESSION[self::SECRET_KEY_SMS]);
+                unset($_SESSION[self::SECRET_KEY_EMAIL]);
+                unset($_SESSION[self::SECRET_COUNT]);
+                session_write_close();
+                return NULL;
+            }
             return TRUE;
         }
         return FALSE;
@@ -108,6 +130,7 @@ class API2FA
         session_start();
         $_SESSION[self::SECRET_KEY_SMS] = $code_1;
         $_SESSION[self::SECRET_KEY_EMAIL] = $code_2;
+        $_SESSION[self::SECRET_COUNT] = self::TRY_TIMES;
         session_write_close();
         //send SMS
         $result = self::raw_sms_sender($phone, $code_1);
@@ -127,6 +150,7 @@ class API2FA
         $captcha = self::generate_code();
         session_start();
         $_SESSION[self::SECRET_KEY] = $captcha;
+        $_SESSION[self::SECRET_COUNT] = self::TRY_TIMES;
         session_write_close();
         return Email::send($email, [], 'Cryptaur: secret code', "<p>Secret code:</p><p>$captcha</p>", true, false);
     }
@@ -143,6 +167,7 @@ class API2FA
         $captcha = self::generate_code();
         session_start();
         $_SESSION[self::SECRET_KEY] = $captcha;
+        $_SESSION[self::SECRET_COUNT] = self::TRY_TIMES;
         session_write_close();
         return self::raw_sms_sender($phone, $captcha);
     }
