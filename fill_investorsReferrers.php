@@ -28,6 +28,13 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
 
     foreach ($users as $i => $user) {
         DB::set("
+            DELETE FROM `investors_referrers`
+            WHERE `investor_id` = ?
+            ;", [
+                $user['id']
+            ]
+        );
+        DB::set("
             INSERT INTO `investors_referrers` (`investor_id`, `referrers`)
             VALUES
             (
