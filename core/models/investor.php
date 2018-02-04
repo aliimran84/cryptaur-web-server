@@ -13,6 +13,8 @@ class Investor
     const ALLREFERRALS_CACHE_PATH_TO_DIR = PATH_TO_TMP_DIR . '/investorsReferrals';
     const ALLREFERRALS_CACHE_TIMEOUT = 3600; // sec
 
+    const REGISTERING_IS_LOCKED_KEY = 'REGISTERING_IS_LOCKED_KEY';
+
     public $id = 0;
     public $referrer_id = 0;
     public $referrer_code = '';
@@ -398,6 +400,10 @@ class Investor
             if (!$existingReferrer) {
                 return -3;
             }
+        }
+
+        if (Application::getValue(self::REGISTERING_IS_LOCKED_KEY)) {
+            return -4;
         }
 
         $referrer_code = Investor_controller::generateReferrerCode();
