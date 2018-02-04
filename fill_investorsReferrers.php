@@ -41,9 +41,9 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
                                 ( SELECT @pv :=  ? ) AS `initialisation`
                         WHERE `id` = @pv AND @pv := `referrer_id`
                         ORDER BY `id` DESC
-                        ) AS tmp
-                        ORDER BY referrer_id ASC
-                        LIMIT 1
+                    ) AS tmp
+                    ORDER BY referrer_id ASC
+                    LIMIT 1
                 )
             )
             ;", [
