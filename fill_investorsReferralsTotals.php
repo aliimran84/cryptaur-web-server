@@ -20,15 +20,15 @@ $token = Coin::token();
 $query = "
     DELETE FROM `investors_referrals_totals`;
 
-    INSERT INTO `investors_referrals_totals` ( investor_id, coin )
-    SELECT investors.id, '$token'
-    FROM investors
+     INSERT INTO `investors_referrals_totals` ( `investor_id`, `coin` )
+    SELECT `investors`.`id`, '$token'
+    FROM `investors`
     ;\r\n";
 foreach (Coin::coins() as $coin) {
     $query .= "
-        INSERT INTO `investors_referrals_totals` ( investor_id, coin )
-        SELECT investors.id, '$coin'
-        FROM investors
+        INSERT INTO `investors_referrals_totals` ( `investor_id`, `coin` )
+        SELECT `investors`.`id`, '$coin'
+        FROM `investors`
         ;\r\n";
 }
 DB::multi_query($query);
@@ -56,7 +56,7 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
 
     $query = '';
     foreach ($users as $i => $user) {
-        $referrals = DB::get("select referrals from investors_referrals where investor_id=?", [$user['id']])[0]['referrals'];
+        $referrals = DB::get("select `referrals` from `investors_referrals` where `investor_id`=?", [$user['id']])[0]['referrals'];
         $ids = $user['id'];
         if ($referrals) {
             $ids .= ',' . $referrals;
@@ -64,7 +64,7 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
 
         DB::query("
             UPDATE `investors_referrals_totals`
-            SET `sum` = (select sum(tokens_count) from investors where id in($ids))
+            SET `sum` = (select sum(`tokens_count`) from `investors` where `id` in($ids))
             WHERE
                 `coin` = '$token' AND
                 `investor_id` = {$user['id']}
@@ -72,7 +72,7 @@ for ($offset = 0; $offset < $usersCount; $offset += $limitSize) {
         foreach (Coin::coins() as $coin) {
             DB::query("
                 UPDATE `investors_referrals_totals`
-                SET `sum` = (select sum(balance) from `wallets` where `coin`='$coin' and `investor_id` in($ids))
+                SET `sum` = (select sum(`balance`) from `wallets` where `coin`='$coin' and `investor_id` in($ids))
                 WHERE
                     `coin` = '$coin' AND
                     `investor_id` = {$user['id']}
