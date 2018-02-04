@@ -17,6 +17,18 @@ do {
     $count = count($investors_data);
     foreach ($investors_data as $i => $investor_data) {
         ++$lastId;
+        // todo: update several tables
+        // eth_queue.investor_id
+        // eth_queue_wallets.investor_id
+        // investors_2fa_choice.investor_id
+        // investors_ethaddresses.investor_id
+        // investors_referrals.referrals concated str
+        // investors_referrals_tokens.investor_id
+        // investors_referrals_totals.investor_id
+        // investors_referrers.investor_id
+        // investors_referrers.referrers concated str
+        // investors_stage_0_bounty.investor_id
+        // investors_waiting_tokens.investor_id
         DB::set("UPDATE `investors` SET `id` = '$lastId' WHERE `id` = {$investor_data['id']} LIMIT 1;");
         DB::set("UPDATE `investors_to_previous_system` SET `investor_id` = '$lastId' WHERE `investor_id` = {$investor_data['id']} LIMIT 1;");
         DB::set("UPDATE `investors_referrals_compressed` SET `investor_id` = '$lastId' WHERE `investor_id` = {$investor_data['id']};");
