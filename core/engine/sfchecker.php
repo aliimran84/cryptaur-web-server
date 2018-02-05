@@ -104,7 +104,7 @@ class ACTION2FA
                 || !isset($_SESSION[self::TEMP_FORM_TYPE])
             ) {
                 //first-time 2FA init
-                self::clearSessionData(); //clean session data to make process clear
+                self::clearSessionData(TRUE); //clean session data to make process clear
                 session_start();
                 $_SESSION[self::TEMP_DATA_URL] = $url;
                 $_SESSION[self::TEMP_DATA_METHOD] = $method;
@@ -218,7 +218,7 @@ class ACTION2FA
     {
         session_start();
         if ($secure_clear === TRUE && isset($_SESSION[self::LAST_SECURED_TIME])) {
-            unset($_SESSION[self::TEMP_DATA_URL]);
+            unset($_SESSION[self::LAST_SECURED_TIME]);
         }
         if (isset($_SESSION[self::TEMP_DATA_URL])) {
             unset($_SESSION[self::TEMP_DATA_URL]);
