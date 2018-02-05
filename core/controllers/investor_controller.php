@@ -18,6 +18,8 @@ use core\translate\Translate;
 use core\views\Base_view;
 use core\views\Investor_view;
 use core\views\Menu_point;
+use core\logging\ActionList;
+use core\logging\Log;
 
 class Investor_controller
 {
@@ -370,7 +372,16 @@ class Investor_controller
         if (Application::$authorizedInvestor) {
             Utility::location(self::BASE_URL);
         }
-        $image = Captcha::generateCaptcha();
+        $image = NULL;
+        $loginTries = Log::actionCountByIP(
+            Log::getIp(), 
+            ActionList::LOGIN_FAIL, 
+            time() - 300
+        );
+        if ($loginTries >= 3) {
+            $image = Captcha::generateCaptcha();
+            $message = Translate::td('Too much requests from your IP, you must input captcha');
+        }
         Base_view::$TITLE = 'Login';
         Base_view::$MENU_POINT = Menu_point::Login;
         echo Base_view::header();
@@ -395,8 +406,17 @@ class Investor_controller
 
     static private function handleLoginRequest()
     {
-        if (!Captcha::checkCaptcha(@$_POST['captcha'])) {
-            Utility::location(self::LOGIN_URL . '?err=3671&err_text=wrong captcha');
+        $loginTries = Log::actionCountByIP(
+            Log::getIp(), 
+            ActionList::LOGIN_FAIL, 
+            time() - 300
+        );
+        if ($loginTries >= 3) {
+            $message = Translate::td('Too much requests from your IP, you must input captcha');
+            if (!Captcha::checkCaptcha(@$_POST['captcha'])) {
+                Log::investor(ActionList::LOGIN_FAIL);
+                Utility::location(self::LOGIN_URL . '?err=3671&err_text=wrong captcha');
+            }
         }
         $email = trim(@$_POST['email']);
         $password = trim(@$_POST['password']);
@@ -416,6 +436,7 @@ class Investor_controller
         if ($investor) {
             Utility::location(self::BASE_URL);
         }
+        Log::investor(ActionList::LOGIN_FAIL);
         Utility::location(self::LOGIN_URL . '?err=3671&err_text=wrong credentials');
     }
 

@@ -15,7 +15,7 @@ use core\translate\Translate;
 
 class Investor_view
 {
-    static public function loginForm($image, $message = '')
+    static public function loginForm($image = NULL, $message = '')
     {
         ob_start();
         ?>
@@ -33,13 +33,15 @@ class Investor_view
                         <?php } ?>
                         <input type="email" name="email" placeholder="Email">
                         <input type="password" name="password" placeholder="<?= Translate::td('Password') ?>" autocomplete="new-password">
-                        <div class="captcha">
-                            <image src="data:image/png;base64,<?= $image ?>">
-                            <div class="captcha-input">
-                                <p><?= Translate::td('Enter security code') ?></p>
-                                <input type="text" name="captcha" placeholder="Captcha" required>
+                        <?php if (!is_null($image)) { ?>
+                            <div class="captcha">
+                                <image src="data:image/png;base64,<?= $image ?>">
+                                <div class="captcha-input">
+                                    <p><?= Translate::td('Enter security code') ?></p>
+                                    <input type="text" name="captcha" placeholder="Captcha" required>
+                                </div>
                             </div>
-                        </div>
+                        <?php } ?>
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Login') ?>

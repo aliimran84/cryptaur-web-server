@@ -20,6 +20,7 @@ use core\models\PaymentServer;
 use core\models\Wallet;
 use core\translate\Translate;
 use core\secondfactor\API2FA;
+use core\logging\Log;
 
 class Application
 {
@@ -67,6 +68,7 @@ class Application
             PaymentServer::db_init();
             EthQueue::db_init();
             EtherWallet::db_init();
+            Log::db_init();
         }
 
         Router::registerDefault(function () {
