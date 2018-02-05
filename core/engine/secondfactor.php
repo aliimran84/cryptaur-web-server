@@ -32,6 +32,8 @@ class API2FA
     const SECRET_COUNT = 'secret_count';
     const TRY_TIMES = 5;
     const SMS_FROM = 'Cryptaur';
+    const CODE_LENGTH = 4;
+    const CODE_LETTERS = '123456789';
     
     static public $allowedMethods = [];
 
@@ -193,11 +195,10 @@ class API2FA
 
     private static function generate_code()
     {
-        $letters = '123456789';
-        $caplen = 4;
         $captcha = '';
-        for ($i = 0; $i < $caplen; $i++) {
-            $captcha .= $letters[rand(0, strlen($letters) - 1)]; // дописываем случайный символ из алфавила
+        $length = strlen(self::CODE_LETTERS);
+        for ($i = 0; $i < self::CODE_LENGTH; $i++) {
+            $captcha .= self::CODE_LETTERS[rand(0, $length - 1)]; // дописываем случайный символ из алфавила
         }
         return $captcha;
     }
