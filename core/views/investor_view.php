@@ -72,6 +72,7 @@ class Investor_view
         $cut_phone = '';
         ob_start();
         ?>
+        <?= self::tabsSettings('secondFactor') ?>
         <div class="row">
             <div class="settings-block col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
                 <form action="<?= Investor_controller::SECONDFACTORSET_URL ?>" method="post" autocomplete="off">
@@ -510,10 +511,27 @@ class Investor_view
         return ob_get_clean();
     }
 
+    static private function tabsSettings($activeTabs)
+    {
+        ob_start();
+        ?>
+        <div class="row settings">
+            <div class="container">
+                <ul class="tabs-block col s12">
+                    <li class="tab-element <?= $activeTabs == 'settings' ? 'active' : '' ?> col s6"><a href="<?= Investor_controller::SETTINGS_URL ?>"><?= Translate::td('User settings') ?></a></li>
+                    <li class="tab-element <?= $activeTabs == 'secondFactor' ? 'active' : '' ?> col s6"><a href="<?= Investor_controller::SECONDFACTORSET_URL ?>"><?= Translate::td('Two-factor authentication settings') ?></a></li>
+                </ul>
+            </div>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+
     static public function settings()
     {
         ob_start();
         ?>
+        <?= self::tabsSettings('settings') ?>
         <div class="row">
             <div class="settings-block col s12 m6 offset-m3 l6 offset-l3 xl4 offset-xl4">
                 <form action="<?= Investor_controller::SETTINGS_URL ?>" method="post" autocomplete="off">
@@ -554,7 +572,6 @@ class Investor_view
                     </button>
                 </form>
                 <br>
-                <a href="<?= Investor_controller::SECONDFACTORSET_URL ?>"><?= Translate::td('Two-factor authentication settings') ?></a>
             </div>
         </div>
         <?php

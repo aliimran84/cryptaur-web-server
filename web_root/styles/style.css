@@ -1040,3 +1040,17 @@ div.phone_code {
     display: inline-block;
     width: 49%;
 }
+.row.settings {
+    background-color: #0074ff;
+}
+.settings .tabs-block .tab-element {
+    line-height: 60px;
+    font-size: 22px;
+    text-align: center;
+}
+.settings .tabs-block .tab-element a {
+    color: #ffffff;
+}
+.settings .tabs-block .tab-element.active {
+    background: rgba(0,0,0, 0.05);
+}
