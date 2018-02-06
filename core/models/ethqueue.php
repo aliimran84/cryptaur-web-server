@@ -249,12 +249,17 @@ class EthQueue
             return null;
         }
 
-        $user = $investorId + self::USERID_SHIFT;
+        $ethtoolsId = Investor::getEthtoolsIdByInvestorId($investorId);
+        if (!$ethtoolsId) {
+            return null;
+        }
+        $user = $ethtoolsId + self::USERID_SHIFT;
         $return = Utility::httpPostWithHmac(ETH_QUEUE_URL . self::getMethodByType(self::TYPE_GETWALLET), [
             'user' => $user
         ], ETH_QUEUE_KEY);
         Utility::log('eth_queue_getwallet/' . Utility::microtime_float(), [
             '_investorId' => $investorId,
+            '_ethtoolsId' => $ethtoolsId,
             'user' => $user,
             'return' => $return
         ]);
@@ -471,7 +476,11 @@ class EthQueue
         }
 
         $weiValue = Utility::int_string(bcmul(Utility::double_string($ethValue), self::ETH_TO_WEI));
-        $user = $investorId + self::USERID_SHIFT;
+        $ethtoolsId = Investor::getEthtoolsIdByInvestorId($investorId);
+        if (!$ethtoolsId) {
+            return [-8523, ''];
+        }
+        $user = $ethtoolsId + self::USERID_SHIFT;
         $sender = $eth_queue->investor->eth_address;
 
         $return = Utility::httpPostWithHmac(ETH_QUEUE_URL . self::sendMethodByType(self::TYPE_SENDETH_WALLET), [
@@ -487,6 +496,7 @@ class EthQueue
             '_sender' => $sender,
             '_ethAddress' => $ethAddress,
             '_investorId' => $eth_queue->investor->id,
+            '_ethtoolsId' => $ethtoolsId,
             '_ethValue' => $ethValue,
             'wei' => $weiValue,
             'return' => $return
@@ -521,7 +531,11 @@ class EthQueue
         }
 
         $cptWithoutDecimals = Utility::int_string(bcmul(Utility::double_string($cptValue), self::CPT_TOKENS_TO_WITHOUT_DECIMALS));
-        $user = $investorId + self::USERID_SHIFT;
+        $ethtoolsId = Investor::getEthtoolsIdByInvestorId($investorId);
+        if (!$ethtoolsId) {
+            return [-8623, ''];
+        }
+        $user = $ethtoolsId + self::USERID_SHIFT;
         $sender = $eth_queue->investor->eth_address;
 
         $return = Utility::httpPostWithHmac(ETH_QUEUE_URL . self::sendMethodByType(self::TYPE_SENDCPT_WALLET), [
@@ -537,6 +551,7 @@ class EthQueue
             '_sender' => $sender,
             '_ethAddress' => $ethAddress,
             '_investorId' => $eth_queue->investor->id,
+            '_ethtoolsId' => $ethtoolsId,
             '_cptValue' => $cptValue,
             'tokens' => $cptWithoutDecimals,
             'return' => $return
@@ -571,7 +586,11 @@ class EthQueue
         }
 
         $proofWithoutDecimals = Utility::int_string(bcmul(Utility::double_string($proofValue), self::PROOF_TOKENS_TO_WITHOUT_DECIMALS));
-        $user = $investorId + self::USERID_SHIFT;
+        $ethtoolsId = Investor::getEthtoolsIdByInvestorId($investorId);
+        if (!$ethtoolsId) {
+            return [-8633, ''];
+        }
+        $user = $ethtoolsId + self::USERID_SHIFT;
         $sender = $eth_queue->investor->eth_address;
 
         $return = Utility::httpPostWithHmac(ETH_QUEUE_URL . self::sendMethodByType(self::TYPE_SENDPROOF_WALLET), [
@@ -587,6 +606,7 @@ class EthQueue
             '_sender' => $sender,
             '_ethAddress' => $ethAddress,
             '_investorId' => $eth_queue->investor->id,
+            '_ethtoolsId' => $ethtoolsId,
             '_proofValue' => $proofValue,
             'tokens' => $proofWithoutDecimals,
             'return' => $return

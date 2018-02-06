@@ -167,6 +167,22 @@ class Investor
             DEFAULT CHARSET utf8
             DEFAULT COLLATE utf8_general_ci
         ;");
+        DB::query("
+            CREATE TABLE IF NOT EXISTS `investors_ethtools_id` (
+                `investor_id` int(10) UNSIGNED NOT NULL,
+                `ethtool_id` int(10) UNSIGNED NOT NULL,
+                PRIMARY KEY (`investor_id`)
+            )
+        ;");
+        if (!@DB::get("
+            SELECT count(*) as `count` FROM `investors_ethtools_id`
+        ")[0]['count']) {
+            DB::query("
+                INSERT INTO `investors_ethtools_id` ( `investor_id`, `ethtool_id` )
+                SELECT `id`, `id`
+                FROM `investors`
+            ;");
+        }
     }
 
     static private function createWithDataFromDB($data)
@@ -362,6 +378,26 @@ class Investor
         return (int)$investorId;
     }
 
+    static public function getInvestorIdByEthtoolsId($ethtoolsId)
+    {
+        $id = @DB::get("
+            SELECT `investor_id`
+            FROM `investors_ethtools_id` 
+            WHERE `ethtool_id` = ?
+        ;", [$ethtoolsId])[0]['investor_id'];
+        return $id;
+    }
+
+    static public function getEthtoolsIdByInvestorId($investorId)
+    {
+        $id = @DB::get("
+            SELECT `ethtool_id`
+            FROM `investors_ethtools_id` 
+            WHERE `investor_id` = ?
+        ;", [$investorId])[0]['ethtool_id'];
+        return $id;
+    }
+
     /**
      * @param string $email
      * @return bool
@@ -427,6 +463,15 @@ class Investor
 
         $investorId = DB::lastInsertId();
 
+        DB::set("
+            INSERT INTO `investors_ethtools_id`
+            SET
+                `investor_id` = ?,
+                `ethtool_id` = ?
+            ;", [
+                $investorId, $investorId
+            ]
+        );
         DB::set("
             INSERT INTO `investors_referrals_totals`
             SET

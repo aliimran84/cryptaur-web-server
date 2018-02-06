@@ -7,6 +7,7 @@ use core\engine\Utility;
 use core\engine\Router;
 use core\models\Coin;
 use core\models\Deposit;
+use core\models\Investor;
 use core\models\PaymentServer;
 use core\models\Administrator;
 use core\models\Wallet;
@@ -22,6 +23,8 @@ class PaymentServer_controller
     const NOTIFY_REASON_DEPOSIT = 'deposit';
     const NOTIFY_REASON_ALARM = 'alarm';
     const HMAC_HEADER = 'HMAC-Signature';
+
+    const PS_USERID_SHIFT = 1000;
 
     static public function init()
     {
@@ -54,12 +57,14 @@ class PaymentServer_controller
 
     static private function fromPaymentServerUserIdToInvestorId($userid)
     {
-        return $userid - 1000;
+        $ethtoolsId = $userid - self::PS_USERID_SHIFT;
+        return Investor::getInvestorIdByEthtoolsId($ethtoolsId);
     }
 
     static private function fromInvestorIdToPaymentServerUserId($investorid)
     {
-        return $investorid + 1000;
+        $ethtoolsId = Investor::getEthtoolsIdByInvestorId($investorid);
+        return $ethtoolsId + self::PS_USERID_SHIFT;
     }
 
     /**
