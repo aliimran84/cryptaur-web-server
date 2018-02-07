@@ -95,6 +95,8 @@ class Base_view
         if (Application::$authorizedAdministrator) { ?>
             <li class="<?= self::activeMenuItem(Menu_point::Administrator_logs) ?>">
                 <a href="<?= Administrator_controller::LOGS ?>"><?= Translate::td('Logs') ?></a></li>
+            <li class="<?= self::activeMenuItem(Menu_point::Administrator_coin_rates) ?>">
+                <a href="<?= Administrator_controller::COIN_RATE_URL ?>"><?= Translate::td('Coin Rates') ?></a></li>
             <li class="<?= self::activeMenuItem(Menu_point::Administrator_settings) ?>">
                 <a href="<?= Administrator_controller::SETTINGS ?>"><?= Translate::td('Settings') ?></a></li>
             <li class="<?= self::activeMenuItem(Menu_point::Administrators_list) ?>">

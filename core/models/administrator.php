@@ -179,4 +179,14 @@ class Administrator
         exec("tail -n $lines $path", $dataMySQL);
         return $dataMySQL;
     }
+
+    /**
+     * @return Array dataRates
+     */
+    static public function getRates()
+    {
+        $lines = self::linesToGet;
+        $dataRates = @DB::get("SELECT * FROM `coin_rate` ORDER BY `datetime` DESC LIMIT $lines;");
+        return $dataRates;
+    }
 }

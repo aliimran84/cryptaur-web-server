@@ -21,6 +21,7 @@ class Administrator_controller
     const SETTINGS = 'administrator/settings';
     const ADMINISTRATORS_LIST = 'administrator/list';
     const LOGS = 'administrator/logs';
+    const COIN_RATE_URL = 'administrator/coin-rates';
 
     const SESSION_KEY = 'authorized_administrator_id';
 
@@ -131,6 +132,17 @@ class Administrator_controller
             }
             self::deleteAlarmMessage();
         }, self::LOGS, Router::POST_METHOD);
+        
+        Router::register(function () {
+            if (!Application::$authorizedAdministrator) {
+                Utility::location(self::BASE_URL);
+            }
+            Base_view::$TITLE = 'Coin Rates';
+            Base_view::$MENU_POINT = Menu_point::Administrator_coin_rates;
+            echo Base_view::header();
+            echo Administrator_view::ratesList();
+            echo Base_view::footer();
+        }, self::COIN_RATE_URL, Router::GET_METHOD);
     }
 
     static public function handleLoginRequest()
