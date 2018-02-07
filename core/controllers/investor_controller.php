@@ -414,7 +414,7 @@ class Investor_controller
         if ($loginTries >= 3) {
             $message = Translate::td('Too much requests from your IP, you must input captcha');
             if (!Captcha::checkCaptcha(@$_POST['captcha'])) {
-                Log::investor(ActionList::LOGIN_FAIL);
+                Log::investor(ActionList::LOGIN_FAIL, NULL, $email);
                 Utility::location(self::LOGIN_URL . '?err=3671&err_text=wrong captcha');
             }
         }
