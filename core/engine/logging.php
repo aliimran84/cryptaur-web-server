@@ -2,15 +2,19 @@
 
 namespace core\logging;
 
+use core\controllers\Investor_controller;
+use core\controllers\Administrator_controller;
 use core\engine\Application;
 use core\engine\DB;
 
 class ActionList
 {
-    const LOGIN = 'login';
+    const LOGIN_TRY = 'login_try';
     const LOGIN_FAIL = 'login_fail';
-    const REGISTRATION = 'registration';
+    const LOGIN_SUCCESS = 'login_success';
+    const REGISTRATION_TRY = 'registration_try';
     const REGISTRATION_FAIL = 'registration_fail';
+    const REGISTRATION_SUCCESS = 'registration_succes';
 }
 
 class Log
@@ -63,9 +67,23 @@ class Log
         $context = 'unauthorized';
         $ip = self::getIp();
 
-        if (Application::$authorizedInvestor) {
+        if (isset($_SESSION[Investor_controller::SESSION_KEY])) {
             $context = 'investor';
-            $action_based_user_id = Application::$authorizedInvestor->id;
+            $action_based_user_id = $_SESSION[Investor_controller::SESSION_KEY];
+        }
+
+        self::base($context, $action_based_user_id, $action_type, $action_based_id, $ip, $log);
+    }
+    
+    public static function administrator($action_type, $action_based_id=NULL, $log=NULL)
+    {
+        $action_based_user_id = NULL;
+        $context = 'unauthorized';
+        $ip = self::getIp();
+
+        if (isset($_SESSION[Administrator_controller::SESSION_KEY])) {
+            $context = 'administrator';
+            $action_based_user_id = $_SESSION[Administrator_controller::SESSION_KEY];
         }
 
         self::base($context, $action_based_user_id, $action_type, $action_based_id, $ip, $log);

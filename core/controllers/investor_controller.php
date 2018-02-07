@@ -419,6 +419,7 @@ class Investor_controller
             }
         }
         $email = trim(@$_POST['email']);
+        Log::investor(ActionList::LOGIN_TRY, NULL, $email);
         $password = trim(@$_POST['password']);
         $investorId = @Investor::getInvestorIdByEmailPassword($email, $password);
         $investor = null;
@@ -434,9 +435,10 @@ class Investor_controller
             }
         }
         if ($investor) {
+            Log::investor(ActionList::LOGIN_SUCCESS, NULL, $email);
             Utility::location(self::BASE_URL);
         }
-        Log::investor(ActionList::LOGIN_FAIL);
+        Log::investor(ActionList::LOGIN_FAIL, NULL, $email);
         Utility::location(self::LOGIN_URL . '?err=3671&err_text=wrong credentials');
     }
 
