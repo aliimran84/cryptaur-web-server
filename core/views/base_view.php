@@ -52,7 +52,7 @@ class Base_view
         ob_start();
         ?>
         <div class="nav-wrapper">
-            <a href="https://cryptaur.com" class="brand-logo">crypt<span>aur</span></a>
+            <a href="https://cryptaur.com" target="_blank" class="brand-logo">crypt<span>aur</span></a>
             <a href="#" data-activates="mobile-demo" class="button-collapse"><i class="material-icons">menu</i></a>
             <ul id="nav-mobile" class="right hide-on-med-and-down">
                 <?= self::menuList() ?>
@@ -166,25 +166,57 @@ class Base_view
             var appId = "igb92dwc",
                 intercomSettings = {app_id: appId};
             <?php if (Application::$authorizedInvestor) : ?>
-                var currentUserId = "<?= Application::$authorizedInvestor->id ?>";
-                var currentUserName = "<?= Application::$authorizedInvestor->firstname ?> <?= Application::$authorizedInvestor->lastname ?>";
-                var currentUserEmail = "<?= Application::$authorizedInvestor->email ?>";
-                var currentUserEthAddress = "<?= Application::$authorizedInvestor->eth_address ?>";
-                intercomSettings = {
-                    app_id: appId,
-                    user_id: currentUserId,
-                    name: currentUserName,
-                    eth_address: currentUserEthAddress,
-                    user_hash: "<?= hash_hmac(
-                        'sha256',
-                        Application::$authorizedInvestor->id,
-                        '8TTXuhAVh4-mpAoGWSHbkas3Pkeu-Z5YUkoYHlVR'
-                    ) ?>",
-                    email: currentUserEmail
-                };
+            var currentUserId = "<?= Application::$authorizedInvestor->id ?>";
+            var currentUserName = "<?= Application::$authorizedInvestor->firstname ?> <?= Application::$authorizedInvestor->lastname ?>";
+            var currentUserEmail = "<?= Application::$authorizedInvestor->email ?>";
+            var currentUserEthAddress = "<?= Application::$authorizedInvestor->eth_address ?>";
+            intercomSettings = {
+                app_id: appId,
+                user_id: currentUserId,
+                name: currentUserName,
+                eth_address: currentUserEthAddress,
+                user_hash: "<?= hash_hmac(
+                    'sha256',
+                    Application::$authorizedInvestor->id,
+                    '8TTXuhAVh4-mpAoGWSHbkas3Pkeu-Z5YUkoYHlVR'
+                ) ?>",
+                email: currentUserEmail
+            };
             <?php endif; ?>
             window.intercomSettings = intercomSettings;
-            (function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/igb92dwc';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()
+            (function () {
+                var w = window;
+                var ic = w.Intercom;
+                if (typeof ic === "function") {
+                    ic('reattach_activator');
+                    ic('update', intercomSettings);
+                } else {
+                    var d = document;
+                    var i = function () {
+                        i.c(arguments)
+                    };
+                    i.q = [];
+                    i.c = function (args) {
+                        i.q.push(args)
+                    };
+                    w.Intercom = i;
+
+                    function l() {
+                        var s = d.createElement('script');
+                        s.type = 'text/javascript';
+                        s.async = true;
+                        s.src = 'https://widget.intercom.io/widget/igb92dwc';
+                        var x = d.getElementsByTagName('script')[0];
+                        x.parentNode.insertBefore(s, x);
+                    }
+
+                    if (w.attachEvent) {
+                        w.attachEvent('onload', l);
+                    } else {
+                        w.addEventListener('load', l, false);
+                    }
+                }
+            })()
         </script>
 
         </body>
