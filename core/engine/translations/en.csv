@@ -91,8 +91,10 @@ ETH-ADDRESS,ETH-ADDRESS
 User eth setup,User eth setup
 User settings,User settings
 Email,Email
-"Phone, mobile","Phone, mobile"
+"Phone, mobile (only digits)","Phone, mobile (only digits)"
 Referrer code,Referrer code
+If available,If available
+Optional,Optional
 Eth address,Eth address
 Eth withdrawn,Eth withdrawn
 Eth bounty,Eth bounty

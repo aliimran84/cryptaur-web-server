@@ -91,8 +91,10 @@ ETH-ADDRESS,ETH-АДРЕС
 User eth setup,Настройки eth инвестора
 User settings,Настройки инвестора
 Email,Почта
-"Phone, mobile","Телефон (моб.)"
+"Phone, mobile (only digits)","Телефон, моб. (только цифры)"
 Referrer code,Реферальный код
+If available,Если есть
+Optional,Не обязательно
 Eth address,Eth адрес
 Eth withdrawn,Eth выведено
 Eth bounty,Eth баунти

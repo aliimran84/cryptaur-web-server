@@ -115,7 +115,7 @@ class Investor_view
                         </select>
                     </div>
                     <div class="row">
-                        <span><?= Translate::td('Phone, mobile') ?>:</span><br/>
+                        <span><?= Translate::td('Phone, mobile (only digits)') ?>:</span><br/>
                         <h5><?= Application::$authorizedInvestor->phone ?></h5>
                     </div>
                     <div
@@ -132,8 +132,8 @@ class Investor_view
                         <input 
                             type="text" 
                             name="phone" 
-                            style="width: 50%" 
-                            placeholder="<?= Translate::td('Phone, mobile') ?>" 
+                            style="width: 50%; font-size: .75em;"
+                            placeholder="<?= Translate::td('Phone, mobile (only digits)') ?>"
                             autocomplete="nope" 
                             pattern="[0-9]{2,15}"
                         >
@@ -276,14 +276,14 @@ class Investor_view
                         <input 
                             type="text" 
                             name="phone" 
-                            style="width: 50%" 
-                            placeholder="<?= Translate::td('Phone, mobile') ?>" 
+                            style="width: 50%; font-size: .75em;"
+                            placeholder="<?= Translate::td('Phone, mobile (only digits)') ?>"
                             value="<?= @$data['phone'] ?>" 
                             autocomplete="nope" 
                             pattern="[0-9]{2,15}"
                         >
-                        <span><?= Translate::td('Use only numbers') ?></span>
-                        <input type="text" name="referrer_code" value="<?= $referrer_code ?>" placeholder="<?= Translate::td('REFERRER CODE') ?>" autocomplete="nope">
+                        <span><?= Translate::td('Optional') ?></span>
+                        <input type="text" name="referrer_code" value="<?= $referrer_code ?>" placeholder="<?= Translate::td('REFERRER CODE') ?> (<?= strtoupper(Translate::td('If available')) ?>)" autocomplete="nope">
                         <input type="password" name="password" pattern=".{6,120}" placeholder="<?= Translate::td('Password') ?>" autocomplete="new-password">
                         <span class="password-label"><?= Translate::td('Password must be more than 6 symbols') ?></span>
                         <div class="captcha">
@@ -346,8 +346,8 @@ class Investor_view
                         <input 
                             type="text" 
                             name="phone" 
-                            style="width: 50%" 
-                            placeholder="<?= Translate::td('Phone, mobile') ?>" 
+                            style="width: 50%; font-size: .75em;"
+                            placeholder="<?= Translate::td('Phone, mobile (only digits)') ?>"
                             value="<?= @$data['phone'] ?>" 
                             autocomplete="nope" 
                             pattern="[0-9]{2,15}"
