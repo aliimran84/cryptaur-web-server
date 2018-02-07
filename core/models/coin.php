@@ -20,7 +20,7 @@ class Coin
                 `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
                 `coin` VARCHAR(6) NOT NULL,
                 `rate` DOUBLE(20,8) NOT NULL DEFAULT '-1',
-                `time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                `datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                 PRIMARY KEY (`id`)
             )
             DEFAULT CHARSET utf8
