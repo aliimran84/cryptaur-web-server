@@ -94,6 +94,25 @@ class Coin
         self::$rateStorage[$coin] = $rate;
         return $rate;
     }
+    
+    /**
+     * how much coins in 1 $. tokens = usd / rate
+     * this function is for archieved rates
+     * @param string $coin
+     * @param string $datetime
+     * @return double count of usd in one coin
+     */
+    static public function getOldRate($coin, $datetime)
+    {
+        $coin = strtoupper($coin);
+        $rate = (double)DB::get("
+            SELECT `rate` FROM `coin_rate` 
+            WHERE `coin` = ? 
+            AND `datetime` <= ? 
+            ORDER BY `datetime` DESC LIMIT 1;", 
+        [$coin, $datetime])[0]['rate'];
+        return $rate;
+    }
 
     /**
      * @param double $amount
