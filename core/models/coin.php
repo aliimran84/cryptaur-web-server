@@ -4,6 +4,7 @@ namespace core\models;
 
 use core\engine\Application;
 use core\engine\Configuration;
+use core\engine\DB;
 
 class Coin
 {
@@ -11,6 +12,21 @@ class Coin
     const USD = 'USD';
 
     static private $rateStorage = [];
+
+    static public function db_init()
+    {
+        DB::query("
+            CREATE TABLE IF NOT EXISTS `coin_rate` (
+                `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `coin` VARCHAR(6) NOT NULL,
+                `rate` DOUBLE(20,8) NOT NULL DEFAULT '-1',
+                `time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (`id`)
+            )
+            DEFAULT CHARSET utf8
+            DEFAULT COLLATE utf8_general_ci
+        ;");
+    }
 
     /**
      * @param bool $onlyActivate
@@ -54,6 +70,13 @@ class Coin
         $coin = strtoupper($coin);
         self::$rateStorage[$coin] = $rate;
         Application::setValue(self::RATE_KEY_PREFIX . $coin, $rate);
+        DB::set("
+            INSERT INTO `coin_rate` 
+            (`coin`,`rate`)
+            VALUES
+            (?,?);",
+            [$coin, $rate]
+        );
     }
 
     /**

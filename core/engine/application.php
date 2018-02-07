@@ -18,6 +18,7 @@ use core\models\EthQueue;
 use core\models\Investor;
 use core\models\PaymentServer;
 use core\models\Wallet;
+use core\models\Coin;
 use core\translate\Translate;
 use core\secondfactor\API2FA;
 use core\logging\Log;
@@ -69,6 +70,7 @@ class Application
             EthQueue::db_init();
             EtherWallet::db_init();
             Log::db_init();
+            Coin::db_init();
         }
 
         Router::registerDefault(function () {
