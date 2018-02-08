@@ -1,5 +1,4 @@
 function conversionHeightLineBottom(tree) {
-
     var ul = tree.find('ul.second-level');
     var li = ul.children('li.'+ul.attr('class'));
     var positionTopFirstLi = $(li[0]).offset().top;
@@ -10,11 +9,48 @@ function conversionHeightLineBottom(tree) {
         li = $(ulParticipants[i]).children('li.'+$(ulParticipants[i]).attr('class').split(' ')[0]);
         positionTopFirstLi = $(li[0]).offset().top;
         positionTopLastLi = $(li[li.length-1]).offset().top;
-        $(ulParticipants[i]).parent().prev().find('.line-bottom').css('height',positionTopLastLi - positionTopFirstLi + 211);
+        var ua = navigator.userAgent;
+        if (ua.search(/Firefox/) > 0)
+            $(ulParticipants[i]).parent().prev().find('.line-bottom').css('height',positionTopLastLi - positionTopFirstLi + $(li[li.length-1]).height() + 86);
+        else
+            $(ulParticipants[i]).parent().prev().find('.line-bottom').css('height',positionTopLastLi - positionTopFirstLi + $(li[li.length-1]).height() + 85);
     }
 }
 $(document).ready(function(){
+    var warningCheckBox = $('.warning-checkbox');
+    var checked;
+    var contract = '0x6f3a995e904c9be5279e375e79f3c30105efa618'.toUpperCase();
+    var optionSelected = $('select.select-wallet :selected');
+    $('.modal').modal({
+        complete: function() {
+            if ($('#warning_1').prop('checked') && $('#warning_2').prop('checked') && $('#warning_3').prop('checked')) {
+                $('.block_external-wallet').css('display', 'block');
+            } else {
+                if (this.$el.closest('.settings-block').length) {
+                    $('select.select-wallet').material_select();
+                    $('.select-wallet .select-dropdown').val(optionSelected.text());
+                    if (optionSelected.val() == 'inner-wallet') {
+                        $('.block_inner-wallet').css('display', 'block');
+                        $('.block_external-wallet').css('display', 'none');
+                    } else if (optionSelected.val() == 'external-wallet') {
+                        $('.block_inner-wallet').css('display', 'none');
+                        $('.block_external-wallet').css('display', 'block');
+                    }
+                } else {
+                    var optionDisabled = $('select.select-wallet option[value="choose"]');
+                    $('select.select-wallet').material_select();
+                    $('.select-wallet .select-dropdown').val(optionDisabled.text());
+                }
+            }
+        }
+    });
     $('ul.tabs').tabs();
+
+    if ($('select.select-wallet').val() == 'inner-wallet') {
+        $('.block_external-wallet').css('display', 'none');
+    } else if ($('select.select-wallet').val() == 'external-wallet') {
+        $('.block_inner-wallet').css('display', 'none');
+    }
 
     $(".dropdown-button").dropdown();
     $('select').material_select();
@@ -59,7 +95,111 @@ $(document).ready(function(){
             }
         });
     });
+
+    warningCheckBox.change(function () {
+        if (checkWarningCheckBox(warningCheckBox))
+            $('#modal_external-wallet').modal('close');
+    });
+
+    $('select.select-wallet').change(function () {
+        var value = $(this).val();
+        if (value == 'inner-wallet') {
+            $('.block_inner-wallet').css('display', 'block');
+            $('.block_external-wallet').css('display', 'none');
+        } else if (value == 'external-wallet') {
+            $('.block_inner-wallet').css('display', 'none');
+            checked = false;
+            warningCheckBox.each(function (i, el) {
+                checked += $(el).prop('checked');
+            });
+            if (checked != warningCheckBox.length)
+                $('#modal_external-wallet').modal('open');
+            else
+                $('.block_external-wallet').css('display', 'block');
+        }
+    });
+
+    $('#modal_cryptauretherwallet-info').modal({
+            dismissible: false,
+            inDuration: 300,
+            outDuration: 200
+        }
+    ).modal('open');
+
+    $("#2fa_method").change(function(){
+        var value = $(this).val();
+        if(value == 'SMS' || value == 'SMS&EMAIL')
+            $("#phone_row").show();
+        else
+            $("#phone_row").hide();
+    });
+
+    function cryptaur_ether_wallet_checkAmount() {
+        var sendBtn = $('#cryptaur_ether_wallet_send'),
+            select = $("select.select-token"),
+            value = select.val(),
+            minimalAmountCPT = $('#warning-minimum-amount'),
+            transactionFree = $('#cryptaur_ether_wallet_transaction_fee');
+        if (value === 'ETH') {
+            transactionFree.css('opacity', 1);
+            var amount = parseFloat($('#cryptaur_ether_wallet_amount_to_send').val()) || 0;
+            if (amount > parseFloat($('#cryptaur_ether_wallet_maximum_amount').html())) {
+                transactionFree.css('color', 'red');
+                sendBtn.attr('disabled', true);
+            } else {
+                transactionFree.css('color', '');
+                sendBtn.attr('disabled', false);
+            }
+            $('#warning-wallet').css('display', 'none');
+            minimalAmountCPT.css('display', 'none');
+        } else if (value === 'CPT') {
+            $('#warning-wallet').css('display', 'block');
+            sendBtn.attr('disabled', true);
+            transactionFree.css('opacity', 0);
+            warningCheckBox.prop('checked', false);
+            warningCheckBox.change(function () {
+                if (checkWarningCheckBox(warningCheckBox)) {
+                    if ($('input.address').val().toUpperCase() === contract && parseFloat($('#cryptaur_ether_wallet_amount_to_send').val()) < 5000) {
+                        minimalAmountCPT.css('display', 'block');
+                    } else {
+                        minimalAmountCPT.css('display', 'none');
+                        sendBtn.attr('disabled', false);
+                    }
+                }
+            });
+            if ($('input.address').val().toUpperCase() === contract && parseFloat($('#cryptaur_ether_wallet_amount_to_send').val()) < 5000) {
+                sendBtn.attr('disabled', true);
+                minimalAmountCPT.css('display', 'block');
+            } else {
+                minimalAmountCPT.css('display', 'none');
+            }
+        } else {
+            minimalAmountCPT.css('display', 'none');
+            $('#warning-wallet').css('display', 'none');
+            sendBtn.attr('disabled', false);
+            transactionFree.css('opacity', 0);
+        }
+    }
+
+    $("#cryptaur_ether_wallet_amount_to_send").keyup(function () {
+        cryptaur_ether_wallet_checkAmount();
+    });
+
+    $("select.select-token").change(function () {
+        cryptaur_ether_wallet_checkAmount();
+    });
 });
+
+function checkWarningCheckBox (warningCheckBox) {
+    var checked = false;
+    warningCheckBox.each(function (i, el) {
+        checked += $(el).prop('checked');
+    });
+    if (checked == warningCheckBox.length)
+        return true;
+    else
+        return false;
+}
 
 function catalogItemCounter(field){
 
@@ -117,7 +257,47 @@ $(inputRange).on("input change", function() {
 
 });
 
-window.intercomSettings = {
-    app_id: "igb92dwc"
+var json = {
+    "firstName": "Test",
+    "secondName": "Testovich",
+    "id": 3,
+    "total_CPT": 0,
+    "referrals": [{
+            "firstName": "Test",
+            "secondName": "Testovich",
+            "id": 4,
+            "total_CPT": 10,
+            "referrals": []
+        },
+        {
+            "firstName": "Test",
+            "secondName": "Testovich",
+            "id": 7,
+            "total_CPT": 10,
+            "referrals": []
+        },
+        {
+            "firstName": "Test",
+            "secondName": "Testovich",
+            "id": 8,
+            "total_CPT": 10,
+            "referrals": []
+        },
+        {
+            "firstName": "Test",
+            "secondName": "Testovich",
+            "id": 9,
+            "total_CPT": 10,
+            "referrals": []
+        },
+        {
+            "firstName": "Test",
+            "secondName": "Testovich",
+            "id": 10,
+            "total_CPT": 10,
+            "referrals": []
+        }
+    ]
 };
-(function(){var w=window;var ic=w.Intercom;if(typeof ic==="function"){ic('reattach_activator');ic('update',intercomSettings);}else{var d=document;var i=function(){i.c(arguments)};i.q=[];i.c=function(args){i.q.push(args)};w.Intercom=i;function l(){var s=d.createElement('script');s.type='text/javascript';s.async=true;s.src='https://widget.intercom.io/widget/igb92dwc';var x=d.getElementsByTagName('script')[0];x.parentNode.insertBefore(s,x);}if(w.attachEvent){w.attachEvent('onload',l);}else{w.addEventListener('load',l,false);}}})()
+
+console.log(json);
