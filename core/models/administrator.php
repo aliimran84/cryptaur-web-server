@@ -189,4 +189,14 @@ class Administrator
         $dataRates = @DB::get("SELECT * FROM `coin_rate` ORDER BY `datetime` DESC LIMIT $lines;");
         return $dataRates;
     }
+
+    /**
+     * @return Array dataRates
+     */
+    static public function getCPLRates()
+    {
+        $lines = self::linesToGet;
+        $dataRates = @DB::get("SELECT * FROM `cpl_rate` ORDER BY `datetime` DESC LIMIT $lines;");
+        return $dataRates;
+    }
 }

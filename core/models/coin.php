@@ -26,6 +26,16 @@ class Coin
             DEFAULT CHARSET utf8
             DEFAULT COLLATE utf8_general_ci
         ;");
+        DB::query("
+            CREATE TABLE IF NOT EXISTS `cpl_rate` (
+                `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `rate` DOUBLE(20,8) NOT NULL DEFAULT '-1',
+                `datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (`id`)
+            )
+            DEFAULT CHARSET utf8
+            DEFAULT COLLATE utf8_general_ci
+        ;");
     }
 
     /**
@@ -135,7 +145,27 @@ class Coin
             return $ratePrev[0]['rate'];
         }
     }
-
+    
+    /**
+     * how much CPL in 1 $
+     * this function is for archieved rates
+     * @param string $coin
+     * @param string $datetime
+     * @return NULL|double count of usd in one coin
+     */
+    static public function getCPLRateToDate($datetime)
+    {
+        $rate = DB::get("
+            SELECT * FROM `cpl_rate` 
+            WHERE `datetime` <= ? 
+            ORDER BY `datetime` DESC LIMIT 1;", 
+        [$datetime]);
+        if (!$rate) {
+            return NULL;
+        }
+        return $rate[0]['rate'];
+    }
+    
     /**
      * @param double $amount
      * @param string $from
