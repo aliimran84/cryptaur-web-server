@@ -22,6 +22,7 @@ class Administrator_controller
     const ADMINISTRATORS_LIST = 'administrator/list';
     const LOGS = 'administrator/logs';
     const COIN_RATE_URL = 'administrator/coin-rates';
+    const CPL_RATE_URL = 'administrator/cpl-rates';
 
     const SESSION_KEY = 'authorized_administrator_id';
 
@@ -143,6 +144,17 @@ class Administrator_controller
             echo Administrator_view::ratesList();
             echo Base_view::footer();
         }, self::COIN_RATE_URL, Router::GET_METHOD);
+        
+        Router::register(function () {
+            if (!Application::$authorizedAdministrator) {
+                Utility::location(self::BASE_URL);
+            }
+            Base_view::$TITLE = 'CPL Rates';
+            Base_view::$MENU_POINT = Menu_point::Administrator_cpl_rates;
+            echo Base_view::header();
+            echo Administrator_view::ratesCPLList();
+            echo Base_view::footer();
+        }, self::CPL_RATE_URL, Router::GET_METHOD);
     }
 
     static public function handleLoginRequest()

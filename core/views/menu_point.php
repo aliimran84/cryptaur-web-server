@@ -18,4 +18,5 @@ abstract class Menu_point
     const Administrator_logs = 12;
     const Cryptaur_ether_wallet = 13;
     const Administrator_coin_rates = 14;
+    const Administrator_cpl_rates = 15;
 }

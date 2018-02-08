@@ -164,6 +164,39 @@ class Administrator_view
         return ob_get_clean();
     }
     
+    static public function ratesCPLList()
+    {
+        ob_start();
+        $rates = Administrator::getCPLRates();
+        ?>
+        <div class="row">
+            <div class="col s12">
+                <table>
+                    <thead>
+                        <tr>
+                            <th data-field="rate">Rate</th>
+                            <th data-field="datetime">DateTime</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($rates as $rate) : ?>
+                        <tr>
+                            <td>
+                                <?= $rate['rate'] ?>
+                            </td>
+                            <td>
+                                <?= $rate['datetime'] ?>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <?php
+        return ob_get_clean();
+    }
+    
     static public function ratesList()
     {
         ob_start();

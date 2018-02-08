@@ -26,6 +26,16 @@ class Coin
             DEFAULT CHARSET utf8
             DEFAULT COLLATE utf8_general_ci
         ;");
+        DB::query("
+            CREATE TABLE IF NOT EXISTS `cpl_rate` (
+                `id` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT,
+                `rate` DOUBLE(20,8) NOT NULL DEFAULT '-1',
+                `datetime` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (`id`)
+            )
+            DEFAULT CHARSET utf8
+            DEFAULT COLLATE utf8_general_ci
+        ;");
     }
 
     /**
@@ -100,20 +110,62 @@ class Coin
      * this function is for archieved rates
      * @param string $coin
      * @param string $datetime
-     * @return double count of usd in one coin
+     * @return NULL|double count of usd in one coin
      */
     static public function getOldRate($coin, $datetime)
     {
         $coin = strtoupper($coin);
-        $rate = (double)DB::get("
-            SELECT `rate` FROM `coin_rate` 
+        $ratePrev = DB::get("
+            SELECT * FROM `coin_rate` 
             WHERE `coin` = ? 
             AND `datetime` <= ? 
             ORDER BY `datetime` DESC LIMIT 1;", 
-        [$coin, $datetime])[0]['rate'];
-        return $rate;
+        [$coin, $datetime]);
+        $rateNext = DB::get("
+            SELECT * FROM `coin_rate` 
+            WHERE `coin` = ? 
+            AND `datetime` >= ? 
+            ORDER BY `datetime` ASC LIMIT 1;", 
+        [$coin, $datetime]);
+        if (!$ratePrev && !$rateNext) {
+            return NULL;
+        } elseif (!$ratePrev) {
+            return $rateNext[0]['rate'];
+        } elseif (!$rateNext) {
+            return $ratePrev[0]['rate'];
+        }
+        $unixTimeRequest = strtotime($datetime);
+        $unixTimeRatePrev = strtotime($ratePrev[0]['datetime']);
+        $unixTimeRateNext = strtotime($rateNext[0]['datetime']);
+        $diffPrev = abs($unixTimeRequest - $unixTimeRatePrev);
+        $diffNext = abs($unixTimeRequest - $unixTimeRateNext);
+        if ($diffPrev > $diffNext) {
+            return $rateNext[0]['rate'];
+        } else {
+            return $ratePrev[0]['rate'];
+        }
     }
-
+    
+    /**
+     * how much CPL in 1 $
+     * this function is for archieved rates
+     * @param string $coin
+     * @param string $datetime
+     * @return NULL|double count of usd in one coin
+     */
+    static public function getCPLRateToDate($datetime)
+    {
+        $rate = DB::get("
+            SELECT * FROM `cpl_rate` 
+            WHERE `datetime` <= ? 
+            ORDER BY `datetime` DESC LIMIT 1;", 
+        [$datetime]);
+        if (!$rate) {
+            return NULL;
+        }
+        return $rate[0]['rate'];
+    }
+    
     /**
      * @param double $amount
      * @param string $from
