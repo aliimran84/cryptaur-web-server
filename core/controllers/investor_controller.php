@@ -542,7 +542,8 @@ class Investor_controller
 
         $firstname = trim(@$_POST['firstname']);
         $lastname = trim(@$_POST['lastname']);
-        $phone = self::clayPhone(@$_POST['code'], @$_POST['phone']);
+        $phone = NULL;
+        /*$phone = self::clayPhone(@$_POST['code'], @$_POST['phone']);
         if (!self::verifyPhone($phone)) {
             self::handleRegistrationForm($_POST, 'not a valid phone number, use more than 6 characters or less than 16');
             return;
@@ -559,7 +560,7 @@ class Investor_controller
             $_SESSION[ACTION2FA::TEMP_DATA_ARR]['phone'] = $phone;
             session_write_close();
             Utility::location(self::REGISTER_PHONEVERIFICATION_URL);
-        }
+        }*/
         
         $confirmationUrl = self::urlForRegistration($email, $firstname, $lastname, $referrerId, $password, $phone);
         Email::send($email, [], 'Cryptaur: email confirmation', "<p><a href=\"$confirmationUrl\">Confirm email to finish registration</a></p>", true);
