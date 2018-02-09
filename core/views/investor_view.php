@@ -257,7 +257,7 @@ class Investor_view
                         <input type="text" name="firstname" placeholder="<?= Translate::td('First name') ?>" value="<?= @$data['firstname'] ?>">
                         <input type="text" name="lastname" placeholder="<?= Translate::td('Last name') ?>" value="<?= @$data['lastname'] ?>">
                         <input type="email" name="email" placeholder="Email" value="<?= @$data['email'] ?>" autocomplete="nope">
-                        <select class="phone_code" name="code" required="">
+                        <!--<select class="phone_code" name="code" required="">
                             <option 
                                 disabled="" 
                                 <?php if (!isset($data['code'])) { ?>
@@ -281,7 +281,7 @@ class Investor_view
                             value="<?= @$data['phone'] ?>" 
                             autocomplete="nope" 
                             pattern="[0-9]{2,15}"
-                        >
+                        >-->
                         <span><?= Translate::td('Optional') ?></span>
                         <input type="text" name="referrer_code" value="<?= $referrer_code ?>" placeholder="<?= Translate::td('REFERRER CODE') ?> (<?= strtoupper(Translate::td('If available')) ?>)" autocomplete="nope">
                         <input type="password" name="password" pattern=".{6,120}" placeholder="<?= Translate::td('Password') ?>" autocomplete="new-password">
@@ -337,7 +337,7 @@ class Investor_view
                         <input type="text" name="firstname" placeholder="<?= Translate::td('First name') ?>" value="<?= @$data['firstname'] ?>">
                         <input type="text" name="lastname" placeholder="<?= Translate::td('Last name') ?>" value="<?= @$data['lastname'] ?>">
                         <input type="email" name="email" placeholder="Email" value="<?= @$data['email'] ?>" autocomplete="nope">
-                        <select class="phone_code" name="code" required="">
+                        <!--<select class="phone_code" name="code" required="">
                             <option disabled="" selected="">-</option>
                             <?php foreach ($country_codes as $set) { ?>
                             <option value="<?= $set['code'] ?>"><?= $set['code'] ?> <?= $set['name'] ?></option>
@@ -352,7 +352,7 @@ class Investor_view
                             autocomplete="nope" 
                             pattern="[0-9]{2,15}"
                         >
-                        <span><?= Translate::td('Use only numbers') ?></span>
+                        <span><?= Translate::td('Use only numbers') ?></span>-->
                         <select class="select-wallet">
                             <option value="choose" disabled selected><?= Translate::td('Choose type wallet') ?></option>
                             <option value="inner-wallet"><?= Translate::td('Inner wallet') ?></option>
