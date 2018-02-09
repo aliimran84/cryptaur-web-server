@@ -198,7 +198,7 @@ class Dashboard_view
         ob_start();
         ?>
         <div class="tree-block">
-            <h2><?= $investor->firstname ?> <?= $investor->lastname ?></h2>
+            <h2><?= $investor->firstname ?>&nbsp;<?= $investor->lastname ?></h2>
             <h3><?= Coin::token() ?> <?= $investor->tokens_count ?></h3>
             <?php /* // todo: временно убираю, т.к. на больших деревьях ну очень долго отрабатывается
             <p>
