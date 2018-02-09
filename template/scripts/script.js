@@ -70,6 +70,12 @@ $(document).ready(function(){
         $('li.first-level>.line-bottom').css('height', heightLineBottom);
 
         $(trees[n]).find('.participants-block i').click(function () {
+            var ulParticipants = $('ul.third-level[data-level='+ level +']');
+            var referrals = json['referrals'];
+            $.each(referrals, function (index, element) {
+                appendTreeBlock(element, ulParticipants);
+            });
+
             var element = $(this).closest('.participants').next().children();
             if ($(element).hasClass('close')) {
                 $($(this).closest('.participants').find('.line-bottom')[0]).css('display', 'block');
@@ -259,45 +265,144 @@ $(inputRange).on("input change", function() {
 
 var json = {
     "firstName": "Test",
-    "secondName": "Testovich",
+    "secondName": "Testovich 3",
     "id": 3,
-    "total_CPT": 0,
-    "referrals": [{
+    "total_CPT": 10,
+    "referrals": [
+        {
             "firstName": "Test",
-            "secondName": "Testovich",
+            "secondName": "Testovich 4",
             "id": 4,
             "total_CPT": 10,
-            "referrals": []
+            "referrals": [
+                {
+                    "firstName": "Test",
+                    "secondName": "Testovich 12",
+                    "id": 12,
+                    "total_CPT": 10,
+                    "referrals": []
+                },
+                {
+                    "firstName": "Test",
+                    "secondName": "Testovich 13",
+                    "id": 13,
+                    "total_CPT": 10,
+                    "referrals": []
+                }
+            ]
         },
         {
             "firstName": "Test",
-            "secondName": "Testovich",
+            "secondName": "Testovich 7",
             "id": 7,
             "total_CPT": 10,
             "referrals": []
         },
         {
             "firstName": "Test",
-            "secondName": "Testovich",
+            "secondName": "Testovich 8",
             "id": 8,
             "total_CPT": 10,
             "referrals": []
         },
         {
             "firstName": "Test",
-            "secondName": "Testovich",
+            "secondName": "Testovich 9",
             "id": 9,
             "total_CPT": 10,
-            "referrals": []
+            "referrals": [
+                {
+                    "firstName": "Test",
+                    "secondName": "Testovich 20",
+                    "id": 20,
+                    "total_CPT": 12,
+                    "referrals": []
+                },
+                {
+                    "firstName": "Test",
+                    "secondName": "Testovich 21",
+                    "id": 21,
+                    "total_CPT": 123,
+                    "referrals": []
+                },
+                {
+                    "firstName": "Test",
+                    "secondName": "Testovich 22",
+                    "id": 22,
+                    "total_CPT": 10,
+                    "referrals": []
+                },
+                {
+                    "firstName": "Test",
+                    "secondName": "Testovich 23",
+                    "id": 23,
+                    "total_CPT": 10,
+                    "referrals": []
+                }
+            ]
         },
         {
             "firstName": "Test",
-            "secondName": "Testovich",
+            "secondName": "Testovich 10",
             "id": 10,
             "total_CPT": 10,
             "referrals": []
         }
     ]
 };
+
+var titleTreeBlock = '.second-level > .tree-block > h2';
+var totalCPTTreeBlock = '.second-level > .tree-block > h3';
+var liSecondLevel = $('li.second-level');
+var ulSecondLevel = $('ul.second-level');
+$(titleTreeBlock).text(json['firstName'] + ' ' + json['secondName']);
+$(totalCPTTreeBlock).text('CPT ' + json['total_CPT']);
+var level = 1;
+if (json['referrals'].length) {
+    liSecondLevel.append(
+        '<div class="line-right"></div>' +
+        '<div class="participants-block">' +
+            '<h2>' + json['referrals'].length + ' participants in level<i class="material-icons" data-level="'+ level +'">expand_more</i></h2>' +
+        '</div>' +
+        '<div class="line-bottom" style="display:none;"></div>'
+    );
+    ulSecondLevel.append(
+        '<li>' +
+            '<ul class="third-level participants close" data-level="' + level + '"></ul>' +
+        '</li>'
+    );
+}
+
+function appendTreeBlock(object, ulParticipants) {
+    var block =
+        '<li class="third-level participants">' +
+            '<div class="tree-block">' +
+                '<h2>' + object['firstName'] + ' ' + object['secondName'] + '</h2>' +
+                '<h3>CPT ' + object['total_CPT'] + '</h3>' +
+            '</div>' +
+            '<div class="line-left"></div>';
+    if (object['referrals'].length) {
+        level++;
+        block +=
+                '<div class="line-right"></div>' +
+                '<div class="participants-block">' +
+                    '<h2>' + object['referrals'].length + ' participants in level<i class="material-icons" data-level="'+ level +'">expand_more</i></h2>' +
+                '</div>' +
+                '<div class="line-bottom" style="display:none;"></div>' +
+            '</li>' +
+            '<li>' +
+                '<ul class="third-level participants close" data-level="' + level + '"></ul>' +
+            '</li>';
+        ulParticipants.append(block);
+        var ulParticipantsInside = $('ul.third-level[data-level='+ level +']');
+        var referrals = object['referrals'];
+        $.each(referrals, function (index, element) {
+            appendTreeBlock(element, ulParticipantsInside);
+        });
+    } else {
+        block += '</li>';
+        ulParticipants.append(block);
+    }
+}
 
 console.log(json);
