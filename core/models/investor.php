@@ -191,6 +191,20 @@ class Investor
                 INDEX `compressed_referrer_index`(`compressed_referrer`)
             )
         ;");
+        DB::query("
+            CREATE TABLE IF NOT EXISTS `investors_stage_1_bounty` (
+                `investor_id` int(10) UNSIGNED NOT NULL,
+                `eth_bounty` double(20, 8) UNSIGNED NULL DEFAULT 0,
+                PRIMARY KEY (`investor_id`)
+            )
+        ;");
+        DB::query("
+            CREATE TABLE IF NOT EXISTS `investors_stage_2_reinvested` (
+                `investor_id` int(10) UNSIGNED NOT NULL,
+                `eth_reinvested` double(20, 8) UNSIGNED NULL DEFAULT 0,
+                PRIMARY KEY (`investor_id`)
+            )
+        ;");
     }
 
     static private function createWithDataFromDB($data)
