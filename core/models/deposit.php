@@ -40,6 +40,7 @@ class Deposit
                 `amount` double(20, 8) NOT NULL,
                 `usd` double(20, 8) DEFAULT '-1',
                 `rate` double(20, 8) DEFAULT '-1',
+                `eth` double(20, 8) DEFAULT '-1',
                 `datetime` datetime(0) NOT NULL,
                 `is_donation` tinyint(1) UNSIGNED DEFAULT '0',
                 `registered` tinyint(1) UNSIGNED DEFAULT '0',
