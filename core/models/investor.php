@@ -205,6 +205,20 @@ class Investor
                 PRIMARY KEY (`investor_id`)
             )
         ;");
+        DB::query("
+            CREATE TABLE IF NOT EXISTS `investors_stage_2_deposited` (
+                `investor_id` int(10) UNSIGNED NOT NULL,
+                `eth_deposited` double(20, 8) UNSIGNED NULL DEFAULT 0,
+                PRIMARY KEY (`investor_id`)
+            )
+        ;");
+        DB::query("
+            CREATE TABLE IF NOT EXISTS `investors_compressed_level_eth` (
+                `investor_id` int(10) UNSIGNED NOT NULL,
+                `eth_level` double(20, 8) UNSIGNED NULL DEFAULT 0,
+                PRIMARY KEY (`investor_id`)
+            )
+        ;");
     }
 
     static private function createWithDataFromDB($data)
