@@ -80,7 +80,7 @@ class Investor_controller
         Router::register(function () {
             self::handleLoginRequest();
         }, self::LOGIN_URL, Router::POST_METHOD);
-        
+
         Router::register(function () {
             self::handleSecondfactorSetForm();
         }, self::SECONDFACTORSET_URL, Router::GET_METHOD);
@@ -187,14 +187,14 @@ class Investor_controller
             }
         }
     }
-    
+
     static private function is2FAHasBeenSet()
     {
         if (!USE_2FA) {
             return TRUE;
         }
         if (
-            Application::$authorizedInvestor->preferred_2fa != "" 
+            Application::$authorizedInvestor->preferred_2fa != ""
             && in_array(Application::$authorizedInvestor->preferred_2fa, API2FA::$allowedMethods)
         ) {
             return TRUE;
@@ -263,7 +263,7 @@ class Investor_controller
         if (self::is2FAHasBeenSet()) {
             ACTION2FA::access2FAChecker(self::SECONDFACTORSET_URL, Router::GET_METHOD);
         }
-        
+
         Base_view::$TITLE = 'Two-factor authentication settings';
         Base_view::$MENU_POINT = Menu_point::Settings;
         echo Base_view::header();
@@ -282,7 +282,7 @@ class Investor_controller
         if (self::is2FAHasBeenSet()) {
             ACTION2FA::access2FAChecker(self::SECONDFACTORSET_URL, Router::POST_METHOD);
         }
-        
+
         $urlErrors = [];
         if (USE_2FA) {
             if (
@@ -323,7 +323,7 @@ class Investor_controller
         if (self::is2FAHasBeenSet()) {
             ACTION2FA::access2FAChecker(self::PHONEVERIFICATION_URL, Router::GET_METHOD);
         }
-        
+
         Base_view::$TITLE = 'Phone number verification';
         Base_view::$MENU_POINT = Menu_point::Settings;
         echo Base_view::header();
@@ -344,7 +344,7 @@ class Investor_controller
         if (self::is2FAHasBeenSet()) {
             ACTION2FA::access2FAChecker(self::PHONEVERIFICATION_URL, Router::POST_METHOD);
         }
-        
+
         $urlErrors = [];
         $checked = API2FA::check($_POST['otp']);
         if ($checked === TRUE) {
@@ -374,8 +374,8 @@ class Investor_controller
         }
         $image = NULL;
         $loginTries = Log::actionCountByIP(
-            Log::getIp(), 
-            ActionList::LOGIN_FAIL, 
+            Log::getIp(),
+            ActionList::LOGIN_FAIL,
             time() - 300
         );
         if ($loginTries >= 3) {
@@ -388,7 +388,7 @@ class Investor_controller
         echo Investor_view::loginForm($image, $message);
         echo Base_view::footer();
     }
-    
+
     static public function investor2FAFormType()
     {
         if (USE_2FA == FALSE || !Application::$authorizedInvestor) {
@@ -407,10 +407,11 @@ class Investor_controller
     static private function handleLoginRequest()
     {
         $loginTries = Log::actionCountByIP(
-            Log::getIp(), 
-            ActionList::LOGIN_FAIL, 
+            Log::getIp(),
+            ActionList::LOGIN_FAIL,
             time() - 300
         );
+        $email = trim(@$_POST['email']);
         if ($loginTries >= 3) {
             $message = Translate::td('Too much requests from your IP, you must input captcha');
             if (!Captcha::checkCaptcha(@$_POST['captcha'])) {
@@ -418,7 +419,6 @@ class Investor_controller
                 Utility::location(self::LOGIN_URL . '?err=3671&err_text=wrong captcha');
             }
         }
-        $email = trim(@$_POST['email']);
         Log::investor(ActionList::LOGIN_TRY, NULL, $email);
         $password = trim(@$_POST['password']);
         $investorId = @Investor::getInvestorIdByEmailPassword($email, $password);
@@ -496,7 +496,7 @@ class Investor_controller
         $phone_cl = Utility::clear_begin_zeroes($phone_cl);
         return $code_cl . $phone_cl;
     }
-    
+
     /**
      * @param string $phone
      * @return bool
@@ -561,7 +561,7 @@ class Investor_controller
             session_write_close();
             Utility::location(self::REGISTER_PHONEVERIFICATION_URL);
         }*/
-        
+
         $confirmationUrl = self::urlForRegistration($email, $firstname, $lastname, $referrerId, $password, $phone);
         Email::send($email, [], 'Cryptaur: email confirmation', "<p><a href=\"$confirmationUrl\">Confirm email to finish registration</a></p>", true);
 
@@ -571,7 +571,7 @@ class Investor_controller
         echo Base_view::text(Translate::td("Please check your email and follow the sent link"));
         echo Base_view::footer();
     }
-    
+
     static private function handleRegistrationPhoneVerificationForm()
     {
         if (
@@ -608,14 +608,14 @@ class Investor_controller
                 }
             }
         }
-        
+
         Base_view::$TITLE = 'Registration';
         Base_view::$MENU_POINT = Menu_point::Register;
         echo Base_view::header();
         echo Investor_view::registerPhoneVerificationForm($message);
         echo Base_view::footer();
     }
-    
+
     static private function handleRegistrationPhoneVerificationRequest()
     {
         if (
@@ -632,7 +632,7 @@ class Investor_controller
         ) {
             Utility::location(self::BASE_URL);
         }
-        
+
         $checked = API2FA::check($_POST['otp']);
         if ($checked === FALSE) {
             echo Base_view::header();
@@ -640,7 +640,7 @@ class Investor_controller
             echo Base_view::footer();
             exit;
         }
-        
+
         session_start();
         $email = $_SESSION[ACTION2FA::TEMP_DATA_ARR]['email'];
         $firstname = $_SESSION[ACTION2FA::TEMP_DATA_ARR]['firstname'];
@@ -650,7 +650,7 @@ class Investor_controller
         $phone = $_SESSION[ACTION2FA::TEMP_DATA_ARR]['phone'];
         unset($_SESSION[ACTION2FA::TEMP_DATA_ARR]);
         session_write_close();
-        
+
         $confirmationUrl = self::urlForRegistration($email, $firstname, $lastname, $referrerId, $password, $phone);
         Email::send($email, [], 'Cryptaur: email confirmation', "<p><a href=\"$confirmationUrl\">Confirm email to finish registration</a></p>", true);
 
@@ -765,7 +765,7 @@ EOT;
     {
         Investor_controller::isPassAllowed();
         ACTION2FA::access2FAChecker(self::SETTINGS_URL, Router::GET_METHOD);
-        
+
         Base_view::$TITLE = 'Settings';
         Base_view::$MENU_POINT = Menu_point::Settings;
         echo Base_view::header();
@@ -796,7 +796,7 @@ EOT;
             Utility::location(self::BASE_URL);
         }
         ACTION2FA::access2FAChecker(self::SETTINGS_URL, Router::POST_METHOD);
-        
+
         Application::$authorizedInvestor->setFirstnameLastName(@$_POST['firstname'], @$_POST['lastname']);
         $urlErrors = [];
         if (self::verifyPassword(@$_POST['password'])) {
