@@ -26,15 +26,16 @@ class SFchecker_view
                             <label class="blue-text"><?= $message ?></label>
                         <?php } ?>
                         <?php if (isset($_SESSION[ACTION2FA::TEMP_DATA_SENDED])) { ?>
-                            <input 
-                                type="text" 
-                                name="otp" 
-                                placeholder="<?= Translate::td('Authentication code') ?>" 
-                                required="" 
+                            <input
+                                type="text"
+                                name="otp"
+                                placeholder="<?= Translate::td('Authentication code') ?>"
+                                required=""
                                 pattern="[<?= API2FA::CODE_LETTERS ?>]{<?= API2FA::CODE_LENGTH ?>,<?= API2FA::CODE_LENGTH ?>}"
                             >
+                            <input type="hidden" name="commit" value="1">
                             <div class="row center">
-                                <button type="submit" name="commit" value="1" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                     <?= Translate::td('Verify') ?>
                                 </button>
                             </div>
@@ -78,23 +79,24 @@ class SFchecker_view
                         <?php } ?>
                         <?php if (isset($_SESSION[ACTION2FA::TEMP_DATA_SENDED])) { ?>
                         <h5><?= Translate::td('Code from SMS') ?>:</h5>
-                        <input 
-                            type="text" 
-                            name="code_1" 
-                            placeholder="<?= Translate::td('Authentication code') ?>" 
-                            required="" 
+                        <input
+                            type="text"
+                            name="code_1"
+                            placeholder="<?= Translate::td('Authentication code') ?>"
+                            required=""
                             pattern="[<?= API2FA::CODE_LETTERS ?>]{<?= API2FA::CODE_LENGTH ?>,<?= API2FA::CODE_LENGTH ?>}"
                         >
                         <h5><?= Translate::td('Code from email') ?>:</h5>
-                        <input 
-                            type="text" 
-                            name="code_2" 
-                            placeholder="<?= Translate::td('Authentication code') ?>" 
-                            required="" 
+                        <input
+                            type="text"
+                            name="code_2"
+                            placeholder="<?= Translate::td('Authentication code') ?>"
+                            required=""
                             pattern="[<?= API2FA::CODE_LETTERS ?>]{<?= API2FA::CODE_LENGTH ?>,<?= API2FA::CODE_LENGTH ?>}"
                         >
                         <div class="row center">
-                            <button type="submit" name="commit" value="1" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                            <input type="hidden" name="commit" value="1">
+                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Verify') ?>
                             </button>
                         </div>
