@@ -183,6 +183,14 @@ class Investor
                 FROM `investors`
             ;");
         }
+        DB::query("
+            CREATE TABLE IF NOT EXISTS `investors_compressed_referrers` (
+                `investor_id` int(10) UNSIGNED NOT NULL,
+                `compressed_referrer` int(10) UNSIGNED NOT NULL,
+                PRIMARY KEY (`investor_id`),
+                INDEX `compressed_referrer_index`(`compressed_referrer`)
+            )
+        ;");
     }
 
     static private function createWithDataFromDB($data)
