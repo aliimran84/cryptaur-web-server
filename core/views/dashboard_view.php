@@ -125,11 +125,11 @@ class Dashboard_view
                                         <h4><?= Translate::td('Verify bounty spending') ?></h4>
                                         <p>
                                             <?= Translate::td('On reinvest') ?>:
-                                            <span id="modal_bounty-info-reinvest"></span>%
+                                            <span id="modal_bounty-info-reinvest"></span> ETH
                                         </p><br>
                                         <p>
                                             <?= Translate::td('On withdraw') ?>:
-                                            <span id="modal_bounty-info-withdraw"></span>%
+                                            <span id="modal_bounty-info-withdraw"></span> ETH
                                         </p>
                                         <br>
                                         <button type="button" onclick="window.bounty_verified = true; $('.reinvest-form').submit();" class="waves-effect waves-light btn">
