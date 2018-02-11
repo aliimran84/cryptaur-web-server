@@ -64,6 +64,9 @@ class Wallet_view
                                 var coin = $(input).parent().data('coin');
                                 var section = $(input).parents('.wallet_view-new_contribution-section');
                                 var text = $(input).val();
+                                if (!text) {
+                                    return;
+                                }
                                 var val;
                                 if (text.length === 0) {
                                     val = parseFloat(textInputOld);
