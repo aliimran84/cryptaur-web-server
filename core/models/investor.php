@@ -233,6 +233,13 @@ class Investor
                 PRIMARY KEY (`investor_id`)
             )
         ;");
+        DB::query("
+            CREATE TABLE IF NOT EXISTS `investors_stage_2_tokens` (
+                `investor_id` int(10) UNSIGNED NOT NULL,
+                `tokens` double(20, 8) UNSIGNED NULL DEFAULT 0,
+                PRIMARY KEY (`investor_id`)
+            )
+        ;");
     }
 
     static private function createWithDataFromDB($data)
