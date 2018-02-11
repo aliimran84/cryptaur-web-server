@@ -66,6 +66,7 @@ Use only numbers,Use only numbers
 "Input code, that you get with SMS","Input code, that you get with SMS"
 "Service error, cannot send code","Service error, cannot send code"
 Authentication code,Authentication code
+Ok,Ok
 Cancel,Cancel
 Accept,Accept
 Verify,Verify
@@ -98,6 +99,7 @@ Optional,Optional
 Eth address,Eth address
 Eth withdrawn,Eth withdrawn
 Eth bounty,Eth bounty
+Verify bounty spending,Verify bounty spending
 Set minimal values,Set minimal values
 Minimal tokens for minting,Minimal tokens for minting
 Minimal tokens for bounty,Minimal tokens for bounty
@@ -129,7 +131,9 @@ Total participants,Total participants
 My tokens,My tokens
 Bounty,Bounty
 Withdraw,Withdraw
+On withdraw,On withdraw
 Reinvest,Reinvest
+On reinvest,On reinvest
 Level,Level
 Purchased,Purchased
 Total coin contributed,Total %%coin%% contributed

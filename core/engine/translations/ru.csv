@@ -66,6 +66,7 @@ Use only numbers,Используйте только цифры
 "Input code, that you get with SMS","Введите код, полученный по SMS"
 "Service error, cannot send code","Ошибка сервиса, невозможно отправить код"
 Authentication code,Код авторизации
+Ok,Ок
 Cancel,Отмена
 Accept,Применить
 Verify,Подтвердить
@@ -98,6 +99,7 @@ Optional,Не обязательно
 Eth address,Eth адрес
 Eth withdrawn,Eth выведено
 Eth bounty,Eth баунти
+Verify bounty spending,Проверьте распределение баунти
 Set minimal values,Установите минимальное значение
 Minimal tokens for minting,Минимальное количество токенов для чеканки
 Minimal tokens for bounty,Минимальное количество токенов для баунти
@@ -129,7 +131,9 @@ Total participants,Всего участников
 My tokens,Мои токены
 Bounty,Баунти
 Withdraw,Вывод
+On withdraw,На вывод
 Reinvest,Реинвестировать
+On reinvest,На реинвестирование
 Level,Уровень
 Purchased,Купленные
 Total coin contributed,Всего %%coin%% внесено

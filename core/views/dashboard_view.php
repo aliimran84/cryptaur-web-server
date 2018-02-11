@@ -115,12 +115,49 @@ class Dashboard_view
                                     <p class="range-field__label"><?= Translate::td('Drag slider to adjust values') ?></p>
                                 </div>
                                 <div class="amount input-field">
-                                    <button type="submit" class="waves-effect waves-light btn "
+                                    <button type="submit" class="waves-effect waves-light btn"
                                         <?= (Bounty::withdrawIsOn() && Bounty::reinvestIsOn() ? '' : 'disabled') ?>>
                                         <?= Translate::td('Reinvest') ?>,&nbsp;<?= Translate::td('Withdraw') ?>
                                     </button>
                                 </div>
+                                <div id="modal_bounty-verify" class="modal">
+                                    <div class="modal-content">
+                                        <h4><?= Translate::td('Verify bounty spending') ?></h4>
+                                        <p>
+                                            <?= Translate::td('On reinvest') ?>:
+                                            <span id="modal_bounty-info-reinvest"></span>%
+                                        </p><br>
+                                        <p>
+                                            <?= Translate::td('On withdraw') ?>:
+                                            <span id="modal_bounty-info-withdraw"></span>%
+                                        </p>
+                                        <br>
+                                        <button type="button" onclick="window.bounty_verified = true; $('.reinvest-form').submit();" class="waves-effect waves-light btn">
+                                            <?= Translate::td('Ok') ?>
+                                        </button>
+                                        <button type="button" onclick="window.bounty_verified = false; $('#modal_bounty-verify').modal('close');" class="waves-effect waves-light btn">
+                                            <?= Translate::td('Cancel') ?>
+                                        </button>
+                                    </div>
+                                </div>
                             </form>
+                            <script>
+                                $(document).ready(function () {
+                                    $('.reinvest-form').submit(function (event) {
+                                        if (window.bounty_verified) {
+                                            window.bounty_verified = false;
+                                        } else {
+                                            var percents = $('[name=percentsForReinvesting]').val();
+                                            var bounty = <?= number_format(Application::$authorizedInvestor->eth_bounty, 8, '.', '') ?>;
+                                            $('#modal_bounty-info-reinvest').html(bounty * percents / 100);
+                                            $('#modal_bounty-info-withdraw').html(bounty * (100 - percents) / 100);
+                                            $('#modal_bounty-verify').modal('open');
+                                            event.preventDefault();
+                                            return false;
+                                        }
+                                    });
+                                });
+                            </script>
                         </div>
                     </div>
                 </section>
