@@ -192,6 +192,13 @@ class Investor
             )
         ;");
         DB::query("
+            CREATE TABLE IF NOT EXISTS `investors_stage_1_deposited_reinvested` (
+                `investor_id` int(10) UNSIGNED NOT NULL,
+                `eth_deposited_reinvested` double(20, 8) UNSIGNED NULL DEFAULT 0,
+                PRIMARY KEY (`investor_id`)
+            )
+        ;");
+        DB::query("
             CREATE TABLE IF NOT EXISTS `investors_stage_1_bounty` (
                 `investor_id` int(10) UNSIGNED NOT NULL,
                 `eth_bounty` double(20, 8) UNSIGNED NULL DEFAULT 0,
@@ -216,6 +223,13 @@ class Investor
             CREATE TABLE IF NOT EXISTS `investors_compressed_level_eth` (
                 `investor_id` int(10) UNSIGNED NOT NULL,
                 `eth_level` double(20, 8) UNSIGNED NULL DEFAULT 0,
+                PRIMARY KEY (`investor_id`)
+            )
+        ;");
+        DB::query("
+            CREATE TABLE IF NOT EXISTS `investors_stage_2_bounty` (
+                `investor_id` int(10) UNSIGNED NOT NULL,
+                `eth_bounty` double(20, 8) UNSIGNED NULL DEFAULT 0,
                 PRIMARY KEY (`investor_id`)
             )
         ;");
