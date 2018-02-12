@@ -203,10 +203,30 @@ class ACTION2FA
         if (!in_array($preferred_2fa, API2FA::$allowedMethods)) {
             return FALSE;
         } elseif ($preferred_2fa == variants_2FA::email) {
+            session_start();
+            $_SESSION[self::TEMP_DATA_VARIANT] = variants_2FA::email;
+            $_SESSION[self::TEMP_DATA_TARGET] = Application::$authorizedInvestor->email;
+            session_write_close();
             return API2FA::send_email(Application::$authorizedInvestor->email);
         } elseif ($preferred_2fa == variants_2FA::sms) {
+            session_start();
+            $_SESSION[self::TEMP_DATA_VARIANT] = variants_2FA::sms;
+            $_SESSION[self::TEMP_DATA_TARGET] = Application::$authorizedInvestor->phone;
+            session_write_close();
             return API2FA::send_sms(Application::$authorizedInvestor->phone);
         }
         return FALSE;
+    }
+    
+    static public function targetHide($string)
+    {
+        $length = mb_strlen($string);
+        $startPoint = 2;
+        $endPoint = $length - 3;
+        $new_target = $string;
+        for ($i = $startPoint; $i <= $endPoint; $i++) {
+            $new_target[$i] = '*';
+        }
+        return $new_target;
     }
 }

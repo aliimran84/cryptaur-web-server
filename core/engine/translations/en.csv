@@ -43,8 +43,8 @@ NONE,Do not use
 SMS,SMS
 EMAIL,Email
 SMS&EMAIL,SMS and email
-Code from SMS,Code from SMS
-Code from email,Code from email
+Code has been send by SMS to number,Code has been send by SMS to number
+Code has been send by EMAIL to address,Code has been send by EMAIL to address
 "e.g. 79997774433","e.g. 79997774433"
 "Two-Factor Authentication","Two-Factor Authentication"
 Send,Send

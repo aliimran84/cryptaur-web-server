@@ -5,6 +5,7 @@ namespace core\views;
 use core\translate\Translate;
 use core\sfchecker\ACTION2FA;
 use core\secondfactor\API2FA;
+use core\secondfactor\variants_2FA;
 
 class SFchecker_view
 {
@@ -25,6 +26,12 @@ class SFchecker_view
                             <label class="blue-text"><?= $message ?></label>
                         <?php } ?>
                         <?php if (isset($_SESSION[ACTION2FA::TEMP_DATA_SENDED])) { ?>
+                            <?php if ($_SESSION[ACTION2FA::TEMP_DATA_VARIANT] == variants_2FA::email) { ?>
+                            <h6><?= Translate::td("Code has been send by EMAIL to address") ?>:</h6>
+                            <?php } elseif ($_SESSION[ACTION2FA::TEMP_DATA_VARIANT] == variants_2FA::sms) { ?>
+                            <h6><?= Translate::td("Code has been send by SMS to number") ?>:</h6>
+                            <?php } ?>
+                            <h6><?= ACTION2FA::targetHide($_SESSION[ACTION2FA::TEMP_DATA_TARGET]) ?></h6>
                             <input
                                 type="text"
                                 name="otp"

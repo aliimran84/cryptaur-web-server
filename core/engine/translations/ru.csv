@@ -43,8 +43,8 @@ NONE,Не использовать
 SMS,SMS
 EMAIL,Эл. почта
 SMS&EMAIL,SMS и эл. почта
-Code from SMS,Код из SMS
-Code from email,Код из эл. почты
+Code has been send by SMS to number,Код был отправлен в SMS на номер
+Code has been send by EMAIL to address,Код был отправлен в письме на адрес
 "e.g. 79997774433","например, 79997774433"
 "Two-Factor Authentication","Двухфакторная авторизация"
 Send,Отправить
