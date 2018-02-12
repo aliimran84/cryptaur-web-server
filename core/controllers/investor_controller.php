@@ -276,9 +276,6 @@ class Investor_controller
         if (!Application::$authorizedInvestor) {
             Utility::location(self::BASE_URL);
         }
-//        if (!in_array(@$_POST['2fa_method'], API2FA::$allowedMethods)) {
-//            Utility::location(self::SECONDFACTORSET_URL);
-//        }
         if (self::is2FAHasBeenSet()) {
             ACTION2FA::access2FAChecker(self::SECONDFACTORSET_URL, Router::POST_METHOD);
         }
