@@ -279,11 +279,7 @@ class Investor_controller
 
         $urlErrors = [];
         if (USE_2FA) {
-            if (
-                $_POST['2fa_method'] == variants_2FA::sms
-                || $_POST['2fa_method'] == variants_2FA::both
-
-            ) {
+            if ($_POST['2fa_method'] == variants_2FA::sms) {
                 $phone = self::clayPhone(@$_POST['code'], @$_POST['phone']);
                 $verify = self::verifyPhone($phone);
                 if ($phone == "") {
@@ -381,21 +377,6 @@ class Investor_controller
         echo Base_view::header();
         echo Investor_view::loginForm($image, $message);
         echo Base_view::footer();
-    }
-
-    static public function investor2FAFormType()
-    {
-        if (USE_2FA == FALSE || !Application::$authorizedInvestor) {
-            return NULL;
-        }
-        $preferred_2fa = Application::$authorizedInvestor->preferred_2fa;
-        //0 - single-code form, 1 - dual-code form
-        if ($preferred_2fa == variants_2FA::none) {
-            return NULL;
-        } elseif ($preferred_2fa == variants_2FA::both) {
-            return 1;
-        }
-        return 0;
     }
 
     static private function handleLoginRequest()

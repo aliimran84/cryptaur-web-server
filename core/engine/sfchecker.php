@@ -2,13 +2,11 @@
 
 namespace core\sfchecker;
 
-use core\engine\Utility;
 use core\engine\Router;
 use core\engine\Application;
 use core\translate\Translate;
 use core\secondfactor\API2FA;
 use core\secondfactor\variants_2FA;
-use core\controllers\Investor_controller;
 use core\views\SFchecker_view;
 use core\views\Base_view;
 
@@ -18,9 +16,7 @@ class ACTION2FA
     const TEMP_DATA_URL = 'temp_data_url';
     const TEMP_DATA_METHOD = 'temp_data_method';
     const TEMP_DATA_VARIANT = 'temp_data_variant';
-    const TEMP_FORM_TYPE = 'temp_data_form_type';
-    const TEMP_DATA_TARGET_1 = 'temp_data_target_1';
-    const TEMP_DATA_TARGET_2 = 'temp_data_target_2';
+    const TEMP_DATA_TARGET = 'temp_data_target';
     const TEMP_DATA_SENDED = 'temp_data_sended';
     const LAST_SECURED_TIME = 'last_secured_time';
     const LAST_2FA_TRY = '2fa_last_try';
@@ -48,48 +44,16 @@ class ACTION2FA
             session_write_close();
         }
     }
-
-    static private function action2FAVerify()
-    {
-        $sfa_form = Investor_controller::investor2FAFormType();
-        if (
-            $sfa_form === 0 || (
-                isset($_SESSION[self::TEMP_DATA_VARIANT]) && (
-                    $_SESSION[self::TEMP_DATA_VARIANT] == variants_2FA::email
-                    || $_SESSION[self::TEMP_DATA_VARIANT] == variants_2FA::sms
-                )
-            )
-        ) {
-            session_start();
-            $_SESSION[self::TEMP_FORM_TYPE] = 0;
-            session_write_close();
-            self::formDraw(0);
-        } elseif (
-            $sfa_form === 1 || (
-                isset($_SESSION[self::TEMP_DATA_VARIANT])
-                && $_SESSION[self::TEMP_DATA_VARIANT] == variants_2FA::both
-            )
-        ) {
-            session_start();
-            $_SESSION[self::TEMP_FORM_TYPE] = 1;
-            session_write_close();
-            self::formDraw(1);
-        }
-    }
     
-    static private function formDraw($form_type, $message = '')
+    static private function formDraw($message = '')
     {
         echo Base_view::header();
-        if ($form_type === 0) {
-            echo SFchecker_view::secondfactorForm($_SESSION[self::TEMP_DATA_URL], $_SESSION[self::TEMP_DATA_METHOD], $message);
-        } elseif ($form_type === 1) {
-            echo SFchecker_view::secondfactorDualForm($_SESSION[self::TEMP_DATA_URL], $_SESSION[self::TEMP_DATA_METHOD], $message);
-        }
+        echo SFchecker_view::secondfactorForm($_SESSION[self::TEMP_DATA_URL], $_SESSION[self::TEMP_DATA_METHOD], $message);
         echo Base_view::footer();
         exit;
     }
 
-    static public function access2FAChecker($url, $method, $variant = NULL, $target_1 = NULL, $target_2 = NULL)
+    static public function access2FAChecker($url, $method, $variant = NULL, $target = NULL)
     {
         if (
             (isset($_SESSION[self::LAST_SECURED_TIME]) && time() - $_SESSION[self::LAST_SECURED_TIME] < SECURED_SESSION_TIME)
@@ -101,23 +65,19 @@ class ACTION2FA
             if (
                 !isset($_SESSION[self::TEMP_DATA_URL]) 
                 || !isset($_SESSION[self::TEMP_DATA_METHOD])
-                || !isset($_SESSION[self::TEMP_FORM_TYPE])
             ) {
                 //first-time 2FA init
                 self::clearSessionData(TRUE); //clean session data to make process clear
                 session_start();
                 $_SESSION[self::TEMP_DATA_URL] = $url;
                 $_SESSION[self::TEMP_DATA_METHOD] = $method;
-                if (isset($variant) && isset($target_1)) {
+                if (isset($variant) && isset($target)) {
                     $_SESSION[self::TEMP_DATA_VARIANT] = $variant;
-                    $_SESSION[self::TEMP_DATA_TARGET_1] = $target_1;
-                    if (isset($target_2)) {
-                        $_SESSION[self::TEMP_DATA_TARGET_2] = $target_2;
-                    }
+                    $_SESSION[self::TEMP_DATA_TARGET] = $target;
                 }
                 session_write_close();
                 self::readFromPost();
-                self::action2FAVerify();
+                self::formDraw();
             } elseif (isset($_SESSION[self::TEMP_DATA_URL]) && isset($_SESSION[self::TEMP_DATA_METHOD])) {
                 if (isset($_POST['send'])) {
                     //if user trying sent/resent the code(s)
@@ -126,7 +86,7 @@ class ACTION2FA
                     if (isset($_SESSION[self::LAST_2FA_TRY]) && $time - $_SESSION[self::LAST_2FA_TRY] < CODE_SENT_TIME) {
                         $diff = CODE_SENT_TIME - ($time - $_SESSION[self::LAST_2FA_TRY]);
                         $message = Translate::td('You cannot send another code(s) until seconds will expire', ['num' => $diff]);
-                        self::formDraw($_SESSION[self::TEMP_FORM_TYPE], $message);
+                        self::formDraw($message);
                     } else {
                         session_start();
                         $_SESSION[self::LAST_2FA_TRY] = $time;
@@ -135,21 +95,11 @@ class ACTION2FA
                         $sended;
                         if (
                             isset($_SESSION[self::TEMP_DATA_VARIANT])
-                            || isset($_SESSION[self::TEMP_DATA_TARGET_1])
-                            || isset($_SESSION[self::TEMP_DATA_TARGET_2])
+                            || isset($_SESSION[self::TEMP_DATA_TARGET])
                         ) {
                             $sended = self::sent2FARequest(
                                 $_SESSION[self::TEMP_DATA_VARIANT], 
-                                $_SESSION[self::TEMP_DATA_TARGET_1], 
-                                $_SESSION[self::TEMP_DATA_TARGET_2]
-                            );
-                        } elseif (
-                            isset($_SESSION[self::TEMP_DATA_VARIANT])
-                            || isset($_SESSION[self::TEMP_DATA_TARGET_1])
-                        ) {
-                            $sended = self::sent2FARequest(
-                                $_SESSION[self::TEMP_DATA_VARIANT], 
-                                $_SESSION[self::TEMP_DATA_TARGET_1]
+                                $_SESSION[self::TEMP_DATA_TARGET]
                             );
                         } else {
                             $sended = self::sent2FARequestByInvestor();
@@ -163,20 +113,10 @@ class ACTION2FA
                             session_write_close();
                             $message = Translate::td('Authentication code has not been sended');
                         }
-                        self::formDraw($_SESSION[self::TEMP_FORM_TYPE], $message);
+                        self::formDraw($message);
                     }
-                } elseif (
-                    isset($_POST['commit']) && (
-                        isset($_POST['otp']) || (isset($_POST['code_1']) && isset($_POST['code_2']))
-                )) {
-                    $checked;
-                    if (isset($_POST['otp'])) {
-                        //case for single code
-                        $checked = API2FA::check($_POST['otp']);
-                    } else {
-                        //case for dual code
-                        $checked = API2FA::check_both($_POST['code_1'], $_POST['code_2']);
-                    }
+                } elseif (isset($_POST['commit']) && isset($_POST['otp'])) {
+                    $checked = API2FA::check($_POST['otp']);
                     if ($checked === TRUE) {
                         ACTION2FA::smart2FARedirect();
                     } else {
@@ -187,10 +127,10 @@ class ACTION2FA
                             unset($_SESSION[self::TEMP_DATA_SENDED]);
                             session_write_close();
                         }
-                        self::formDraw($_SESSION[self::TEMP_FORM_TYPE], $message);
+                        self::formDraw($message);
                     }
                 } else {
-                    self::formDraw($_SESSION[self::TEMP_FORM_TYPE]);
+                    self::formDraw();
                 }
             }
         }
@@ -226,20 +166,14 @@ class ACTION2FA
         if (isset($_SESSION[self::TEMP_DATA_METHOD])) {
             unset($_SESSION[self::TEMP_DATA_METHOD]);
         }
-        if (isset($_SESSION[self::TEMP_FORM_TYPE])) {
-            unset($_SESSION[self::TEMP_FORM_TYPE]);
-        }
         if (isset($_SESSION[self::LAST_2FA_TRY])) {
             unset($_SESSION[self::LAST_2FA_TRY]);
         }
         if (isset($_SESSION[self::TEMP_DATA_VARIANT])) {
             unset($_SESSION[self::TEMP_DATA_VARIANT]);
         }
-        if (isset($_SESSION[self::TEMP_DATA_TARGET_1])) {
-            unset($_SESSION[self::TEMP_DATA_TARGET_1]);
-        }
-        if (isset($_SESSION[self::TEMP_DATA_TARGET_2])) {
-            unset($_SESSION[self::TEMP_DATA_TARGET_2]);
+        if (isset($_SESSION[self::TEMP_DATA_TARGET])) {
+            unset($_SESSION[self::TEMP_DATA_TARGET]);
         }
         if (isset($_SESSION[self::TEMP_DATA_ARR])) {
             unset($_SESSION[self::TEMP_DATA_ARR]);
@@ -250,14 +184,12 @@ class ACTION2FA
         session_write_close();
     }
 
-    static private function sent2FARequest($variant, $target_1, $target_2 = NULL)
+    static private function sent2FARequest($variant, $target)
     {
         if ($variant == variants_2FA::email) {
-            return API2FA::send_email($target_1);
+            return API2FA::send_email($target);
         } elseif ($variant == variants_2FA::sms) {
-            return API2FA::send_sms($target_1);
-        } elseif ($variant == variants_2FA::both) {
-            return API2FA::send_both($target_1, $target_2);
+            return API2FA::send_sms($target);
         }
         return FALSE;
     }
@@ -274,8 +206,6 @@ class ACTION2FA
             return API2FA::send_email(Application::$authorizedInvestor->email);
         } elseif ($preferred_2fa == variants_2FA::sms) {
             return API2FA::send_sms(Application::$authorizedInvestor->phone);
-        } elseif ($preferred_2fa == variants_2FA::both) {
-            return API2FA::send_both(Application::$authorizedInvestor->email, Application::$authorizedInvestor->phone);
         }
         return FALSE;
     }

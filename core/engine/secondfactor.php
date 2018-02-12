@@ -10,7 +10,6 @@ class variants_2FA
     const none = 'NONE';
     const email = 'EMAIL';
     const sms = 'SMS';
-    const both = 'SMS&EMAIL';
 
     /**
      * @return array
@@ -26,8 +25,6 @@ class API2FA
 {
     static public $initialized = false;
     
-    const SECRET_KEY_SMS = 'secret_key_sms';
-    const SECRET_KEY_EMAIL = 'secret_key_email';
     const SECRET_KEY = 'secret_key';
     const SECRET_COUNT = 'secret_count';
     const TRY_TIMES = 5;
@@ -88,60 +85,6 @@ class API2FA
             return FALSE;
         }
         return TRUE;
-    }
-
-    /*
-     * Checks authcode returns true/false depending on correctness
-     */
-    public static function check_both($code_1, $code_2)
-    {
-        if (
-            !isset($_SESSION[self::SECRET_KEY_SMS])
-            || !isset($_SESSION[self::SECRET_KEY_EMAIL])
-            || !isset($_SESSION[self::SECRET_COUNT])
-        ) {
-            return NULL;
-        }
-        $code_stored_1 = $_SESSION[self::SECRET_KEY_SMS];
-        $code_stored_2 = $_SESSION[self::SECRET_KEY_EMAIL];
-        if ($code_1 == $code_stored_1 && $code_2 == $code_stored_2) {
-            if ($_SESSION[self::SECRET_COUNT] > 0) {
-                session_start();
-                $_SESSION[self::SECRET_COUNT]--;
-                session_write_close();
-            } else {
-                session_start();
-                unset($_SESSION[self::SECRET_KEY_SMS]);
-                unset($_SESSION[self::SECRET_KEY_EMAIL]);
-                unset($_SESSION[self::SECRET_COUNT]);
-                session_write_close();
-                return NULL;
-            }
-            return TRUE;
-        }
-        return FALSE;
-    }
-
-    /*
-     * Sends email with the one time auth_code
-     */
-    public static function send_both($email, $phone)
-    {
-        $code_1 = self::generate_code();
-        $code_2 = self::generate_code();
-        session_start();
-        $_SESSION[self::SECRET_KEY_SMS] = $code_1;
-        $_SESSION[self::SECRET_KEY_EMAIL] = $code_2;
-        $_SESSION[self::SECRET_COUNT] = self::TRY_TIMES;
-        session_write_close();
-        //send SMS
-        $result = self::raw_sms_sender($phone, $code_1);
-        if ($result == FALSE) {
-            return FALSE;
-        }
-        //an now email
-        return Email::send($email, [], 'Cryptaur: secret code', "<p>Secret code:</p><p>$code_2</p>", true, false);
-
     }
 
     /*

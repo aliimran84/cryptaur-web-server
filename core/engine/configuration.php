@@ -107,7 +107,6 @@ class Configuration
             || !isset($config['2fa']['NONE'])
             || !isset($config['2fa']['EMAIL'])
             || !isset($config['2fa']['SMS'])
-            || !isset($config['2fa']['SMS&EMAIL'])
         ) {
             $needConfigure = true;
             $config['2fa'] = [
@@ -116,8 +115,7 @@ class Configuration
                 'code_sent_time' => 120,
                 'NONE' => true,
                 'EMAIL' => true,
-                'SMS' => false,
-                'SMS&EMAIL' => false
+                'SMS' => false
             ];
         } else {
             DEFINE('USE_2FA', $config['2fa']['use_2fa']);
@@ -126,7 +124,6 @@ class Configuration
             DEFINE('NONE_2FA', $config['2fa']['NONE']);
             DEFINE('EMAIL_2FA', $config['2fa']['EMAIL']);
             DEFINE('SMS_2FA', $config['2fa']['SMS']);
-            DEFINE('SMS&EMAIL_2FA', $config['2fa']['SMS&EMAIL']);
         }
         
         if (!isset($config['sms_url'])) {

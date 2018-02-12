@@ -114,15 +114,13 @@ class Investor_view
                             <?php } ?>
                         </select>
                     </div>
-                    <div class="row">
-                        <span><?= Translate::td('Phone, mobile (only digits)') ?>:</span><br/>
-                        <h5><?= Application::$authorizedInvestor->phone ?></h5>
-                    </div>
                     <div
                         id="phone_row"
                         class="row"
                         style="display:none"
                     >
+                        <span><?= Translate::td('Phone, mobile (only digits)') ?>:</span><br/>
+                        <h5><?= Application::$authorizedInvestor->phone ?></h5>
                         <select class="phone_code" name="code" required="">
                             <option disabled="" selected="">-</option>
                             <?php foreach ($country_codes as $set) { ?>
