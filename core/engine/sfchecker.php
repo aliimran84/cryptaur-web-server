@@ -119,7 +119,7 @@ class ACTION2FA
                 self::readFromPost();
                 self::action2FAVerify();
             } elseif (isset($_SESSION[self::TEMP_DATA_URL]) && isset($_SESSION[self::TEMP_DATA_METHOD])) {
-                if (!isset($_POST['commit'])) {
+                if (isset($_POST['send'])) {
                     //if user trying sent/resent the code(s)
                     $message = "";
                     $time = time();

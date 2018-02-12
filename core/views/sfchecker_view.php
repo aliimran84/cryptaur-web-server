@@ -33,9 +33,8 @@ class SFchecker_view
                                 required=""
                                 pattern="[<?= API2FA::CODE_LETTERS ?>]{<?= API2FA::CODE_LENGTH ?>,<?= API2FA::CODE_LENGTH ?>}"
                             >
-                            <input type="hidden" name="commit" value="1">
                             <div class="row center">
-                                <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                <button name="commit" value="1" type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                     <?= Translate::td('Verify') ?>
                                 </button>
                             </div>
@@ -43,15 +42,9 @@ class SFchecker_view
                     </form>
                     <form class="login col s12" action="<?= $url ?>" method="post" autocomplete="off">
                         <div class="row center">
-                            <?php if ($method == Router::GET_METHOD) { ?>
-                            <a href="<?= $url ?>" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= isset($_SESSION[ACTION2FA::TEMP_DATA_SENDED]) ? Translate::td('Re-send') : Translate::td('Send') ?>
-                            </a>
-                            <?php } else { ?>
-                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                            <button name="send" value="1" type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= isset($_SESSION[ACTION2FA::TEMP_DATA_SENDED]) ? Translate::td('Re-send') : Translate::td('Send') ?>
                             </button>
-                            <?php } ?>
                         </div>
                     </form>
                 </div>
@@ -95,8 +88,7 @@ class SFchecker_view
                             pattern="[<?= API2FA::CODE_LETTERS ?>]{<?= API2FA::CODE_LENGTH ?>,<?= API2FA::CODE_LENGTH ?>}"
                         >
                         <div class="row center">
-                            <input type="hidden" name="commit" value="1">
-                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                            <button name="commit" value="1" type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Verify') ?>
                             </button>
                         </div>
@@ -104,15 +96,9 @@ class SFchecker_view
                     </form>
                     <form class="login col s12" action="<?= $url ?>" method="post" autocomplete="off">
                         <div class="row center">
-                            <?php if ($method == Router::GET_METHOD) { ?>
-                            <a href="<?= $url ?>" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= isset($_SESSION[ACTION2FA::TEMP_DATA_SENDED]) ? Translate::td('Re-send') : Translate::td('Send') ?>
-                            </a>
-                            <?php } else { ?>
-                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                            <button name="send" value="1" type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= isset($_SESSION[ACTION2FA::TEMP_DATA_SENDED]) ? Translate::td('Re-send') : Translate::td('Send') ?>
                             </button>
-                            <?php } ?>
                         </div>
                     </form>
                 </div>
