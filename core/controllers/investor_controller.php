@@ -190,9 +190,6 @@ class Investor_controller
 
     static private function is2FAHasBeenSet()
     {
-        if (!USE_2FA) {
-            return TRUE;
-        }
         if (
             Application::$authorizedInvestor->preferred_2fa != ""
             && in_array(Application::$authorizedInvestor->preferred_2fa, API2FA::$allowedMethods)
