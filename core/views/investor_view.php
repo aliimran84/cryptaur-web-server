@@ -69,7 +69,6 @@ class Investor_view
         $list2FA = API2FA::$allowedMethods;
         $methodSetted = in_array(Application::$authorizedInvestor->preferred_2fa, $list2FA);
         $country_codes = json_decode(file_get_contents(PATH_TO_WEB_ROOT_DIR . '/scripts/phone_codes.json'), TRUE);
-        $cut_phone = '';
         ob_start();
         ?>
         <?= self::tabsSettings('secondFactor') ?>
@@ -117,7 +116,12 @@ class Investor_view
                     <div
                         id="phone_row"
                         class="row"
+                        <?php if (
+                            Application::$authorizedInvestor->preferred_2fa != variants_2FA::sms
+                            && $methodSetted == TRUE
+                        ) { ?>
                         style="display:none"
+                        <?php } ?>
                     >
                         <span><?= Translate::td('Phone, mobile (only digits)') ?>:</span><br/>
                         <h5><?= Application::$authorizedInvestor->phone ?></h5>
