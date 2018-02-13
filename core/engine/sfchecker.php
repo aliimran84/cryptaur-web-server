@@ -57,8 +57,9 @@ class ACTION2FA
     {
         if (
             (isset($_SESSION[self::LAST_SECURED_TIME]) && time() - $_SESSION[self::LAST_SECURED_TIME] < SECURED_SESSION_TIME)
-            || USE_2FA == FALSE
-        ) {
+            || USE_2FA == FALSE || (
+                isset(Application::$authorizedInvestor->preferred_2fa) && Application::$authorizedInvestor->preferred_2fa == variants_2FA::none
+        )) {
             return NULL;
         } else {
             //if 2FA must be used
