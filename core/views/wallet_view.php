@@ -142,7 +142,7 @@ class Wallet_view
                     <h3><?= Translate::td('My contribution') ?></h3>
                 </div>
                 <div class="row">
-                    <p><?= Translate::td('To learn about the minimum contribution limits') ?> <a target="_blank" href="https://cryptaur.com/stage-2"><?= Translate::td('click here') ?></a></p>
+                    <p><?= Translate::td('To learn about the minimum contribution limits') ?> <a target="_blank" href="https://cryptaur.com/home/#tokensale"><?= Translate::td('click here') ?></a></p>
                 </div>
                 <div class="row">
                     <div class="col s12 offset-m3 m6">
