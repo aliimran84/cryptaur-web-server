@@ -93,6 +93,11 @@
         line-height: 36px;
     }
 }
+@media screen and (max-width: 768px){
+    .wallet_view-new_contribution-div_amount {
+        margin-top: 2rem;
+    }
+}
 @media screen and (max-width: 600px){
     .dashboard .indicators {
         padding: 15px 0;

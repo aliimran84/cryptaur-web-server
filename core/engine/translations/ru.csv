@@ -234,3 +234,4 @@ Enter security code,Введите защитный код
 "Too much requests from your IP, you must input captcha","Слишком много запросов с вашего IP, требуется ввести капчу"
 Coin Rates,Курсы валют
 CPL Rates,Курсы CPL
+FIAT_MONEY,БУМАЖНЫЕ ДЕНЬГИ

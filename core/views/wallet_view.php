@@ -105,6 +105,7 @@ class Wallet_view
                             });
                             $(document).on('change', '.wallet_view-new_contribution-select_coins', function (event) {
                                 var coin = $(event.target).val();
+                                var coinText = $('option[value='+coin+']').text();
                                 $('.wallet_view-new_contribution-div_amount').hide();
                                 $('.wallet_view-new_contribution-div_amount[data-coin=' + coin + ']').show();
                                 var section = $(event.target).parents('.wallet_view-new_contribution-section');
@@ -126,7 +127,7 @@ class Wallet_view
                                             break;
                                     }
                                 }
-                                section.find('.wallet_view-new_contribution-selected_currency').text(coin);
+                                section.find('.wallet_view-new_contribution-selected_currency').text(coinText);
                                 section.find('.wallet_view-new_contribution-selected_wallet_addr').text(walletAddrText);
                                 section.find('.wallet_view-new_contribution-selected_wallet_more').text(walletMoreText);
                             });
@@ -148,16 +149,17 @@ class Wallet_view
                     <div class="col s12 offset-m3 m6">
                         <div class="row">
                             <form autocomplete="off">
-                                <div class="input-field col s6 m6">
+                                <div class="input-field col s12 m6">
                                     <select class="wallet_view-new_contribution-select_coins">
                                         <?php foreach (Coin::coins() as $coin) { ?>
                                             <option value="<?= $coin ?>"><?= $coin ?></option>
                                         <?php } ?>
+                                        <option value="FIAT_MONEY"><?= Translate::td('FIAT_MONEY') ?></option>
                                     </select>
                                     <label><?= Translate::td('select currency') ?></label>
                                 </div>
                                 <?php foreach (Coin::coins() as $coin) { ?>
-                                    <div style="display: none;" data-coin="<?= $coin ?>" class="wallet_view-new_contribution-div_amount input-field col s6 m6">
+                                    <div style="display: none;" data-coin="<?= $coin ?>" class="wallet_view-new_contribution-div_amount input-field col s12 m6">
                                         <input type="number"
                                                class="wallet_view-new_contribution-input_amount"
                                                value="1" min="0" max="9999999999" step="0.00000001">
@@ -166,6 +168,9 @@ class Wallet_view
                                         <span class="btn-down"><i class="material-icons">keyboard_arrow_down</i></span>
                                     </div>
                                 <?php } ?>
+                                <div style="display: none;" data-coin="FIAT_MONEY" class="wallet_view-new_contribution-div_amount input-field col s12 m6">
+                                    <a target="_blank" class="logo-fintech" href="https://login.fintechunitedgroup.com/"><img src="images/fintech.png"></a>
+                                </div>
                             </form>
                         </div>
                     </div>

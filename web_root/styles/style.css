@@ -1054,3 +1054,8 @@ div.phone_code {
 .settings .tabs-block .tab-element.active {
     background: rgba(0,0,0, 0.05);
 }
+.logo-fintech img {
+    width: 40%;
+    display: block;
+    margin: 0 auto;
+}
