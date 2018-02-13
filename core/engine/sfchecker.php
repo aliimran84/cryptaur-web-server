@@ -20,7 +20,7 @@ class ACTION2FA
     const TEMP_DATA_SENDED = 'temp_data_sended';
     const LAST_SECURED_TIME = 'last_secured_time';
     const LAST_2FA_TRY = '2fa_last_try';
-    
+
     static private function writeToPost()
     {
         if (
@@ -32,7 +32,7 @@ class ACTION2FA
             }
         }
     }
-    
+
     static private function readFromPost()
     {
         if (count($_POST) > 0) {
@@ -44,7 +44,7 @@ class ACTION2FA
             session_write_close();
         }
     }
-    
+
     static private function formDraw($message = '')
     {
         echo Base_view::header();
@@ -63,7 +63,7 @@ class ACTION2FA
         } else {
             //if 2FA must be used
             if (
-                !isset($_SESSION[self::TEMP_DATA_URL]) 
+                !isset($_SESSION[self::TEMP_DATA_URL])
                 || !isset($_SESSION[self::TEMP_DATA_METHOD])
             ) {
                 //first-time 2FA init
@@ -98,7 +98,7 @@ class ACTION2FA
                             || isset($_SESSION[self::TEMP_DATA_TARGET])
                         ) {
                             $sended = self::sent2FARequest(
-                                $_SESSION[self::TEMP_DATA_VARIANT], 
+                                $_SESSION[self::TEMP_DATA_VARIANT],
                                 $_SESSION[self::TEMP_DATA_TARGET]
                             );
                         } else {
@@ -135,7 +135,7 @@ class ACTION2FA
             }
         }
     }
-    
+
     static public function smart2FARedirect()
     {
         session_start();
@@ -153,7 +153,7 @@ class ACTION2FA
             exit;
         }
     }
-    
+
     static public function clearSessionData($secure_clear = FALSE)
     {
         session_start();
@@ -193,7 +193,7 @@ class ACTION2FA
         }
         return FALSE;
     }
-    
+
     static private function sent2FARequestByInvestor()
     {
         if (!Application::$authorizedInvestor) {
@@ -217,16 +217,12 @@ class ACTION2FA
         }
         return FALSE;
     }
-    
+
     static public function targetHide($string)
     {
-        $length = mb_strlen($string);
-        $startPoint = 2;
-        $endPoint = $length - 3;
-        $new_target = $string;
-        for ($i = $startPoint; $i <= $endPoint; $i++) {
-            $new_target[$i] = '*';
-        }
-        return $new_target;
+        $strLength = mb_strlen($string);
+        $hideLength = ceil($strLength / 2.5);
+        $startPoint = floor($hideLength / 1.5);
+        return substr_replace($string, str_repeat('*', $hideLength), $startPoint, $hideLength);
     }
 }
