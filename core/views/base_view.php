@@ -67,6 +67,14 @@ class Base_view
             </ul>
             <ul class="side-nav" id="mobile-demo">
                 <?= self::menuList() ?>
+                <li><a class="dropdown-button" href="#!" data-activates="dropdown_flag"><img src="<?php
+                        if (Translate::defaultLang() === 'ru') {
+                            echo 'images/flag_rus.png';
+                        } else {
+                            echo 'images/flag_usa.png';
+                        }
+                        ?>"/><i class="material-icons right">keyboard_arrow_down</i></a>
+                </li>
             </ul>
         </div>
         <ul id="dropdown_flag" class="dropdown-content">

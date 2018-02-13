@@ -58,6 +58,19 @@
     }
 }
 @media screen and (max-width: 992px){
+    #mobile-demo .dropdown-button img {
+        padding: 11px 0;
+    }
+    #mobile-demo .dropdown-content {
+        background: #ffffff;
+        box-shadow: none;
+    }
+    #mobile-demo .dropdown-content li:hover {
+        background: transparent;
+    }
+    #mobile-demo .dropdown-content li>a {
+        padding: 11px 16px !important;
+    }
     nav .brand-logo {
         margin-left: 0;
     }
