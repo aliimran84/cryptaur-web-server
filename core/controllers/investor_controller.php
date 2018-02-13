@@ -300,6 +300,7 @@ class Investor_controller
             } else {
                 Application::$authorizedInvestor->set2faMethod($_POST['2fa_method']);
                 $urlErrors[] = 'success=1';
+                Utility::location();
             }
         }
         Utility::location(self::SECONDFACTORSET_URL . '?' . implode('&', $urlErrors));
@@ -346,6 +347,7 @@ class Investor_controller
             session_write_close();
             $urlErrors[] = 'success=1';
             $urlErrors[] = 'phone_verified=1';
+            Utility::location();
         } else {
             $sent = API2FA::send_sms($_SESSION[self::PHONE_VERIFY_NUMBER]);
             if ($sent == FALSE) {
