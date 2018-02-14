@@ -259,7 +259,11 @@ class Deposit
 
             if ($deposit->registered) {
                 $depositsForMinting[] = $deposit;
-                $tokensToMinting += $deposit->usd / $tokenRate;
+                $tokenRate_currentDeposit = $tokenRate;
+                if (strtolower($deposit->coin) === 'xem') {
+                    $tokenRate_currentDeposit *= 0.8;
+                }
+                $tokensToMinting += $deposit->usd / $tokenRate_currentDeposit;
             }
         }
 
