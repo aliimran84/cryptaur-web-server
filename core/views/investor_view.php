@@ -36,10 +36,10 @@ class Investor_view
                         <?php if (!is_null($image)) { ?>
                             <div class="captcha">
                                 <image src="data:image/png;base64,<?= $image ?>">
-                                <div class="captcha-input">
-                                    <p><?= Translate::td('Enter security code') ?></p>
-                                    <input type="text" name="captcha" placeholder="Captcha" required>
-                                </div>
+                                    <div class="captcha-input">
+                                        <p><?= Translate::td('Enter security code') ?></p>
+                                        <input type="text" name="captcha" placeholder="Captcha" required>
+                                    </div>
                             </div>
                         <?php } ?>
                         <div class="row center">
@@ -114,13 +114,13 @@ class Investor_view
                         </select>
                     </div>
                     <div
-                        id="phone_row"
-                        class="row"
+                            id="phone_row"
+                            class="row"
                         <?php if (
                             Application::$authorizedInvestor->preferred_2fa != variants_2FA::sms
                             && $methodSetted == TRUE
                         ) { ?>
-                        style="display:none"
+                            style="display:none"
                         <?php } ?>
                     >
                         <span><?= Translate::td('Phone, mobile (only digits)') ?>:</span><br/>
@@ -128,16 +128,16 @@ class Investor_view
                         <select class="phone_code" name="code" required="">
                             <option disabled="" selected="">-</option>
                             <?php foreach ($country_codes as $set) { ?>
-                            <option><?= $set['code'] ?> <?= $set['name'] ?></option>
+                                <option><?= $set['code'] ?> <?= $set['name'] ?></option>
                             <?php } ?>
                         </select>
-                        <input 
-                            type="text" 
-                            name="phone" 
-                            style="width: 50%; font-size: .75em;"
-                            placeholder="<?= Translate::td('Phone, mobile (only digits)') ?>"
-                            autocomplete="nope" 
-                            pattern="[0-9]{2,15}"
+                        <input
+                                type="text"
+                                name="phone"
+                                style="width: 50%; font-size: .75em;"
+                                placeholder="<?= Translate::td('Phone, mobile (only digits)') ?>"
+                                autocomplete="nope"
+                                pattern="[0-9]{2,15}"
                         >
                         <span><?= Translate::td('e.g. 79997774433') ?></span><br/>
                         <span><?= Translate::td('Use only numbers') ?></span>
@@ -384,13 +384,14 @@ class Investor_view
                         <input type="text" name="referrer_code" value="<?= $referrer_code ?>" placeholder="<?= Translate::td('REFERRER CODE') ?>" autocomplete="nope">
                         <input type="password" name="password" pattern=".{6,120}" placeholder="<?= Translate::td('Password') ?>" autocomplete="new-password">
                         <span><?= Translate::td('Password must be more than 6 symbols') ?></span>
-                        <br/><image src="data:image/png;base64,<?= $image ?>">
-                        <input type="text" name="captcha" placeholder="Captcha" required>
-                        <div class="row center">
-                            <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
-                                <?= Translate::td('Register') ?>
-                            </button>
-                        </div>
+                        <br/>
+                        <image src="data:image/png;base64,<?= $image ?>">
+                            <input type="text" name="captcha" placeholder="Captcha" required>
+                            <div class="row center">
+                                <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
+                                    <?= Translate::td('Register') ?>
+                                </button>
+                            </div>
                     </form>
                 </div>
             </div>
@@ -418,10 +419,10 @@ class Investor_view
                         <input type="email" name="email" placeholder="Email" autocomplete="nope">
                         <div class="captcha">
                             <image src="data:image/png;base64,<?= $image ?>">
-                            <div class="captcha-input">
-                                <p><?= Translate::td('Enter security code') ?></p>
-                                <input type="text" name="captcha" placeholder="Captcha" required>
-                            </div>
+                                <div class="captcha-input">
+                                    <p><?= Translate::td('Enter security code') ?></p>
+                                    <input type="text" name="captcha" placeholder="Captcha" required>
+                                </div>
                         </div>
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
@@ -520,8 +521,12 @@ class Investor_view
         <div class="row settings">
             <div class="container">
                 <ul class="tabs-block col s12">
-                    <li class="tab-element <?= $activeTabs == 'settings' ? 'active' : '' ?> col s6"><a href="<?= Investor_controller::SETTINGS_URL ?>"><?= Translate::td('User settings') ?></a></li>
-                    <li class="tab-element <?= $activeTabs == 'secondFactor' ? 'active' : '' ?> col s6"><a href="<?= Investor_controller::SECONDFACTORSET_URL ?>"><?= Translate::td('Two-factor authentication settings') ?></a></li>
+                    <li class="tab-element <?= $activeTabs == 'settings' ? 'active' : '' ?> col s6">
+                        <a href="<?= Investor_controller::SETTINGS_URL ?>"><?= Translate::td('User settings') ?></a>
+                    </li>
+                    <li class="tab-element <?= $activeTabs == 'secondFactor' ? 'active' : '' ?> col s6">
+                        <a href="<?= Investor_controller::SECONDFACTORSET_URL ?>"><?= Translate::td('Two-factor authentication settings') ?></a>
+                    </li>
                 </ul>
             </div>
         </div>
