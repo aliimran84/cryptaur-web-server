@@ -229,6 +229,7 @@ class Investor_view
     }
 
     /**
+     * @param string $image
      * @param [] $data
      * @param string $error
      * @return string HTML
@@ -240,6 +241,13 @@ class Investor_view
             $referrer_code = $_GET['referrer_code'];
         } else if (isset($data['referrer_code'])) {
             $referrer_code = $data['referrer_code'];
+        }
+        if ($referrer_code) {
+            session_start();
+            $_SESSION['registration_referrer_code'] = $referrer_code;
+            session_write_close();
+        } else if (isset($_SESSION['registration_referrer_code'])) {
+            $referrer_code = $_SESSION['registration_referrer_code'];
         }
         $country_codes = json_decode(file_get_contents(PATH_TO_WEB_ROOT_DIR . '/scripts/phone_codes.json'), TRUE);
         ob_start();
@@ -313,6 +321,7 @@ class Investor_view
     }
 
     /**
+     * @param string $image
      * @param [] $data
      * @param string $error
      * @return string HTML
@@ -324,6 +333,13 @@ class Investor_view
             $referrer_code = $_GET['referrer_code'];
         } else if (isset($data['referrer_code'])) {
             $referrer_code = $data['referrer_code'];
+        }
+        if ($referrer_code) {
+            session_start();
+            $_SESSION['registration_referrer_code'] = $referrer_code;
+            session_write_close();
+        } else if (isset($_SESSION['registration_referrer_code'])) {
+            $referrer_code = $_SESSION['registration_referrer_code'];
         }
         $country_codes = json_decode(file_get_contents(PATH_TO_WEB_ROOT_DIR . '/scripts/phone_codes.json'), TRUE);
         ob_start();
