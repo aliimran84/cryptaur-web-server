@@ -7,13 +7,15 @@ function conversionHeightLineBottom(tree) {
     var ulParticipants = ul.find('ul.participants');
     for (var i = 0; i < ulParticipants.length; i++) {
         li = $(ulParticipants[i]).children('li.'+$(ulParticipants[i]).attr('class').split(' ')[0]);
-        positionTopFirstLi = $(li[0]).offset().top;
-        positionTopLastLi = $(li[li.length-1]).offset().top;
-        var ua = navigator.userAgent;
-        if (ua.search(/Firefox/) > 0)
-            $(ulParticipants[i]).parent().prev().find('.line-bottom').css('height',positionTopLastLi - positionTopFirstLi + $(li[li.length-1]).height() + 86);
-        else
-            $(ulParticipants[i]).parent().prev().find('.line-bottom').css('height',positionTopLastLi - positionTopFirstLi + $(li[li.length-1]).height() + 85);
+        if (li.length) {
+            positionTopFirstLi = $(li[0]).offset().top;
+            positionTopLastLi = $(li[li.length-1]).offset().top;
+            var ua = navigator.userAgent;
+            if (ua.search(/Firefox/) > 0)
+                $(ulParticipants[i]).parent().prev().find('.line-bottom').css('height',positionTopLastLi - positionTopFirstLi + $(li[li.length-1]).height() + 86);
+            else
+                $(ulParticipants[i]).parent().prev().find('.line-bottom').css('height',positionTopLastLi - positionTopFirstLi + $(li[li.length-1]).height() + 85);
+        }
     }
 }
 $(document).ready(function(){
@@ -61,6 +63,7 @@ $(document).ready(function(){
         $('.referral-progam .line-bottom').css('height',$('.referral-progam ul').height());
     var trees = $('.main-panel-block.tree');
     for (var n = 0; n < trees.length; n++) {
+        console.log(trees[n]);
         var secondLevel = $(trees[n]).find('li.second-level');
         heightLineBottom = 85;
         var marginTop = 20;
@@ -68,26 +71,6 @@ $(document).ready(function(){
             heightLineBottom += secondLevel[i].clientHeight + marginTop;
         }
         $('li.first-level>.line-bottom').css('height', heightLineBottom);
-
-        $(trees[n]).find('.participants-block i').click(function () {
-            var ulParticipants = $('ul.third-level[data-level='+ level +']');
-            var referrals = json['referrals'];
-            $.each(referrals, function (index, element) {
-                appendTreeBlock(element, ulParticipants);
-            });
-
-            var element = $(this).closest('.participants').next().children();
-            if ($(element).hasClass('close')) {
-                $($(this).closest('.participants').find('.line-bottom')[0]).css('display', 'block');
-                $(element).removeClass('close');
-            } else {
-                $($(this).closest('.participants').find('.line-bottom')[0]).css('display', 'none');
-                $(element).addClass('close');
-            }
-            var treeBlock = $('.main-panel-block.tree');
-            treeBlock.closest('.main-panel').css('height', treeBlock.closest('.my-group').height());
-            conversionHeightLineBottom($(this).closest('.tree'));
-        });
     }
     $('#after-compression').change(function () {
         var trees = $('.main-panel-block.tree');
@@ -371,6 +354,28 @@ if (json['referrals'].length) {
             '<ul class="third-level participants close" data-level="' + level + '"></ul>' +
         '</li>'
     );
+    var participantButton = liSecondLevel.find('.participants-block i');
+    deployingTree(participantButton, json['referrals']);
+}
+
+function deployingTree(participantButton, referrals) {
+    participantButton.click(function () {
+        var ulParticipants = $(this).closest('.participants').next().children();
+        $.each(referrals, function (index, element) {
+            appendTreeBlock(element, ulParticipants);
+        });
+
+        if ($(ulParticipants).hasClass('close')) {
+            $($(this).closest('.participants').find('.line-bottom')[0]).css('display', 'block');
+            $(ulParticipants).removeClass('close');
+        } else {
+            $($(this).closest('.participants').find('.line-bottom')[0]).css('display', 'none');
+            $(ulParticipants).addClass('close');
+        }
+        var treeBlock = $('.main-panel-block.tree');
+        treeBlock.closest('.main-panel').css('height', treeBlock.closest('.my-group').height());
+        conversionHeightLineBottom($(this).closest('.tree'));
+    });
 }
 
 function appendTreeBlock(object, ulParticipants) {
@@ -384,21 +389,19 @@ function appendTreeBlock(object, ulParticipants) {
     if (object['referrals'].length) {
         level++;
         block +=
-                '<div class="line-right"></div>' +
-                '<div class="participants-block">' +
-                    '<h2>' + object['referrals'].length + ' participants in level<i class="material-icons" data-level="'+ level +'">expand_more</i></h2>' +
-                '</div>' +
-                '<div class="line-bottom" style="display:none;"></div>' +
-            '</li>' +
-            '<li>' +
-                '<ul class="third-level participants close" data-level="' + level + '"></ul>' +
-            '</li>';
+            '<div class="line-right"></div>' +
+            '<div class="participants-block">' +
+                '<h2>' + object['referrals'].length + ' participants in level<i class="material-icons" data-level="'+ level +'">expand_more</i></h2>' +
+            '</div>' +
+            '<div class="line-bottom" style="display:none;"></div>' +
+        '</li>' +
+        '<li>' +
+            '<ul class="third-level participants close" data-level="' + level + '"></ul>' +
+        '</li>';
         ulParticipants.append(block);
-        var ulParticipantsInside = $('ul.third-level[data-level='+ level +']');
         var referrals = object['referrals'];
-        $.each(referrals, function (index, element) {
-            appendTreeBlock(element, ulParticipantsInside);
-        });
+        var participantButton = ulParticipants.find('.participants-block i')[ulParticipants.find('.participants-block i').length-1];
+        deployingTree(participantButton, referrals);
     } else {
         block += '</li>';
         ulParticipants.append(block);
