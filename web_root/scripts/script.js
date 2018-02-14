@@ -26,7 +26,7 @@ function validatedCheckbox(checkBox, element) {
 
 $(document).ready(function(){
     var checkBoxTermsConditions = $('#terms_conditions');
-    var buttonRegister = $('form.registration  button[type=submit].btn-login');
+    var buttonRegister = $('#btnRegistration');
     validatedCheckbox(checkBoxTermsConditions, buttonRegister);
     checkBoxTermsConditions.change(function () {
         validatedCheckbox(checkBoxTermsConditions, buttonRegister);
