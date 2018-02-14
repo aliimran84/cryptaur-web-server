@@ -1054,3 +1054,21 @@ div.phone_code {
 .settings .tabs-block .tab-element.active {
     background: rgba(0,0,0, 0.05);
 }
+input#terms_conditions+label {
+    top: 0;
+    color: #000000;
+}
+input#terms_conditions:active,
+input#terms_conditions:hover,
+input#terms_conditions:focus,
+input#terms_conditions:active + label,
+input#terms_conditions:hover + label,
+input#terms_conditions:focus + label {
+    color: #000000 !important;
+}
+input#terms_conditions:active,
+input#terms_conditions:hover,
+input#terms_conditions:focus {
+    outline: 0;
+    outline-offset: 0;
+}

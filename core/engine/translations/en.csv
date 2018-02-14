@@ -234,3 +234,4 @@ Enter security code,Enter security code
 "Too much requests from your IP, you must input captcha","Too much requests from your IP, you must input captcha"
 Coin Rates,Coin Rates
 CPL Rates,CPL Rates
+"I agree to the terms and conditions","I agree to the <a target='_blank' href='https://cryptaur.com/terms-and-conditions/'>terms and conditions</a>"

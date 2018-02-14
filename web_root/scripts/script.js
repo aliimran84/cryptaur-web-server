@@ -16,7 +16,21 @@ function conversionHeightLineBottom(tree) {
             $(ulParticipants[i]).parent().prev().find('.line-bottom').css('height',positionTopLastLi - positionTopFirstLi + $(li[li.length-1]).height() + 85);
     }
 }
+
+function validatedCheckbox(checkBox, element) {
+    if (!checkBox.is(':checked'))
+        element.attr('disabled', true);
+    else
+        element.attr('disabled', false);
+}
+
 $(document).ready(function(){
+    var checkBoxTermsConditions = $('#terms_conditions');
+    var buttonRegister = $('button[type=submit].btn-login');
+    validatedCheckbox(checkBoxTermsConditions, buttonRegister);
+    checkBoxTermsConditions.change(function () {
+        validatedCheckbox(checkBoxTermsConditions, buttonRegister);
+    });
     var warningCheckBox = $('.warning-checkbox');
     var checked;
     var contract = '0x6f3a995e904c9be5279e375e79f3c30105efa618'.toUpperCase();
