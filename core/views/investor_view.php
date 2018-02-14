@@ -789,12 +789,23 @@ class Investor_view
                         </div>
                     </div>
                     <div class="personal-data col s12 m5 l5">
-                        <p><?= Translate::td('Account Address') ?></p>
-                        <p class="account-address"><?= $wallet->eth_address ?></p>
-                        <p><?= Translate::td('Account Balance') ?></p>
-                        <p class="account-balance"><?= number_format($wallet->eth, 8, '.', '') ?> ETH</p>
-                        <p class="account-balance"><?= number_format($wallet->cpt, 8, '.', '') ?> CPT</p>
-                        <p class="account-balance"><?= number_format($wallet->proof, 8, '.', '') ?> PROOF</p>
+                        <?php if ($wallet->eth_address) { ?>
+                            <p><?= Translate::td('Account Address') ?></p>
+                            <p class="account-address">
+                                <?= $wallet->eth_address ?>
+                            </p>
+                            <p><?= Translate::td('Account Balance') ?></p>
+                            <p class="account-balance"><?= number_format($wallet->eth, 8, '.', '') ?> ETH</p>
+                            <p class="account-balance"><?= number_format($wallet->cpt, 8, '.', '') ?> CPT</p>
+                            <p class="account-balance"><?= number_format($wallet->proof, 8, '.', '') ?> PROOF</p>
+                        <?php } else { ?>
+                            <p><?= Translate::td('Account Address') ?></p>
+                            <p class="account-address red"><?= Translate::td('Temporary unavailable') ?></p>
+                            <p><?= Translate::td('Account Balance') ?></p>
+                            <p class="account-balance">??? ETH</p>
+                            <p class="account-balance">??? CPT</p>
+                            <p class="account-balance">??? PROOF</p>
+                        <?php } ?>
                         <p><?= Translate::td('Transaction History') ?></p>
                         <a target="_blank" href="https://etherscan.io/address/<?= $wallet->eth_address ?>">
                             ETH (https://etherscan.io)
