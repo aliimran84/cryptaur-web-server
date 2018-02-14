@@ -67,7 +67,7 @@ class Base_view
             </ul>
             <ul class="side-nav" id="mobile-demo">
                 <?= self::menuList() ?>
-                <li><a class="dropdown-button" href="#!" data-activates="dropdown_flag"><img src="<?php
+                <li><a class="dropdown-button" href="#!" data-activates="dropdown_flag-mobile"><img src="<?php
                         if (Translate::defaultLang() === 'ru') {
                             echo 'images/flag_rus.png';
                         } else {
@@ -78,6 +78,10 @@ class Base_view
             </ul>
         </div>
         <ul id="dropdown_flag" class="dropdown-content">
+            <li><a href="<?= Translate::languageSwitchHref('en') ?>"><img src="images/flag_usa.png"/></a></li>
+            <li><a href="<?= Translate::languageSwitchHref('ru') ?>"><img src="images/flag_rus.png"/></a></li>
+        </ul>
+        <ul id="dropdown_flag-mobile" class="dropdown-content">
             <li><a href="<?= Translate::languageSwitchHref('en') ?>"><img src="images/flag_usa.png"/></a></li>
             <li><a href="<?= Translate::languageSwitchHref('ru') ?>"><img src="images/flag_rus.png"/></a></li>
         </ul>
