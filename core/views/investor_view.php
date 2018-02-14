@@ -295,6 +295,10 @@ class Investor_view
                                     <input type="text" name="captcha" placeholder="Captcha" required>
                                 </div>
                         </div>
+                        <p class="terms_conditions">
+                            <input type="checkbox" id="terms_conditions"/>
+                            <label for="terms_conditions"><?= Translate::td('I agree to the terms and conditions') ?></label>
+                        </p>
                         <div class="row center">
                             <button type="submit" class="waves-effect waves-light btn btn-login" style="width: 100%">
                                 <?= Translate::td('Register') ?>

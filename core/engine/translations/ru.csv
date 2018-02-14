@@ -235,3 +235,4 @@ Enter security code,Введите защитный код
 "Too much requests from your IP, you must input captcha","Слишком много запросов с вашего IP, требуется ввести капчу"
 Coin Rates,Курсы валют
 CPL Rates,Курсы CPL
+"I agree to the terms and conditions","Я согласен с <a target='_blank' href='https://cryptaur.com/terms-and-conditions/'>условиями и правилами</a>"
